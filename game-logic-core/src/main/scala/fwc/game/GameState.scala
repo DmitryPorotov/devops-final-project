@@ -1,0 +1,81 @@
+package fwc.game
+
+import fwc.{JsonParsable, JsonSerializable}
+import fwc.game.actionPhase.{Combat, DiscardedHouseCards, DominanceTokensUsage}
+import fwc.game.eventsPhase.cards.BoardCards
+import fwc.game.board.{Armies, DominanceTokenType, Tracks}
+import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
+import fwc.game.houses.HouseType
+import fwc.game.phases.SubPhase
+import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
+import fwc.gameLoading.BoardTile
+import ujson.Value
+
+import scala.util.Try
+
+case class GameState(
+                      subPhase: SubPhase,
+                      armies: Armies,
+                      placedOrders: PlacedOrders,
+                      tracks: Tracks,
+                      supplies: Supplies,
+                      discardedHouseCards: DiscardedHouseCards,
+                      powerTokens: PowerTokens,
+                      boardCards: BoardCards,
+                      dominanceTokensUsage: DominanceTokensUsage,
+                      usedMusteringPoints: UsedMusteringPoints,
+                      availableOrders: AvailableOrders,
+                      bids: Bids,
+                      combat: Combat = null,
+                      wildlingCounter: Int = 6,
+                      wildlingsStartedFrom12Points: Option[Boolean] = None,
+                      roundCounter: Int = 1,
+                      winner: Option[HouseType] = None
+                    ) extends JsonSerializable {
+  def toJson: ujson.Value = {
+    ujson.Obj(
+      "subPhase" -> subPhase.toJson,
+      "armies" -> armies.toJson,
+      "placedOrders" -> placedOrders.toJson,
+      "tracks" -> tracks.toJson,
+      "supplies" -> supplies.toJson,
+      "discardedHouseCards" -> discardedHouseCards.toJson,
+      "powerTokens" -> powerTokens.toJson,
+      "boardCards" -> boardCards.toJson,
+      "dominanceTokensUsage" -> dominanceTokensUsage.toJson,
+      "usedMusteringPoints" -> usedMusteringPoints.toJson,
+      "availableOrders" -> availableOrders.toJson,
+      "bids" -> bids.toJson,
+      "combat" -> (if combat == null then ujson.Null else combat.toJson),
+      "wildlingCounter" -> wildlingCounter,
+      "wildlingsStartedFrom12Points" -> 
+        (if wildlingsStartedFrom12Points.isEmpty then ujson.Null else wildlingsStartedFrom12Points.head),
+      "roundCounter" -> roundCounter,
+    )
+  }
+
+}
+
+object GameState extends JsonParsable {
+  override def fromJson(json: Value): GameState = {
+    GameState(
+      SubPhase.fromJson(json.obj("subPhase")),
+      Armies.fromJson(json.obj("armies")),
+      PlacedOrders.fromJson(json.obj("placedOrders")),
+      Tracks.fromJson(json.obj("tracks")),
+      Supplies.fromJson(json.obj("supplies")),
+      DiscardedHouseCards.fromJson(json.obj("discardedHouseCards")),
+      PowerTokens.fromJson(json.obj("powerTokens")),
+      BoardCards.fromJson(json.obj("boardCards")),
+      DominanceTokensUsage.fromJson(json.obj("dominanceTokensUsage")),
+      UsedMusteringPoints.fromJson(json.obj("usedMusteringPoints")),
+      AvailableOrders.fromJson(json.obj("availableOrders")),
+      Bids.fromJson(json.obj("bids")),
+      Combat.fromJson(json("combat")),
+      json.obj("wildlingCounter").num.toInt,
+      Try[Option[Boolean]](json("wildlingsStartedFrom12Points").boolOpt).getOrElse(None),
+      json.obj("roundCounter").num.toInt
+    )
+
+  }
+}

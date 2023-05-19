@@ -1,0 +1,350 @@
+{
+  "wolf": [
+    {
+      "code": 0,
+      "name": "Robb Stark",
+      "strength": 3,
+      "text": "If you win this combat, you may choose the area to which your opponent retreats. You must choose a legal area where your opponent loses the fewest units.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 1,
+      "name": "Eddard Stark",
+      "strength": 4,
+      "text": "",
+      "attack": 2,
+      "defense": 0
+    },
+    {
+      "code": 2,
+      "name": "Rose Bolton",
+      "strength": 2,
+      "text": "If you lose this combat, return your entire House card discard pile into your hand (including this card)",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "Ser Rodrick Cassel",
+      "strength": 1,
+      "text": "",
+      "attack": 0,
+      "defense": 2
+    },
+    {
+      "code": 4,
+      "name": "Greatjon Umber",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "The Blackfish",
+      "strength": 1,
+      "text": "You do not take casualties in this combat from House card abilities, Combat icons, or Tide of Battle cards.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 6,
+      "name": "Catelyn Stark",
+      "strength": 0,
+      "text": "If you have a defense Order token in the embattled area, its value is doubled.",
+      "attack": 0,
+      "defense": 0
+    }
+  ],
+  "moose": [
+    {
+      "code": 0,
+      "name": "Stannis Baratheon",
+      "strength": 4,
+      "text": "If your opponent has a higher position on the Iron Throne Influence track than you, this card gains +1 strength.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 1,
+      "name": "Brienne of Tarth",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 1
+    },
+    {
+      "code": 2,
+      "name": "Renly Baratheon",
+      "strength": 3,
+      "text": "If you win this combat, you may upgrade one of your participating Footmen (or one supporting Baratheon Footmen) to a Knight.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "Patchface",
+      "strength": 0,
+      "text": "At the end of combat, you may look at your opponent's hand and discard one card of your choice.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 4,
+      "name": "Melisandre",
+      "strength": 1,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "Ser Davos Seaworth",
+      "strength": 2,
+      "text": "If your \"Stannis Baratheon\" House card is in your discard pile, this card gains +1 combat strength and a sword icon.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 6,
+      "name": "Salladohr Saan",
+      "strength": 1,
+      "text": "If you are being supported in this combat, the combat strength of all non-Baratheon Ships is reduced to 0",
+      "attack": 0,
+      "defense": 0
+    }
+  ],
+  "pufferfish": [
+    {
+      "code": 0,
+      "name": "Doran Martell",
+      "strength": 0,
+      "text": "Immediately move your opponent to the bottom of one influence track of your choice",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 1,
+      "name": "Darkstar",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 2,
+      "name": "Arianne Martell",
+      "strength": 1,
+      "text": "If you are defending and lose this combat, your opponent may not move his units into the embattled area. They return to the area from which they marched. Your own units must still retreat.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "The Red Viper",
+      "strength": 4,
+      "text": "",
+      "attack": 2,
+      "defense": 1
+    },
+    {
+      "code": 4,
+      "name": "Obara Sand",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "Areo Hotah",
+      "strength": 3,
+      "text": "",
+      "attack": 0,
+      "defense": 1
+    },
+    {
+      "code": 6,
+      "name": "Nymeria Sand",
+      "strength": 1,
+      "text": "If you are defending, this card gains a fortification icon/ If you are attacking, this card gains a sword icon.",
+      "attack": 0,
+      "defense": 0
+    }
+  ],
+  "kraken": [
+    {
+      "code": 0,
+      "name": "Dagmer Cleftjaw",
+      "strength": 1,
+      "text": "",
+      "attack": 1,
+      "defense": 1
+    },
+    {
+      "code": 1,
+      "name": "Theon Greyjoy",
+      "strength": 2,
+      "text": "If you are defending an area that contains either a Stronghold or a Castle, this card gains +1 combat strength and a sword icon.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 2,
+      "name": "Euron Crow's Eye",
+      "strength": 4,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "Balon Greyjoy",
+      "strength": 2,
+      "text": "The printed combat strength of your opponent's House card is reduced to 0.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 4,
+      "name": "Victarion Greyjoy",
+      "strength": 3,
+      "text": "If you are attacking, all of your participating Ships (including supporting Greyjoy Ships) add +2 to combat strength instead of +1.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "Asha Greyjoy",
+      "strength": 1,
+      "text": "If you are not being supported in this combat, this card gains two sword icons and one fortification icon.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 6,
+      "name": "Aeron Damphair",
+      "strength": 0,
+      "text": "You may immediately discard two of your available Power tokens to discard Aeron Damphair and choose a different House Card from your hand (if able).",
+      "attack": 0,
+      "defense": 0
+    }
+  ],
+  "rose": [
+    {
+      "code": 0,
+      "name": "Ser Loras Tyrell",
+      "strength": 3,
+      "text": "If you are attacking and win this combat, move the March Order token into the conquered area (instead of discarding it). The marching order may be resolved again later this round.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 1,
+      "name": "Margaery Tyrell",
+      "strength": 1,
+      "text": "",
+      "attack": 0,
+      "defense": 1
+    },
+    {
+      "code": 2,
+      "name": "Mace Tyrell",
+      "strength": 4,
+      "text": "Immediately destroy one of your opponent's attacking or defending Footmen units.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "Randyll Tarly",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    },
+    {
+      "code": 4,
+      "name": "Queen of Thorns",
+      "strength": 0,
+      "text": "Immediately remove one of your opponent's Order tokens in any one area adjacent to the embattled area. You may not remove the March Order token used to start this combat.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "Ser Garlan Tyrell",
+      "strength": 2,
+      "text": "",
+      "attack": 2,
+      "defense": 0
+    },
+    {
+      "code": 6,
+      "name": "Alester Florent",
+      "strength": 1,
+      "text": "",
+      "attack": 0,
+      "defense": 1
+    }
+  ],
+  "lion": [
+    {
+      "code": 0,
+      "name": "Ser Gregor Clegane",
+      "strength": 3,
+      "text": "",
+      "attack": 3,
+      "defense": 0
+    },
+    {
+      "code": 1,
+      "name": "Cersei Lannister",
+      "strength": 0,
+      "text": "If you win this combat, you may remove one of the losing opponent's Order tokens from anywhere on the board.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 2,
+      "name": "Tywin Lannister",
+      "strength": 4,
+      "text": "If you win this combat, gain two Power tokens.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 3,
+      "name": "The Hound",
+      "strength": 2,
+      "text": "",
+      "attack": 0,
+      "defense": 2
+    },
+    {
+      "code": 4,
+      "name": "Ser Kevan Lannister",
+      "strength": 1,
+      "text": "If you are attacking, all of your participating Footmen (including supporting Lannister Footmen) add +2 combat strength instead of +1",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 5,
+      "name": "Tyrion Linnester",
+      "strength": 1,
+      "text": "You may cancel your opponent's chosen House card and return it to his hand. He must then choose a different House card to reveal. If he has no other House cards in hand, he cannot use a House card this combat.",
+      "attack": 0,
+      "defense": 0
+    },
+    {
+      "code": 6,
+      "name": "Ser Jaime Lannister",
+      "strength": 2,
+      "text": "",
+      "attack": 1,
+      "defense": 0
+    }
+  ]
+}

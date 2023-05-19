@@ -1,0 +1,49 @@
+{
+  "march": [
+    {
+      "modifier": 1,
+      "star": true
+    },
+    {
+      "modifier": 0
+    },
+    {
+      "modifier": -1
+    }
+  ],
+  "defend": [
+    {
+      "modifier": 2,
+      "star": true
+    },
+    {
+      "modifier": 1,
+      "amount": 2
+    }
+  ],
+  "support": [
+    {
+      "modifier": 1,
+      "star": true
+    },
+    {
+      "amount": 2
+    }
+  ],
+  "raid": [
+    {
+      "star": true
+    },
+    {
+      "amount": 2
+    }
+  ],
+  "consolidatePower": [
+    {
+      "star": true
+    },
+    {
+      "amount": 2
+    }
+  ]
+}

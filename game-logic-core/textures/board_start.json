@@ -1,0 +1,217 @@
+[
+  {
+    "name": "lion",
+    "map": [
+      {
+        "tileCode": 21,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 22,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 27,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 2,
+      "fiefdoms": 6,
+      "court": 1,
+      "supply": 2,
+      "victory": 1
+    }
+  },
+  {
+    "name": "kraken",
+    "map": [
+      {
+        "tileCode": 15,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 17,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 16,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 12,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 5,
+      "fiefdoms": 1,
+      "court": 6,
+      "supply": 2,
+      "victory": 1
+    }
+  },
+  {
+    "name": "pufferfish",
+    "map": [
+      {
+        "tileCode": 50,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 55,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 54,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 4,
+      "fiefdoms": 3,
+      "court": 3,
+      "supply": 2,
+      "victory": 1
+    }
+  },
+  {
+    "name": "wolf",
+    "map": [
+      {
+        "tileCode": 2,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 3,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 7,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 3,
+      "fiefdoms": 4,
+      "court": 2,
+      "supply": 1,
+      "victory": 2
+    }
+  },
+  {
+    "name": "moose",
+    "map": [
+      {
+        "tileCode": 30,
+        "items": {
+          "ship": 2
+        }
+      },
+      {
+        "tileCode": 31,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 40,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 1,
+      "fiefdoms": 5,
+      "court": 4,
+      "supply": 2,
+      "victory": 1
+    }
+  },
+  {
+    "name": "rose",
+    "map": [
+      {
+        "tileCode": 41,
+        "items": {
+          "ship": 1
+        }
+      },
+      {
+        "tileCode": 38,
+        "items": {
+          "knight": 1,
+          "footman": 1,
+          "garrison": 2
+        }
+      },
+      {
+        "tileCode": 44,
+        "items": {
+          "footman": 1
+        }
+      }
+    ],
+    "tracks": {
+      "throne": 6,
+      "fiefdoms": 2,
+      "court": 5,
+      "supply": 2,
+      "victory": 1
+    }
+  },
+  {
+    "name": "neutral",
+    "map": [
+      {
+        "tileCode": 35,
+        "items": {
+          "garrison": 5
+        }
+      },
+      {
+        "tileCode": 36,
+        "items": {
+          "garrison": 6
+        }
+      }
+    ]
+  }
+]

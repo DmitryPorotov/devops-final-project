@@ -1,0 +1,56 @@
+{
+  "numOfPowerTokensAtStart": 5,
+  "kingsCourtStars": [
+    3,
+    3,
+    2,
+    1
+  ],
+  "maxArmies": {
+    "footmen": 10,
+    "knights": 5,
+    "ships": 6,
+    "siegeEngines": 2,
+    "powerToken": 20
+  },
+  "supplyUsage": [
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      3,
+      2,
+      2
+    ],
+    [
+      3,
+      2,
+      2,
+      2
+    ],
+    [
+      3,
+      3,
+      2,
+      2
+    ],
+    [
+      4,
+      3,
+      2,
+      2
+    ],
+    [
+      4,
+      3,
+      2,
+      2,
+      2
+    ]
+  ]
+}

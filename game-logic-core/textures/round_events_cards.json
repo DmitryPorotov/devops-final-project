@@ -1,0 +1,111 @@
+{
+  "deck1": [
+    {
+      "code": 0,
+      "title": "Supply",
+      "text": "Adjust supply track. Reconcile armies",
+      "numOfCards": 3
+    },
+    {
+      "code": 1,
+      "title": "Mustering",
+      "text": "Recruit new units in Strongholds and Castles",
+      "numOfCards": 3
+    },
+    {
+      "code": 2,
+      "title": "A Throne of Blades",
+      "text": "The holder of the Iron Throne token chooses whether; a) everyone updates their Supply then reconciles armies, b) everyone musters units, or c) this card has no effect",
+      "numOfCards": 2,
+      "hasWildling": true
+    },
+    {
+      "code": 3,
+      "title": "Winter is coming",
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card."
+    },
+    {
+      "code": 4,
+      "title": "Last Days of Summer",
+      "text": "Nothing happens.",
+      "hasWildling": true
+    }
+  ],
+  "deck2": [
+    {
+      "code": 0,
+      "title": "Game of Thrones",
+      "text": "Each player collects one Power token for each power icon printed of areas he controls.",
+      "numOfCards": 3
+    },
+    {
+      "code": 1,
+      "title": "Clash of Kings",
+      "text": "Bid on the three Influence tracks.",
+      "numOfCards": 3
+    },
+    {
+
+      "code": 2,
+      "title": "Draw Wings, Draw Words",
+      "text": "The holder of the Messenger Raven token chooses whether a) everyone bids on the three Influence tracks b) everyone collects one Power token for every power icon present in areas they control, or c) this card has no effect.",
+      "numOfCards": 2,
+      "hasWildling": true
+    },
+    {
+      "code": 3,
+      "title": "Winter is coming",
+      "text": "Immediately shuffle this deck. Then draw and resolve a new card."
+    },
+    {
+      "code": 4,
+      "title": "Last Days of Summer",
+      "text": "Nothing happens.",
+      "hasWildling": true
+    }
+  ],
+  "deck3": [
+    {
+      "code": 0,
+      "title": "Wildlings Attack",
+      "text": "The wildlings attack Westeros.",
+      "numOfCards": 3
+    },
+    {
+      "code": 1,
+      "title": "Put to the Sword",
+      "text": "The holder of the Valyrian Steel Sword chooses one of the following conditions for this Planning Phase: a) Defense Orders cannot be played b) March +1 Orders cannot be played, or c) no restrictions.",
+      "numOfCards": 2
+    },
+    {
+      "code": 2,
+      "title": "Rain of Autumn",
+      "text": "March +1 Orders cannot be played this Planning Phase.",
+      "hasWildling": true
+    },
+    {
+      "code": 3,
+      "title": "Web of Lies",
+      "text": "Support Orders cannot be played during this Planning Phase",
+      "hasWildling": true
+    },
+    {
+      "code": 4,
+      "title": "Storm of Swords",
+      "text": "Defense Orders cannot be played during theis Planning Phase.",
+      "hasWildling": true
+    },
+    {
+      "code": 5,
+      "title": "Feast for Crows",
+      "text": "Consolidate Power Orders cannot be played during this Planning Phase",
+      "hasWildling": true
+    },
+    {
+      "code": 6,
+      "title": "Sea of Storms",
+      "text": "Raid Orders cannot be played during this Planning Phase.",
+      "hasWildling": true
+    }
+  ]
+}

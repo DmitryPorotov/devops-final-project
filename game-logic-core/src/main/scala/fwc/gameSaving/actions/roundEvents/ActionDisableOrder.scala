@@ -1,0 +1,43 @@
+package fwc.gameSaving.actions.roundEvents
+
+import fwc.JsonSerializable
+import fwc.game.GameState
+import fwc.game.houses.HouseType
+import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
+import fwc.game.phases.roundEventsSubPhases.SubPhaseDisableOrder
+import fwc.game.planningPhase.*
+import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction}
+import ujson.Value
+
+case class ActionDisableOrder(
+                             gameState: GameState,
+                             orderType: OrderType,
+                           ) extends Action(gameState) with JsonSerializable {
+  override def doAction(): GameState = {
+//    if !gameState.subPhase.isInstanceOf[SubPhaseDisableOrder]
+//    then throw new ActionException("Wrong phase")
+
+    val updatedAvailAbleOrders =
+      if orderType == OrderMarch
+      then gameState.availableOrders.disableMarchPlusOneOrder()
+      else gameState.availableOrders.disableOrderType(orderType)
+
+    gameState.copy(
+      subPhase = SubPhaseAddOrder(HouseType.getSeqOfAll),
+      availableOrders = updatedAvailAbleOrders
+    )
+  }
+
+  override def toJson: Value = ujson.Obj(
+    Action.actionTypeJsonKey -> "disableOrder",
+    "orderType" -> orderType.toString
+  )
+}
+
+object ActionDisableOrder extends JsonParsableAction {
+  override def fromJson(gameState: GameState, json: Value): ActionDisableOrder =
+    ActionDisableOrder(
+      gameState,
+      OrderType.fromString(json("orderType").str)
+    )
+}

@@ -1,0 +1,35 @@
+package fwc.communication.messages
+
+import fwc.game.FWCException
+
+import scala.util.Try
+
+trait Message
+
+object Message {
+  def parse(str: String): Message = {
+    val json = ujson.read(str)
+
+    val userId = Try[Int](json.obj("userId").num.toInt) getOrElse (throw new FWCException("Message has no userId"))
+
+    val gameId = Try[String](json.obj("gameId").str) getOrElse null
+
+    val action = Try[String](json.obj("action").str) getOrElse (throw new FWCException("Message has no action"))
+
+    if (action != "create_game" && gameId == null)
+      throw new FWCException("Message has no gameId")
+
+    action match
+      case "create_game" => MessageCreateGame(userId)
+      case "join_game" => MessageJoinGame(
+        userId,
+        gameId,
+        null //TODO
+      )
+      case "try_join_game" => MessageTryJoinGame(userId, gameId)
+      case "game_action" => {
+        val gameAction = json("player_action")
+        MessageGameAction(userId, gameId, gameAction)
+      }
+  }
+}

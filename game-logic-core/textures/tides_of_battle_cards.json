@@ -1,0 +1,35 @@
+[
+  {
+    "code": 0,
+    "power": 0,
+    "numOfCards": 8
+  },
+  {
+    "code": 1,
+    "power": 0,
+    "death": true,
+    "numOfCards": 2
+  },
+  {
+    "code": 2,
+    "power": 1,
+    "defense": true,
+    "numOfCards": 4
+  },
+  {
+    "code": 3,
+    "power": 1,
+    "attack": true,
+    "numOfCards": 4
+  },
+  {
+    "code": 4,
+    "power": 2,
+    "numOfCards": 4
+  },
+  {
+    "code": 5,
+    "power": 3,
+    "numOfCards": 2
+  }
+]

@@ -1,0 +1,84 @@
+[
+  {
+    "code": 0,
+    "title": "Silence at the Wall",
+    "wildlingVictory": {
+      "lowestBidder": "Nothing happens.",
+      "everyoneElse": "Nothing happens."
+    },
+    "playersVictory": "Nothing happens."
+  },
+  {
+    "code": 1,
+    "title": "Rattleshirt's Raiders",
+    "wildlingVictory": {
+      "lowestBidder": "Is reduced 2 positions on the Supply track (to no lower than 0).",
+      "everyoneElse": "Is reduced 1 positions on the Supply track (to no lower than 0).",
+      "note": "Then reconcile armies to their new Supply limits."
+    },
+    "playersVictory": "Is increased 1 position on the Supply track (to no higher than 6)."
+  },
+  {
+    "code": 2,
+    "title": "Massing on the Milkwater",
+    "wildlingVictory": {
+      "lowestBidder": "If he has more than one House card in his hand, he discards all cards with the highest combat strength.",
+      "everyoneElse": "If they have more than one House card in their hand, they must choose and discard one of those cards."
+    },
+    "playersVictory": "Returns his entire House card discard pile into his hand."
+  },
+  {
+    "code": 3,
+    "title": "Mammoth Riders",
+    "wildlingVictory": {
+      "lowestBidder": "Destroys 3 of his units anywhere.",
+      "everyoneElse": "Destroys 2 of his units anywhere."
+    },
+    "playersVictory": "May retrieve 1 House card of his choice from his House card discard pile."
+  },
+  {
+    "code": 4,
+    "title": "Skinchanger Scout",
+    "wildlingVictory": {
+      "lowestBidder": "Discard all available Power tokens.",
+      "everyoneElse": "Discard 2 available Power tokens, or as many as they are able."
+    },
+    "playersVictory": "All Power tokens he bid on this attack are immediately returned to his available Power."
+  },
+  {
+    "code": 5,
+    "title": "Preemptive Raid",
+    "wildlingVictory": {
+      "lowestBidder": "Chooses one of the following: A. Destroy 2 of his units anywhere. B. Is reduced 2 positions on his highest Influence track.",
+      "everyoneElse": "Nothing happens."
+    },
+    "playersVictory": "The wildlings immediately attack again with a strength of 6. You do not participate in the bidding against this attack (nor do you receive any rewards or penalties)."
+  },
+  {
+    "code": 6,
+    "title": "The Horde Descends",
+    "wildlingVictory": {
+      "lowestBidder": "Destroys 2 of his units at one of his Castles or Strongholds. If unable, he destroys 2 of his units anywhere.",
+      "everyoneElse": "Destroys 1 of their units anywhere."
+    },
+    "playersVictory": "May muster forces (following normal mustering rules) in any one Castle or Stronghold area he controls."
+  },
+  {
+    "code": 7,
+    "title": "Crow Killers",
+    "wildlingVictory": {
+      "lowestBidder": "Replaces all of his Knights with available Footmen. Any Knight unable to be replaced is destroyed.",
+      "everyoneElse": "Replaces 2 of his Knights with available Footmen. Any Knight unable to be replaced is destroyed."
+    },
+    "playersVictory": "May immediately replace up to 2 of his Footmen, anywhere, with available Knights."
+  },
+  {
+    "code": 8,
+    "title": "A King Beyond the wall",
+    "wildlingVictory": {
+      "lowestBidder": "Moves his tokens to the lowest position of every Influence track.",
+      "everyoneElse": "In turn order, each player chooses either the Fiefdoms or King's Court Influence track and moves his token to the lowest position of that track."
+    },
+    "playersVictory": "Moves his token to the top of one Influence track of his choice, then takes the appropriate Dominance token."
+  }
+]

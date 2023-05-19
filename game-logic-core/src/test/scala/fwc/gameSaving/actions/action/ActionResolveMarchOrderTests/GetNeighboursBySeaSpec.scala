@@ -1,0 +1,34 @@
+package fwc.gameSaving.actions.action.ActionResolveMarchOrderTests
+
+import fwc.game.GameState
+import fwc.game.board.{MilitaryUnit, MilitaryUnitShips}
+import fwc.game.houses.HouseKraken
+import fwc.gameLoading
+import fwc.gameSaving.actions.action.ActionResolveMarchOrder
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should
+
+class GetNeighboursBySeaSpec extends AnyFlatSpec with should.Matchers {
+  "GetNeighboursBySea method" should "find neighbours" in {
+    val json = gameLoading.readJson("saves/forUnitTests/initGameState.json")
+    val gameState = GameState.fromJson(json)
+
+    val newGameState = gameState.copy(
+      armies =
+        gameState.armies + (10 -> Seq(MilitaryUnit(
+          HouseKraken,
+          MilitaryUnitShips
+        )))
+    )
+
+    val action = ActionResolveMarchOrder(newGameState, HouseKraken, 16, Map())
+    val n = action.getAllNeighboursBySea(16)
+    assert(n.size == 6)
+    assert(n.contains(11))
+    assert(n.contains(12))
+    assert(n.contains(16))
+    assert(n.contains(18))
+    assert(n.contains(24))
+    assert(n.contains(33))
+  }
+}
