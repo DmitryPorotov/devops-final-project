@@ -1,7 +1,13 @@
-import {Entity, Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, DeleteDateColumn} from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    DeleteDateColumn, CreateDateColumn, UpdateDateColumn,
+} from 'typeorm';
+import {BaseEntity} from "../../common/base.entity";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -37,12 +43,6 @@ export class User {
         default: false
     })
     isAdmin: boolean;
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-    @UpdateDateColumn()
-    updatedAt: Date;
 
     @DeleteDateColumn({
         nullable: true,

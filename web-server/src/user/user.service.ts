@@ -5,12 +5,16 @@ import * as constants from '../constants';
 import {QueryFailedError, Repository} from 'typeorm';
 import { User } from "./entities/user.entity";
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt'
+import {AuthCredentialsDto} from "../auth/dto/auth.credentials.dto";
+import {LoginUserDto} from "./dto/login-user.dto";
 
 @Injectable()
 export class UserService {
   constructor(
       @Inject(constants.USER_REPOSITORY)
-      private userRepository: Repository<User>
+      private userRepository: Repository<User>,
+      private jwtService: JwtService
   ) {
   }
 
@@ -46,8 +50,6 @@ export class UserService {
           oldUser.name = createUserDto.name;
           oldUser.password = hashed;
           oldUser.deletedAt = null;
-          oldUser.createdAt = new Date();
-          oldUser.updatedAt = new Date();
           oldUser.isEnabled = false;
           oldUser.passwordResetToken = null;
           oldUser.rememberToken = null;
@@ -68,6 +70,21 @@ export class UserService {
     });
   }
 
+  async login(authCredentialsDto: AuthCredentialsDto): Promise<LoginUserDto | null> {
+    const user = await this.userRepository.findOneBy({
+      email: authCredentialsDto.email
+    });
+    if (!user) return null;
+    const isValidLogin = await bcrypt.compare(authCredentialsDto.password, user.password)
+    if (isValidLogin) {
+      return {
+        email: authCredentialsDto.email,
+        name: user.name,
+        token: this.generateJWT(user)
+      }
+    }
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOneBy({
       id
@@ -85,4 +102,19 @@ export class UserService {
   async remove(id: number) {
     return this.userRepository.softRemove({id});
   }
+
+  public generateJWT(user: User) {
+    const today = new Date();
+    const exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+
+    return this.jwtService.sign({
+      sub: user.id,
+      username: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      isEnabled: user.isEnabled,
+      exp: exp.getTime() / 1000,
+    }, {secret: constants.SECRET});
+  };
 }

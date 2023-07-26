@@ -3,3 +3,5 @@ export const DATA_SOURCE = 'DATA_SOURCE_DEV';
 export const USER_REPOSITORY = 'USER_REPOSITORY';
 
 export const HASH_SALT_ROUNDS = 10;
+
+export const SECRET = 'bottom-secret';
