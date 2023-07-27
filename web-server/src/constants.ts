@@ -1,7 +1,8 @@
-export const DATA_SOURCE = 'DATA_SOURCE_DEV';
+export default {
+    DATA_SOURCE: 'DATA_SOURCE_DEV',
+    USER_REPOSITORY: 'USER_REPOSITORY',
+    LOBBY_REPOSITORY: 'LOBBY_REPOSITORY',
+    HASH_SALT_ROUNDS: 10,
+    JWT_SECRET: 'bottom-secret',
+};
 
-export const USER_REPOSITORY = 'USER_REPOSITORY';
-
-export const HASH_SALT_ROUNDS = 10;
-
-export const SECRET = 'bottom-secret';

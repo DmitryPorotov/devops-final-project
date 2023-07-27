@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as constants from '../constants';
+import constants from '../constants';
 import {QueryFailedError, Repository} from 'typeorm';
 import { User } from "./entities/user.entity";
 import * as bcrypt from 'bcrypt';
@@ -103,18 +103,18 @@ export class UserService {
     return this.userRepository.softRemove({id});
   }
 
-  public generateJWT(user: User) {
+  private generateJWT(user: User) {
     const today = new Date();
     const exp = new Date(today);
     exp.setDate(today.getDate() + 60);
 
     return this.jwtService.sign({
-      sub: user.id,
-      username: user.name,
+      id: user.id,
+      name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
       isEnabled: user.isEnabled,
       exp: exp.getTime() / 1000,
-    }, {secret: constants.SECRET});
+    }, {secret: constants.JWT_SECRET});
   };
 }

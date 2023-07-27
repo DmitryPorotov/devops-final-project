@@ -36,8 +36,9 @@ export class UserController {
   }
 
   @Patch()
+  @Roles('loggedIn')
   updateSelf(@Req() request: FastifyRequest, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(request['user'].sub, updateUserDto);
+    return this.userService.update(request['user'].id, updateUserDto);
   }
 
   @Delete(':id')

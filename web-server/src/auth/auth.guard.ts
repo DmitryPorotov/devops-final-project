@@ -2,7 +2,7 @@ import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from '
 import {Reflector} from "@nestjs/core";
 import {FastifyRequest} from 'fastify';
 import {JwtService} from "@nestjs/jwt";
-import {SECRET} from "../constants";
+import constants from "../constants";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,17 +22,18 @@ export class AuthGuard implements CanActivate {
             request.user = await this.jwtService.verifyAsync(
                 token,
                 {
-                    secret: SECRET
+                    secret: constants.JWT_SECRET
                 }
             );
         } catch {
             throw new UnauthorizedException();
         }
 
-        return !(
+        const rv = !(
             !request.user.isEnabled
-            || !request.user.isAdmin && roles.includes('admin')
+            || (!request.user.isAdmin && roles.includes('admin'))
         );
+        return rv;
 
     }
 

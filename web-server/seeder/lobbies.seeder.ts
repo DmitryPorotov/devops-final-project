@@ -1,0 +1,35 @@
+import {Seeder} from "nestjs-seeder";
+import {Inject, Injectable} from "@nestjs/common";
+import constants from "../src/constants";
+import {Repository} from "typeorm";
+import {Lobby} from "../src/lobby/entities/lobby.entity";
+import {User} from "../src/user/entities/user.entity";
+
+@Injectable()
+export class LobbiesSeeder implements Seeder {
+    constructor(
+        @Inject(constants.LOBBY_REPOSITORY)
+        private lobbyRepository: Repository<Lobby>
+    ) {
+    }
+
+    async drop(): Promise<any> {
+        return this.lobbyRepository.clear();
+    }
+
+    async seed(): Promise<any> {
+        const user = new User()
+        user.id = 1;
+        const lobby1 = new Lobby();
+        lobby1.name = 'test1';
+        lobby1.password = '1234';
+        lobby1.owner = user;
+
+        const lobby2 = new Lobby();
+        lobby2.name = 'test2';
+        lobby2.owner = user;
+
+        return this.lobbyRepository.insert([lobby1, lobby2]);
+    }
+
+}

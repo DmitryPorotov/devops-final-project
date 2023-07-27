@@ -15,7 +15,7 @@ describe('AuthController', () => {
         await app.close();
     });
 
-    it('POST /auth/signup', () => {
+    test('POST /auth/signup', () => {
         return request(app.getHttpServer())
             .post('/auth/signup')
             .send({
@@ -26,7 +26,7 @@ describe('AuthController', () => {
             .expect(201);
     });
 
-    it('POST /auth/login', () => {
+    test('POST /auth/login', () => {
        return request(app.getHttpServer())
            .post('/auth/login')
            .send({

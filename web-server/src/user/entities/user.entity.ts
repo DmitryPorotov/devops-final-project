@@ -2,9 +2,10 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    DeleteDateColumn, CreateDateColumn, UpdateDateColumn,
+    DeleteDateColumn, OneToMany, ManyToMany,
 } from 'typeorm';
 import {BaseEntity} from "../../common/base.entity";
+import {Lobby} from "../../lobby/entities/lobby.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -44,8 +45,9 @@ export class User extends BaseEntity {
     })
     isAdmin: boolean;
 
-    @DeleteDateColumn({
-        nullable: true,
-    })
-    deletedAt?: Date;
+    @OneToMany(() => Lobby, (lobby) => lobby.owner)
+    ownedLobbies: Lobby[];
+
+    @ManyToMany(() => Lobby, (lobby) => lobby.participants)
+    lobbies: Lobby[];
 }

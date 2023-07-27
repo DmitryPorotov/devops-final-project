@@ -14,7 +14,7 @@ describe('AppController', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
+  test('/ (GET)', () => {
     return request(app.getHttpServer())
         .get('/')
         .expect(200)

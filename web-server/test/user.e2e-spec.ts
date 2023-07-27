@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import {User} from "../src/user/entities/user.entity";
-import initApp, {getAdminToken} from './init-app';
+import initApp, {getAdminToken, getUserToken} from './init-app';
 
 describe('UserController', () => {
     let app: INestApplication;
@@ -16,7 +16,7 @@ describe('UserController', () => {
         await app.close();
     });
 
-    it('GET /user/1', async () => {
+    test('GET /user/1', async () => {
         return request(app.getHttpServer())
             .get('/user/1')
             .auth(adminToken, { type: "bearer" })
@@ -27,7 +27,7 @@ describe('UserController', () => {
             });
     });
 
-    it('GET /user/2', () => {
+    test('GET /user/2', () => {
         return request(app.getHttpServer())
             .get('/user/3')
             .auth(adminToken, { type: "bearer" })
@@ -37,7 +37,7 @@ describe('UserController', () => {
             })
     });
 
-    it('POST /user', () => {
+    test('POST /user', () => {
         return request(app.getHttpServer())
             .post('/user')
             .auth(adminToken, { type: "bearer" })
@@ -55,11 +55,24 @@ describe('UserController', () => {
             });
     });
 
-    it('DELETE /user', () => {
+    test('DELETE /user', () => {
         return request(app.getHttpServer())
             .delete('/user/3')
             .auth(adminToken, { type: "bearer" })
             .expect(200);
+    });
+
+    test('PATCH /user', async () => {
+        const userToken = await getUserToken(app);
+        return request(app.getHttpServer())
+            .patch('/user')
+            .auth(userToken, { type: "bearer" })
+            .send({name: 'newUserName1'})
+            .expect(200)
+            .expect(r => {
+                const b: User = r.body;
+                expect(b.name).toBe('newUserName1');
+            });
     });
 
 });

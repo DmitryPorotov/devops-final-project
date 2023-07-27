@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
-import * as consts from '../constants';
+import constants from '../constants';
 
 export const databaseProviders = [
     {
-        provide: consts.DATA_SOURCE,
+        provide: constants.DATA_SOURCE,
         useFactory: async () => {
             const dataSource = new DataSource({
                 type: 'mysql',

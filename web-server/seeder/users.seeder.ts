@@ -1,7 +1,7 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {Seeder} from "nestjs-seeder";
 import {User} from "../src/user/entities/user.entity";
-import * as constants from "../src/constants";
+import constants from "../src/constants";
 import {Repository} from "typeorm";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UsersSeeder implements Seeder {
     async seed(): Promise<any> {
         const user = new User();
         user.email = 'a@b.com';
-        user.password = '$2b$10$lZhQp13Dw3mzkGbnO8pbCOd4zObY7fH42Cp4jX93/U8w8amSuE46a';
+        user.password = '$2b$10$6APgQoKKgyAjZ0eZGDVzv.fWfLzSiUbJ3uD8RJ9M6muxaPSnjfzn2';
         user.name = 'user1';
         user.isEnabled = true;
 
