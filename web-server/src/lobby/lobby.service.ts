@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {ConflictException, Inject, Injectable} from '@nestjs/common';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
 import {Repository} from "typeorm";
@@ -19,7 +19,7 @@ export class LobbyService {
       where: {name: createLobbyDto.name}
     });
     if (sameName.length) {
-      throw new Error('Lobby with this name already exists');
+      throw new ConflictException('Lobby with this name already exists');
     }
     const lobby = new Lobby();
     lobby.participants = [];
@@ -30,8 +30,12 @@ export class LobbyService {
     return await this.lobbyRepository.save(lobby)
   }
 
-  findAll() {
-    return `This action returns all lobby`;
+  async findAll() {
+    return await this.lobbyRepository.find({
+      relations: {
+        participants: true
+      }
+    });
   }
 
   findOne(id: number) {

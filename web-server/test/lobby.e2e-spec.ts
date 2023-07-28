@@ -15,7 +15,7 @@ describe('LobbiesController', () => {
         await app.close();
     });
 
-    it('POST /lobby', () => {
+    test('POST /lobby', () => {
         return request(app.getHttpServer())
             .post('/lobby')
             .auth(userToken, { type: "bearer" })
@@ -29,6 +29,17 @@ describe('LobbiesController', () => {
                 expect(b.name).toBe('myLobby');
                 expect(typeof b.id).toBe('number');
             });
+    });
+
+    test('GET /lobby', () => {
+        return request(app.getHttpServer())
+            .get('/lobby')
+            .auth(userToken, { type: "bearer" })
+            .expect(200)
+            .expect(r => {
+                const b = r.body;
+                expect(b.length).toBeGreaterThanOrEqual(2);
+            })
     });
 
 });

@@ -19,10 +19,13 @@ export class Lobby extends BaseEntity {
     })
     password?: string;
 
-    @ManyToOne(() => User, (user) => user.ownedLobbies, {createForeignKeyConstraints: false})
-    @Column({
-        type: "int"
-    })
+    @ManyToOne(
+        () => User,
+        (user) => user.ownedLobbies,
+        {
+            createForeignKeyConstraints: false,
+            nullable: false
+        })
     owner: User;
 
     @ManyToMany(() => User, (user) => user.lobbies, {createForeignKeyConstraints: false})
