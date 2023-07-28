@@ -34,6 +34,14 @@ export class LobbyService {
     return await this.lobbyRepository.find({
       relations: {
         participants: true
+      },
+      select: {
+        id: true,
+        name: true,
+        participants: {
+          id: true,
+          name: true
+        }
       }
     });
   }

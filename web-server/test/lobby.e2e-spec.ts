@@ -39,7 +39,11 @@ describe('LobbiesController', () => {
             .expect(r => {
                 const b = r.body;
                 expect(b.length).toBeGreaterThanOrEqual(2);
-            })
+            });
+    });
+
+    test('PATCH /lobby/1', () => {
+
     });
 
 });

@@ -23,6 +23,7 @@ export class LobbiesSeeder implements Seeder {
     async seed(): Promise<any> {
         const user = new User();
         user.id = 1;
+
         const lobby1 = new Lobby();
         lobby1.name = 'test1';
         lobby1.password = '1234';
@@ -36,7 +37,7 @@ export class LobbiesSeeder implements Seeder {
         lobby2.participants = [];
         lobby2.participants.push(user);
 
-        return await this.lobbyRepository.insert([lobby1, lobby2]);
+        return await this.lobbyRepository.save([lobby1, lobby2]);
     }
 
 }

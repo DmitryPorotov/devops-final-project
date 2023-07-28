@@ -19,6 +19,12 @@ export class UsersSeeder implements Seeder {
         user.name = 'user1';
         user.isEnabled = true;
 
+        const user2 = new User();
+        user2.email = 'b@b.com';
+        user2.password = '$2b$10$6APgQoKKgyAjZ0eZGDVzv.fWfLzSiUbJ3uD8RJ9M6muxaPSnjfzn2';
+        user2.name = 'user2';
+        user2.isEnabled = true;
+
         const admin = new User();
         admin.email = 'admin@b.com';
         admin.password = '$2b$10$zZ19qsEcXp6XbZBsya.j2ObBPmjN4OdOHzteLXoc..Ug2urCFiI5.';
@@ -26,7 +32,7 @@ export class UsersSeeder implements Seeder {
         admin.isAdmin = true;
         admin.isEnabled = true;
 
-        return this.userRepository.insert([user, admin]);
+        return this.userRepository.insert([user, user2, admin]);
     }
 
     async drop(): Promise<any> {
