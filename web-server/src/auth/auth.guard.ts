@@ -9,8 +9,10 @@ export class AuthGuard implements CanActivate {
     constructor(private reflector: Reflector, private jwtService: JwtService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const roles = this.reflector.get<string[]>('roles', context.getHandler());
-        if (!roles) {
+        const actionRoles = this.reflector.get<string[]>('roles', context.getHandler());
+        const controllerRoles = this.reflector.get<string[]>('roles', context.getClass());
+        const rolesToUse = actionRoles?.length ? actionRoles : controllerRoles;
+        if (!rolesToUse) {
             return true;
         }
         const request = context.switchToHttp().getRequest();
@@ -29,11 +31,10 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const rv = !(
+        return !(
             !request.user.isEnabled
-            || (!request.user.isAdmin && roles.includes('admin'))
+            || (!request.user.isAdmin && rolesToUse.includes('admin'))
         );
-        return rv;
 
     }
 

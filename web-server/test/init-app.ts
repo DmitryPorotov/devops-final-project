@@ -33,9 +33,17 @@ export const getUserToken = async (app): Promise<string> => {
     });
 };
 
+export const getUser2Token = async (app): Promise<string> => {
+    return await doLogin(app, {
+        email: 'b@b.com',
+        password: '12345678'
+    });
+};
+
 const doLogin = async (app, credentials: AuthCredentialsDto) => {
     const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(credentials);
     return response.body.token
 };
+

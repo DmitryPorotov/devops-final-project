@@ -4,6 +4,7 @@ import {IsNotEmpty, Length} from "class-validator";
 export class CreateLobbyDto {
     @ApiProperty()
     @IsNotEmpty()
+    @Length(5)
     name: string;
 
     @ApiProperty()

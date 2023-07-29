@@ -1,5 +1,5 @@
 import {INestApplication} from "@nestjs/common";
-import initApp, {getUserToken} from "./init-app";
+import initApp, {getUserToken, getUser2Token} from "./init-app";
 import * as request from "supertest";
 
 describe('LobbiesController', () => {
@@ -43,7 +43,47 @@ describe('LobbiesController', () => {
     });
 
     test('PATCH /lobby/1', () => {
+        return request(app.getHttpServer())
+            .patch('/lobby/1')
+            .auth(userToken, { type: "bearer" })
+            .send({
+                name: 'newName',
+                password: '4321'
+            })
+            .expect(200)
+            .expect(r => {
+                const b = r.body;
+                expect(b.name).toBe('newName');
+                expect(b.password).toBe('4321')
+            });
+    });
 
+    test('PATCH /lobby/1/join', async () => {
+        return request(app.getHttpServer())
+            .patch('/lobby/1/join')
+            .auth(await getUser2Token(app), { type: "bearer" })
+            .send({
+                password: '4321'
+            })
+            .expect(200)
+            .expect(r => {
+                const b = r.body;
+                expect(b.participants.length).toBeGreaterThanOrEqual(2);
+            });
+    });
+
+    test('PATCH /lobby/1/leave', async () => {
+        return request(app.getHttpServer())
+            .patch('/lobby/1/leave')
+            .auth(await getUser2Token(app), { type: "bearer" })
+            .send({
+                password: '4321'
+            })
+            .expect(200)
+            .expect(r => {
+                const b = r.body;
+                expect(b.participants.length).toBe(1);
+            });
     });
 
 });
