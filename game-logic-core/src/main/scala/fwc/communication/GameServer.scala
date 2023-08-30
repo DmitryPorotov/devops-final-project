@@ -9,7 +9,7 @@ object GameServer {
     val context = ZMQ.context(1)
 
     val socket = context.socket(ZMQ.REP)
-    socket.bind("tcp://127.0.0.1:5555")
+    socket.bind("tcp://0.0.0.0:5555")
 
     val poller = new PollItem(socket, 7)
 
