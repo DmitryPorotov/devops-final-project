@@ -75,9 +75,10 @@ export class UserService {
       email: authCredentialsDto.email
     });
     if (!user) return null;
-    const isValidLogin = await bcrypt.compare(authCredentialsDto.password, user.password)
+    const isValidLogin = await bcrypt.compare(authCredentialsDto.password, user.password);
     if (isValidLogin) {
       return {
+        id: user.id,
         email: authCredentialsDto.email,
         name: user.name,
         token: this.generateJWT(user)

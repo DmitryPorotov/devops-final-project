@@ -1,0 +1,22 @@
+body {
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 15rem;
+    margin: auto;
+}
+.login-form .form-field {
+    margin: .5rem 0;
+}
+
+.login-form .form-field > * {
+    margin: .2rem 0;
+}

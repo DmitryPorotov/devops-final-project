@@ -3,6 +3,7 @@ import {Reflector} from "@nestjs/core";
 import {FastifyRequest} from 'fastify';
 import {JwtService} from "@nestjs/jwt";
 import constants from "../constants";
+import {LoginUserDto} from "../user/dto/login-user.dto";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,12 +17,18 @@ export class AuthGuard implements CanActivate {
             return true;
         }
         const request = context.switchToHttp().getRequest();
-        const token = AuthGuard.extractTokenFromHeader(request);
+        const token = AuthGuard.extractToken(request);
         if (!token) {
             throw new UnauthorizedException();
         }
+        request.user = await this.getUser(token);
+
+        return request.user.isEnabled && (request.user.isAdmin || !rolesToUse.includes('admin'));
+    }
+
+    async getUser(token: string): Promise<LoginUserDto | null> {
         try {
-            request.user = await this.jwtService.verifyAsync(
+            return await this.jwtService.verifyAsync(
                 token,
                 {
                     secret: constants.JWT_SECRET
@@ -30,16 +37,11 @@ export class AuthGuard implements CanActivate {
         } catch {
             throw new UnauthorizedException();
         }
-
-        return !(
-            !request.user.isEnabled
-            || (!request.user.isAdmin && rolesToUse.includes('admin'))
-        );
-
     }
 
-    private static extractTokenFromHeader(request: FastifyRequest): string | undefined {
+    private static extractToken(request: FastifyRequest): string | undefined {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type === 'Bearer' ? token : undefined;
+        if (type === 'Bearer') return token;
+        else return request.query['_token'];
     }
 }

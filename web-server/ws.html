@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="application/javascript">
+    const user = fetch('http://127.0.0.1:3001/auth/login', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: 'a@b.com',
+            password: "12345678"
+        })
+    }).then(async (data) => {
+        const user = await data.json();
+        const exampleSocket = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`, "events");
+        exampleSocket.onmessage = (event) => {
+            event.data.text().then(
+                t => console.log("message:" + t)
+            );
+        };
+        exampleSocket.onopen = (event) => {
+            console.log("on open: ", event);
+            // exampleSocket.send('{"action": "hello", "type": "test", "userId": 0}')
+            exampleSocket.send('{"type": "chat", "lobbyId": 2, "body":{"type":"create"}}')
+        };
+    });
+
+
+</script>
+</body>
+</html>

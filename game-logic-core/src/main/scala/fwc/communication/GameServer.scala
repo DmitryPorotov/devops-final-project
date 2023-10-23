@@ -1,20 +1,50 @@
 package fwc.communication
+import com.rabbitmq.client.*
+import fwc.communication.messages.Message
 
-import org.zeromq.{ZLoop, ZMQ}
-import org.zeromq.ZMQ.{Context, PollItem, Poller, Socket}
+
+//import org.zeromq.{ZLoop, ZMQ}
+//import org.zeromq.ZMQ.{Context, PollItem, Poller, Socket}
 
 object GameServer {
 
+  private val TO_WORKERS_EXCHANGE = "to_workers"
+  private val FROM_WORKERS_EXCHANGE = "from_workers"
   def start(): Unit = {
-    val context = ZMQ.context(1)
+    val rabbitHost =
+      if System.getenv("RABBIT_HOST") == null
+      then "localhost"
+      else System.getenv("RABBIT_HOST")
 
-    val socket = context.socket(ZMQ.REP)
-    socket.bind("tcp://0.0.0.0:5555")
+    val factory = new ConnectionFactory()
+    factory.setHost(rabbitHost)
+    println("Trying to connect to " + factory.getHost + ":" + factory.getPort)
+    val connection: Connection = factory.newConnection()
+    val channel: Channel = connection.createChannel()
 
-    val poller = new PollItem(socket, 7)
+    channel.exchangeDeclare(TO_WORKERS_EXCHANGE, "topic")
+    channel.exchangeDeclare(FROM_WORKERS_EXCHANGE, "topic")
+    val queueName = channel.queueDeclare.getQueue
+    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "new_game.*")
+    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "worker1.*")
 
-    val loop = new ZLoop()
-    loop.addPoller(poller, MessageHandlerWrapper(Reactor.apply), null)
-    loop.start()
+    channel.basicConsume(queueName, true, (consumerTag, delivery: Delivery) => {
+      val message = new String(delivery.getBody, "UTF-8")
+      println(" [x] Received '" + message + "'")
+      val reply = Reactor.apply(message)
+      println(" [x] Sent '" + reply + "'")
+      val serverName = delivery.getEnvelope.getRoutingKey.split('.')(1)
+      channel.basicPublish(FROM_WORKERS_EXCHANGE, serverName + ".worker1", null, reply.getBytes("UTF-8"))
+    }, consumerTag => {})
+    //    val context = ZMQ.context(1)
+//
+//    val socket = context.socket(ZMQ.REP)
+//    socket.bind("tcp://0.0.0.0:5555")
+//
+//    val poller = new PollItem(socket, 7)
+//
+//    val loop = new ZLoop()
+//    loop.addPoller(poller, MessageHandlerWrapper(Reactor.apply), null)
+//    loop.start()
   }
 }

@@ -47,7 +47,7 @@ export class LobbyController {
       @Param('id') id: string,
       @Req() request: FastifyRequest
   ) {
-    return this.lobbyService.leave(+id, request['user'] as User)
+    return this.lobbyService.leave(+id, (request['user'] as User).id)
   }
 
   @Patch(':id')

@@ -6,11 +6,11 @@ import fwc.game.GameState
 import java.util.UUID
 
 object ReactionCreateGame {
-  def apply(userId: Int): (String, GameSettings, GameState) = {
-    val gameId = UUID.randomUUID().toString
+  def apply(userId: Int, gameId: String): (String, GameSettings, GameState) = {
+    val finalGameId = if gameId.isBlank then UUID.randomUUID().toString else gameId
     val randomEventsServerSide = true
     val settings = GameSettings(
-      gameId,
+      finalGameId,
       userId,
       false,
       false,
@@ -19,6 +19,6 @@ object ReactionCreateGame {
       None
     )
     val state = fwc.game.initializeGameState(randomEventsServerSide)
-    (gameId, settings, state)
+    (finalGameId, settings, state)
   }
 }

@@ -1,4 +1,4 @@
-import {ConflictException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
+import {ConflictException, ForbiddenException, Inject, Injectable} from '@nestjs/common';
 import {CreateLobbyDto} from './dto/create-lobby.dto';
 import {UpdateLobbyDto} from './dto/update-lobby.dto';
 import {DataSource, Repository} from "typeorm";
@@ -60,7 +60,13 @@ export class LobbyService {
   }
 
   async findAll() {
-    return await this.lobbyRepository.find(this.selectJoinOpt);
+    const lobbies = await this.lobbyRepository.find(this.selectJoinOpt);
+    return lobbies.map(LobbyService.censorPassword)
+  }
+
+  private static censorPassword(lobby: Lobby): Lobby {
+    if (lobby?.password) lobby.password = '*';
+    return lobby;
   }
 
   private selectJoinOpt: FindOneOptions<Lobby> = {
@@ -71,6 +77,7 @@ export class LobbyService {
     select: {
       id: true,
       name: true,
+      password: true,
       owner: {
         id: true,
         name: true
@@ -89,11 +96,12 @@ export class LobbyService {
     }
   };
 
-  async findOne(id: number) {
-    return await this.lobbyRepository.findOne({
+  async findOne(id: number): Promise<Lobby> {
+    const lobby = await this.lobbyRepository.findOne({
       where: {id},
       ...this.selectJoinOpt
     });
+    return LobbyService.censorPassword(lobby);
   }
 
   async join(id: number, joinLobbyDto: JoinLobbyDto, user: User) {
@@ -103,35 +111,52 @@ export class LobbyService {
         where: {id}
       });
       if (lobby.participants.filter(u => u.id == user.id).length) {
-        throw new ConflictException('You have joined this lobby already.');
+        return LobbyService.censorPassword(lobby);
       }
       if (lobby.participants.length > 5) {
         throw new ConflictException('The lobby is full.')
       }
       if (lobby.password && lobby.password != joinLobbyDto.password) {
-        throw new UnauthorizedException('The password for lobby is incorrect.');
+        throw new ForbiddenException('The password for lobby is incorrect.');
       }
       lobby.participants.push({id: user.id, name: user.name} as User);
-      return lobbyRepository.save(lobby);
+      return await lobbyRepository.save(lobby);
     });
   }
 
-  async leave(id: number, user: User) {
+  async leave(id: number, userId: number) {
     return this.transactionWrapper(async lobbyRepository => {
       const lobby = await lobbyRepository.findOne({
         ...this.selectJoinLockOpt,
         where: {id},
       });
-      if (!lobby.participants.filter(u => u.id == user.id).length) {
+      if (!lobby.participants.filter(u => u.id === userId).length) {
         throw new ConflictException('You are not in this lobby.');
       }
-      lobby.participants = lobby.participants.filter(u => u.id != user.id);
+      lobby.participants = lobby.participants.filter(u => u.id !== userId);
       if (!lobby.participants.length) {
-        return await this.remove(id, user, lobbyRepository);
+        return await this.remove(id, {id: userId} as User, lobbyRepository);
       }
-      if (lobby.owner.id === user.id) {
+      if (lobby.owner.id === userId) {
         lobby.owner = lobby.participants[0];
       }
+      return lobbyRepository.save(lobby);
+    });
+  }
+
+  async kick(id: number, ownerId: number, kicked: number) {
+    return this.transactionWrapper(async lobbyRepository => {
+      const lobby = await lobbyRepository.findOne({
+        ...this.selectJoinLockOpt,
+        where: {id},
+      });
+      if (lobby.owner.id !== ownerId) {
+        throw new ConflictException('You are not the owner of this lobby.');
+      }
+      if (!lobby.participants.find(u => u.id === kicked)) {
+        throw new ConflictException(`User ${kicked} is not in this lobby.`);
+      }
+      lobby.participants = lobby.participants.filter(u => u.id !== kicked);
       return lobbyRepository.save(lobby);
     });
   }
@@ -142,7 +167,7 @@ export class LobbyService {
       lobby.name = updateLobbyDto.name ?? lobby.name;
       lobby.password = updateLobbyDto.password ?? lobby.password;
     }
-    else throw new UnauthorizedException("You don't have permissions to edit this lobby.");
+    else throw new ForbiddenException("You don't have permissions to edit this lobby.");
     await this.lobbyRepository.save(lobby);
     return {
       id: lobby.id,
@@ -154,7 +179,7 @@ export class LobbyService {
   async remove(id: number, user: User, lobbyRepository?: Repository<Lobby>) {
     const lobby = await this.findOne(id);
     if (lobby.owner.id != user.id || !user.isAdmin) {
-      throw new UnauthorizedException("You don't have permissions to delete this lobby.");
+      throw new ForbiddenException("You don't have permissions to delete this lobby.");
     }
     return await (lobbyRepository || this.lobbyRepository).softRemove(lobby);
   }
