@@ -17,7 +17,7 @@ class Websocket {
     static async init(playerId) {
         if (!this.isInit) {
             this.isInit = true;
-            window.mywebsoc= this;
+            window.mywebsoc = this;
         }
         else return;
 

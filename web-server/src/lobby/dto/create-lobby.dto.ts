@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {IsNotEmpty, Length} from "class-validator";
+import { IsNotEmpty, IsOptional, Length } from "class-validator"
 
 export class CreateLobbyDto {
     @ApiProperty()
@@ -8,7 +8,7 @@ export class CreateLobbyDto {
     name: string;
 
     @ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     @Length(4)
-    password: string;
+    password?: string;
 }

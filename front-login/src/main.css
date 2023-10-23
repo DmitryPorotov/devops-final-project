@@ -7,16 +7,16 @@ h1 {
 }
 
 
-.login-form {
+.the-form {
     display: flex;
     flex-direction: column;
     max-width: 15rem;
     margin: auto;
 }
-.login-form .form-field {
+.the-form .form-field {
     margin: .5rem 0;
 }
 
-.login-form .form-field > * {
+.the-form .form-field > * {
     margin: .2rem 0;
 }

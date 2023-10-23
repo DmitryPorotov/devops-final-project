@@ -8,9 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Api from "../http/api";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "../App";
 import {serverIsDeadHandler} from "./common/GlobalErrorHandlers";
+import Button from "@mui/material/Button";
+import CreateLobbyForm from "./CreateLobbyForm";
 
 const columns = [
     { id: 'name', label: 'Name', minWidth: 170 },
@@ -40,6 +42,8 @@ const Lobbies = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const navigate =  useNavigate();
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -50,6 +54,17 @@ const Lobbies = () => {
     };
 
     const [rows, setRows] = useState([]);
+
+    const [showCreateLobby, setShowCreateLobby] = useState(false);
+
+    const handleShowCreateLobby = () => {
+        setShowCreateLobby(true);
+    };
+
+    const onCreateLobbySuccess = (lobby) => {
+        setShowCreateLobby(false);
+        navigate('/lobby/' + lobby.id);
+    };
 
     const auth = useContext(AuthContext);
 
@@ -92,6 +107,11 @@ const Lobbies = () => {
 
     return (
         <>
+            <Button
+                variant={"outlined"}
+                type={'button'}
+                onClick={handleShowCreateLobby}
+            >Create lobby</Button>
             <Paper sx={{width: '100%', overflow: 'hidden'}}>
                 <TableContainer sx={{maxHeight: 440}}>
                     <Table stickyHeader aria-label="sticky table">
@@ -140,6 +160,9 @@ const Lobbies = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
+            {showCreateLobby &&
+                <CreateLobbyForm onSuccess={onCreateLobbySuccess}/>
+            }
         </>
     );
 };
