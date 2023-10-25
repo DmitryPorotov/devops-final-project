@@ -9,6 +9,7 @@ const InputField = ({
                         errorMessages,
                         type,
                         name,
+                        isAutofocus,
                     }) => {
 
     if (!type) type = "text";
@@ -23,6 +24,7 @@ const InputField = ({
                 value={value}
                 type={type}
                 name={name}
+                autoFocus={isAutofocus}
             />
             {errorMessages && errorMessages.length > 0 &&
                 errorMessages.map((e, i) =>

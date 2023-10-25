@@ -8,6 +8,7 @@ import Lobby from "./Pages/Lobby";
 import {Outlet} from "react-router";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Websocket from "./http/websocket";
 
 const RoutesWrapper = () => {
     const auth = useContext(AuthContext);
@@ -74,28 +75,38 @@ const router = createBrowserRouter([
 
 export const AuthContext = createContext({});
 
+export const WsContext = createContext({});
+
 const App = () => {
     const [isLoginShown, setIsLoginShown] = useState(false);
-
+    const [lobbyData, setLobbyData] = useState();
     const storeUser = useCallback(result => {
         window.sessionStorage.setItem('_user',  JSON.stringify(result));
     },[]);
 
-    const contextValue = useMemo(() => ({
+    const authContextValue = useMemo(() => ({
         storeUser,
         setIsLoginShown,
         isLoginShown,
         loginCallback: null,
-        globalError: null
+        globalError: null,
     }), [storeUser, setIsLoginShown, isLoginShown]);
+
+    const wsContextValue = {
+        websocket: Websocket,
+        lobbyData,
+        setLobbyData
+    };
 
     return (
         <>
-            <AuthContext.Provider value={contextValue}>
-            <h1 >
-                Hello! Welcome to Table Games!
-            </h1>
-            <RouterProvider router={router}/>
+            <AuthContext.Provider value={authContextValue}>
+                <WsContext.Provider value={wsContextValue}>
+                    <h1 >
+                        Hello! Welcome to Table Games!
+                    </h1>
+                    <RouterProvider router={router}/>
+                </WsContext.Provider>
             </AuthContext.Provider>
         </>
 )

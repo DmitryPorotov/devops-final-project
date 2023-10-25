@@ -62,13 +62,12 @@ export class RabbitMqService {
             if (this.isInit) {
                 resolve(true)
             } else {
-                const interval = setInterval(()=> {
+                const interval = setInterval(() => {
                     if (this.isInit) {
                         clearInterval(interval);
                         resolve(true)
                     }
                 }, 2)
-
             }
         })
     }

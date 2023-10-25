@@ -52,6 +52,7 @@ class WebsocketService {
                     await this.lobbyManagerService.kick(client, message);
                     break;
                 }
+                case "edit":
                 case "message": {
                     await this.lobbyManagerService.message(client, message);
                     break;

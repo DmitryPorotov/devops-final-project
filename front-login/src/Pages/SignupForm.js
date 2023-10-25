@@ -5,12 +5,16 @@ import {Link} from "react-router-dom";
 
 
 const SignupForm = () => {
+
+    /**
+     * @type {{getBody(): string, getEmailAndPassword: function, onFailure(*): void, url: string, onSuccess(*): void}}
+     */
     const fetchOptions = {
         url: '/auth/signup',
         getBody() {
             return JSON.stringify({
                 name,
-                ...getEmailAndPassword.func()
+                ...this.getEmailAndPassword()
             });
         },
         onSuccess(result) {
@@ -18,11 +22,11 @@ const SignupForm = () => {
         },
         onFailure(messages) {
             setNameErrors(messages.n);
-        }
+        },
+        getEmailAndPassword: null
     };
     const [name, setName] = useState('');
     const [nameErrors, setNameErrors] = useState([]);
-    const getEmailAndPassword = {};
     return (
         <BaseLoginSignupForm
             formTitle={"Sign up"}
@@ -36,7 +40,6 @@ const SignupForm = () => {
                     errorMessages={nameErrors}
                 />
             }
-            returnMailAndPassword={getEmailAndPassword}
             fetchOptions={fetchOptions}
             link={<Link to={'/'}>To login</Link>}
         />

@@ -3,6 +3,7 @@ import { MessageInterface } from "./messages/message.interface"
 import LobbyManagerService from "./lobby-manager.service"
 import { Lobby } from "../lobby/entities/lobby.entity"
 import { ConflictException } from "@nestjs/common"
+import { ChatMessageInterface } from "./messages/chat-message.interface"
 
 
 export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
@@ -13,6 +14,19 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
         descriptor.value = async function (this: LobbyManagerService, client: WebsocketWithUserInterface, message: MessageInterface, lobby: Lobby = null) {
             await this.init();
             const lobbyEntity = await this.getLobbyIfIsParticipant(message, client.user);
+            if (client.user.id !== message.from) {
+                const error: MessageInterface = {
+                    type: 'error',
+                    messageId: message.messageId,
+                    lobbyId: message.lobbyId,
+                    body: {
+                        type: 'error',
+                        body: 'message is corrupt'
+                    }
+                }
+                client.send(JSON.stringify(error))
+                return
+            }
             if (lobbyEntity &&
                 (
                     !ownerOnly
@@ -25,16 +39,23 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
             ) {
                 try {
                     await original.call(this, client, message, lobbyEntity);
+                    const body: ChatMessageInterface = {
+                        type: message.body?.type,
+                        body: message.body?.body,
+                        to: message.body?.to
+                    };
+                    if (message.body.deletePassword != null) {
+                        body.deletePassword = message.body.deletePassword;
+                    }
+                    if (message.body.lobbyName) {
+                        body.lobbyName = message.body.lobbyName;
+                    }
                     await this.rabbitMqService.sendToChat(lobbyEntity.id, {
                         messageId: message.messageId,
                         type: 'chat',
                         from: client.user.id,
                         lobbyId: message.lobbyId,
-                        body: {
-                            type: message.body?.type,
-                            body: message.body?.body,
-                            to: message.body?.to
-                        }
+                        body
                     })
                 }
                 catch (e) {

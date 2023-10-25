@@ -122,6 +122,7 @@ const Lobbies = () => {
                                         key={column.id}
                                         align={column.align}
                                         style={{minWidth: column.minWidth}}
+                                        component={'th'}
                                     >
                                         {column.label}
                                     </TableCell>

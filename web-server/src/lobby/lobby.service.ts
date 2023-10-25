@@ -134,11 +134,11 @@ export class LobbyService {
         throw new ConflictException('You are not in this lobby.');
       }
       lobby.participants = lobby.participants.filter(u => u.id !== userId);
+      if (lobby.participants.length && lobby.owner.id === userId) {
+        lobby.owner = lobby.participants[0];
+      }
       if (!lobby.participants.length) {
         return await this.remove(id, {id: userId} as User, lobbyRepository);
-      }
-      if (lobby.owner.id === userId) {
-        lobby.owner = lobby.participants[0];
       }
       return lobbyRepository.save(lobby);
     });
@@ -165,20 +165,24 @@ export class LobbyService {
     const lobby = await this.findOne(id);
     if (user.id === lobby.owner.id || user.isAdmin) {
       lobby.name = updateLobbyDto.name ?? lobby.name;
-      lobby.password = updateLobbyDto.password ?? lobby.password;
+      if (updateLobbyDto.deletePassword) {
+        lobby.password = null;
+      } else {
+        lobby.password = updateLobbyDto.password ?? lobby.password;
+      }
     }
     else throw new ForbiddenException("You don't have permissions to edit this lobby.");
     await this.lobbyRepository.save(lobby);
     return {
       id: lobby.id,
       name: lobby.name,
-      password: lobby.password
+      // password: lobby.password
     }
   }
 
   async remove(id: number, user: User, lobbyRepository?: Repository<Lobby>) {
     const lobby = await this.findOne(id);
-    if (lobby.owner.id != user.id || !user.isAdmin) {
+    if (lobby.owner.id != user.id || (lobby.owner.id != user.id && !user.isAdmin)) {
       throw new ForbiddenException("You don't have permissions to delete this lobby.");
     }
     return await (lobbyRepository || this.lobbyRepository).softRemove(lobby);

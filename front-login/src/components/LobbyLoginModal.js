@@ -35,6 +35,7 @@ const LobbyLoginModal = ({isOpen, handleClose, tryPassword, passwordErrors}) => 
             open={isOpen}
             onClose={handleClose}
         >
+            <form onSubmit={(e) => {e.preventDefault(); tryPassword(password)}}>
             <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Log into the lobby
@@ -49,10 +50,12 @@ const LobbyLoginModal = ({isOpen, handleClose, tryPassword, passwordErrors}) => 
                     labelText={'Password'}
                     onChange={setPassword}
                     errorMessages={passwordErrors}
+                    isAutofocus={true}
                 >
                 </InputField>
-                <Button onClick={() => tryPassword(password)}>Login</Button>
+                <Button type={'submit'}>Login</Button>
             </Box>
+            </form>
          </Modal>
     );
 };

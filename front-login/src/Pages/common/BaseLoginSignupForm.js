@@ -12,13 +12,12 @@ const BaseLoginSignupForm = ({
                        moreFields,
                         link,
                         fetchOptions,
-                        returnMailAndPassword,
                         formTitle,
                         buttonText,
                    }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    returnMailAndPassword.func = () => ({email, password});
+    fetchOptions.getEmailAndPassword = () => ({email, password});
 
     const handleSubmit = async (event) => {
         event.preventDefault();

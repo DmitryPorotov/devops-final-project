@@ -39,6 +39,9 @@ class LobbyManagerService {
 
     private chatCallback = (msg: MessageInterface) => {
         const lobby = this.lobbies.get(msg.lobbyId);
+        if (msg.type === 'chat') {
+            msg.name = lobby.clients.find(x => x.user.id === msg.from).user.name
+        }
         lobby.clients.forEach(c => {
                 if (
                     (

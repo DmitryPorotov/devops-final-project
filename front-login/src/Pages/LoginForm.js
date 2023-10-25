@@ -8,17 +8,19 @@ const LoginForm = () => {
     // const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
+    /**
+     * @type {{getBody(): string, url: string, onSuccess(*=): void, getEmailAndPassword: function}}
+     */
     const fetchOptions = {
         url: '/auth/login',
         getBody() {
-            return JSON.stringify(getEmailAndPassword.func());
+            return JSON.stringify(this.getEmailAndPassword());
         },
         onSuccess(result) {
             auth.storeUser(result);
             if (auth.loginCallback) auth.loginCallback();
         }
     };
-    const getEmailAndPassword = {};
     return (
     createPortal(
         <div style={{
@@ -33,7 +35,6 @@ const LoginForm = () => {
               formTitle={"Login"}
               buttonText={"Login"}
               moreFields={<></>}
-              returnMailAndPassword={getEmailAndPassword}
               fetchOptions={fetchOptions}
               link={
                       <Link onClick={()=>auth.setIsLoginShown(false)} to={'/signup'}>To sign up</Link>
