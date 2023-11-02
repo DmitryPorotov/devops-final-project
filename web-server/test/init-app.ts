@@ -2,17 +2,34 @@ import {Test} from "@nestjs/testing";
 import {AppModule} from "../src/app.module";
 import {FastifyAdapter, NestFastifyApplication} from "@nestjs/platform-fastify";
 import * as request from "supertest";
-import {INestApplication, ValidationPipe} from "@nestjs/common";
+import { BadRequestException, INestApplication, ValidationPipe } from "@nestjs/common"
 import {AuthCredentialsDto} from "../src/auth/dto/auth.credentials.dto";
+import { WsAdapter } from "@nestjs/platform-ws"
+import { ValidationError } from "@nestjs/common/interfaces/external/validation-error.interface"
 
 export default async (): Promise<INestApplication> => {
     const moduleRef = await Test.createTestingModule({
         imports: [AppModule],
     })
         .compile();
-    const app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    const app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter({logger: true}));
+    await app.useWebSocketAdapter(new WsAdapter(app));
+    app.enableCors({
+        origin: '*'
+    });
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        exceptionFactory: (errors: ValidationError[]) => new BadRequestException(
+            {
+                message: errors.reduce((acc,cur) => {
+                    acc[cur.property] = Object.values(cur.constraints);
+                    return acc;
+                }, {}),
+                statusCode: 400
+            }
 
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+        )}));
 
     await app.init();
     await app.getHttpAdapter().getInstance().ready();

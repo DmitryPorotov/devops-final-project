@@ -1,6 +1,7 @@
 package fwc.communication.messages
 
 import fwc.game.FWCException
+import fwc.game.houses.HouseType
 
 import scala.util.Try
 
@@ -23,11 +24,13 @@ object Message {
       case "hello" => MessageTestConnectivity(userId)
       case "new_game" => MessageNewGame(gameId)
       case "create_game" => MessageCreateGame(userId, gameId)
-      case "join_game" => MessageJoinGame(
-        userId,
-        gameId,
-        null //TODO
-      )
+      case "join_game" =>
+        val houseType = Try[HouseType](HouseType.fromString(json.obj("joinAs").str)) getOrElse null
+        MessageJoinGame(
+          userId,
+          gameId,
+          houseType
+        )
       case "try_join_game" => MessageTryJoinGame(userId, gameId)
       case "game_action" =>
         val gameAction = json("player_action")

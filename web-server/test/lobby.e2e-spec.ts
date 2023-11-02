@@ -54,7 +54,7 @@ describe('LobbiesController', () => {
             .expect(r => {
                 const b = r.body;
                 expect(b.name).toBe('newName');
-                expect(b.password).toBe('4321')
+                expect(b.password).toBeUndefined();
             });
     });
 

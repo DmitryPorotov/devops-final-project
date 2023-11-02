@@ -24,6 +24,13 @@ object Reactor {
           "gameId" -> ujson.Str(gameId),
           "gamesCount" -> ujson.Num(games.size),
         ).render(fwc.jsonIndentation)
+      case MessageJoinGame(userId, gameId, joinAs) =>
+        val result = ReactionJoinGame(userId, joinAs, games(gameId).gameSettings)
+        games = games + (gameId -> games(gameId).copy(gameSettings = result))
+        ujson.Obj(
+          "gameId" -> ujson.Str(gameId),
+          "gameSettings" -> result.toJson
+        ).render(fwc.jsonIndentation)
       case MessageCreateGame(userId, gameId) =>
         val result = ReactionCreateGame(userId, gameId)
         games = games + (result._1 -> GameReplay(result._2, result._3.boardCards, result._3, Seq()))

@@ -21,7 +21,7 @@ describe('AuthController', () => {
             .send({
                 email: 'qwe3@qwe.com',
                 password: '12345678',
-                name: 'user3'
+                name: 'user6'
             })
             .expect(201);
     });

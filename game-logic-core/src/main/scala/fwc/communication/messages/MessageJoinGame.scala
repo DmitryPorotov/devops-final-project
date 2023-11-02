@@ -1,8 +1,10 @@
 package fwc.communication.messages
 
+import fwc.game.houses.HouseType
+
 case class MessageJoinGame(
                           userId: Int,
                           gameId: String,
-                          joinAs: AnyRef
+                          joinAs: HouseType
                           )
   extends Message

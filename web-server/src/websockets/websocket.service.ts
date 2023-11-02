@@ -59,11 +59,12 @@ class WebsocketService {
                 }
             }
         } else if (message.type === 'test') {
-
             await this.connectivityTestService.sendToWorker(JSON.stringify(message), (msg) => {
                 this.logger.debug("from worker: " + JSON.stringify(msg))
                 client.send(Buffer.from(JSON.stringify(msg)))
             })
+        } else if (message.type === 'action') {
+
         }
 
         /*if (!this.lobbies.has(message.lobbyId)) {

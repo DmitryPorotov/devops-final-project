@@ -1,7 +1,7 @@
 package fwc.communication
 import com.rabbitmq.client.*
 import fwc.communication.messages.Message
-
+import scala.util.{Try, Success, Failure}
 
 //import org.zeromq.{ZLoop, ZMQ}
 //import org.zeromq.ZMQ.{Context, PollItem, Poller, Socket}
@@ -31,7 +31,10 @@ object GameServer {
     channel.basicConsume(queueName, true, (consumerTag, delivery: Delivery) => {
       val message = new String(delivery.getBody, "UTF-8")
       println(" [x] Received '" + message + "'")
-      val reply = Reactor.apply(message)
+      val reply = Try[String](Reactor.apply(message)) match
+        case Success(s) => s
+        case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
+          .render(fwc.jsonIndentation)
       println(" [x] Sent '" + reply + "'")
       val serverName = delivery.getEnvelope.getRoutingKey.split('.')(1)
       channel.basicPublish(FROM_WORKERS_EXCHANGE, serverName + ".worker1", null, reply.getBytes("UTF-8"))

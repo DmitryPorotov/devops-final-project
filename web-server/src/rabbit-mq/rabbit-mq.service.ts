@@ -123,7 +123,7 @@ export class RabbitMqService {
             if (workers.length) {
                 const worker = workers.sort((a, b) => b.gamesCount - a.gamesCount)[0];
                 this.channel.publish(this.TO_WORKERS_EXCHANGE, `${worker.worker}.${this.SERVER_NAME}`, Buffer.from(JSON.stringify({
-                    action: 'crate_game',
+                    action: 'create_game',
                     userId,
                     gameId: String(gameId),
                 })))

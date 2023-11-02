@@ -27,9 +27,9 @@ describe('UserController', () => {
             });
     });
 
-    test('GET /user/2', () => {
+    test('GET /user/8', () => {
         return request(app.getHttpServer())
-            .get('/user/3')
+            .get('/user/8')
             .auth(adminToken, { type: "bearer" })
             .expect(200)
             .expect(r => {
@@ -57,7 +57,7 @@ describe('UserController', () => {
 
     test('DELETE /user', () => {
         return request(app.getHttpServer())
-            .delete('/user/3')
+            .delete('/user/8')
             .auth(adminToken, { type: "bearer" })
             .expect(200);
     });
