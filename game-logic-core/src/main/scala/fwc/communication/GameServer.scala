@@ -1,44 +1,71 @@
 package fwc.communication
-import com.rabbitmq.client.*
+//import com.rabbitmq.client.*
 import fwc.communication.messages.Message
 import scala.util.{Try, Success, Failure}
+import redis.clients.jedis.*
 
 //import org.zeromq.{ZLoop, ZMQ}
 //import org.zeromq.ZMQ.{Context, PollItem, Poller, Socket}
 
 object GameServer {
 
-  private val TO_WORKERS_EXCHANGE = "to_workers"
-  private val FROM_WORKERS_EXCHANGE = "from_workers"
+//  private val TO_WORKERS_EXCHANGE = "to_workers"
+//  private val FROM_WORKERS_EXCHANGE = "from_workers"
   def start(): Unit = {
-    val rabbitHost =
-      if System.getenv("RABBIT_HOST") == null
+    val redisHost =
+      if System.getenv("REDIS_HOST") == null
       then "localhost"
-      else System.getenv("RABBIT_HOST")
+      else System.getenv("REDIS_HOST")
 
-    val factory = new ConnectionFactory()
-    factory.setHost(rabbitHost)
-    println("Trying to connect to " + factory.getHost + ":" + factory.getPort)
-    val connection: Connection = factory.newConnection()
-    val channel: Channel = connection.createChannel()
+    val workerName =
+      if System.getenv("WORKER_NAME") == null
+      then "worker1"
+      else System.getenv("WORKER_NAME")
 
-    channel.exchangeDeclare(TO_WORKERS_EXCHANGE, "topic")
-    channel.exchangeDeclare(FROM_WORKERS_EXCHANGE, "topic")
-    val queueName = channel.queueDeclare.getQueue
-    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "new_game.*")
-    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "worker1.*")
+    val jedisSub = new Jedis(redisHost, 6379)
+    val jedisPub = new Jedis(redisHost, 6379)
+    jedisSub.psubscribe(new JedisPubSub {
+      override def onPMessage(pattern: String, channel: String, message: String): Unit = {
+        val serverName = channel.split('.')(1)
+        println(" [x] Received '" + message + "'")
+        val reply = Try[String](Reactor.apply(message)) match
+          case Success(s) => s
+          case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
+            .render(fwc.jsonIndentation)
+        println(" [x] Sent '" + reply + "'")
+        jedisPub.publish(serverName + "." + workerName, reply)
+      }
+    }, workerName + ".*")
 
-    channel.basicConsume(queueName, true, (consumerTag, delivery: Delivery) => {
-      val message = new String(delivery.getBody, "UTF-8")
-      println(" [x] Received '" + message + "'")
-      val reply = Try[String](Reactor.apply(message)) match
-        case Success(s) => s
-        case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
-          .render(fwc.jsonIndentation)
-      println(" [x] Sent '" + reply + "'")
-      val serverName = delivery.getEnvelope.getRoutingKey.split('.')(1)
-      channel.basicPublish(FROM_WORKERS_EXCHANGE, serverName + ".worker1", null, reply.getBytes("UTF-8"))
-    }, consumerTag => {})
+//    val rabbitHost =
+//      if System.getenv("RABBIT_HOST") == null
+//      then "localhost"
+//      else System.getenv("RABBIT_HOST")
+//
+//    val factory = new ConnectionFactory()
+//    factory.setHost(rabbitHost)
+//    println("Trying to connect to " + factory.getHost + ":" + factory.getPort)
+//    val connection: Connection = factory.newConnection()
+//    val channel: Channel = connection.createChannel()
+//
+//    channel.exchangeDeclare(TO_WORKERS_EXCHANGE, "topic")
+//    channel.exchangeDeclare(FROM_WORKERS_EXCHANGE, "topic")
+//    val queueName = channel.queueDeclare.getQueue
+//    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "new_game.*")
+//    channel.queueBind(queueName, TO_WORKERS_EXCHANGE, "worker1.*")
+//
+//    channel.basicConsume(queueName, true, (consumerTag, delivery: Delivery) => {
+//      val message = new String(delivery.getBody, "UTF-8")
+//      println(" [x] Received '" + message + "'")
+//      val reply = Try[String](Reactor.apply(message)) match
+//        case Success(s) => s
+//        case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
+//          .render(fwc.jsonIndentation)
+//      println(" [x] Sent '" + reply + "'")
+//      val serverName = delivery.getEnvelope.getRoutingKey.split('.')(1)
+//      channel.basicPublish(FROM_WORKERS_EXCHANGE, serverName + ".worker1", null, reply.getBytes("UTF-8"))
+//    }, consumerTag => {})
+
     //    val context = ZMQ.context(1)
 //
 //    val socket = context.socket(ZMQ.REP)

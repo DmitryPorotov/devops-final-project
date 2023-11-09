@@ -10,12 +10,14 @@ lazy val root = (project in file("."))
       "org.scalactic" %% "scalactic" % "3.2.11",
       "org.scalatest" %% "scalatest" % "3.2.11" % "test",
       "com.lihaoyi" %% "upickle" % "1.6.0",
-      "com.rabbitmq" % "amqp-client" % "5.16.0"
+      "com.rabbitmq" % "amqp-client" % "5.16.0",
+      "redis.clients" % "jedis" % "4.4.0"
     ),
     Compile / packageBin / packageOptions += {
       Package.ManifestAttributes(java.util.jar.Attributes.Name.CLASS_PATH -> (
         "lib/amqp-client-5.16.0.jar " +
           "lib/geny_3-0.7.1.jar " +
+          "lib/jedis-4.4.0.jar" +
           "lib/scala-library-2.13.8.jar " +
           "lib/scala-reflect-2.11.12.jar " +
           "lib/scala3-library_3-3.1.2.jar " +

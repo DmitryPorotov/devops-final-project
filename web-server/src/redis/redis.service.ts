@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MessagingProviderInterface } from "../common/messaging-provider.interface";
 import { MessageInterface } from "../websockets/messages/message.interface";
 import RedisStreamListener from "./redis.stream-listener";
+import RedisPubSub from "./redis.pub-sub";
 
 @Injectable()
 export class RedisService implements MessagingProviderInterface {
@@ -13,9 +14,11 @@ export class RedisService implements MessagingProviderInterface {
 
     private redisStreamListener: RedisStreamListener;
 
+    private redisPubSub: RedisPubSub;
+
     private readonly CHAT_PREFIX = 'chat';
 
-    private chats: Map<number, (msg: string) => void>;
+    private chats: Map<number, (msg: string) => void> = new Map<number, (msg:string) => void>();
 
     async init(workerCallback: (message: Object) => void, chatCallback: (message: Object) => void): Promise<void> {
         if (!this.isInit) {
@@ -25,7 +28,8 @@ export class RedisService implements MessagingProviderInterface {
             this.redisStreamListener = new RedisStreamListener();
             await this.redisStreamListener.init();
 
-
+            this.redisPubSub = new RedisPubSub();
+            await this.redisPubSub.init(this.workerCallback);
 
             this.isInit = true;
         }
@@ -37,7 +41,15 @@ export class RedisService implements MessagingProviderInterface {
     }
 
     sendToWorkersTest(message): void {
+        this.redisPubSub.sendToWorkerTest(message)
+    }
 
+    async getWholeChat(lobbyId: number, cb: (msg: Object) => void) {
+        const chatCb = (msg: string) => {
+           const data = JSON.parse(msg);
+           cb(data)
+        };
+        return this.redisStreamListener.addListener(`${this.CHAT_PREFIX}${lobbyId}`,'0', chatCb, true);
     }
 
     async subscribeToChat(lobbyId: number): Promise<void> {
