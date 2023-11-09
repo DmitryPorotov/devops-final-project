@@ -6,6 +6,7 @@ import {LoginUserDto} from "../user/dto/login-user.dto";
 import {LobbyService} from "../lobby/lobby.service";
 import { RabbitMqService } from "../rabbit-mq/rabbit-mq.service"
 import { AuthToLobby } from "./auth-to-lobby.decorator"
+import { RedisService } from "../redis/redis.service";
 
 interface Lobby {
     id: number;
@@ -16,29 +17,34 @@ interface Lobby {
 
 @Injectable()
 class LobbyManagerService {
-    private readonly logger = new Logger(LobbyManagerService.name);
+    protected readonly logger = new Logger(LobbyManagerService.name);
 
-    private lobbies: Map<number, Lobby> = new Map<number, Lobby>();
+    protected lobbies: Map<number, Lobby> = new Map<number, Lobby>();
 
     private readonly instId: string;
 
-    constructor(private lobbyService: LobbyService, protected rabbitMqService: RabbitMqService) {
+    constructor(private lobbyService: LobbyService, protected messagingService: RedisService) {
         this.instId = String(Math.random()) + Math.random();
     }
 
     protected async init() {
-        this.logger.debug('in init' + this.instId)
-        await this.rabbitMqService.init(this.workerCallback, this.chatCallback)
-        await this.rabbitMqService.waitForInit()
+        this.logger.debug('in init' + this.instId);
+        await this.messagingService.init(this.workerCallback, this.chatCallback);
+        await this.messagingService.waitForInit()
     }
 
 
     private workerCallback = (msg) => {
 
-    }
+    };
 
     private chatCallback = (msg: MessageInterface) => {
+        this.logger.debug('chat callback');
         const lobby = this.lobbies.get(msg.lobbyId);
+        if (!lobby) {
+            this.logger.warn('No lobby ' + msg.lobbyId);
+            return;
+        }
         if (msg.type === 'chat') {
             msg.name = lobby.clients.find(x => x.user.id === msg.from).user.name
         }
@@ -60,43 +66,51 @@ class LobbyManagerService {
                 }
             }
         )
-    }
+    };
 
     @AuthToLobby(true)
     async create(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity: LobbyEntity = null) {
-        const lobby = {
-            id: lobbyEntity.id,
-            owner: lobbyEntity.owner.id,
-            clients: [client],
-            participants: lobbyEntity.participants.map(u => u.id)
-        }
-        this.lobbies.set(lobbyEntity.id, lobby)
-        this.logger.debug(`Created: instID ${this.instId} ` + JSON.stringify({
-            ...lobby,
-            clients: null,
-        }))
+        // const lobby = {
+        //     id: lobbyEntity.id,
+        //     owner: lobbyEntity.owner.id,
+        //     clients: [client],
+        //     participants: lobbyEntity.participants.map(u => u.id)
+        // };
+        // this.lobbies.set(lobbyEntity.id, lobby);
+        // this.logger.debug(`Created: instID ${this.instId} ` + JSON.stringify({
+        //     ...lobby,
+        //     clients: null,
+        // }));
     }
 
     @AuthToLobby()
     async join(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity: LobbyEntity = null) {
-        let lobby;
-        if (!this.lobbies.has(message.lobbyId)) {
-            lobby = {
-                id: lobbyEntity.id,
-                owner: lobbyEntity.owner.id,
-                clients: [client],
-                participants: lobbyEntity.participants.map(u => u.id)
+        // let lobby;
+        // if (!this.lobbies.has(message.lobbyId)) {
+        //     lobby = {
+        //         id: lobbyEntity.id,
+        //         owner: lobbyEntity.owner.id,
+        //         clients: [client],
+        //         participants: lobbyEntity.participants.map(u => u.id)
+        //     };
+        //     this.lobbies.set(lobbyEntity.id, lobby)
+        // } else {
+        //     lobby = this.lobbies.get(message.lobbyId);
+        //     lobby.clients.push(client);
+        //     lobby.participants = lobbyEntity.participants.map(u => u.id);
+        // }
+        await this.messagingService.getWholeChat(lobbyEntity.id, (msg: MessageInterface) => {
+            if (msg.body.type === 'message') {
+                this.logger.debug(msg);
+                client.send(
+                    JSON.stringify(msg)
+                )
             }
-            this.lobbies.set(lobbyEntity.id, lobby)
-        } else {
-            lobby = this.lobbies.get(message.lobbyId);
-            lobby.clients.push(client);
-            lobby.participants = lobbyEntity.participants.map(u => u.id);
-        }
-        this.logger.debug(`Joined: instID ${this.instId} ${client.user.id} ${JSON.stringify({
-            ...lobby,
-            clients: null
-        })}`);
+        });
+        // this.logger.debug(`Joined: instID ${this.instId} ${client.user.id} ${JSON.stringify({
+        //     ...lobby,
+        //     clients: null
+        // })}`);
     }
 
     @AuthToLobby(true)
@@ -115,7 +129,7 @@ class LobbyManagerService {
         if (updatedLobbyEntity.deletedAt != null) {
             setTimeout(async () => {
                 this.lobbies.delete(updatedLobbyEntity.id);
-                await this.rabbitMqService.unsubscribeFromChat(updatedLobbyEntity.id);
+                await this.messagingService.unsubscribeFromChat(updatedLobbyEntity.id);
             }, 5000)
         }
         const lobby = this.lobbies.get(updatedLobbyEntity.id);

@@ -9,9 +9,10 @@ import {DatabaseModule} from "../database/database.module";
 import LobbyManagerService from "./lobby-manager.service";
 import {RabbitMqModule} from "../rabbit-mq/rabbit-mq.module";
 import ConnectivityTestService from "./connectivity-test.service";
+import { RedisModule } from "../redis/redis.module";
 
 @Module({
-    imports:[JwtModule, DatabaseModule, RabbitMqModule],
+    imports:[JwtModule, DatabaseModule, RabbitMqModule, RedisModule],
     providers: [EventsGateway, AuthGuard, WebsocketService, LobbyManagerService, LobbyService, ConnectivityTestService, ...lobbyProviders],
 })
 export class EventsModule {}

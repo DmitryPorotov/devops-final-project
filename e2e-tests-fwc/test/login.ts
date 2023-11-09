@@ -22,7 +22,7 @@ export async function send(path: string, message: string, token?: string, method
     return new Promise((resolve, reject) => {
         const headers = {
             "Content-Type": "application/json",
-        }
+        };
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
@@ -38,7 +38,7 @@ export async function send(path: string, message: string, token?: string, method
                 reject(new Error('Unsuccessful request'))
             }
             const chunks = [];
-            res.on('data', data => chunks.push(data))
+            res.on('data', data => chunks.push(data));
             res.on('end', () => {
 
                 const resBody = chunks.join();

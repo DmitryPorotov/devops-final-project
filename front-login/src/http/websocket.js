@@ -31,6 +31,10 @@ class Websocket {
         }
         else return;
 
+        return Websocket.makeSocket();
+    }
+
+    static makeSocket() {
         return new Promise((resolve => {
 
             this.socket = new WebSocket(
@@ -41,6 +45,21 @@ class Websocket {
             this.socket.addEventListener('message', (message) => {
                 console.log(message.data);
             });
+
+            const errorCb = (message) => {
+                console.log(message);
+                setTimeout(() => {
+                    Websocket.makeSocket().then(() => {
+                        Websocket.eventHandlers.forEach((cb) => {
+                            Websocket.socket.addEventListener('message', cb);
+                        })
+                    });
+                }, 1000);
+            };
+
+            this.socket.addEventListener('error', errorCb);
+
+            this.socket.addEventListener('close', errorCb);
 
             this.socket.onopen = () => {
                 resolve()

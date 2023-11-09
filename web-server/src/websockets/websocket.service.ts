@@ -37,6 +37,7 @@ class WebsocketService {
         if (message.type === "chat") {
             switch (message.body.type) {
                 case "create": {
+                    this.logger.debug('in create')
                     await this.lobbyManagerService.create(client, message);
                     break;
                 }
@@ -60,7 +61,7 @@ class WebsocketService {
             }
         } else if (message.type === 'test') {
             await this.connectivityTestService.sendToWorker(JSON.stringify(message), (msg) => {
-                this.logger.debug("from worker: " + JSON.stringify(msg))
+                this.logger.debug("from worker: " + JSON.stringify(msg));
                 client.send(Buffer.from(JSON.stringify(msg)))
             })
         } else if (message.type === 'action') {

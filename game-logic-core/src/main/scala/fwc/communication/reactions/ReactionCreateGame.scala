@@ -15,7 +15,7 @@ object ReactionCreateGame {
       false,
       false,
       randomEventsServerSide,
-      Some(Seq(Player(userId, null))),
+      None,
       None
     )
     val state = fwc.game.initializeGameState(randomEventsServerSide)

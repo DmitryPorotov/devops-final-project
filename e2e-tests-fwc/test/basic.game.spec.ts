@@ -1,4 +1,4 @@
-import { login, send, sleep } from "./login"
+import { login, LoginUserDto, send, sleep } from "./login";
 import { WebSocket } from "ws"
 
 describe('basic_game', function () {
@@ -8,31 +8,86 @@ describe('basic_game', function () {
         return login({email: 'a@b.com', password: "12345678"}).then(res => {
             user = res;
         })
-    })
+    });
 
     test('game_create', function () {
         return new Promise<void>(async (resolve, reject) => {
             try {
-                const webSocket = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`);
+                const openSocket = (u: LoginUserDto) => new Promise<WebSocket & {u: LoginUserDto}>(r => {
+                    const webSocket: WebSocket & {u: LoginUserDto} = new WebSocket(`ws://127.0.0.1:3001?_token=${u.token}`) as any;
+                    webSocket.u = u;
+                    webSocket.addEventListener('open', () => {
+                        r(webSocket)
+                    })
+                });
+                const user2 = await login({email:'b@b.com', password:'12345678'});
+                const user3 = await login({email:'admin@b.com', password:'12345678'});
+                const user4 = await login({email:'c@b.com', password:'12345678'});
+                const user5 = await login({email:'d@b.com', password:'12345678'});
+                const user6 = await login({email:'e@b.com', password:'12345678'});
+                const webSocket1 = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`);
+
+
                 const messageId = String(Math.random());
                 const messageId1 = String(Math.random());
-                webSocket.addEventListener('message', function (event) {
-                    const json = JSON.parse(event.data as string);
-                    if (json.messageId === messageId) {
-                        expect(json.body.type).toBe('create');
-                        webSocket.send(`{"type": "chat", "messageId": "${messageId1}", "lobbyId": 2, "body":{"type":"create"}}`)
+                let isLobbyCreated = false;
+                webSocket1.addEventListener('message', function (event) {
+                    try {
+                        const json = JSON.parse(event.data as string);
+                        switch (json.messageId) {
+                            case messageId:
+                                expect(json.body.type).toBe('create');
+                                isLobbyCreated = true;
+                                break;
+                        }
+                    } catch (e) {
+                        reject(e)
                     }
-                    else if (json.messageId === messageId1) {
+                    // resolve();
+                });
+                webSocket1.addEventListener('open', (event) => {
+                    webSocket1.send(`{"type": "chat", "from": 1, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`)
+                });
+                const waitForLobby = async () => {
+                    do {
+                        await sleep(5);
+                    } while (!isLobbyCreated)
+                };
+                await waitForLobby();
+                const webSocket2 = openSocket(user2);
+                const webSocket3 = openSocket(user3);
+                const webSocket4 = openSocket(user4);
+                const webSocket5 = openSocket(user5);
+                const webSocket6 = openSocket(user6);
 
-                    }
-                    resolve();
-                });
-                webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat", "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`)
-                });
+                const sockets: Array<WebSocket & {u: LoginUserDto}> = await Promise.all([
+                    webSocket2,
+                    webSocket3,
+                    webSocket4,
+                    webSocket5,
+                    webSocket6,
+                ]);
+                for (let s of sockets) {
+                    const messageId = String(Math.random());
+                    s.addEventListener('message', function (event) {
+                        const json = JSON.parse(event.data as string);
+                        console.log(json);
+                        try {
+                            if (messageId === json.messageId) {
+                                expect(json.body.type).toBe('join');
+                            }
+                        }
+                        catch (e) {
+                            reject(e);
+                        }
+                    });
+                    await send('/lobby/2/join', '{}', s.u.token, 'PATCH');
+                    s.send(`{"type": "chat", "from": ${s.u.id}, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                }
+
             } catch (e) {
                 reject(e)
             }
         })
     })
-})
+});

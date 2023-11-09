@@ -53,6 +53,7 @@ export class EventsGateway implements OnGatewayConnection{
                 this.websocketService.handleMessage(client, JSON.parse(strMessage));
             }
             catch (e) {
+                this.logger.debug('in catch', e)
                 if (e instanceof SyntaxError) {
                     if (e.message.includes('JSON')) {
                         client.send(JSON.stringify({

@@ -1,13 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as amqp from "amqplib/"
-import {Channel} from "amqplib/";
-import {ConsumeMessage} from "amqplib/properties";
-import {Buffer} from "buffer";
+import { Channel } from "amqplib/";
+import { ConsumeMessage } from "amqplib/properties";
+import { Buffer } from "buffer";
 import { env } from "process";
 import { MessageInterface } from "../websockets/messages/message.interface"
+import { MessagingProviderInterface } from "../common/messaging-provider.interface"
+
 
 @Injectable()
-export class RabbitMqService {
+export class RabbitMqService implements MessagingProviderInterface {
     private readonly logger = new Logger(RabbitMqService.name);
     private readonly TO_WORKERS_EXCHANGE = "to_workers";
     private readonly FROM_WORKERS_EXCHANGE = "from_workers";
@@ -32,32 +34,33 @@ export class RabbitMqService {
         if (this.channel === null) {
             this.workerCallback = workerCallback;
             this.chatCallback = chatCallback;
-            this.logger.debug('init')
+            this.logger.debug('init');
 
             const connection = await amqp.connect(`amqp://${env.RABBIT_HOST}`);
             const channel = await connection.createChannel();
             this.channel = channel;
 
-            await channel.assertExchange(this.TO_WORKERS_EXCHANGE, "topic", {durable:false});
-            await channel.assertExchange(this.FROM_WORKERS_EXCHANGE, "topic",{durable:false});
-            await channel.assertExchange(this.CHAT, "topic",{durable:false});
+            await channel.assertExchange(this.TO_WORKERS_EXCHANGE, "topic", {durable: false});
+            await channel.assertExchange(this.FROM_WORKERS_EXCHANGE, "topic", {durable: false});
+            await channel.assertExchange(this.CHAT, "topic", {durable: false});
 
             const fromWorkersQueue = await channel.assertQueue('');
             const fromWorkersQueueName = fromWorkersQueue.queue;
 
             const chatQueue = await channel.assertQueue('');
-            this.chatQueueName = chatQueue.queue
+            this.chatQueueName = chatQueue.queue;
 
             await channel.bindQueue(fromWorkersQueueName, this.FROM_WORKERS_EXCHANGE, `${this.SERVER_NAME}.*`);
             await channel.consume(fromWorkersQueueName, this.handleMessageFromWorker, {noAck: true});
 
             await channel.consume(this.chatQueueName, this.handleChatMessage, {noAck: true});
 
+            this.logger.debug('init end');
             this.isInit = true
         }
     }
 
-    public async waitForInit() {
+    async waitForInit() {
         return new Promise<boolean>(resolve => {
             if (this.isInit) {
                 resolve(true)
@@ -72,28 +75,29 @@ export class RabbitMqService {
         })
     }
 
-    public sendToWorkersTest(message) {
+    sendToWorkersTest(message) {
         this.channel.publish(this.TO_WORKERS_EXCHANGE, `worker1.${this.SERVER_NAME}`, Buffer.from(message));
     }
 
-    public async subscribeToChat(lobbyId: number) {
+    async subscribeToChat(lobbyId: number) {
         await this.channel.bindQueue(this.chatQueueName, this.CHAT, `${lobbyId}.*`);
     }
 
-    public async unsubscribeFromChat(lobbyId: number) {
+    async unsubscribeFromChat(lobbyId: number) {
         await this.channel.unbindQueue(this.chatQueueName, this.CHAT, `${lobbyId}.*`);
     }
 
-    public async sendToChat(lobbyId: number, message: MessageInterface) {
+    async sendToChat(lobbyId: number, message: MessageInterface) {
+        this.logger.debug('in send to chat');
         await this.subscribeToChat(lobbyId);
-        this.channel.publish(this.CHAT, `${lobbyId}.${this.SERVER_NAME}`, Buffer.from(JSON.stringify(message)));
+        this.channel.publish(this.CHAT, `${lobbyId}.${this.SERVER_NAME}`, Buffer.from(JSON.stringify(message)))
     }
 
     private handleChatMessage = (message: ConsumeMessage) => {
         if (!this.chatCallback) return;
         const data = JSON.parse(message.content.toString());
-        this.chatCallback(data)
-    }
+        this.chatCallback(data);
+    };
 
     private handleMessageFromWorker = (message: ConsumeMessage) => {
         const workerName = message.fields.routingKey.split('.')[1];
