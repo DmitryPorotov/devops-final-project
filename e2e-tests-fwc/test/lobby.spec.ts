@@ -28,7 +28,7 @@ describe('lobby', function () {
                     resolve();
                 });
                 webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat", "from": 1 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`);
+                    webSocket.send(`{"type": "chat", "userId": 1 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`);
                 });
             } catch (e) {
                 reject(e)
@@ -58,7 +58,7 @@ describe('lobby', function () {
 
                 });
                 webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat","from": 2 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket.send(`{"type": "chat","userId": 2 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
             } catch (e) {
                 reject(e)
@@ -95,7 +95,7 @@ describe('lobby', function () {
                     }
                 });
                 webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat", "from": 2 , "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket.send(`{"type": "chat", "userId": 2 , "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
 
                 const webSocket2 = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`);
@@ -105,7 +105,7 @@ describe('lobby', function () {
                         const json = JSON.parse(event.data as string);
                         if (messageId2 === json.messageId) {
                             sleep(10).then(()=>{
-                                webSocket2.send(`{"type": "chat", "from": 1 , "messageId": "${messageId3}",`
+                                webSocket2.send(`{"type": "chat", "userId": 1 , "messageId": "${messageId3}",`
                                     + ` "lobbyId": 2, "body":{"type":"kick", "to": [2], "body": "kicked"}}`);
                                 webSocket2.close()
                             })
@@ -116,7 +116,7 @@ describe('lobby', function () {
                     }
                 });
                 webSocket2.addEventListener('open', (event) => {
-                    webSocket2.send(`{"type": "chat", "from": 1 ,"messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket2.send(`{"type": "chat", "userId": 1 ,"messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
             } catch (e) {
                 reject(e)
@@ -140,7 +140,7 @@ describe('lobby', function () {
                         // console.log(json)
                         if (messageId === json.messageId) {
                             expect(json.body.type).toBe('join');
-                            webSocket.send(`{"type": "chat", "from": 2 , "messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"leave"}}`)
+                            webSocket.send(`{"type": "chat", "userId": 2 , "messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"leave"}}`)
                         }
                         if (messageId2 === json.messageId) {
                             expect(json.body.type).toBe('leave');
@@ -153,7 +153,7 @@ describe('lobby', function () {
                     }
                 });
                 webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat", "from": 2 , "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket.send(`{"type": "chat", "userId": 2 , "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
 
             } catch (e) {
@@ -192,7 +192,7 @@ describe('lobby', function () {
 
                 });
                 webSocket.addEventListener('open', (event) => {
-                    webSocket.send(`{"type": "chat", "from": 2 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket.send(`{"type": "chat", "userId": 2 ,"messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
 
                 const webSocket2 = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`);
@@ -201,7 +201,7 @@ describe('lobby', function () {
                     const json = JSON.parse(event.data as string);
                     if (messageId2 === json.messageId) {
                         sleep(10).then(()=>{
-                            webSocket2.send(`{"type": "chat", "from": 1 , "messageId": "${messageId3}",`
+                            webSocket2.send(`{"type": "chat", "userId": 1 , "messageId": "${messageId3}",`
                                 + ` "lobbyId": 2, "body":{"type":"message", "to": [], "body": "hello"}}`);
                             webSocket2.close();
                         })
@@ -209,7 +209,7 @@ describe('lobby', function () {
 
                 });
                 webSocket2.addEventListener('open', (event) => {
-                    webSocket2.send(`{"type": "chat","from": 1 ,"messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    webSocket2.send(`{"type": "chat","userId": 1 ,"messageId": "${messageId2}", "lobbyId": 2, "body":{"type":"join"}}`)
                 });
             } catch (e) {
                 reject(e)

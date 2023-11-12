@@ -82,7 +82,7 @@ const Lobby = () => {
                 body.password = '*';
             }
             ws.websocket.send({
-                from: ws.websocket.playerId,
+                userId: ws.websocket.playerId,
                 type: 'chat',
                 lobbyId: id,
                 body
@@ -99,19 +99,19 @@ const Lobby = () => {
             if (message.type === 'chat') {
                 switch (message.body.type) {
                     case 'join':
-                        if (ws.lobbyData && !ws.lobbyData.participants.find(p => p.id === message.from)) {
+                        if (ws.lobbyData && !ws.lobbyData.participants.find(p => p.id === message.userId)) {
                             ws.setLobbyData({
                                 ...ws.lobbyData,
-                                participants: [...ws.lobbyData.participants, {id: message.from, name: message.name}]
+                                participants: [...ws.lobbyData.participants, {id: message.userId, name: message.name}]
                             })
                         }
                         break;
                     case 'leave':
-                        if (message.from === ws.websocket.playerId) {
+                        if (message.userId === ws.websocket.playerId) {
                             navigate('/');
                         }
                         else {
-                            const participants = ws.lobbyData.participants.filter(p => p.id !== message.from);
+                            const participants = ws.lobbyData.participants.filter(p => p.id !== message.userId);
                             ws.setLobbyData({
                                 ...ws.lobbyData,
                                 participants,
@@ -183,7 +183,7 @@ const Lobby = () => {
 
     const handleLeaveClick = (event) => {
         ws.websocket.send({
-            from: ws.websocket.playerId,
+            userId: ws.websocket.playerId,
             type: 'chat',
             lobbyId: id,
             body: {type:'leave'}
@@ -194,7 +194,7 @@ const Lobby = () => {
     const handleKickClick = (playerId, name) => {
         //TODO add a prompt
         ws.websocket.send({
-            from: ws.websocket.playerId,
+            userId: ws.websocket.playerId,
             type: 'chat',
             lobbyId: id,
             body: {type:'kick', to: [playerId]}

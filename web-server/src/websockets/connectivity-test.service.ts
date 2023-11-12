@@ -1,14 +1,14 @@
 import {Injectable} from "@nestjs/common";
 import {RabbitMqService} from "../rabbit-mq/rabbit-mq.service";
-import { RedisService } from "../redis/redis.service";
+import WorkerRelayService from "../redis/worker-relay.service";
 
 @Injectable()
 class ConnectivityTestService {
-    constructor(private messagingService: RedisService) {
+    constructor(private messagingService: WorkerRelayService) {
     }
 
     async sendToWorker(message, callback: (msg: string) => void ) {
-        await this.messagingService.init(callback, ()=>{});
+        await this.messagingService.init(callback);
         await this.messagingService.sendToWorkersTest(message);
     }
 }

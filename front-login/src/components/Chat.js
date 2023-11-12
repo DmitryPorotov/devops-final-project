@@ -52,7 +52,7 @@ const Chat = ({lobbyId}) => {
         if (!message) return;
         try {
             ws.websocket.send({
-                from: ws.websocket.playerId,
+                userId: ws.websocket.playerId,
                 type: 'chat',
                 lobbyId,
                 body: {

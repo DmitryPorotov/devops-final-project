@@ -8,15 +8,16 @@ class RedisPubSub {
     // private readonly FROM_WORKERS = "from_workers";
     private readonly SERVER_NAME = 'server1';//todo get from env
 
-    private pendingNewGames: Map<number, Array<{worker: string, gamesCount: number}>> = new Map();
-
     private redisPublisher;
     private redisSubscriber;
 
     private workerCallback: (msg: string) => void;
 
-    async init(callback: (msg: Object) => void) {
+    private onNewGameMessage: (gameId: string, workerName: string, gamesCount: number) => void;
+
+    async init(callback: (msg: Object) => void, onNewGameMessage: (gameId: string, workerName: string, gamesCount: number) => void) {
         this.workerCallback = callback;
+        this.onNewGameMessage = onNewGameMessage;
         this.redisPublisher = createClient({url: env.REDIS_URL});
         this.redisPublisher.on('error', (err) => this.logger.error('Redis Client Error', err));
         await this.redisPublisher.connect();
@@ -31,10 +32,7 @@ class RedisPubSub {
         const data = JSON.parse(message);
         const workerName = channel.split('.')[1];
         if (data.action === 'new_game') {
-            this.pendingNewGames.get(parseInt(data.gameId)).push({
-                worker: workerName,
-                gamesCount: data.gamesCount
-            })
+            this.onNewGameMessage(data.gameId, workerName, data.gamesCount)
         } else {
             this.workerCallback(data);
         }
@@ -44,6 +42,9 @@ class RedisPubSub {
         this.redisPublisher.publish(`worker1.${this.SERVER_NAME}`, message);
     }
 
+    publish(toChannel: string, message: string) {
+        this.redisPublisher.publish(`${toChannel}.${this.SERVER_NAME}`, message);
+    }
 
 }
 

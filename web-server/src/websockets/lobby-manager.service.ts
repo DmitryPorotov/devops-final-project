@@ -6,9 +6,10 @@ import {LoginUserDto} from "../user/dto/login-user.dto";
 import {LobbyService} from "../lobby/lobby.service";
 import { RabbitMqService } from "../rabbit-mq/rabbit-mq.service"
 import { AuthToLobby } from "./auth-to-lobby.decorator"
-import { RedisService } from "../redis/redis.service";
+import ChatService from "../redis/chat.service";
+import LobbiesClientsMapService from "./lobbies-clients-map.service"
 
-interface Lobby {
+export interface LobbyClients {
     id: number;
     owner: number;
     participants: Array<number>;
@@ -19,24 +20,19 @@ interface Lobby {
 class LobbyManagerService {
     protected readonly logger = new Logger(LobbyManagerService.name);
 
-    protected lobbies: Map<number, Lobby> = new Map<number, Lobby>();
+    // protected lobbies: Map<number, LobbyClients> = new Map<number, LobbyClients>();
 
     private readonly instId: string;
 
-    constructor(private lobbyService: LobbyService, protected messagingService: RedisService) {
+    constructor(private lobbyService: LobbyService, protected messagingService: ChatService, protected lobbies: LobbiesClientsMapService) {
         this.instId = String(Math.random()) + Math.random();
     }
 
     protected async init() {
         this.logger.debug('in init' + this.instId);
-        await this.messagingService.init(this.workerCallback, this.chatCallback);
+        await this.messagingService.init(this.chatCallback);
         await this.messagingService.waitForInit()
     }
-
-
-    private workerCallback = (msg) => {
-
-    };
 
     private chatCallback = (msg: MessageInterface) => {
         this.logger.debug('chat callback');
@@ -46,7 +42,7 @@ class LobbyManagerService {
             return;
         }
         if (msg.type === 'chat') {
-            msg.name = lobby.clients.find(x => x.user.id === msg.from).user.name
+            msg.name = lobby.clients.find(x => x.user.id === msg.userId)?.user?.name
         }
         lobby.clients.forEach(c => {
                 if (

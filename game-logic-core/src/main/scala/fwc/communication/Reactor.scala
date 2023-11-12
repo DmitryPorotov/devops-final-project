@@ -38,6 +38,13 @@ object Reactor {
           "gameId" -> ujson.Str(result._1),
           "gameState" -> result._3.toJson
         ).render(fwc.jsonIndentation)
+      case MessageStartGame(userId, gameId) =>
+        val result = ReactionStartGame(userId, games(gameId).gameSettings)
+        games = games + (gameId -> games(gameId).copy(gameSettings = result))
+        ujson.Obj(
+          "gameId" -> ujson.Str(gameId),
+          "gameState" -> games(gameId).currentGameState.toJson
+        ).render(fwc.jsonIndentation)
       case MessageGameAction(userId, gameId, gameAction) =>
         val gameReplay = games(gameId)
         val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction.apply(userId, gameReplay, gameAction)

@@ -29,7 +29,7 @@ describe('basic_game', function () {
 
 
                 const messageId = String(Math.random());
-                const messageId1 = String(Math.random());
+
                 let isLobbyCreated = false;
                 webSocket1.addEventListener('message', function (event) {
                     try {
@@ -46,7 +46,7 @@ describe('basic_game', function () {
                     // resolve();
                 });
                 webSocket1.addEventListener('open', (event) => {
-                    webSocket1.send(`{"type": "chat", "from": 1, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`)
+                    webSocket1.send(`{"type": "chat", "userId": 1, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"create"}}`)
                 });
                 const waitForLobby = async () => {
                     do {
@@ -82,9 +82,17 @@ describe('basic_game', function () {
                         }
                     });
                     await send('/lobby/2/join', '{}', s.u.token, 'PATCH');
-                    s.send(`{"type": "chat", "from": ${s.u.id}, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
+                    s.send(`{"type": "chat", "userId": ${s.u.id}, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 }
-
+                await sleep(1000);
+                const messageId1 = String(Math.random());
+                webSocket1.send(JSON.stringify({
+                    type: 'action',
+                    lobbyId: 2,
+                    userId: 1,
+                    messageId: messageId1,
+                    action: 'create_game'
+                }))
             } catch (e) {
                 reject(e)
             }

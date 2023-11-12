@@ -13,7 +13,7 @@ object ReactionCreateGame {
       finalGameId,
       userId,
       false,
-      false,
+      true,
       randomEventsServerSide,
       None,
       None

@@ -9,15 +9,16 @@ describe('connect', function () {
                 const user = await login({email: 'a@b.com', password: "12345678"});
 
                 const webSocket = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`, "events");
-                webSocket.onmessage = function (event) {
+                webSocket.addEventListener('message', function (event) {
                     const json = JSON.parse(event.data as string);
+                    console.log(json)
                     try {
                         expect(json.action).toBe('hello');
                     } catch (e) {
                         reject(e);
                     }
                     resolve();
-                };
+                });
                 webSocket.onopen = (event) => {
                     webSocket.send('{"action": "hello", "type": "test", "userId": 0}')
                 };

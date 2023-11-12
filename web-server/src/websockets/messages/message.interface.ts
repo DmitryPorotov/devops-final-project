@@ -1,7 +1,7 @@
 import {ChatMessageInterface} from "./chat-message.interface";
 
 export interface MessageInterface {
-    from?: number;
+    userId?: number;
     messageId: string;
     name?: string;
     type: 'chat' | 'action' | 'test' | 'error';

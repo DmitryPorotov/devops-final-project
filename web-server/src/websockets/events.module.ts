@@ -10,9 +10,10 @@ import LobbyManagerService from "./lobby-manager.service";
 import {RabbitMqModule} from "../rabbit-mq/rabbit-mq.module";
 import ConnectivityTestService from "./connectivity-test.service";
 import { RedisModule } from "../redis/redis.module";
+import LobbiesClientsMapService from "./lobbies-clients-map.service"
 
 @Module({
     imports:[JwtModule, DatabaseModule, RabbitMqModule, RedisModule],
-    providers: [EventsGateway, AuthGuard, WebsocketService, LobbyManagerService, LobbyService, ConnectivityTestService, ...lobbyProviders],
+    providers: [EventsGateway, AuthGuard, WebsocketService, LobbyManagerService, LobbiesClientsMapService, LobbyService, ConnectivityTestService, ...lobbyProviders],
 })
 export class EventsModule {}

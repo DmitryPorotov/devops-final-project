@@ -103,7 +103,7 @@ class Websocket {
     static subscribe(lobbyId) {
         Websocket.socket.send(
             JSON.stringify({
-                from: this.playerId,
+                userId: this.playerId,
                 type: 'chat',
                 lobbyId,
                 body: {

@@ -16,7 +16,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                 await this.init();
                 const lobbyEntity = await this.getLobbyIfIsParticipant(message, client.user);
                 this.logger.debug('has lobbyEntity', lobbyEntity != null);
-                if (client.user.id !== message.from) {
+                if (client.user.id !== message.userId) {
                     this.logger.debug('corrupt message, messageId ' + message.messageId);
                     const error: MessageInterface = {
                         type: 'error',
@@ -73,7 +73,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                         await this.messagingService.sendToChat(lobbyEntity.id, {
                             messageId: message.messageId,
                             type: 'chat',
-                            from: client.user.id,
+                            userId: client.user.id,
                             lobbyId: message.lobbyId,
                             body
                         })
@@ -84,7 +84,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                                     type: 'error',
                                     body: e.message
                                 },
-                                from: client.user.id,
+                                userId: client.user.id,
                                 lobbyId: lobbyEntity.id,
                                 messageId: message.messageId,
                                 type: 'error'

@@ -5,7 +5,7 @@ export interface MessagingProviderInterface {
 
     waitForInit(): Promise<boolean>;
 
-    sendToWorkersTest(message): void;
+    // sendToWorkersTest(message): void;
 
     subscribeToChat(lobbyId: number): Promise<void>;
 
