@@ -42,8 +42,20 @@ class RedisPubSub {
         this.redisPublisher.publish(`worker1.${this.SERVER_NAME}`, message);
     }
 
-    publish(toChannel: string, message: string) {
-        this.redisPublisher.publish(`${toChannel}.${this.SERVER_NAME}`, message);
+    publishToWorker(toChannel: string, message: string) {
+        this.publishToGame(toChannel, this.SERVER_NAME, message);
+    }
+
+    publishToGame(toChannel: string, returnTo: string, message: string) {
+        this.redisPublisher.publish(`${toChannel}.${returnTo}`, message);
+    }
+
+    async subscribe(pattern: string, handler: (message: string, channel: string) => void) {
+        await this.redisSubscriber.pSubscribe(pattern, handler);
+    }
+
+    async unsubscribe(pattern: string) {
+        await this.redisSubscriber.pUnsubscribe(pattern);
     }
 
 }

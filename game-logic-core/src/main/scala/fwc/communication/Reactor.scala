@@ -36,19 +36,22 @@ object Reactor {
         games = games + (result._1 -> GameReplay(result._2, result._3.boardCards, result._3, Seq()))
         ujson.Obj(
           "gameId" -> ujson.Str(result._1),
-          "gameState" -> result._3.toJson
+          "gameState" -> result._3.toCleanJson
         ).render(fwc.jsonIndentation)
       case MessageStartGame(userId, gameId) =>
         val result = ReactionStartGame(userId, games(gameId).gameSettings)
         games = games + (gameId -> games(gameId).copy(gameSettings = result))
         ujson.Obj(
           "gameId" -> ujson.Str(gameId),
-          "gameState" -> games(gameId).currentGameState.toJson
+          "gameState" -> games(gameId).currentGameState.toCleanJson
         ).render(fwc.jsonIndentation)
       case MessageGameAction(userId, gameId, gameAction) =>
         val gameReplay = games(gameId)
         val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction.apply(userId, gameReplay, gameAction)
         games = games + (gameId -> replay)
-        reply.render(fwc.jsonIndentation)
+        ujson.Obj(
+          "gameId" -> ujson.Str(gameId),
+          "reply" -> reply
+        ).render(fwc.jsonIndentation)
   }
 }

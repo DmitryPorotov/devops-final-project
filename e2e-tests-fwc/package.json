@@ -4,7 +4,8 @@
   "description": "end to end tests for the table games project",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/jest/bin/jest.js --silent=false --config ./test/jest-e2e.json"
+    "test": "node node_modules/jest/bin/jest.js --silent=false --config ./test/jest-e2e.json",
+    "test:debug": "node --inspect=9228 node_modules/jest/bin/jest.js --silent=false --config ./test/jest-e2e.json"
   },
   "type": "module",
   "author": "",

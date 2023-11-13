@@ -7,6 +7,7 @@ import LobbyManagerService from "./lobby-manager.service";
 import WebsocketWithUserInterface from "./websocket-with-user.interface";
 import ConnectivityTestService from "./connectivity-test.service";
 import {Buffer} from "buffer";
+import GameMessagingService from "./game-messaging.service"
 
 interface Lobby {
     id: number;
@@ -21,7 +22,8 @@ class WebsocketService {
 
     constructor(private lobbyService: LobbyService,
                 private lobbyManagerService: LobbyManagerService,
-                private connectivityTestService: ConnectivityTestService) {
+                private connectivityTestService: ConnectivityTestService,
+                private gameMessagingService: GameMessagingService) {
     }
 
     // private lobbies: Map<number,Lobby> = new Map<number, Lobby>();
@@ -65,7 +67,14 @@ class WebsocketService {
                 client.send(JSON.stringify(msg))
             })
         } else if (message.type === 'action') {
-
+            switch (message.action) {
+                case "create_game":
+                    await this.gameMessagingService.create(client, message);
+                    break;
+                case "join_game":
+                    await this.gameMessagingService.join(client, message);
+                    break;
+            }
         }
 
         /*if (!this.lobbies.has(message.lobbyId)) {

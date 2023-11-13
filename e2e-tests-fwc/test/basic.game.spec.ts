@@ -29,7 +29,7 @@ describe('basic_game', function () {
 
 
                 const messageId = String(Math.random());
-
+                const messageId1 = String(Math.random());
                 let isLobbyCreated = false;
                 webSocket1.addEventListener('message', function (event) {
                     try {
@@ -38,6 +38,9 @@ describe('basic_game', function () {
                             case messageId:
                                 expect(json.body.type).toBe('create');
                                 isLobbyCreated = true;
+                                break;
+                            case messageId1:
+                                console.log(json)
                                 break;
                         }
                     } catch (e) {
@@ -85,7 +88,7 @@ describe('basic_game', function () {
                     s.send(`{"type": "chat", "userId": ${s.u.id}, "messageId": "${messageId}", "lobbyId": 2, "body":{"type":"join"}}`)
                 }
                 await sleep(1000);
-                const messageId1 = String(Math.random());
+
                 webSocket1.send(JSON.stringify({
                     type: 'action',
                     lobbyId: 2,

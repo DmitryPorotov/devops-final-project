@@ -26,16 +26,16 @@ object GameServer {
     val jedisPub = new Jedis(redisHost, 6379)
     jedisSub.psubscribe(new JedisPubSub {
       override def onPMessage(pattern: String, channel: String, message: String): Unit = {
-        val serverName = channel.split('.')(1)
+        val replyTo = channel.split('.')(1)
         println(" [x] Received '" + message + "'")
         val reply = Try[String](Reactor.apply(message)) match
           case Success(s) => s
           case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
             .render(fwc.jsonIndentation)
         println(" [x] Sent '" + reply + "'")
-        jedisPub.publish(serverName + "." + workerName, reply)
+        jedisPub.publish(replyTo + "." + workerName, reply)
       }
-    }, workerName + ".*")
+    }, workerName + ".*", "new_game.*")
 
 //    val rabbitHost =
 //      if System.getenv("RABBIT_HOST") == null

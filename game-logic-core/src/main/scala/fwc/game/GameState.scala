@@ -11,6 +11,7 @@ import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
 import fwc.gameLoading.BoardTile
 import ujson.Value
 
+import scala.collection.mutable
 import scala.util.Try
 
 case class GameState(
@@ -34,21 +35,28 @@ case class GameState(
                     ) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj(
+      toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
+        "boardCards" -> boardCards.toJson,
+        "placedOrders" -> placedOrders.toJson,
+        "availableOrders" -> availableOrders.toJson,
+        "bids" -> bids.toJson,
+      )
+    )
+  }
+
+  def toCleanJson: ujson.Obj = {
+    ujson.Obj(
       "subPhase" -> subPhase.toJson,
       "armies" -> armies.toJson,
-      "placedOrders" -> placedOrders.toJson,
       "tracks" -> tracks.toJson,
       "supplies" -> supplies.toJson,
       "discardedHouseCards" -> discardedHouseCards.toJson,
       "powerTokens" -> powerTokens.toJson,
-      "boardCards" -> boardCards.toJson,
       "dominanceTokensUsage" -> dominanceTokensUsage.toJson,
       "usedMusteringPoints" -> usedMusteringPoints.toJson,
-      "availableOrders" -> availableOrders.toJson,
-      "bids" -> bids.toJson,
       "combat" -> (if combat == null then ujson.Null else combat.toJson),
       "wildlingCounter" -> wildlingCounter,
-      "wildlingsStartedFrom12Points" -> 
+      "wildlingsStartedFrom12Points" ->
         (if wildlingsStartedFrom12Points.isEmpty then ujson.Null else wildlingsStartedFrom12Points.head),
       "roundCounter" -> roundCounter,
     )

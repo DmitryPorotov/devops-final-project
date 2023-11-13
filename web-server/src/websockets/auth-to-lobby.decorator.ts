@@ -7,7 +7,7 @@ import { ChatMessageInterface } from "./messages/chat-message.interface"
 
 
 export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
-    return function <T2 = (this: LobbyManagerService, WebsocketWithUserInterface, MessageInterface, Lobby) => Promise<void>>
+    return function <T2 = (this: LobbyManagerService, client: WebsocketWithUserInterface, message: MessageInterface, lobby: Lobby) => Promise<void>>
     (target: LobbyManagerService, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
         const original = descriptor.value as (WebsocketWithUserInterface, MessageInterface, Lobby) => Promise<void>;
 
