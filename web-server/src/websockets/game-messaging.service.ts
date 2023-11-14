@@ -19,11 +19,20 @@ class GameMessagingService {
     @AuthToGame(true)
     async create(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
-        await this.workerRelayService.createNewGame(client.user.id, message.lobbyId)
+        await this.workerRelayService.createNewGame(client.user.id, message.lobbyId, message.isRandomHouses, message.messageId)
     }
 
     @AuthToGame()
     async join(client: WebsocketWithUserInterface, message: MessageInterface) {
+        await this.workerRelayService.subscribeToGame(message.lobbyId);
+        await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
+            ...message,
+            gameId: String(message.lobbyId)
+        }))
+    }
+
+    @AuthToGame()
+    async start(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
         await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
             ...message,

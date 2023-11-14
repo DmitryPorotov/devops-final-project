@@ -1,10 +1,6 @@
 version: "3.8"
 
 services:
-  #rabbitmq:
-    #image: "rabbitmq:3"
-    #ports:
-      #- "5672:5672"
   redis:
     image: redis:7.2.2
     restart: always
@@ -31,7 +27,7 @@ services:
     command: ["npx", "nest", "start", "--debug=0.0.0.0:9229", "--watch"]
     depends_on:
       - mysql
-      - rabbitmq
+      - redis
     environment:
       - DB_HOST=mysql
       - RABBIT_HOST=rabbitmq
@@ -48,6 +44,6 @@ services:
       - WORKER_NAME=worker1
     command: ["java","-cp", "lib/jedis-4.4.0.jar:lib/geny_3-0.7.1.jar:lib/ujson_3-1.6.0.jar:lib/upack_3-1.6.0.jar:lib/upickle-core_3-1.6.0.jar:lib/upickle-implicits_3-1.6.0.jar:lib/upickle_3-1.6.0.jar:lib/amqp-client-5.16.0.jar:lib/scalajs-library_2.11-1.8.0.jar:lib/scala-library-2.13.8.jar:lib/scala-reflect-2.11.12.jar:lib/scala3-library_3-3.1.2.jar:lib/slf4j-api-1.7.36.jar:./classes", "fwc.FunWithChairs"]
     depends_on:
-      rabbitmq:
+      redis:
         condition: service_started
         restart: true

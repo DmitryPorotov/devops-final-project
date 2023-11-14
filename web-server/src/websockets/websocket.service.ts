@@ -74,6 +74,9 @@ class WebsocketService {
                 case "join_game":
                     await this.gameMessagingService.join(client, message);
                     break;
+                case "start_game":
+                    await this.gameMessagingService.start(client, message);
+                    break
             }
         }
 

@@ -67,14 +67,15 @@ class WorkerRelayService {
 
     async sendToGame(gameId: number, message: string) {
         const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
-        this.redisPubSub.publishToGame(workerName, `game:${gameId}`, message);
+        this.redisPubSub.publishToGame(workerName, `game${gameId}`, message);
     }
 
-    async createNewGame(userId: number, gameId: number) {
+    async createNewGame(userId: number, gameId: number, isRandomHouses: boolean, messageId: string) {
         this.redisPubSub.publishToWorker( 'new_game', JSON.stringify({
             userId,
             gameId: String(gameId),
-            action: 'new_game'
+            action: 'new_game',
+            messageId
         }));
         this.pendingNewGames.set(gameId, []);
         setTimeout(() => {
@@ -85,6 +86,8 @@ class WorkerRelayService {
                     action: 'create_game',
                     userId,
                     gameId: String(gameId),
+                    messageId,
+                    isRandomHouses
                 }))
                 this.redisCacheStorage.set(`game:${gameId}`, worker.worker);
             }

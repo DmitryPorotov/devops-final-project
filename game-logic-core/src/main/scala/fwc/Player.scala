@@ -7,7 +7,7 @@ import scala.util.{Try, Success, Failure}
 case class Player(userId: Int, house: Option[HouseType]) extends JsonSerializable {
   override def toJson: Value = ujson.Obj(
     "userId" -> userId,
-    "house" -> house.orNull.toString
+    "house" -> house.fold(ujson.Null)(_.toString)
   )
 }
 

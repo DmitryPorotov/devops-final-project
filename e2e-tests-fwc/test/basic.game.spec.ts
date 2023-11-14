@@ -30,6 +30,8 @@ describe('basic_game', function () {
 
                 const messageId = String(Math.random());
                 const messageId1 = String(Math.random());
+                const messageId2 = String(Math.random());
+                const messageId3 = String(Math.random());
                 let isLobbyCreated = false;
                 webSocket1.addEventListener('message', function (event) {
                     try {
@@ -40,7 +42,15 @@ describe('basic_game', function () {
                                 isLobbyCreated = true;
                                 break;
                             case messageId1:
-                                console.log(json)
+                                expect(json.gameState.subPhase.subPhase).toBe('addOrder');
+                                everyoneJoin();
+                                break;
+                            case messageId2:
+                                expect(json.gameSettings.players).toBeDefined();
+                                break;
+                            case messageId3:
+                                expect(json.gameSettings.players[0].house).toBeDefined();
+                                resolve()
                                 break;
                         }
                     } catch (e) {
@@ -74,7 +84,6 @@ describe('basic_game', function () {
                     const messageId = String(Math.random());
                     s.addEventListener('message', function (event) {
                         const json = JSON.parse(event.data as string);
-                        console.log(json);
                         try {
                             if (messageId === json.messageId) {
                                 expect(json.body.type).toBe('join');
@@ -94,8 +103,58 @@ describe('basic_game', function () {
                     lobbyId: 2,
                     userId: 1,
                     messageId: messageId1,
-                    action: 'create_game'
+                    action: 'create_game',
+                    isRandomHouses: false
                 }))
+                const otherHouses = {
+                    2: "kraken",
+                    3: "pufferfish",
+                    4: "wolf",
+                    5: "moose",
+                    6: "rose"
+                };
+                const everyoneJoin = function() {
+                    webSocket1.send(JSON.stringify({
+                        type: 'action',
+                        userId: user.id,
+                        action: 'join_game',
+                        lobbyId: 2,
+                        messageId: messageId2,
+                        joinAs: "lion"
+                    }))
+                    for (let s of sockets) {
+                        const messageId = String(Math.random());
+                        s.addEventListener('message', function (event) {
+                            const json = JSON.parse(event.data as string);
+                            // console.log(json);
+                            try {
+                                if (messageId === json.messageId) {
+                                    expect(json.gameSettings.players).toBeDefined();
+                                    if (json.gameSettings.players.length === 6) {
+                                        webSocket1.send(JSON.stringify({
+                                            messageId: messageId3,
+                                            type: 'action',
+                                            userId: user.id,
+                                            action: 'start_game',
+                                            lobbyId: 2,
+                                        }))
+                                    }
+                                }
+                            }
+                            catch (e) {
+                                reject(e);
+                            }
+                        });
+                        s.send(JSON.stringify({
+                            type: 'action',
+                            userId: s.u.id,
+                            action: 'join_game',
+                            lobbyId: 2,
+                            messageId,
+                            joinAs: otherHouses[s.u.id]
+                        }))
+                    }
+                }
             } catch (e) {
                 reject(e)
             }

@@ -1,5 +1,6 @@
 package fwc.communication.messages
 
 case class MessageNewGame(
-                           gameId: String
+                           gameId: String,
+                           messageId: String,
                          ) extends Message

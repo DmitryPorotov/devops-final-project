@@ -5,6 +5,7 @@ import fwc.game.houses.HouseType
 case class MessageJoinGame(
                           userId: Int,
                           gameId: String,
-                          joinAs: Option[HouseType]
+                          joinAs: Option[HouseType],
+                          messageId: String
                           )
   extends Message

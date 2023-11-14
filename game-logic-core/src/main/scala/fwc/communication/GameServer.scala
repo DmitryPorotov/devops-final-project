@@ -1,7 +1,9 @@
 package fwc.communication
 //import com.rabbitmq.client.*
 import fwc.communication.messages.Message
-import scala.util.{Try, Success, Failure}
+import fwc.game.FWCException
+
+import scala.util.{Failure, Success, Try}
 import redis.clients.jedis.*
 
 //import org.zeromq.{ZLoop, ZMQ}
@@ -30,7 +32,16 @@ object GameServer {
         println(" [x] Received '" + message + "'")
         val reply = Try[String](Reactor.apply(message)) match
           case Success(s) => s
-          case Failure(e) => ujson.Obj("error" -> "error", "message" -> e.getMessage)
+          case Failure(e: FWCException) => ujson.Obj(
+              "error" -> "error",
+              "message" -> e.getMessage
+            )
+            .render(fwc.jsonIndentation)
+          case Failure(e) => ujson.Obj(
+              "error" -> "error",
+              "message" -> e.getMessage,
+              "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString))
+            )
             .render(fwc.jsonIndentation)
         println(" [x] Sent '" + reply + "'")
         jedisPub.publish(replyTo + "." + workerName, reply)

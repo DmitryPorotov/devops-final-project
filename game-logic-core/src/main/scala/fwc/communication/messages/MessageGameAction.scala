@@ -3,5 +3,6 @@ package fwc.communication.messages
 case class MessageGameAction(
                               userId: Int,
                               gameId: String,
-                              gameAction: ujson.Value
+                              gameAction: ujson.Value,
+                              messageId: String,
                             ) extends Message

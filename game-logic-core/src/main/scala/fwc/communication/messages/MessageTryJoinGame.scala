@@ -2,6 +2,7 @@ package fwc.communication.messages
 
 case class MessageTryJoinGame(
                              userId: Int,
-                             gameId: String
+                             gameId: String,
+                             messageId: String,
                              ) 
   extends Message
