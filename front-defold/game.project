@@ -1,0 +1,20 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = front-defold
+dependencies#0 = https://github.com/defold/extension-websocket/archive/3.1.0.zip
+
+[tilemap]
+max_tile_count = 16384
+
+[display]
+width = 1200
+height = 675
+

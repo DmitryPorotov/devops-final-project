@@ -1,0 +1,86 @@
+function init(self)
+	msg.post("#camera", "acquire_camera_focus")
+	msg.post(".", "acquire_input_focus")
+	self.camera_move_dir = vmath.vector3()
+	self.camera_drag_delta = vmath.vector3()
+	self.camera_move_speed = 400
+	self.moving_camera = false
+
+	self.camera_up_limit = vmath.vector3(0, 950, 0)
+	self.camera_down_limit = vmath.vector3(0, -850, 0)
+
+	self.mouse_pressed = false
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	if self.moving_camera then
+		local pos = go.get_position()         
+		pos = pos + self.camera_move_dir * self.camera_move_speed * dt
+		pos = pos - self.camera_drag_delta
+		if pos.x < self.camera_down_limit.x then
+			pos.x = self.camera_down_limit.x
+		elseif pos.x > self.camera_up_limit.x then
+			pos.x = self.camera_up_limit.x
+		end
+		if pos.y < self.camera_down_limit.y then
+			pos.y = self.camera_down_limit.y
+		elseif pos.y > self.camera_up_limit.y then
+			pos.y = self.camera_up_limit.y
+		end
+		go.set_position(pos)                  
+	end
+
+	self.moving_camera = false
+	self.camera_move_dir = vmath.vector3()
+end
+
+function fixed_update(self, dt)
+	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
+	-- Can be coupled with fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
+	-- Physics section of game.project
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("camera_up") then
+		self.camera_move_dir.y = 1                       
+	elseif action_id == hash("camera_down") then
+		self.camera_move_dir.y = -1
+	elseif action_id == hash("camera_left") then
+		self.camera_move_dir.x = -1
+	elseif action_id == hash("camera_right") then
+		self.camera_move_dir.x = 1
+	elseif action_id == hash("touch") and action.pressed then
+		self.mouse_pressed = true
+	elseif action_id == hash("touch") and self.mouse_pressed and (action.dx ~= 0 or action.dy ~= 0) and not action.released then
+		self.moving_camera = true
+		self.camera_drag_delta = vmath.vector3(action.dx, action.dy, 0)
+	elseif action_id == hash("touch") and action.released then
+		self.mouse_pressed = false
+	end
+
+	if vmath.length(self.camera_move_dir) > 0 then
+		self.moving_camera = true                     
+		self.dir = vmath.normalize(self.camera_move_dir) 
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

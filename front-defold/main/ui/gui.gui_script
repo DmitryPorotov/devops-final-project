@@ -1,0 +1,48 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+end
+
+local function swap_positions(node1, node2)
+	local pos1 = gui.get_position(node1)
+	local pos2 = gui.get_position(node2)
+	local new_pos1 = vmath.vector3(pos2.x, pos1.y, 0)
+	local new_pos2 = vmath.vector3(pos1.x, pos2.y, 0)
+	gui.set_position(node1, new_pos1)
+	gui.set_position(node2, new_pos2)
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then
+		local tracks = gui.get_node("tracks")
+		local full_tracks = gui.get_node("tracks_full")
+		if tracks and gui.pick_node(tracks, action.x, action.y) then
+			swap_positions(tracks, full_tracks)
+		elseif full_tracks and gui.pick_node(full_tracks, action.x, action.y) then
+			swap_positions(full_tracks, tracks)
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end
