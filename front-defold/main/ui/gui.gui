@@ -451,14 +451,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.502
-    y: 0.2
-    z: 0.302
+    x: 1.0
+    y: 1.0
+    z: 1.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: ""
+  texture: "gui/influence-tracks-no-bg"
   id: "tracks_full"
   xanchor: XANCHOR_RIGHT
   yanchor: YANCHOR_BOTTOM

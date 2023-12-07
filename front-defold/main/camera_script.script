@@ -3,7 +3,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.camera_move_dir = vmath.vector3()
 	self.camera_drag_delta = vmath.vector3()
-	self.camera_move_speed = 400
+	self.camera_move_speed = 1000
 	self.moving_camera = false
 
 	self.camera_up_limit = vmath.vector3(0, 950, 0)

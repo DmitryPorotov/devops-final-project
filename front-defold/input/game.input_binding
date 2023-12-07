@@ -15,10 +15,14 @@ key_trigger {
   action: "camera_right"
 }
 mouse_trigger {
-  input: MOUSE_BUTTON_1
+  input: MOUSE_BUTTON_LEFT
   action: "touch"
 }
 mouse_trigger {
-  input: MOUSE_BUTTON_LEFT
-  action: "touch"
+  input: MOUSE_WHEEL_UP
+  action: "camera_up"
+}
+mouse_trigger {
+  input: MOUSE_WHEEL_DOWN
+  action: "camera_down"
 }

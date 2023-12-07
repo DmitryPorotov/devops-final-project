@@ -18,3 +18,6 @@ max_tile_count = 16384
 width = 1200
 height = 675
 
+[sprite]
+max_count = 256
+
