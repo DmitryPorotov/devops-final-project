@@ -1,5 +1,37 @@
+local tracks = require "main/ui/tracks"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	self.tracks_open = false
+	self.me = "moose"
+	self.tracks = { 
+		throne = {
+			"moose",
+			"lion",
+			"wolf",
+			"pufferfish",
+			"kraken",
+			"rose"
+		},
+		fiefdoms = {
+			"kraken",
+			"rose",
+			"pufferfish",
+			"wolf",
+			"moose",
+			"lion"
+		},
+		court = {
+			"lion",
+			"wolf",
+			"pufferfish",
+			"moose",
+			"rose",
+			"kraken"
+		}
+	}
+	tracks:init(self.me)
+	tracks:set_tracks(self.tracks)
 end
 
 function final(self)
@@ -20,26 +52,36 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 end
 
-local function swap_positions(node1, node2)
-	local pos1 = gui.get_position(node1)
-	local pos2 = gui.get_position(node2)
-	local new_pos1 = vmath.vector3(pos2.x, pos1.y, 0)
-	local new_pos2 = vmath.vector3(pos1.x, pos2.y, 0)
-	gui.set_position(node1, new_pos1)
-	gui.set_position(node2, new_pos2)
-end
 
 function on_input(self, action_id, action)
 	if action_id == hash("touch") and action.pressed then
-		local tracks = gui.get_node("tracks")
-		local full_tracks = gui.get_node("tracks_full")
-		if tracks and gui.pick_node(tracks, action.x, action.y) then
-			swap_positions(tracks, full_tracks)
-		elseif full_tracks and gui.pick_node(full_tracks, action.x, action.y) then
-			swap_positions(full_tracks, tracks)
+		if gui.pick_node(tracks.tracks, action.x, action.y) then
+			if tracks.is_open then
+				tracks:close()
+				-- close_tracks(self, tracks)
+			else
+				tracks:open()
+				-- open_tracks(self, tracks)
+			end	
 		end
 	end
 end
+
+-- function open_tracks(self, tracks)
+-- 	gui.animate(tracks, "position.y", 260, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t_under_shiled_u1"), "color.w", 1, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t1"), "scale", 1, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t1"), "position.y", 175, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	self.tracks_open = true
+-- end
+
+-- function close_tracks(self, tracks)
+-- 	gui.animate(tracks, "position.y", -100, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t_under_shiled_u1"), "color.w", 0, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t1"), "scale", .7, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	gui.animate(gui.get_node("t1"), "position.y", 185, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+-- 	self.tracks_open = false
+-- end
 
 function on_reload(self)
 	-- Add reload-handling code here

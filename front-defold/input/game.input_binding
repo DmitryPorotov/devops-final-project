@@ -20,9 +20,9 @@ mouse_trigger {
 }
 mouse_trigger {
   input: MOUSE_WHEEL_UP
-  action: "camera_up"
+  action: "zoom_out"
 }
 mouse_trigger {
   input: MOUSE_WHEEL_DOWN
-  action: "camera_down"
+  action: "zoom_in"
 }
