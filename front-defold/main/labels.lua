@@ -17,6 +17,7 @@ local M = {
 		kraken = vmath.vector3(.95, .95, .95),
 		others = vmath.vector3(.2, .2, .2)
 	},
+	LABEL_SELECT_COLOR = vmath.vector4(0,0,0,1),
 	selected = nil
 }
 
@@ -24,9 +25,17 @@ function M.to_id(hash)
 	return string.sub(tostring(hash), 8, #tostring(hash) - 1)
 end
 
+local function is_port(id)
+	return string.find(id, "%dport_")
+end
+
 function M.select(self, label)
 	local id = M.to_id(label)
-	go.set(id .. '#label_bg_sel', 'tint', vmath.vector4(0,0,0,1))
+	if is_port(id) then
+		go.set(id .. '#bg_selected', 'tint', self.LABEL_SELECT_COLOR)
+	else
+		go.set(id .. '#label_bg_sel', 'tint', self.LABEL_SELECT_COLOR)
+	end
 
 	if self.selected then
 		self:unselect(self.selected)
@@ -41,7 +50,11 @@ end
 
 function M.unselect(self, label)
 	local id = M.to_id(label)
-	go.set(id .. '#label_bg_sel', 'tint', vmath.vector4(1,1,1,1))
+	if is_port(id) then
+		go.set(id .. '#bg_selected', 'tint', vmath.vector4(1,1,1,0))
+	else
+		go.set(id .. '#label_bg_sel', 'tint', vmath.vector4(1,1,1,1))
+	end
 end
 
 function M.init(self)
@@ -69,6 +82,14 @@ function M.init(self)
 	go.set("/54salt_shore#label_bg", "tint", self.HOUSE_COLORS.pufferfish)
 	go.set("/55sunspear#label_bg", "tint", self.HOUSE_COLORS.pufferfish)
 
+	go.set("/4port_winterfell#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/8port_white_harbor#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/17port_pyke#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/23port_lannisport#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/32port_dragonstone#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/43port_oldtown#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/47port_storms_end#bg_selected", "tint", vmath.vector4(1,1,1,0))
+	go.set("/56port_sunspear#bg_selected", "tint", vmath.vector4(1,1,1,0))
 
 	go.set("/0bay_of_ice#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/1castle_black#label_bg", "tint", self.HOUSE_COLORS.neutral)

@@ -3,7 +3,7 @@ local tracks = require "main/ui/tracks"
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.tracks_open = false
-	self.me = "moose"
+	self.me = "lion"
 	self.tracks = { 
 		throne = {
 			"moose",
@@ -30,7 +30,15 @@ function init(self)
 			"kraken"
 		}
 	}
-	tracks:init(self.me)
+	self.players = {
+		moose = { id = 1, name = "player1" },
+		lion = { id = 2, name = "player2" },
+		wolf = { id = 3, name = "player3" },
+		pufferfish = { id = 4, name = "player4" },
+		kraken = { id = 5, name = "player5" },
+		rose = { id = 6, name = "player6" }
+	}
+	tracks:init(self.me, self.players)
 	tracks:set_tracks(self.tracks)
 end
 
@@ -50,6 +58,19 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Learn more: https://defold.com/manuals/message-passing/
 	-- Remove this function if not needed
+	if message_id == hash("touch_multi") then
+		local text = ""
+		local sum = vmath.vector3()
+		if #message.touch > 1 then
+			sum = vmath.vector3(message.touch[1].dx + message.touch[2].dx, message.touch[1].dy + message.touch[2].dy, 0)
+		end
+		for i, touchdata in ipairs(message.touch) do
+			text = text .. "point " .. i .. ' x ' .. touchdata.x .. ' y ' .. touchdata.y .. ' dx ' .. touchdata.dx .. ' dy ' .. touchdata.dy .. "\n"
+		end
+		text = text .. 'sum of deltas ' .. sum
+		local s = gui.get_node("debug")
+		gui.set_text(s, text)
+	end
 end
 
 

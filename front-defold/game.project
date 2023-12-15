@@ -22,3 +22,6 @@ height = 675
 [sprite]
 max_count = 256
 
+[physics]
+debug = 0
+

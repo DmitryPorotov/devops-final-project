@@ -8,10 +8,12 @@ local ANIMATION_TIME = .15
 local STARTING_Y_POSITION = 185
 local Y_STEP = 70
 
-function M.init(self, my_house)
+function M.init(self, my_house, players)
+	self.logic_tracks = nil
 	self.is_open = false
 	self.is_init = false
 	self.me = my_house
+	self.players = players
 	self.tracks = gui.get_node("tracks_full")
 end
 
@@ -25,6 +27,49 @@ local function set_shields(tracks, track_name)
 		gui.set_id(shield, prefix .. "_shield-" .. i)
 		gui.set_parent(shield, gui.get_node(prefix .. i))
 		gui.set_position(shield, vmath.vector3(0, -4, 0))
+	end
+end
+
+local function set_player_panels(self, player_panel_num, house_name)
+	local name = gui.get_node("player" .. player_panel_num .. "/player_name_text")
+	gui.set_text(name, self.players[house_name]["name"])
+	local shield = gui.get_node("player" .. player_panel_num .. "/shield")
+	gui.play_flipbook(shield, hash(house_name))
+
+	for i = 1, 3 do
+		local icon = gui.get_node("player" .. player_panel_num .. "/icon" .. i)
+		gui.set_color(icon, vmath.vector4(1,1,1,0))
+	end
+
+	local icon_num_to_set = 1
+	if self.logic_tracks["throne"][1] == house_name then
+		local icon = gui.get_node("player" .. player_panel_num .. "/icon" .. icon_num_to_set)
+		gui.set_color(icon, vmath.vector4(1,1,1,1))
+		gui.play_flipbook(icon, hash("throne_icon"))
+		icon_num_to_set = icon_num_to_set + 1
+	end
+	if self.logic_tracks["fiefdoms"][1] == house_name then
+		local icon = gui.get_node("player" .. player_panel_num .. "/icon" .. icon_num_to_set)
+		gui.set_color(icon, vmath.vector4(1,1,1,1))
+		gui.play_flipbook(icon, hash("sword_icon"))
+		icon_num_to_set = icon_num_to_set + 1
+	end
+	if self.logic_tracks["court"][1] == house_name then
+		local icon = gui.get_node("player" .. player_panel_num .. "/icon" .. icon_num_to_set)
+		gui.set_color(icon, vmath.vector4(1,1,1,1))
+		gui.play_flipbook(icon, hash("crow_icon"))
+	end
+
+end
+
+local function set_players_panels(self)
+	set_player_panels(self, 1, self.me)
+	local i = 2
+	for _, v in ipairs(self.logic_tracks["throne"]) do
+		if v ~= self.me then
+			set_player_panels(self, i, v)
+			i = i + 1
+		end
 	end
 end
 
@@ -72,6 +117,7 @@ function M.set_tracks(self, tracks)
 		self.my_t_idx = M:set_closed_locations("throne")
 		self.my_f_idx = M:set_closed_locations("fiefdoms")
 		self.my_c_idx = M:set_closed_locations("court")
+		set_players_panels(self)
 	end
 end
 
