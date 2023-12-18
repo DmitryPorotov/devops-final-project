@@ -118,15 +118,16 @@ function M.init(self)
 	go.set("/35kings_landing#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/36blackwater_bay#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/37west_summer_sea#label_bg", "tint", self.HOUSE_COLORS.neutral)
+	go.set("/39the_reach#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/42oldtown#label_bg", "tint", self.HOUSE_COLORS.neutral)
+
 	go.set("/45the_boneway#label_bg", "tint", self.HOUSE_COLORS.neutral)
-	
 	go.set("/46storms_end#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/48three_towers#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/49princes_pass#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/51the_arbor#label_bg", "tint", self.HOUSE_COLORS.neutral)
+
 	go.set("/52starfall#label_bg", "tint", self.HOUSE_COLORS.neutral)
-	
 	go.set("/53yronwood#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set("/57east_summer_sea#label_bg", "tint", self.HOUSE_COLORS.neutral)
 end

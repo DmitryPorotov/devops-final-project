@@ -1,6 +1,8 @@
 package fwc.gameLoading
 
+import fwc.JsonSerializable
 import fwc.game.houses.HouseType
+import ujson.Value
 
 case class BoardTile(number: Int,
                      tileType: BoardTileType,
@@ -9,7 +11,8 @@ case class BoardTile(number: Int,
                      musteringPoints: Int = 0,
                      supplyPoints: Int = 0,
                      powerPoints: Int = 0,
-                     homeOf: HouseType = null) {
+                     homeOf: HouseType = null)
+  extends JsonSerializable {
   def isNeighbourOf(boardTile: BoardTile): Boolean = {
     neighbourTiles.contains(boardTile.number)
   }
@@ -18,4 +21,14 @@ case class BoardTile(number: Int,
     neighbourTiles.contains(boardTileNumber)
   }
   def toNumberString: String = this.number.toString
+
+  override def toJson: Value = ujson.Obj(
+    "tileType" -> tileType.toString,
+    "name" -> name,
+    "neighbourTiles" -> neighbourTiles,
+    "musteringPoints" -> musteringPoints,
+    "supplyPoints" -> supplyPoints,
+    "powerPoints" -> powerPoints,
+    "homeOf" -> (if homeOf != null then homeOf.toString else ujson.Null)
+  )
 }

@@ -1,6 +1,8 @@
 package fwc.gameLoading
 
+import fwc.JsonSerializable
 import fwc.game.houses.*
+import ujson.Value
 
 case class HouseCard(
                       house: HouseType, 
@@ -10,8 +12,18 @@ case class HouseCard(
                       text: String = "", 
                       attack: Int = 0, 
                       defense: Int = 0
-                    ) extends CardTrait {
+                    ) extends CardTrait, JsonSerializable {
   override def getCode: Int = code
+
+  override def toJson: Value = ujson.Obj(
+    "house" -> house.toString,
+    "code" -> code,
+    "name" -> name,
+    "strength" -> strength,
+    "text" -> text,
+    "attack" -> attack,
+    "defense" -> defense
+  )
 
   def isWolf0: Boolean = house == HouseWolf && code == 0
   def isWolf2: Boolean = house == HouseWolf && code == 2

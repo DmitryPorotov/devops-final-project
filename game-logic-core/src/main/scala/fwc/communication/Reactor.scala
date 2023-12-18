@@ -2,7 +2,7 @@ package fwc.communication
 
 import fwc.GameSettings
 import fwc.communication.messages.*
-import fwc.game.{FWCException, GameState}
+import fwc.game.{FWCException, GameState, gameRules}
 import fwc.communication.reactions.*
 import fwc.gameSaving.GameReplay
 //import org.zeromq.ZLoop
@@ -14,13 +14,28 @@ object Reactor {
   def apply(message: String): String = {
     val msg = Message.parse(message)
     msg match
+      case MessageGameAction(userId, gameId, gameAction, messageId) =>
+        val gameReplay = games(gameId)
+        val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction.apply(userId, gameReplay, gameAction)
+        games = games + (gameId -> replay)
+        ujson.Obj(
+          "gameId" -> ujson.Str(gameId),
+          "messageId" -> messageId,
+          "reply" -> reply
+        ).render(fwc.jsonIndentation)
+      case MessageGetRules(userId, gameId,messageId) =>
+        ujson.Obj(
+          "gameId" -> ujson.Str(gameId),
+          "messageId" -> messageId,
+          "gameRules" -> gameRules.toJson
+        )render fwc.jsonIndentation
       case m: MessageTestConnectivity =>
         ujson.Obj(
           "action" -> "hello"
         ).render(fwc.jsonIndentation)
       case MessageNewGame(gameId, messageId) =>
         ujson.Obj(
-            "action" -> "new_game",
+          "action" -> "new_game",
           "gameId" -> ujson.Str(gameId),
           "messageId"->messageId,
           "gamesCount" -> ujson.Num(games.size),
@@ -64,14 +79,6 @@ object Reactor {
           "gameState" -> games(gameId).currentGameState.toCleanJson,
           "gameSettings" -> games(gameId).gameSettings.toJson
         ).render(fwc.jsonIndentation)
-      case MessageGameAction(userId, gameId, gameAction, messageId) =>
-        val gameReplay = games(gameId)
-        val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction.apply(userId, gameReplay, gameAction)
-        games = games + (gameId -> replay)
-        ujson.Obj(
-          "gameId" -> ujson.Str(gameId),
-          "messageId"->messageId,
-          "reply" -> reply
-        ).render(fwc.jsonIndentation)
+
   }
 }

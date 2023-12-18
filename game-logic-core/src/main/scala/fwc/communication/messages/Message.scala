@@ -23,6 +23,9 @@ object Message {
       throw new FWCException("Message has no gameId")
 
     action match
+      case "game_action" =>
+        val gameAction = json("player_action")
+        MessageGameAction(userId, gameId, gameAction, messageId)
       case "hello" => MessageTestConnectivity(userId, messageId)
       case "new_game" => MessageNewGame(gameId, messageId)
       case "create_game" =>
@@ -40,8 +43,6 @@ object Message {
         )
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
-      case "game_action" =>
-        val gameAction = json("player_action")
-        MessageGameAction(userId, gameId, gameAction, messageId)
+      case "get_rules" => MessageGetRules(userId, gameId, messageId)
   }
 }
