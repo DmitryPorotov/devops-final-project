@@ -43,7 +43,7 @@ object GameServer {
               "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString))
             )
             .render(fwc.jsonIndentation)
-        println(" [x] Sent '" + reply + "'")
+        println(" [x] Sent '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
         jedisPub.publish(replyTo + "." + workerName, reply)
       }
     }, workerName + ".*", "new_game.*")

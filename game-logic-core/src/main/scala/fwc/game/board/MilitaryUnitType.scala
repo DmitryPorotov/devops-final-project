@@ -1,12 +1,19 @@
 package fwc.game.board
 
+import fwc.JsonSerializable
 import fwc.game.FWCException
+import ujson.Value
 
-sealed trait MilitaryUnitType {
+sealed trait MilitaryUnitType extends JsonSerializable {
   def musteringPoints: Int = 1
   def strength = 1
   def canRetreat = true
   def canBeMustered: Boolean = musteringPoints > 0
+  override def toJson: Value = ujson.Obj(
+    "musteringPoints" -> musteringPoints,
+    "strength" -> strength,
+    "canRetreat" -> canRetreat,
+  )
 }
 
 case object MilitaryUnitFootmen extends MilitaryUnitType {
@@ -35,7 +42,7 @@ case object MilitaryUnitSiegeEngines extends MilitaryUnitType {
 
 case object MilitaryUnitGarrison extends MilitaryUnitType {
   override def toString: String = "garrison"
-  override def musteringPoints = -1
+  override def musteringPoints: Int = -1
   override def strength: Int = 0
 
   override def canRetreat: Boolean = false
@@ -43,7 +50,7 @@ case object MilitaryUnitGarrison extends MilitaryUnitType {
 
 case object MilitaryUnitPowerToken extends MilitaryUnitType {
   override def toString: String = "powerToken"
-  override def musteringPoints = -1
+  override def musteringPoints: Int = -1
 
   override def strength: Int = 0
 

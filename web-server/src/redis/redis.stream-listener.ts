@@ -1,6 +1,7 @@
 import { createClient } from "redis";
 import { env } from "process"
 import { Logger } from "@nestjs/common"
+import {sleep} from "../common/utilities";
 
 class RedisStreamListener {
     private readonly logger = new Logger(RedisStreamListener.name);
@@ -9,12 +10,12 @@ class RedisStreamListener {
 
     async init() {
         this.logger.debug('redis url ', env.REDIS_URL);
-        this.redisClient = createClient({url: env.REDIS_URL});
+        this.redisClient = await createClient({url: env.REDIS_URL});
         this.redisClient.on('error', (err) => this.logger.error('Redis Client Error', err));
         await this.redisClient.connect();
     }
 
-    addListener(streamName: string, startId: string, callback: (msg: string) => void, once = false): void {
+    async addListener(streamName: string, startId: string, callback: (msg: string) => void, once = false): Promise<void> {
         this.logger.debug('adding listener');
         if (!this.listeners.hasOwnProperty(streamName) || once) {
             if (!once) {
@@ -43,13 +44,14 @@ class RedisStreamListener {
                     })
                 }
                 if (!once) {
+                    //recursive timeout
                     this.listeners[streamName].timeout = setTimeout(async () => await xread({
                         stream,
                         id
                     }), 20) as NodeJS.Timeout
                 }
             };
-            xread({stream: streamName,id: startId}).then();
+            await xread({stream: streamName,id: startId});
         }
         else {
             this.listeners[streamName].callbacks.push(callback);

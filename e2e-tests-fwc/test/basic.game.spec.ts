@@ -1,5 +1,6 @@
-import { login, LoginUserDto, send, sleep } from "./login";
+import { login} from "./login";
 import { WebSocket } from "ws"
+import {LoginUserDto, send, sleep} from "./utility";
 
 describe('basic_game', function () {
     let user;
@@ -121,7 +122,7 @@ describe('basic_game', function () {
                         lobbyId: 2,
                         messageId: messageId2,
                         joinAs: "lion"
-                    }))
+                    }));
                     for (let s of sockets) {
                         const messageId = String(Math.random());
                         s.addEventListener('message', function (event) {

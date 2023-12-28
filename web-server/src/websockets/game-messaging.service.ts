@@ -8,7 +8,7 @@ import { WorkerMessageInterface } from "./messages/worker-message.interface"
 
 @Injectable()
 class GameMessagingService {
-    protected logger = new Logger(GameMessagingService.name)
+    protected logger = new Logger(GameMessagingService.name);
     constructor(protected lobbies: LobbiesClientsMapService, protected workerRelayService: WorkerRelayService) {
     }
 
@@ -22,17 +22,17 @@ class GameMessagingService {
         await this.workerRelayService.createNewGame(client.user.id, message.lobbyId, message.isRandomHouses, message.messageId)
     }
 
-    @AuthToGame()
-    async join(client: WebsocketWithUserInterface, message: MessageInterface) {
-        await this.workerRelayService.subscribeToGame(message.lobbyId);
-        await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
-            ...message,
-            gameId: String(message.lobbyId)
-        }))
-    }
+    // @AuthToGame()
+    // async join(client: WebsocketWithUserInterface, message: MessageInterface) {
+    //     await this.workerRelayService.subscribeToGame(message.lobbyId);
+    //     await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
+    //         ...message,
+    //         gameId: String(message.lobbyId)
+    //     }))
+    // }
 
     @AuthToGame()
-    async start(client: WebsocketWithUserInterface, message: MessageInterface) {
+    async relayMessage(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
         await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
             ...message,
@@ -44,9 +44,16 @@ class GameMessagingService {
         //todo send to users
         const lobby = this.lobbies.get(Number(msg.gameId));
         if (!lobby) return;
+        if (msg.userId) {
+            const client = lobby.clients.find(c => c.user.id === msg.userId);
+            if (client) {
+                client.send(JSON.stringify(msg));
+            }
+            return;
+        }
         lobby.clients.forEach(c => {
             c.send(JSON.stringify(msg));
-        })
+        });
     }
 }
 

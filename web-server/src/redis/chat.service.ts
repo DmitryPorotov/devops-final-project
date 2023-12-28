@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import { MessagingProviderInterface } from "../common/messaging-provider.interface";
 import { MessageInterface } from "../websockets/messages/message.interface";
 import RedisStreamListener from "./redis.stream-listener";
 import RedisPubSub from "./redis.pub-sub";
+import {sleep} from "../common/utilities";
 
 @Injectable()
 export default class ChatService implements MessagingProviderInterface {
+    private logger = new Logger(ChatService.name);
     private isInit = false;
 
     // private workerCallback: (msg:Object) => void;
@@ -45,7 +47,10 @@ export default class ChatService implements MessagingProviderInterface {
     // }
 
     async sendToChat(lobbyId: number, message: MessageInterface): Promise<void> {
-        this.subscribeToChat(lobbyId);
+        this.logger.debug("in sendToChat");
+        await this.subscribeToChat(lobbyId);
+        this.logger.debug("sending to chat");
+        this.logger.debug(message);
         await this.redisStreamListener.send(`${this.CHAT_PREFIX}${lobbyId}`, JSON.stringify(message));
     }
 
@@ -58,7 +63,7 @@ export default class ChatService implements MessagingProviderInterface {
            const data = JSON.parse(msg);
            cb(data)
         };
-        return this.redisStreamListener.addListener(`${this.CHAT_PREFIX}${lobbyId}`,'0', chatCb, true);
+        return await this.redisStreamListener.addListener(`${this.CHAT_PREFIX}${lobbyId}`,'0', chatCb, true);
     }
 
     async subscribeToChat(lobbyId: number): Promise<void> {
@@ -68,7 +73,9 @@ export default class ChatService implements MessagingProviderInterface {
             this.chatCallback(data);
         };
         this.chats.set(lobbyId, chatCb);
-        this.redisStreamListener.addListener(`${this.CHAT_PREFIX}${lobbyId}`, '0', chatCb);
+        const id = String(new Date().getTime()) + "-0";
+        await this.redisStreamListener.addListener(`${this.CHAT_PREFIX}${lobbyId}`, id, chatCb);
+        this.logger.debug("added listener");
     }
 
     async unsubscribeFromChat(lobbyId: number): Promise<void> {

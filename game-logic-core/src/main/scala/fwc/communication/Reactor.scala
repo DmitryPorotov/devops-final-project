@@ -23,8 +23,9 @@ object Reactor {
           "messageId" -> messageId,
           "reply" -> reply
         ).render(fwc.jsonIndentation)
-      case MessageGetRules(userId, gameId,messageId) =>
+      case MessageGetRules(userId, gameId, messageId) =>
         ujson.Obj(
+          "userId" -> userId,
           "gameId" -> ujson.Str(gameId),
           "messageId" -> messageId,
           "gameRules" -> gameRules.toJson

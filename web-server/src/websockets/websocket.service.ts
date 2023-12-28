@@ -65,18 +65,18 @@ class WebsocketService {
             await this.connectivityTestService.sendToWorker(JSON.stringify(message), (msg) => {
                 this.logger.debug("from worker: " + JSON.stringify(msg));
                 client.send(JSON.stringify(msg))
-            })
+            }) 
         } else if (message.type === 'action') {
             switch (message.action) {
                 case "create_game":
                     await this.gameMessagingService.create(client, message);
                     break;
+                case "get_rules":
                 case "join_game":
-                    await this.gameMessagingService.join(client, message);
-                    break;
                 case "start_game":
-                    await this.gameMessagingService.start(client, message);
-                    break
+                    await this.gameMessagingService.relayMessage(client, message);
+                    break;
+
             }
         }
 

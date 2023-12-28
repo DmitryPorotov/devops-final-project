@@ -24,7 +24,7 @@ export class EventsGateway implements OnGatewayConnection{
 
     constructor(
         private authGuard: AuthGuard,
-        private websocketService: WebsocketService
+        private websocketService: WebsocketService,
     ) {
     }
     @WebSocketServer()

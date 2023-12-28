@@ -1,5 +1,6 @@
-import { login, send, sleep } from "./login"
+import { login} from "./login"
 import { WebSocket } from "ws"
+import {send, sleep} from "./utility";
 
 describe('lobby', function () {
     let user;

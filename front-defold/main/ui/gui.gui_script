@@ -1,7 +1,11 @@
 local tracks = require "main/ui/tracks"
+local ws = require "main/ui/websocket"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
+	ws:init()
+	
 	self.tracks_open = false
 	self.me = "lion"
 	self.tracks = { 
