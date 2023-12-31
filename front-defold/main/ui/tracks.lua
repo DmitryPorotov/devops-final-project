@@ -2,13 +2,13 @@
 -- To get access to the functions, you need to put:
 -- require "my_directory.my_file"
 -- in any script using the functions
-local M = {}
+local _M = {}
 local ANIMATION_TIME = .15
 
 local STARTING_Y_POSITION = 185
 local Y_STEP = 70
 
-function M.init(self, my_house, players)
+function _M.init(self, my_house, players)
 	self.logic_tracks = nil
 	self.is_open = false
 	self.is_init = false
@@ -99,7 +99,7 @@ local function unshift_others(my_index, prefix)
 	end
 end
 
-function M.set_closed_locations(self, track_name)
+function _M.set_closed_locations(self, track_name)
 	local prefix = string.sub(track_name, 1, 1)
 	for i, v in ipairs(self.logic_tracks[track_name]) do
 		if self.me == v then
@@ -112,15 +112,15 @@ function M.set_closed_locations(self, track_name)
 	end
 end
 
-function M.set_tracks(self, tracks)
+function _M.set_tracks(self, tracks)
 	self.logic_tracks = tracks
 	if not self.is_init then
 		set_shields(tracks, "throne")
 		set_shields(tracks, "fiefdoms")
 		set_shields(tracks, "court")
-		self.my_t_idx = M:set_closed_locations("throne")
-		self.my_f_idx = M:set_closed_locations("fiefdoms")
-		self.my_c_idx = M:set_closed_locations("court")
+		self.my_t_idx = self:set_closed_locations("throne")
+		self.my_f_idx = self:set_closed_locations("fiefdoms")
+		self.my_c_idx = self:set_closed_locations("court")
 		set_players_panels(self)
 	end
 end
@@ -135,7 +135,7 @@ local function ani_open(prefix, i)
 	unshift_others(i, prefix)
 end
 
-function M.open(self) 
+function _M.open(self)
 	gui.animate(self.tracks, "position.y", 250, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
 	ani_open("t", self.my_t_idx)
 	ani_open("f", self.my_f_idx)
@@ -153,7 +153,7 @@ local function ani_close(prefix, i)
 	shift_others(i, prefix)
 end
 
-function M.close(self)
+function _M.close(self)
 	gui.animate(self.tracks, "position.y", -120, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
 	ani_close("t", self.my_t_idx)
 	ani_close("f", self.my_f_idx)
@@ -161,4 +161,4 @@ function M.close(self)
 	self.is_open = false
 end
 
-return M
+return _M

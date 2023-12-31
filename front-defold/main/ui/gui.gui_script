@@ -1,39 +1,43 @@
 local tracks = require "main/ui/tracks"
+local top_panel = require "main/ui/top_panel"
 local ws = require "main/ui/websocket"
+local mes_poc = require "main/messaging/message_processing"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	ws:init()
-	
+	mes_poc.set_set_tracks_cb(tracks, tracks.set_tracks)
+	mes_poc.set_set_game_state_cb(top_panel, top_panel.set_game_state)
+
 	self.tracks_open = false
 	self.me = "lion"
-	self.tracks = { 
-		throne = {
-			"moose",
-			"lion",
-			"wolf",
-			"pufferfish",
-			"kraken",
-			"rose"
-		},
-		fiefdoms = {
-			"kraken",
-			"rose",
-			"pufferfish",
-			"wolf",
-			"moose",
-			"lion"
-		},
-		court = {
-			"lion",
-			"wolf",
-			"pufferfish",
-			"moose",
-			"rose",
-			"kraken"
-		}
-	}
+	--self.tracks = {
+	--	throne = {
+	--		"moose",
+	--		"lion",
+	--		"wolf",
+	--		"pufferfish",
+	--		"kraken",
+	--		"rose"
+	--	},
+	--	fiefdoms = {
+	--		"kraken",
+	--		"rose",
+	--		"pufferfish",
+	--		"wolf",
+	--		"moose",
+	--		"lion"
+	--	},
+	--	court = {
+	--		"lion",
+	--		"wolf",
+	--		"pufferfish",
+	--		"moose",
+	--		"rose",
+	--		"kraken"
+	--	}
+	--}
 	self.players = {
 		moose = { id = 1, name = "player1" },
 		lion = { id = 2, name = "player2" },
@@ -43,7 +47,8 @@ function init(self)
 		rose = { id = 6, name = "player6" }
 	}
 	tracks:init(self.me, self.players)
-	tracks:set_tracks(self.tracks)
+	top_panel:init()
+	--tracks:set_tracks(self.tracks)
 end
 
 function final(self)

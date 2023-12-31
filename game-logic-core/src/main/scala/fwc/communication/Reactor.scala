@@ -19,15 +19,17 @@ object Reactor {
         val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction.apply(userId, gameReplay, gameAction)
         games = games + (gameId -> replay)
         ujson.Obj(
+          "action" -> "game_action",
           "gameId" -> ujson.Str(gameId),
-          "messageId" -> messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "reply" -> reply
         ).render(fwc.jsonIndentation)
       case MessageGetRules(userId, gameId, messageId) =>
         ujson.Obj(
+          "action" -> "get_rules",
           "userId" -> userId,
           "gameId" -> ujson.Str(gameId),
-          "messageId" -> messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameRules" -> gameRules.toJson
         )render fwc.jsonIndentation
       case m: MessageTestConnectivity =>
@@ -38,7 +40,7 @@ object Reactor {
         ujson.Obj(
           "action" -> "new_game",
           "gameId" -> ujson.Str(gameId),
-          "messageId"->messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gamesCount" -> ujson.Num(games.size),
         ).render(fwc.jsonIndentation)
       case MessageJoinGame(userId, gameId, joinAs, messageId) =>
@@ -59,24 +61,27 @@ object Reactor {
         val result = ReactionJoinGame(userId, joinAs, settings)
         games = games + (gameId -> games(gameId).copy(gameSettings = result))
         ujson.Obj(
+          "action" -> "join_game",
           "gameId" -> ujson.Str(gameId),
-          "messageId"->messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameSettings" -> result.toJson
         ).render(fwc.jsonIndentation)
       case MessageCreateGame(userId, gameId, isRandomHouses, messageId) =>
         val result = ReactionCreateGame(userId, gameId, isRandomHouses)
         games = games + (result._1 -> GameReplay(result._2, result._3.boardCards, result._3, Seq()))
         ujson.Obj(
+          "action" -> "create_game",
           "gameId" -> ujson.Str(result._1),
-          "messageId"->messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameState" -> result._3.toCleanJson
         ).render(fwc.jsonIndentation)
       case MessageStartGame(userId, gameId, messageId) =>
         val result = ReactionStartGame(userId, games(gameId).gameSettings)
         games = games + (gameId -> games(gameId).copy(gameSettings = result))
         ujson.Obj(
+          "action" -> "start_game",
           "gameId" -> ujson.Str(gameId),
-          "messageId"->messageId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameState" -> games(gameId).currentGameState.toCleanJson,
           "gameSettings" -> games(gameId).gameSettings.toJson
         ).render(fwc.jsonIndentation)

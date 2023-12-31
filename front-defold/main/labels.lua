@@ -2,7 +2,7 @@
 -- To get access to the functions, you need to put:
 -- require "my_directory.my_file"
 -- in any script using the functions.
-local M = {
+local _M = {
 	HOUSE_COLORS = {
 		lion = vmath.vector4(.925, .302, .302, 1),
 		kraken = vmath.vector4(.188, .188, .188, 1),
@@ -21,7 +21,7 @@ local M = {
 	selected = nil
 }
 
-function M.to_id(hash)
+function _M.to_id(hash)
 	return string.sub(tostring(hash), 8, #tostring(hash) - 1)
 end
 
@@ -29,8 +29,8 @@ local function is_port(id)
 	return string.find(id, "%dport_")
 end
 
-function M.select(self, label)
-	local id = M.to_id(label)
+function _M.select(self, label)
+	local id = _M.to_id(label)
 	if is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', self.LABEL_SELECT_COLOR)
 	else
@@ -48,8 +48,8 @@ function M.select(self, label)
 	self.selected = label
 end
 
-function M.unselect(self, label)
-	local id = M.to_id(label)
+function _M.unselect(self, label)
+	local id = _M.to_id(label)
 	if is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', vmath.vector4(1,1,1,0))
 	else
@@ -57,7 +57,7 @@ function M.unselect(self, label)
 	end
 end
 
-function M.init(self)
+function _M.init(self)
 	go.set("/2the_shivering_sea#label_bg", "tint", self.HOUSE_COLORS.wolf)
 	go.set("/3winterfell#label_bg", "tint", self.HOUSE_COLORS.wolf)
 	go.set("/7white_harbor#label_bg", "tint", self.HOUSE_COLORS.wolf)
@@ -132,4 +132,4 @@ function M.init(self)
 	go.set("/57east_summer_sea#label_bg", "tint", self.HOUSE_COLORS.neutral)
 end
 
-return M
+return _M

@@ -22,8 +22,8 @@ describe('game_setup', function () {
                     "userId": user.id,
                     "messageId": messageId,
                     "lobbyId": 2,
-                    "body":{"type":"create"}}
-                    );
+                    "body":{"type":"create"}
+                });
                 console.log("after lobby create");
                 expect(createdLobbyMsg.body.type).toBe('create');
                 const messageId1 = String(Math.random());
