@@ -20,7 +20,7 @@ width = 1200
 height = 675
 
 [sprite]
-max_count = 256
+max_count = 1024
 
 [physics]
 debug = 0

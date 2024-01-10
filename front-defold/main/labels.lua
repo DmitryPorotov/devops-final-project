@@ -85,13 +85,13 @@ function _M.to_id(hash)
 	return string.sub(tostring(hash), 8, #tostring(hash) - 1)
 end
 
-local function is_port(id)
+function _M.is_port(id)
 	return string.find(id, "%dport_")
 end
 
 function _M.select(self, label)
 	local id = _M.to_id(label)
-	if is_port(id) then
+	if self.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', self.LABEL_SELECT_COLOR)
 	else
 		go.set(id .. '#label_bg_sel', 'tint', self.LABEL_SELECT_COLOR)
@@ -110,7 +110,7 @@ end
 
 function _M.unselect(self, label)
 	local id = _M.to_id(label)
-	if is_port(id) then
+	if self.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', vmath.vector4(1,1,1,0))
 	else
 		go.set(id .. '#label_bg_sel', 'tint', vmath.vector4(1,1,1,1))
