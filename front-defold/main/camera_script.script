@@ -119,7 +119,7 @@ local function add_zoom(self)
 		local pos = go.get_position()
 		self.camera_drag_delta = vmath.vector3(-60,-(pos.y/10),0)
 		self.moving_camera = true
-		update_camera_limits(self, "in")
+		update_camera_limits(self)
 	end
 end
 

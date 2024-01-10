@@ -5,6 +5,7 @@ import fwc.game.board.*
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.houses.*
+import fwc.game.phases.SubPhaseAwaitingStart
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
 import fwc.gameLoading.BoardStart
@@ -21,7 +22,7 @@ package object game {
 
     val otherRules = gameLoading.loadOtherRules()
 
-    val initPhase = SubPhaseAddOrder(HouseType.getSeqOfAll)
+    val initPhase = SubPhaseAwaitingStart()
 
     GameState(
       initPhase,

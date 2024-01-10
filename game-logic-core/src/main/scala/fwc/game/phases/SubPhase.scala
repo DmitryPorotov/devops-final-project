@@ -175,6 +175,8 @@ object SubPhase extends JsonParsable {
           SubPhase.fromJson(json("subPhaseWildlingsCard")).asInstanceOf[SubPhaseWildlingsCard],
           getFieldsOfNoHouse(json)
         )
+      case "awaitingStart" =>
+        SubPhaseAwaitingStart()
   }
 
 

@@ -30,7 +30,7 @@ local function set_shields(tracks, track_name)
 	end
 end
 
-local function set_player_panels(self, player_panel_num, house_name)
+local function set_player_panel(self, player_panel_num, house_name)
 	local name = gui.get_node("player" .. player_panel_num .. "/player_name_text")
 	gui.set_text(name, self.players[house_name]["name"])
 	local shield = gui.get_node("player" .. player_panel_num .. "/shield")
@@ -67,11 +67,11 @@ local function set_player_panels(self, player_panel_num, house_name)
 end
 
 local function set_players_panels(self)
-	set_player_panels(self, 1, self.me)
+	set_player_panel(self, 1, self.me)
 	local i = 2
 	for _, v in ipairs(self.logic_tracks["throne"]) do
 		if v ~= self.me then
-			set_player_panels(self, i, v)
+			set_player_panel(self, i, v)
 			i = i + 1
 		end
 	end
@@ -94,7 +94,7 @@ local function unshift_others(my_index, prefix)
 			return
 		else
 			local node = gui.get_node(prefix .. i)
-			gui.set_position(node, vmath.vector3(0, STARTING_Y_POSITION - (i - 1) * Y_STEP, 0))
+			gui.set_position(node, vmath.vector3(0, STARTING_Y_POSITION - 10 - (i - 1) * Y_STEP, 0))
 		end
 	end
 end
@@ -131,7 +131,7 @@ local function ani_open(prefix, i)
 	gui.animate(under_shield_u, "color.w", 0.5, gui.EASING_LINEAR, 0.7, ANIMATION_TIME, nil, gui.PLAYBACK_LOOP_PINGPONG)
 	local t1 = gui.get_node(prefix .. i)
 	gui.animate(t1, "scale", 1, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
-	gui.animate(t1, "position.y", STARTING_Y_POSITION - (i - 1) * Y_STEP, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
+	gui.animate(t1, "position.y", STARTING_Y_POSITION - 10 - (i - 1) * Y_STEP, gui.PLAYBACK_ONCE_FORWARD, ANIMATION_TIME)
 	unshift_others(i, prefix)
 end
 

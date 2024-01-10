@@ -4,6 +4,8 @@ import fwc.GameSettings
 import fwc.communication.messages.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.communication.reactions.*
+import fwc.game.houses.HouseType
+import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
 //import org.zeromq.ZLoop
 
@@ -77,7 +79,11 @@ object Reactor {
         ).render(fwc.jsonIndentation)
       case MessageStartGame(userId, gameId, messageId) =>
         val result = ReactionStartGame(userId, games(gameId).gameSettings)
-        games = games + (gameId -> games(gameId).copy(gameSettings = result))
+        val state = games(gameId).currentGameState
+        games = games + (gameId -> games(gameId).copy(
+          gameSettings = result,
+          currentGameState = state.copy(subPhase = SubPhaseAddOrder(HouseType.getSeqOfAll))
+        ))
         ujson.Obj(
           "action" -> "start_game",
           "gameId" -> ujson.Str(gameId),
