@@ -1,8 +1,4 @@
 images {
-  image: "/assets/inf-tracks.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/assets/shield-back-s1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -80,6 +76,18 @@ images {
 }
 images {
   image: "/assets/player_panel/throne_icon.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/slice-9-trsm.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/yellow-line.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/orders/lock.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

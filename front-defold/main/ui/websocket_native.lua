@@ -1,6 +1,10 @@
-local mes_proc = require "main/messaging/message_processing"
+local _M = {
+	process_message = nil
+}
 
-local M = {}
+function _M.send(self, message)
+	websocket.send(self.connection, json.encode(message))
+end
 
 local function log(...)
 	local text = ""
@@ -13,7 +17,7 @@ local function log(...)
 end
 
 local function websocket_callback(self, conn, data)
-	self = M
+	self = _M
 	if data.event == websocket.EVENT_DISCONNECTED then
 		log("Disconnected: " .. tostring(conn) .. " Code: " .. data.code .. " Message: " .. tostring(data.message))
 		self.connection = nil
@@ -51,12 +55,13 @@ local function websocket_callback(self, conn, data)
 				))
 			end
 		else
-			mes_proc:process_message(msg)
+			self.process_message(msg)
 		end
 	end
 end
 
-function M.init(self)
+function _M.init(self, process_message)
+	self.process_message = process_message
 	local function handle_response(self_, id, response)
 		local data = json.decode(response.response)
 		self.token = data.token
@@ -74,4 +79,4 @@ function M.init(self)
 	http.request("http://127.0.0.1:3001/auth/login", "POST", handle_response, headers, body)
 end
 
-return M
+return _M

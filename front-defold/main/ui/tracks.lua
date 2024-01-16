@@ -30,6 +30,7 @@ local function set_shields(tracks, track_name)
 	end
 end
 
+-- TODO move to it's own file
 local function set_player_panel(self, player_panel_num, house_name)
 	local name = gui.get_node("player" .. player_panel_num .. "/player_name_text")
 	gui.set_text(name, self.players[house_name]["name"])
@@ -66,6 +67,7 @@ local function set_player_panel(self, player_panel_num, house_name)
 
 end
 
+-- TODO move to it's own file
 local function set_players_panels(self)
 	set_player_panel(self, 1, self.me)
 	local i = 2

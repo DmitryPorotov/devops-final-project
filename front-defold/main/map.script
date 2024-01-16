@@ -1,4 +1,5 @@
 local map_ = require "main/map"
+local labels = require "main/labels"
 
 function init(self)
 	-- Add initialization code here
@@ -14,7 +15,7 @@ function init(self)
 	-- 		unit = factory.create("/map#millitary_unit_facrory", vmath.vector3(350, 250, 0.125), nil, {house = hash("lion"), type = hash("siegeEngines")})
 	-- 	}
 	-- }
-	
+	labels:init()
 end
 
 function final(self)
@@ -44,6 +45,8 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 	if message_id == hash("set_units") then
 		map_:set_units(message.tile_num, message.units)
+	elseif message_id == hash("select_label") then
+		map_:select_label(message.id)
 	end
 end
 

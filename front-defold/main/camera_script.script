@@ -1,4 +1,4 @@
-local labels = require "main/labels"
+
 
 
 local function draw_line(from, to)
@@ -32,7 +32,7 @@ function init(self)
 	self.m_touch = {}
 	self.zoom_delay = 0
 
-	labels:init()
+
 end
 
 function final(self)
@@ -50,7 +50,9 @@ local function try_selecting(self, group, size)
 	local result1 = physics.raycast(from1, to, { hash(group) })
 	local result2 = physics.raycast(from2, to, { hash(group) })
 	if result1 and result2 and result1.id == result2.id then
-		msg.post(result1.id, 'select')
+		msg.post("/map", 'select_label', {
+			id = result1.id
+		})
 		-- draw_line(from1, result1.position)
 		-- draw_line(from2, result2.position)
 		return true
@@ -68,7 +70,7 @@ function update(self, dt)
 		self.zoom_delay = self.zoom_delay - dt
 	end
 	if self.moving_camera then
-		local pos = go.get_position()         
+		local pos = go.get_position()
 		pos = pos + self.camera_move_dir * self.camera_move_speed * dt
 		pos = pos - self.camera_drag_delta
 		if pos.x < self.camera_down_limit.x then
@@ -94,15 +96,6 @@ function update(self, dt)
 
 	self.moving_camera = false
 	self.camera_move_dir = vmath.vector3()
-end
-
-function fixed_update(self, dt)
-	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
-	-- Can be coupled with fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
-	-- Physics section of game.project
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
 end
 
 function on_message(self, message_id, message, sender)

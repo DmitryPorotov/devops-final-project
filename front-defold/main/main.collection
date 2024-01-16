@@ -980,6 +980,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "22lannisport"
+  children: "22shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -1068,33 +1069,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"lion\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -70.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1240,6 +1214,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "0bay_of_ice"
+  children: "0shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -1328,33 +1303,6 @@ embedded_instances {
   "    x: 22.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -52.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1450,6 +1398,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "1castle_black"
+  children: "1shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -1538,33 +1487,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -72.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1685,6 +1607,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "2the_shivering_sea"
+  children: "2shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -1773,33 +1696,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"wolf\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -72.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1895,6 +1791,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "3winterfell"
+  children: "3shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -2008,33 +1905,6 @@ embedded_instances {
   "    x: 35.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"wolf\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -74.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -2288,6 +2158,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "5karhold"
+  children: "5shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -2404,33 +2275,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -57.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -2523,6 +2367,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "6the_stony_shore"
+  children: "6shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -2611,33 +2456,6 @@ embedded_instances {
   "    x: 35.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -71.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -2758,6 +2576,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "7white_harbor"
+  children: "7shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -2846,33 +2665,6 @@ embedded_instances {
   "    x: 27.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"wolf\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -55.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -3101,6 +2893,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "9widows_watch"
+  children: "9shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -3217,33 +3010,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -70.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -3336,6 +3102,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "10sunset_sea"
+  children: "10shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -3424,33 +3191,6 @@ embedded_instances {
   "    x: 22.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -47.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -3546,6 +3286,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "11flints_finger"
+  children: "11shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -3634,33 +3375,6 @@ embedded_instances {
   "    x: 23.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -57.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -3756,6 +3470,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "12greywater_watch"
+  children: "12shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -3872,33 +3587,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"kraken\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -76.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -3991,6 +3679,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "13moat_calin"
+  children: "13shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -4079,33 +3768,6 @@ embedded_instances {
   "    x: 20.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -47.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -4201,6 +3863,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "14the_narrow_sea"
+  children: "14shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -4289,33 +3952,6 @@ embedded_instances {
   "    x: 28.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -61.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -4411,6 +4047,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "15ironmans_bay"
+  children: "15shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -4499,33 +4136,6 @@ embedded_instances {
   "    x: 27.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"kraken\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -56.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -4621,6 +4231,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "16pyke"
+  children: "16shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -4734,33 +4345,6 @@ embedded_instances {
   "    x: 25.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"kraken\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -62.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -5014,6 +4598,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "18seaguard"
+  children: "18shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -5155,33 +4740,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -72.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -5274,6 +4832,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "19the_twins"
+  children: "19shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -5390,33 +4949,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -62.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -5509,6 +5041,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "20the_fingers"
+  children: "20shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -5625,33 +5158,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -63.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -5744,6 +5250,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "21the_golden_sound"
+  children: "21shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -5832,33 +5339,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"lion\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -70.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -6087,6 +5567,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "24riverrun"
+  children: "24shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -6228,33 +5709,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -73.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -6347,6 +5801,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "25the_mountains_of_the_moon"
+  children: "25shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -6463,33 +5918,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -104.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -6582,6 +6010,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "26the_eyrie"
+  children: "26shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -6723,33 +6152,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -69.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -6842,6 +6244,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "27stoney_sept"
+  children: "27shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -6958,33 +6361,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"lion\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -65.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -7077,6 +6453,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "28herrenhal"
+  children: "28shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -7193,33 +6570,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -62.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -7312,6 +6662,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "29crackclaw_point"
+  children: "29shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -7400,33 +6751,6 @@ embedded_instances {
   "    x: 28.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -64.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -7522,6 +6846,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "30shipbreaker_bay"
+  children: "30shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -7610,33 +6935,6 @@ embedded_instances {
   "    x: 35.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"moose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -74.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -7732,6 +7030,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "31dragonstone"
+  children: "31shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -7870,33 +7169,6 @@ embedded_instances {
   "    x: 37.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"moose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -79.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -8125,6 +7397,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "33searoad_marches"
+  children: "33shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -8241,33 +7514,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -75.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -8360,6 +7606,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "34blackwater"
+  children: "34shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -8473,33 +7720,6 @@ embedded_instances {
   "    x: 35.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -72.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -8620,6 +7840,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "35kings_landing"
+  children: "35shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -8733,33 +7954,6 @@ embedded_instances {
   "    x: 45.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -91.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -8880,6 +8074,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "36blackwater_bay"
+  children: "36shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -8968,33 +8163,6 @@ embedded_instances {
   "    x: 28.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -61.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -9090,6 +8258,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "37west_summer_sea"
+  children: "37shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -9178,33 +8347,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -73.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -9300,6 +8442,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "38highgarden"
+  children: "38shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -9441,33 +8584,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"rose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -74.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -9560,6 +8676,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "39the_reach"
+  children: "39shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -9648,33 +8765,6 @@ embedded_instances {
   "    x: 20.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -45.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -9770,6 +8860,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "40kingswood"
+  children: "40shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -9911,33 +9002,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"moose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -77.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -10030,6 +9094,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "41redwyne_straights"
+  children: "41shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -10118,33 +9183,6 @@ embedded_instances {
   "    x: 32.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"rose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -74.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -10240,6 +9278,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "42oldtown"
+  children: "42shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -10328,33 +9367,6 @@ embedded_instances {
   "    x: 18.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -41.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -10583,6 +9595,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "44dornish_marches"
+  children: "44shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -10699,33 +9712,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"rose\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -82.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -10818,6 +9804,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "45the_boneway"
+  children: "45shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -10934,33 +9921,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -72.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -11053,6 +10013,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "46storms_end"
+  children: "46shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -11141,33 +10102,6 @@ embedded_instances {
   "    x: 20.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -51.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -11396,6 +10330,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "48three_towers"
+  children: "48shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -11512,33 +10447,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -64.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -11631,6 +10539,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "49princes_pass"
+  children: "49shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -11772,33 +10681,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -80.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -11891,6 +10773,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "50sea_of_dorn"
+  children: "50shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -11979,33 +10862,6 @@ embedded_instances {
   "    x: 24.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"pufferfish\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -55.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -12101,6 +10957,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "51the_arbor"
+  children: "51shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -12217,33 +11074,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -61.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -12336,6 +11166,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "52starfall"
+  children: "52shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -12452,33 +11283,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -49.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -12571,6 +11375,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "53yronwood"
+  children: "53shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -12659,33 +11464,6 @@ embedded_instances {
   "    x: 20.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -47.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -12781,6 +11559,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "54salt_shore"
+  children: "54shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -12897,33 +11676,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"pufferfish\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -57.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -13016,6 +11768,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "55sunspear"
+  children: "55shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -13154,33 +11907,6 @@ embedded_instances {
   "    x: 34.0\n"
   "    y: 5.0\n"
   "    z: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
-  "default_animation: \\\"pufferfish\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 33.5\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -73.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -13409,6 +12135,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "57east_summer_sea"
+  children: "57shield"
   data: "components {\n"
   "  id: \"label_s\"\n"
   "  component: \"/main/label.script\"\n"
@@ -13500,33 +12227,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"shield\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
-  "default_animation: \\\"label-neutral-shield\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "size {\\n"
-  "  x: 40.0\\n"
-  "  y: 40.0\\n"
-  "  z: 0.0\\n"
-  "  w: 0.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -68.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"collisionobject\"\n"
   "  type: \"collisionobject\"\n"
   "  data: \"collision_shape: \\\"\\\"\\n"
@@ -13604,6 +12304,2356 @@ embedded_instances {
     x: 784.0
     y: -687.0
     z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "0shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -52.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "1shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -72.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "2shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"wolf\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -72.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "3shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"wolf\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -74.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "5shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -57.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "6shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -71.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "7shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"wolf\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -55.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "9shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -70.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "10shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -47.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "11shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -57.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "12shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"kraken\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -76.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "13shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -47.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "14shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -61.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "15shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"kraken\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -56.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "16shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"kraken\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -62.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "18shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -72.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "19shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -62.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "20shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -63.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "21shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"lion\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -70.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "22shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"lion\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -70.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "24shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -73.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "25shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -104.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "26shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -69.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "27shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"lion\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -65.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "28shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -62.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "29shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -64.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "30shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"moose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -74.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "31shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"moose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -79.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "33shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -75.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "34shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -72.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "35shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -91.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "36shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -61.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "37shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -73.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "38shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"rose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -74.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "39shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -45.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "40shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"moose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -77.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "41shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"rose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -74.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "42shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -41.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "44shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"rose\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -82.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "45shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -72.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "46shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -51.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "48shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -64.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "49shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -80.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "50shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"pufferfish\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -55.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "51shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -61.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "52shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -49.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "53shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -47.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "54shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"pufferfish\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -57.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "55shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/common.atlas\\\"\\n"
+  "default_animation: \\\"pufferfish\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 33.5\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -73.0
+    y: 0.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "57shield"
+  data: "embedded_components {\n"
+  "  id: \"shield\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"label-neutral-shield\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 40.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -68.0
+    y: 0.0
+    z: 0.1
   }
   rotation {
     x: 0.0

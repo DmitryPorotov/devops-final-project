@@ -18,6 +18,7 @@ local _M = {
 		[hash("ships")] = "ships",
 		[hash("siegeEngines")] = "siegeEngines",
 	},
+	ANIMATION_TIME = .15,
 }
 
 return _M
