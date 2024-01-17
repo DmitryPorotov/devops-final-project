@@ -2,19 +2,6 @@ local map_ = require "main/map"
 local labels = require "main/labels"
 
 function init(self)
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-	-- self.units = {
-	-- 	{
-	-- 		pos = vmath.vector3(500, 900, 0.125),
-	-- 		unit = factory.create("/map#millitary_unit_facrory", vmath.vector3(500, 900, 0.125), nil, {house = hash("wolf"), type = hash("footmen")})
-	-- 	},
-	-- 	{
-	-- 		pos = vmath.vector3(350, 250, 0.125),
-	-- 		unit = factory.create("/map#millitary_unit_facrory", vmath.vector3(350, 250, 0.125), nil, {house = hash("lion"), type = hash("siegeEngines")})
-	-- 	}
-	-- }
 	labels:init()
 end
 
@@ -47,19 +34,9 @@ function on_message(self, message_id, message, sender)
 		map_:set_units(message.tile_num, message.units)
 	elseif message_id == hash("select_label") then
 		map_:select_label(message.id)
+	elseif message_id == hash("add_order") then
+		map_:add_order(message)
 	end
-end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here. The game object this script is attached to
-	-- must have acquired input focus:
-	--
-	--    msg.post(".", "acquire_input_focus")
-	--
-	-- All mapped input bindings will be received. Mouse and touch input will
-	-- be received regardless of where on the screen it happened.
-	-- Learn more: https://defold.com/manuals/input/
-	-- Remove this function if not needed
 end
 
 function on_reload(self)

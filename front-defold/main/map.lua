@@ -47,6 +47,21 @@ function _M.tile_selectable_for_order(self, tile_num, label_hash)
 	end
 end
 
+function _M.add_order(self, message)
+	labels:unselect(message.label)
+	local order_type = hash(message.order:sub(1, -2))
+	local order_num = tonumber(message.order:sub(-1))
+	local position = go.get_position(message.label) + vmath.vector3(0, 25, 0)
+	collectionfactory.create("/map#orderfactory", position, nil, 
+	{
+		[hash("/order")] = {
+			type = order_type,
+			number = order_num
+		}
+	},
+		 .75)
+end
+
 function _M.set_units(self, tile_num, units)
 	table.insert(self.armies, tile_num, units)
 	-- table.insert(self.armies_by_house[units[1].house], tile_num, units)

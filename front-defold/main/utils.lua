@@ -18,6 +18,13 @@ local _M = {
 		[hash("ships")] = "ships",
 		[hash("siegeEngines")] = "siegeEngines",
 	},
+	ORDERS = {
+		[hash("consolidate")] = "consolidate",
+		[hash("raid")] = "raid",
+		[hash("march")] = "march",
+		[hash("defend")] = "defend",
+		[hash("support")] = "support",
+	},
 	ANIMATION_TIME = .15,
 }
 

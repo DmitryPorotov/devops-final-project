@@ -1,7 +1,3 @@
--- Put functions in this file to use them in several other scripts.
--- To get access to the functions, you need to put:
--- require "my_directory.my_file"
--- in any script using the functions.
 local utils = require "main/utils"
 local _M = {
 	ORDER_TYPES = {
@@ -13,6 +9,8 @@ local _M = {
 	},
 	buttons = {},
 	for_label = nil,
+	button_selected = nil,
+	placed_orders = {},
 }
 
 function _M.init(self)
@@ -41,6 +39,24 @@ end
 
 function _M.close(self)
 	gui.animate(self.panel, "position.x", 1350, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME, 0, on_closed)
+end
+
+function _M.get_button_pressed(self, x, y)
+	for k, v in pairs(self.buttons) do
+		if gui.pick_node(v, x, y) then
+			self.button_selected = k
+			self:close()
+			return true
+		end
+	end
+	return false
+end
+
+function _M.add_order_to_map(self)
+	msg.post("/map", "add_order", {order = self.button_selected, label = self.for_label})
+	self.for_label = nil
+	self.button_selected = nil
+	-- TODO send addOrder to the server
 end
 
 return _M

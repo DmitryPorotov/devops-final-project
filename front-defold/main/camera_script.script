@@ -1,9 +1,12 @@
+local CAMERA_LIMITS = {
+	up = vmath.vector3(150, 950, 0),
+	down = vmath.vector3(-150, -870, 0)
+}
 
-
-
-local function draw_line(from, to)
-	msg.post("@render:", "draw_line", { start_point = from, end_point = to, color = vmath.vector4(1,0,0,1) })
-end
+local SCREEN_SIZE = {
+	x = 1200,
+	y = 675
+}
 
 function init(self)
 	msg.post("#camera", "acquire_camera_focus")
@@ -14,8 +17,8 @@ function init(self)
 	self.camera_move_speed = 1000
 	self.moving_camera = false
 
-	self.camera_up_limit = vmath.vector3(0, 950, 0)
-	self.camera_down_limit = vmath.vector3(0, -870, 0)
+	self.camera_up_limit = CAMERA_LIMITS.up
+	self.camera_down_limit = CAMERA_LIMITS.down
 
 	-- self.camera_up_limit = vmath.vector3(2000, 2000, 0)
 	-- self.camera_down_limit = vmath.vector3(0, -2000, 0)
@@ -53,16 +56,22 @@ local function try_selecting(self, group, size)
 		msg.post("/map", 'select_label', {
 			id = result1.id
 		})
-		-- draw_line(from1, result1.position)
-		-- draw_line(from2, result2.position)
 		return true
 	end
 	return false
 end
 
 local function update_camera_limits(self)
-	self.camera_up_limit = vmath.vector3(1200 * (self.zoom - 1), 950 + (1625 * (self.zoom - 1)), 0)
-	self.camera_down_limit = vmath.vector3(0, -870 - (870 * (self.zoom - 1)), 0)
+	self.camera_up_limit = vmath.vector3(
+	CAMERA_LIMITS.up.x + ((CAMERA_LIMITS.up.x + SCREEN_SIZE.x) * (self.zoom - 1)),
+	-- SCREEN_SIZE.x * (self.zoom - 1),
+	CAMERA_LIMITS.up.y + ((CAMERA_LIMITS.up.y + SCREEN_SIZE.y) * (self.zoom - 1)),
+	 0)
+	self.camera_down_limit = vmath.vector3(
+	CAMERA_LIMITS.down.x + (CAMERA_LIMITS.down.x * (self.zoom - 1)),
+	-- 0, 
+	CAMERA_LIMITS.down.y + (CAMERA_LIMITS.down.y * (self.zoom - 1)), 
+	0)
 end
 
 function update(self, dt)
