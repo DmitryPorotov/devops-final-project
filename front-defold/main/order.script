@@ -3,6 +3,7 @@ local utils = require "main/utils"
 go.property("house", hash("lion"))
 go.property("type", hash("support"))
 go.property("number", 1)
+go.property("is_opened", true)
 
 local props = {
 	star_pos = {
@@ -20,9 +21,6 @@ local props = {
 }
 
 function init(self)
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
 	local my_url = msg.url()
 	local inst_url = tostring(my_url.path):match("%[(/%w+%d+/)")
 	local star_url = inst_url .. "star"
@@ -36,12 +34,17 @@ function init(self)
 		go.set_position(props.num_pos[utils.ORDERS[self.type]], number_url)
 		if self.type ~= hash("support") then
 			go.set(number_url .. "#bg", "tint", vmath.vector4(0,0,0,0))
+			if self.type == hash("march") then
+				label.set_text(inst_url .. "number#label", (self.number == 1 and "-1") or (self.number == 2 and "+0") or (self.number == 3 and "+1"))
+			elseif self.type == hash("defend") then
+				label.set_text(inst_url .. "number#label", ((self.number == 1 or self.number == 2) and "+1") or (self.number == 3 and "+2"))
+			end
 		end
 	else
 		go.set_position(vmath.vector3(0,0,-1), number_url)
 	end
 	sprite.play_flipbook(inst_url .. "opened#order_sprite", utils.ORDERS[self.type])
-	go.set_parent(nil, "/map")
+	-- go.set_parent(nil, "/map")
 end
 
 function final(self)

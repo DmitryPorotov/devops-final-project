@@ -13,7 +13,7 @@ function init(self)
 	mes_poc.set_set_game_state_cb(top_panel, top_panel.set_game_state)
 
 	self.tracks_open = false
-	self.me = "lion"
+	self.me = "kraken"
 	self.players = {
 		moose = { id = 1, name = "player1" },
 		lion = { id = 2, name = "player2" },
@@ -57,7 +57,7 @@ function on_message(self, message_id, message, sender)
 		local s = gui.get_node("debug")
 		gui.set_text(s, text)
 	elseif message_id == hash("show_orders_menu") then
-		orders:open(message.label)
+		orders:open(message.label, message.deleted)
 	end
 end
 

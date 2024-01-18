@@ -1,4 +1,5 @@
 local labels = require "main/labels"
+local utils = require "main/utils"
 
 local _M = {
 	UNIT_OFFSETS = {
@@ -13,17 +14,9 @@ local _M = {
 		vmath.vector3(25, 0, 0.5),
 	},
 	armies = {},
-	-- armies_by_house = {
-	-- 	lion = {},
-	-- 	kraken = {},
-	-- 	moose = {},
-	-- 	rose = {},
-	-- 	pufferfish = {},
-	-- 	wolf = {},
-	-- 	neutral = {},
-	-- },
-	me = "lion",
-	phase = "addOrder"
+	me = "kraken",
+	phase = "addOrder",
+	orders = {},
 }
 
 function _M.is_unit_commandable(type)
@@ -43,7 +36,14 @@ function _M.tile_selectable_for_order(self, tile_num, label_hash)
 	and (self.is_unit_commandable(self.armies[tile_num][1].type) or #self.armies[tile_num] > 1)
 	then
 		labels:select(label_hash)
-		msg.post("/gui", "show_orders_menu", {label = label_hash})
+		local deleted = nil
+		if self.orders[label_hash] then
+			go.delete(self.orders[label_hash])
+			local script_url = tostring(self.orders[label_hash][hash('/order')]):match("%[(.+)%]") .. "#order"
+			deleted = utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
+			self.orders[label_hash] = nil
+		end
+		msg.post("/gui", "show_orders_menu", { label = label_hash, deleted = deleted })
 	end
 end
 
@@ -51,15 +51,17 @@ function _M.add_order(self, message)
 	labels:unselect(message.label)
 	local order_type = hash(message.order:sub(1, -2))
 	local order_num = tonumber(message.order:sub(-1))
-	local position = go.get_position(message.label) + vmath.vector3(0, 25, 0)
-	collectionfactory.create("/map#orderfactory", position, nil, 
+	local position = vmath.vector3(0, 25, 0)
+	local order = collectionfactory.create("/map#orderfactory", position, nil, 
 	{
 		[hash("/order")] = {
 			type = order_type,
 			number = order_num
 		}
 	},
-		 .75)
+	.75)
+	go.set_parent(order[hash("/order")], message.label)
+	self.orders[message.label] = order
 end
 
 function _M.set_units(self, tile_num, units)

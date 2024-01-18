@@ -101,11 +101,12 @@ function _M.select(self, label)
 		self:unselect(self.selected)
 		if self.selected == label then
 			self.selected = nil
-			return
+			return false
 		end
 	end
 
 	self.selected = label
+	return true
 end
 
 function _M.unselect(self, label)
