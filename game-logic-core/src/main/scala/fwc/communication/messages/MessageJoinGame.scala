@@ -6,6 +6,7 @@ case class MessageJoinGame(
                           userId: Int,
                           gameId: String,
                           joinAs: Option[HouseType],
-                          messageId: String
+                          name: String,
+                          messageId: String,
                           )
   extends Message

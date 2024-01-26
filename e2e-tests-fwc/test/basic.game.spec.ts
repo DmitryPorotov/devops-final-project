@@ -106,7 +106,7 @@ describe('basic_game', function () {
                     messageId: messageId1,
                     action: 'create_game',
                     isRandomHouses: false
-                }))
+                }));
                 const otherHouses = {
                     2: "kraken",
                     3: "pufferfish",

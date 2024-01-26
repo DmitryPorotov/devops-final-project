@@ -10,7 +10,7 @@ describe('game_setup', function () {
         })
     });
 
-    test('get_rules', function () {
+    test('join_game', function () {
         return new Promise<void>(async (resolve, reject) => {
             try {
                 const sock = new WebSocketWrap(`ws://127.0.0.1:3001?_token=${user.token}`);
@@ -37,19 +37,22 @@ describe('game_setup', function () {
                     isRandomHouses: false
                 });
                 console.log("after game create");
-                expect(createdGameMsg.gameState.subPhase.subPhase).toBe('addOrder');
+                expect(createdGameMsg.action).toBe('create_game');
                 const resp = await sock.send({
                     messageId : "123",
                     userId: user.id,
-                    action: "get_rules",
+                    action: "join_game",
                     lobbyId: 2,
-                    type: "action"
+                    type: "action",
+                    joinAs: "lion"
                 } as any);
-                expect(resp.gameRules).toBeDefined()
+                expect(resp.gameRules).toBeDefined();
+                expect(resp.gameState).toBeDefined();
+                expect(resp.gameSettings).toBeDefined();
                 resolve()
             }
             catch (e) {
-                console.log("in catch", e)
+                console.log("in catch", e);
                 reject(e)
             }
         })

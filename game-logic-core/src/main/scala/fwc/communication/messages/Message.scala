@@ -32,17 +32,20 @@ object Message {
         val isRandomHouses = Try[Boolean](json.obj("isRandomHouses").bool) getOrElse true
         MessageCreateGame(userId, gameId, isRandomHouses, messageId)
       case "join_game" =>
+        val name = Try(json.obj("name").str) match
+          case Success(value) => value
+          case Failure(_) => throw new FWCException("Message has no player's name")
         val houseType = Try[HouseType](HouseType.fromString(json.obj("joinAs").str)) match
           case Success(s) => Some(s)
           case Failure(_) => None
         MessageJoinGame(
           userId,
           gameId,
-          houseType
-          , messageId
+          houseType,
+          name,
+          messageId,
         )
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
-      case "get_rules" => MessageGetRules(userId, gameId, messageId)
   }
 }

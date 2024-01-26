@@ -1,8 +1,10 @@
 local _M = {
-	process_message = nil
+	process_message = nil,
+	on_connected = nil,
+	login_data = nil
 }
 
-function _M.send(self, message)
+function _M:send(message)
 	websocket.send(self.connection, json.encode(message))
 end
 
@@ -23,13 +25,14 @@ local function websocket_callback(self, conn, data)
 		self.connection = nil
 	elseif data.event == websocket.EVENT_CONNECTED then
 		log("Connected: " .. tostring(conn))
-		websocket.send(self.connection, json.encode({
-			type = "chat",
-			userId = 1,
-			messageId = messageId,
-			lobbyId = 2,
-			body = { type = "create" }
-		}))
+		self.on_connected(self.login_data)
+		-- websocket.send(self.connection, json.encode({
+		-- 	type = "chat",
+		-- 	userId = 1,
+		-- 	messageId = messageId,
+		-- 	lobbyId = 2,
+		-- 	body = { type = "create" }
+		-- }))
 	elseif data.event == websocket.EVENT_ERROR then
 		log("Error: '" .. tostring(data.message) .. "'")
 		if data.handshake_response then
@@ -41,33 +44,23 @@ local function websocket_callback(self, conn, data)
 		end
 	elseif data.event == websocket.EVENT_MESSAGE then
 		log("Receiving: '" .. tostring(data.message) .. "'")
-		local msg = json.decode(data.message)
-		if msg.type == "chat" then
-			if msg.body.type == "create" then
-				websocket.send(self.connection, json.encode(
-						{
-							type = 'action',
-							lobbyId = 2,
-							userId = 1,
-							action = 'create_game',
-							isRandomHouses = false
-						}
-				))
-			end
-		else
-			self.process_message(msg)
-		end
+		local msg_ = json.decode(data.message)
+
+		self.process_message(msg_)
 	end
 end
 
-function _M.init(self, process_message)
+function _M:init(process_message)
 	self.process_message = process_message
+end
+
+function _M:connect(creds)
 	local function handle_response(self_, id, response)
 		local data = json.decode(response.response)
-		self.token = data.token
+		self.login_data = data
 
-		print(self.token)
-		self.url = "ws://127.0.0.1:3001/?_token=" .. self.token
+		print(self.login_data.token)
+		self.url = "ws://127.0.0.1:3001/?_token=" .. self.login_data.token
 		print(self.url)
 		self.connection = websocket.connect(self.url, params, websocket_callback)
 	end
@@ -75,7 +68,7 @@ function _M.init(self, process_message)
 	local headers = {
 		["Content-Type"] = "application/json"
 	}
-	local body = json.encode({email = 'a@b.com', password = "12345678"})
+	local body = json.encode(creds)
 	http.request("http://127.0.0.1:3001/auth/login", "POST", handle_response, headers, body)
 end
 

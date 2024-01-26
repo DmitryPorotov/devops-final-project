@@ -1,20 +1,73 @@
--- Put functions in this file to use them in several other scripts.
--- To get access to the functions, you need to put:
--- require "my_directory.my_file"
--- in any script using the functions.
-local _M = {}
+local game_data = require "main/ui/game_data"
+
+local _M = {
+	send = nil,
+}
+
+local function update_players(old, new)
+	for _, v in ipairs(new) do
+		old[v.house] = {id =v.id , name = v.name}
+	end
+end
 
 function _M.process_message(self, message)
-	if message.action == "game_action" then
+	if message.type == 'action' then
+		if message.action == "game_action" then
 
-	elseif message.action == "get_rules" then
-
-	elseif message.action == "create_game" then
-		self.set_tracks(self.tracks_gui, message.gameState.tracks)
-		self.set_game_state(self.top_panel, message.gameState)
-		for i, v in pairs(message.gameState.armies) do
-			self.set_tile_units(i, v)
+		elseif message.action == "join_game" then
+			update_players(game_data.players, message.gameSettings.players)
+			game_data.gameRules = message.gameRules
+			self.tracks_gui:set_players(game_data.players)
+			self.set_tracks(self.tracks_gui, message.gameState.tracks)
+			self.set_game_state(self.top_panel, message.gameState)
+			for i, v in pairs(message.gameState.armies) do
+				self.set_tile_units(i, v)
+			end
+		elseif message.action == "create_game" and game_data.me == "kraken" then
+			self.send({
+				type = "action",
+				userId = game_data.user_data.id,
+				lobbyId = game_data.game_id,
+				action = "join_game",
+				joinAs = game_data.me,
+				name = game_data.user_data.name
+			})
 		end
+	elseif message.type == 'chat' then
+		if message.body.type == 'create' then
+			self.send({
+				type = "chat",
+				userId = game_data.user_data.id,
+				lobbyId = game_data.game_id,
+				body = {
+					type = "join"
+				}
+			})
+		elseif message.body.type == 'join' then
+			if game_data.me == "kraken" then
+				self.send({
+					type = "action",
+					userId = game_data.user_data.id,
+					lobbyId = game_data.game_id,
+					action = "create_game",
+					isRandomHouses = false,
+				})
+			else
+				self.send({
+					type = "action",
+					userId = game_data.user_data.id,
+					lobbyId = game_data.game_id,
+					action = "join_game",
+					joinAs = game_data.me,
+					name = game_data.user_data.name
+				})
+			end
+
+		end
+	else
+		print(message.message)
+		local s = gui.get_node("debug")
+		gui.set_text(s, message.message)
 	end
 end
 

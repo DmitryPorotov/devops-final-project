@@ -44,6 +44,7 @@ class GameMessagingService {
         //todo send to users
         const lobby = this.lobbies.get(Number(msg.gameId));
         if (!lobby) return;
+        msg.type = "action";
         if (msg.userId) {
             const client = lobby.clients.find(c => c.user.id === msg.userId);
             if (client) {

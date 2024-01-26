@@ -1,28 +1,30 @@
 local tracks = require "main/ui/tracks"
 local top_panel = require "main/ui/top_panel"
 local orders = require "main/ui/orders"
+local login = require "main/ui/login/debug_login"
 
-local ws = require "main/ui/websocket"
+local ws = require "main/messaging/websocket"
 local mes_poc = require "main/messaging/message_processing"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	login:init()
 
 	ws:init()
 	mes_poc.set_set_tracks_cb(tracks, tracks.set_tracks)
 	mes_poc.set_set_game_state_cb(top_panel, top_panel.set_game_state)
 
 	self.tracks_open = false
-	self.me = "kraken"
-	self.players = {
-		moose = { id = 1, name = "player1" },
-		lion = { id = 2, name = "player2" },
-		wolf = { id = 3, name = "player3" },
-		pufferfish = { id = 4, name = "player4" },
-		kraken = { id = 5, name = "player5" },
-		rose = { id = 6, name = "player6" }
-	}
-	tracks:init(self.me, self.players)
+	-- self.me = "kraken"
+	-- self.players = {
+	-- 	moose = { id = -1, name = "Waiting for player..." },
+	-- 	lion = { id = -1, name = "Waiting for player..." },
+	-- 	wolf = { id = -1, name = "Waiting for player..." },
+	-- 	pufferfish = { id = -1, name = "Waiting for player..." },
+	-- 	kraken = { id = -1, name = "Waiting for player..." },
+	-- 	rose = { id = -1, name = "Waiting for player..." }
+	-- }
+	tracks:init()
 	top_panel:init()
 	orders:init()
 	--tracks:set_tracks(self.tracks)
@@ -63,6 +65,9 @@ end
 
 
 function on_input(self, action_id, action)
+	if login:on_input(action_id, action) then
+		return true
+	end
 	if action_id == hash("touch") and action.pressed then
 		if gui.pick_node(tracks.tracks, action.x, action.y) then
 			if tracks.is_open then
