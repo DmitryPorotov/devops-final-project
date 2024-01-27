@@ -1,4 +1,5 @@
 local game_data = require "main/ui/game_data"
+local supply_panel = require "main/ui/supply_panel"
 
 local _M = {
 	send = nil,
@@ -10,16 +11,32 @@ local function update_players(old, new)
 	end
 end
 
+local function filter_my_armies(armies)
+	local my = {}
+	for i, v in pairs(armies) do
+		if v[1].house == game_data.me then
+			table.insert(my, v)
+		end
+	end
+	return my
+end
+
 function _M.process_message(self, message)
 	if message.type == 'action' then
 		if message.action == "game_action" then
 
 		elseif message.action == "join_game" then
 			update_players(game_data.players, message.gameSettings.players)
+			-- TODO encapsulate supply_panel
+			supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
+			supply_panel:set_available(message.gameState.supplies[game_data.me])
+			supply_panel:set_current(message.gameState.supplies[game_data.me])
+			supply_panel:update_usage(filter_my_armies(message.gameState.armies))
+			
 			game_data.gameRules = message.gameRules
-			self.tracks_gui:set_players(game_data.players)
-			self.set_tracks(self.tracks_gui, message.gameState.tracks)
-			self.set_game_state(self.top_panel, message.gameState)
+			self.set_players(game_data.players)
+			self.set_tracks(message.gameState.tracks)
+			self.set_game_state(message.gameState)
 			for i, v in pairs(message.gameState.armies) do
 				self.set_tile_units(i, v)
 			end
@@ -78,15 +95,16 @@ function _M.set_tile_units(tile_num, units)
 	})
 end
 
-function _M.set_set_tracks_cb(ctx, callback)
-	_M.tracks_gui = ctx
-	_M.set_tracks = callback
+function _M:set_set_tracks_cb(callback)
+	self.set_tracks = callback
 end
 
-function _M.set_set_game_state_cb(ctx, callback)
-	_M.top_panel = ctx
-	_M.set_game_state = callback
+function _M:set_set_game_state_cb(callback)
+	self.set_game_state = callback
 end
 
+function _M:set_set_players_cb(callback)
+	self.set_players = callback
+end
 
 return _M

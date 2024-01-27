@@ -67,7 +67,6 @@ local function set_closed_locations(self, track_name)
 		if self.me == v then
 			local my_node = gui.get_node(prefix .. i)
 			gui.move_above(my_node, gui.get_node(prefix .. 6))
-			print(gui.get_index(my_node))
 			gui.set_position(my_node, vmath.vector3(0, STARTING_Y_POSITION + 5, 0))
 			gui.set_scale(my_node, vmath.vector3(.7, .7, 1))
 			shift_others(i, prefix)

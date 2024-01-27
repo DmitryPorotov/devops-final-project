@@ -2,6 +2,7 @@ local tracks = require "main/ui/tracks"
 local top_panel = require "main/ui/top_panel"
 local orders = require "main/ui/orders"
 local login = require "main/ui/login/debug_login"
+local supply_panel = require "main/ui/supply_panel"
 
 local ws = require "main/messaging/websocket"
 local mes_poc = require "main/messaging/message_processing"
@@ -11,8 +12,19 @@ function init(self)
 	login:init()
 
 	ws:init()
-	mes_poc.set_set_tracks_cb(tracks, tracks.set_tracks)
-	mes_poc.set_set_game_state_cb(top_panel, top_panel.set_game_state)
+	
+	local function set_tracks(tracks_data)
+		tracks:set_tracks(tracks_data)
+	end
+	mes_poc:set_set_tracks_cb(set_tracks)
+	local function set_game_state(game_state)
+		top_panel:set_game_state(game_state)
+	end
+	mes_poc:set_set_game_state_cb(set_game_state)
+	local function set_players(players)
+		tracks:set_players(players)
+	end
+	mes_poc:set_set_players_cb(set_players)
 
 	self.tracks_open = false
 	-- self.me = "kraken"
@@ -27,6 +39,7 @@ function init(self)
 	tracks:init()
 	top_panel:init()
 	orders:init()
+	supply_panel:init()
 	--tracks:set_tracks(self.tracks)
 end
 

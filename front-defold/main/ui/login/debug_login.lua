@@ -57,7 +57,8 @@ function _M:on_input(action_id, action)
 					game_data.me = k
 					tracks:set_me(k)
 					ws.connect(self.login_creds[k], cb)
-					gui.set_enabled(gui.get_node("login/back_drop"), false)
+					-- gui.set_enabled(gui.get_node("login/back_drop"), false)
+					gui.delete_node(gui.get_node("login/back_drop"))
 					self.disabled = true
 				end
 			end

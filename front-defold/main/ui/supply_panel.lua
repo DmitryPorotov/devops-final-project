@@ -1,0 +1,94 @@
+local _M = {
+	current_count = -1,
+	available_count = 0,
+	x = -105,
+	y = 112,
+	step = 50,
+}
+
+function _M:init()
+	self.current_sup_node = gui.get_node("sup_current")
+	self.available_sup_node = gui.get_node("sup_available")
+	self.sup_panel = gui.get_node("supply_panel")
+end
+
+function _M:set_supply_usage_rules(usage)
+	self.usage_rules = usage
+end
+
+local function update_panel(self)
+	if not self.usage_rules or self.current_count < 0 then return end
+	local cur_count
+	if self.current_count > 6 then
+		cur_count = 6
+	else
+		cur_count = self.current_count
+	end
+	self.cur_max_armies = self.usage_rules[cur_count + 1]
+	local avail_helm_count = #self.cur_max_armies
+	gui.set_position(self.sup_panel, vmath.vector3(self.x + (self.step * avail_helm_count), self.y ,0))
+	for i = 1, 5 do
+		local node = gui.get_node("sup" .. i)
+		local do_enable = avail_helm_count >= i
+		gui.set_enabled(node, do_enable)
+	end
+	gui.set_enabled(gui.get_node("sup_dot13"), cur_count > 0)
+	gui.set_enabled(gui.get_node("sup_dot14"), cur_count > 4)
+	gui.set_enabled(gui.get_node("sup_dot23"), cur_count > 3)
+end 
+
+local function update_counter_color(self)
+	if self.current_count == self.available_count then
+		gui.set_color(self.available_sup_node, vmath.vector4(1,1,1,1))
+	elseif self.current_count < self.available_count then
+		gui.set_color(self.available_sup_node, vmath.vector4(0,1,0,1))
+	else
+		gui.set_color(self.available_sup_node, vmath.vector4(1,0,0,1))
+	end
+end
+
+function _M:set_current(count)
+	self.current_count = count
+	gui.set_text(self.current_sup_node, tostring(count))
+	update_counter_color(self)
+	update_panel(self)
+end
+
+function _M:set_available(count)
+	self.available_count = count
+	gui.set_text(self.available_sup_node, tostring(count))
+	update_counter_color(self)
+end
+
+local function count_units(army)
+	local cnt = 0
+	for i, v in ipairs(army) do
+		cnt = cnt + ((v.type ~= "garrison" and v.type ~= "powerToken") and 1 or 0)
+	end
+	return cnt
+end
+
+local function get_dot_color(flag)
+	return flag and vmath.vector4(1,1,0,1) or vmath.vector4(1,1,1,1)
+end
+
+function _M:update_usage(armies)
+	local counts = {}
+	for i, v in ipairs(armies) do
+		table.insert(counts,count_units(v))
+	end
+	table.sort(counts, 
+		function(a, b) 
+			return a >= b
+		end
+	)
+	for i = 1, #self.cur_max_armies do
+		for j = 1,  self.cur_max_armies[i] do
+			gui.set_color(gui.get_node("sup_dot" .. i .. j),
+					get_dot_color(j <= counts[i])
+			)
+		end
+	end
+end
+
+return _M
