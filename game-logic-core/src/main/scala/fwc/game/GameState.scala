@@ -3,11 +3,11 @@ package fwc.game
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.actionPhase.{Combat, DiscardedHouseCards, DominanceTokensUsage}
 import fwc.game.eventsPhase.cards.BoardCards
-import fwc.game.board.{Armies, DominanceTokenType, Tracks}
+import fwc.game.board.{Armies, DominanceTokenType, TileNumber, Tracks}
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
-import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
+import fwc.game.planningPhase.{AvailableOrders, Order, OrderConsolidatePower, OrderType, PlacedOrders}
 import fwc.gameLoading.BoardTile
 import ujson.Value
 
@@ -22,6 +22,7 @@ case class GameState(
                       supplies: Supplies,
                       discardedHouseCards: DiscardedHouseCards,
                       powerTokens: PowerTokens,
+                    //TODO need to add used cards
                       boardCards: BoardCards,
                       dominanceTokensUsage: DominanceTokensUsage,
                       usedMusteringPoints: UsedMusteringPoints,
@@ -33,6 +34,25 @@ case class GameState(
                       roundCounter: Int = 1,
                       winner: Option[HouseType] = None
                     ) extends JsonSerializable {
+
+  def toPersonalJson(myHouse: HouseType): ujson.Value = {
+    val placedOrdersP = placedOrders.copy(placedOrders = placedOrders.placedOrders.map(
+      (houseType: HouseType, orders: Map[TileNumber, Order]) =>
+        if houseType == myHouse then
+          houseType -> orders
+        else
+          houseType -> orders.map(
+            (tileNnum: TileNumber, order: Order) =>
+              tileNnum -> Order(OrderConsolidatePower)
+          )
+    ))
+    ujson.Obj(
+      toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
+        "placedOrders" -> placedOrdersP.toJson,
+      )
+    )
+  }
+
   def toJson: ujson.Value = {
     ujson.Obj(
       toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
