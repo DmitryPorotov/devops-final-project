@@ -18,22 +18,22 @@ object InitialReplayServerSideRandom extends App {
     true,
     Some(Seq(
       Player(
-        1, Some(HouseRose)
+        1, "player1", Some(HouseRose)
       ),
       Player(
-        2, Some(HouseWolf)
+        2, "player2", Some(HouseWolf)
       ),
       Player(
-        3, Some(HouseLion)
+        3, "player3", Some(HouseLion)
       ),
       Player(
-        4, Some(HouseMoose)
+        4, "player4", Some(HouseMoose)
       ),
       Player(
-        5, Some(HousePufferfish)
+        5, "player5", Some(HousePufferfish)
       ),
       Player(
-        6, Some(HouseKraken)
+        6, "player6", Some(HouseKraken)
       ),
     )),
     None

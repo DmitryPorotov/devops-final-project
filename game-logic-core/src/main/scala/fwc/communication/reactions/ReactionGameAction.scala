@@ -19,7 +19,6 @@ import scala.util.Random
 
 object ReactionGameAction {
   def apply(userId: Int, gameReplay: GameReplay, gameAction: ujson.Value): (GameReplay, ujson.Value) = {
-    //todo: do proper validation of user
     val player = gameReplay.gameSettings.players.head.find(_.userId == userId)
     val action = Action.fromJson(gameReplay.currentGameState, gameAction)
 
@@ -28,7 +27,7 @@ object ReactionGameAction {
     action match
       case a: PlayerAction =>
 
-        if player.isEmpty || player.head.house != a.getHouseType
+        if player.isEmpty || player.head.house.head != a.getHouseType
         then throw new FWCException("House does not belong to player")
 
         loop(a, gameReplay)
@@ -140,17 +139,17 @@ object ReactionGameAction {
         if sp.defenderCard.isEmpty
         then ujson.Obj(
           "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-          "reply" -> sp.attackerCard
+          "player_action" -> sp.attackerCard
         )
         else ujson.Obj(
           "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-          "reply" -> sp.defenderCard
+          "player_action" -> sp.defenderCard
         )
       case a: ActionRavenGetWildlingsCard =>
         if a.isRandom
         then ujson.Obj(
           "to" -> findPlayerIdByHouse(updatedGameState.tracks.ravenOwner),
-          "reply" -> updatedGameState.boardCards.wildlings.head.toJson
+          "player_action" -> updatedGameState.boardCards.wildlings.head.toJson
         )
         else buildMessageToAll(a.toJson)
       case a: ActionOpenOrders =>
@@ -163,6 +162,6 @@ object ReactionGameAction {
   private def buildMessageToAll(a: ujson.Value): ujson.Obj =
     ujson.Obj(
       "to" -> "*",
-      "reply" -> a
+      "player_action" -> a
     )
 }

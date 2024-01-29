@@ -8,104 +8,110 @@
     "players": [
       {
         "userId": 1,
-        "house": "rose"
+        "house": "rose",
+        "name": "player1"
       },
       {
         "userId": 2,
-        "house": "wolf"
+        "house": "wolf",
+        "name": "player2"
       },
       {
         "userId": 3,
-        "house": "lion"
+        "house": "lion",
+        "name": "player3"
       },
       {
         "userId": 4,
-        "house": "moose"
+        "house": "moose",
+        "name": "player4"
       },
       {
         "userId": 5,
-        "house": "pufferfish"
+        "house": "pufferfish",
+        "name": "player5"
       },
       {
         "userId": 6,
-        "house": "kraken"
+        "house": "kraken",
+        "name": "player6"
       }
     ],
     "playersInputting": null
   },
   "startingBoardCards": {
     "deck1": [
+      4,
       1,
-      0,
-      2,
       0,
       1,
       3,
-      0,
-      4,
-      2,
-      1
-    ],
-    "deck2": [
-      1,
-      1,
       2,
       1,
       0,
-      0,
-      3,
-      4,
       2,
       0
     ],
-    "deck3": [
-      5,
+    "deck2": [
+      0,
       1,
-      6,
+      1,
       0,
       2,
       4,
       0,
+      2,
+      3,
+      1
+    ],
+    "deck3": [
+      0,
+      2,
+      5,
+      6,
+      4,
       3,
       0,
+      0,
+      1,
       1
     ],
     "wildlings": [
-      6,
       7,
-      2,
       8,
-      4,
+      2,
       0,
-      5,
       3,
+      6,
+      5,
+      4,
       1
     ],
     "tidesOfBattle": [
-      0,
       5,
       0,
-      3,
+      0,
+      0,
+      1,
+      2,
+      4,
+      2,
+      0,
       5,
+      4,
+      0,
+      4,
+      2,
+      0,
+      0,
+      4,
+      3,
+      3,
       1,
-      4,
-      3,
-      0,
       2,
       3,
-      1,
-      4,
-      2,
       3,
-      0,
-      0,
-      0,
-      0,
-      4,
-      0,
-      2,
-      4,
-      2
+      0
     ]
   },
   "actions": [

@@ -21,6 +21,10 @@ class AvailableOrdersSpec extends AnyFlatSpec with should.Matchers {
     val ao2 = ao.useOrder(HouseWolf, Order(OrderDefend, modifier = 1))
 
     assert(ao2.orders(HouseWolf)(OrderDefend).length == 2, "there should be 2 orders left after use")
+
+    val ao3 = ao2.useOrder(HouseWolf, Order(OrderRaid))
+
+    assert(ao3.orders(HouseWolf)(OrderRaid).length == 2, "there should be 2 orders left after use")
   }
 
 }

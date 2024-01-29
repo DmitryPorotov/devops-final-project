@@ -1,5 +1,6 @@
 local labels = require "main/labels"
 local utils = require "main/utils"
+local game_data = require "main/ui/game_data"
 
 local _M = {
 	UNIT_OFFSETS = {
@@ -14,7 +15,6 @@ local _M = {
 		vmath.vector3(25, 0, 0.5),
 	},
 	armies = {},
-	me = "kraken",
 	phase = "addOrder",
 	orders = {},
 }
@@ -24,7 +24,7 @@ function _M.is_unit_commandable(type)
 end
 
 function _M.select_label(self, label_hash)
-	local id_str = labels.to_id(label_hash)
+	local id_str = utils.hash_to_id(label_hash)
 	local tile_num = string.match(id_str, "^/(%d+)")
 	if self.phase == "addOrder" then
 		self:tile_selectable_for_order(tonumber(tile_num), label_hash)
@@ -32,7 +32,7 @@ function _M.select_label(self, label_hash)
 end
 
 function _M.tile_selectable_for_order(self, tile_num, label_hash)
-	if self.armies[tile_num] and #self.armies[tile_num] > 0 and self.armies[tile_num][1].house == self.me 
+	if self.armies[tile_num] and #self.armies[tile_num] > 0 and self.armies[tile_num][1].house == game_data.me
 	and (self.is_unit_commandable(self.armies[tile_num][1].type) or #self.armies[tile_num] > 1)
 	then
 		labels:select(label_hash)
@@ -43,12 +43,13 @@ function _M.tile_selectable_for_order(self, tile_num, label_hash)
 			deleted = utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
 			self.orders[label_hash] = nil
 		end
-		msg.post("/gui", "show_orders_menu", { label = label_hash, deleted = deleted })
+		msg.post("/gui", "show_orders_menu", { label = label_hash, tile_num = tile_num, deleted = deleted })
 	end
 end
 
-function _M.add_order(self, message)
-	labels:unselect(message.label)
+function _M:add_order(message)
+	local label = type(message.label) == "number" and hash("/" .. labels.LABEL_IDS[message.label]) or message.label
+	labels:unselect(label)
 	local order_type = hash(message.order:sub(1, -2))
 	local order_num = tonumber(message.order:sub(-1))
 	local position = vmath.vector3(0, 25, 0)
@@ -56,12 +57,14 @@ function _M.add_order(self, message)
 	{
 		[hash("/order")] = {
 			type = order_type,
-			number = order_num
+			number = order_num,
+			is_opened = message.is_opened,
+			house = hash(message.house)
 		}
 	},
 	.75)
-	go.set_parent(order[hash("/order")], message.label)
-	self.orders[message.label] = order
+	go.set_parent(order[hash("/order")], label)
+	self.orders[label] = order
 end
 
 function _M.set_units(self, tile_num, units)

@@ -1,10 +1,10 @@
 package fwc.game.phases.actionSubPhases
 
-import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhaseNoHouse}
+import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseNoHouse}
 
 case class SubPhaseResolveConsolidatePowerOrder(
                                                  mainPhase: MainPhase = PhaseRoundEvents
-                                               ) extends SubPhaseNoHouse(
+                                               )extends SubPhase(mainPhase) with SubPhaseNoHouse(
   mainPhase
 ) {
   def getSubPhaseName: String = "resolveConsolidatePowerOrder"

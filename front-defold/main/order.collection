@@ -2,6 +2,7 @@ name: "order"
 scale_along_z: 0
 embedded_instances {
   id: "order"
+  children: "closed"
   children: "opened"
   data: "components {\n"
   "  id: \"order\"\n"
@@ -147,7 +148,7 @@ embedded_instances {
   position {
     x: 16.0
     y: -8.0
-    z: -0.0
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -242,6 +243,53 @@ embedded_instances {
   position {
     x: 0.0
     y: -15.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "closed"
+  data: "embedded_components {\n"
+  "  id: \"shield_sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/main/full_map.atlas\\\"\\n"
+  "default_animation: \\\"lion-r\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 50.0\\n"
+  "  y: 50.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {

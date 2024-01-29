@@ -25,6 +25,14 @@ function init(self)
 		tracks:set_players(players)
 	end
 	mes_poc:set_set_players_cb(set_players)
+	local function calc_stars_available(court_track)
+		orders:calc_stars_available(court_track)
+	end
+	mes_poc:set_calc_stars_available_cb(calc_stars_available)
+	local function show_orders_on_map(orders_)
+		orders:show_orders_on_map(orders_)
+	end
+	mes_poc:set_show_orders_on_map_cb(show_orders_on_map)
 
 	self.tracks_open = false
 	-- self.me = "kraken"
@@ -72,7 +80,7 @@ function on_message(self, message_id, message, sender)
 		local s = gui.get_node("debug")
 		gui.set_text(s, text)
 	elseif message_id == hash("show_orders_menu") then
-		orders:open(message.label, message.deleted)
+		orders:open(message.label, message.tile_num, message.deleted)
 	end
 end
 
@@ -91,6 +99,7 @@ function on_input(self, action_id, action)
 				-- open_tracks(self, tracks)
 			end	
 		elseif orders:get_button_pressed(action.x, action.y) then
+			ws.send(orders:get_order_to_send())
 			orders:add_order_to_map()
 		end
 	end

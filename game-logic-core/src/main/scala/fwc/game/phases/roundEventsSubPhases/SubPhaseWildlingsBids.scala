@@ -2,14 +2,14 @@ package fwc.game.phases.roundEventsSubPhases
 
 import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhaseMultipleHouses}
+import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseMultipleHouses}
 
 case class SubPhaseWildlingsBids(
                                   houseTypes: Seq[HouseType],
                                   numberOfParticipants: Int,
                                   wildlingsStartedFrom12Points: Boolean,
                                   mainPhase: MainPhase = PhaseRoundEvents
-                                ) extends SubPhaseMultipleHouses(
+                                ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {
   def getSubPhaseName: String = "wildlingsBids"

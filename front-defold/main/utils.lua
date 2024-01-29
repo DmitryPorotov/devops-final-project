@@ -26,6 +26,17 @@ local _M = {
 		[hash("support")] = "support",
 	},
 	ANIMATION_TIME = .15,
+	index_of = function (table, value)
+		for i, v in ipairs(table) do
+			if v == value then
+				return i
+			end
+		end
+		return nil
+	end,
+	hash_to_id = function(hash)
+		return string.sub(tostring(hash), 8, #tostring(hash) - 1)
+	end
 }
 
 return _M

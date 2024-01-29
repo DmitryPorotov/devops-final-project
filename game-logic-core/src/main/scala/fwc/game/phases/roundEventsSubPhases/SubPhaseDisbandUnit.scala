@@ -11,7 +11,7 @@ case class SubPhaseDisbandUnit(
                                 houseType: HouseType,
                                 nextStep: UnitDisbandNextStepType,
                                 mainPhase: MainPhase = PhaseRoundEvents
-                              ) extends SubPhaseSingleHouse(
+                              ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
     houseType, mainPhase
   ) {
   def getSubPhaseName: String = "disbandUnit"

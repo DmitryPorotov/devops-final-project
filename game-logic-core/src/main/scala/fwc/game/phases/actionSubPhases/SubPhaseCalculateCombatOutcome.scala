@@ -1,10 +1,10 @@
 package fwc.game.phases.actionSubPhases
 
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhaseNoHouse}
+import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseNoHouse}
 
 case class SubPhaseCalculateCombatOutcome(
                                            mainPhase: MainPhase = PhaseAction
-                                         ) extends SubPhaseNoHouse (
+                                         )extends SubPhase(mainPhase) with SubPhaseNoHouse (
   mainPhase
 ) {
   def getSubPhaseName: String = "calculateCombatOutcome"

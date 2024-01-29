@@ -7,7 +7,7 @@ import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseSingleHouse}
 case class SubPhaseResolveSpecialConsolidatePower(
                                                    houseType: HouseType,
                                                    mainPhase: MainPhase = PhaseAction
-                                                 ) extends SubPhaseSingleHouse(
+                                                 ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
     houseType, mainPhase
   ) {
   def getSubPhaseName: String = "resolveSpecialConsolidatePower"

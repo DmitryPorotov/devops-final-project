@@ -1,7 +1,5 @@
--- Put functions in this file to use them in several other scripts.
--- To get access to the functions, you need to put:
--- require "my_directory.my_file"
--- in any script using the functions.
+local utils = require "main/utils"
+
 local _M = {
 	HOUSE_COLORS = {
 		lion = vmath.vector4(.925, .302, .302, 1),
@@ -81,16 +79,12 @@ local _M = {
 	}
 }
 
-function _M.to_id(hash)
-	return string.sub(tostring(hash), 8, #tostring(hash) - 1)
-end
-
 function _M.is_port(id)
 	return string.find(id, "%dport_")
 end
 
 function _M.select(self, label)
-	local id = _M.to_id(label)
+	local id = utils.hash_to_id(label)
 	if self.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', self.LABEL_SELECT_COLOR)
 	else
@@ -110,7 +104,7 @@ function _M.select(self, label)
 end
 
 function _M.unselect(self, label)
-	local id = _M.to_id(label)
+	local id = utils.hash_to_id(label)
 	if self.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', vmath.vector4(1,1,1,0))
 	else

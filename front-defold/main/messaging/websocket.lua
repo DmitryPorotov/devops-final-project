@@ -1,3 +1,4 @@
+local game_data = require "main/ui/game_data"
 local mes_proc = require "main/messaging/message_processing"
 local ws_to_use = require "main/messaging/websocket_native"
 -- local mes_poc = require "main/messaging/message_processing"
@@ -5,6 +6,10 @@ local ws_to_use = require "main/messaging/websocket_native"
 local _M = {}
 
 local function wrap(message)
+	message.lobbyId = game_data.game_id
+	if game_data.user_data then
+		message.userId = game_data.user_data.id
+	end
 	return message
 end
 

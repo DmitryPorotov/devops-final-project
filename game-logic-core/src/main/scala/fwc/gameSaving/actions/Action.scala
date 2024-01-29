@@ -6,7 +6,7 @@ import fwc.gameSaving.actions.action.*
 import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenChangeOrder, ActionRavenChooseChangeOrderOrLookAtWildlingCard, ActionRavenChoosePutWildlingsCardOnTopOrBottom}
 import fwc.gameSaving.actions.roundEvents.*
 
-trait Action(gameState: GameState) extends JsonSerializable{
+trait Action(gameState: GameState) extends JsonSerializable {
   def doAction(): GameState
   def undoAction(): GameState = gameState
 }

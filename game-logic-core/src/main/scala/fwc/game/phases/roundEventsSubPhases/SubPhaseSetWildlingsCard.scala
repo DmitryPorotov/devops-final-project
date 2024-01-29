@@ -6,7 +6,7 @@ import ujson.Value
 case class SubPhaseSetWildlingsCard(
                                      subPhaseWildlingsCard: SubPhaseWildlingsCard,
                                      mainPhase: MainPhase = PhaseRoundEvents
-                                   ) extends SubPhaseNoHouse (
+                                   )extends SubPhase(mainPhase) with SubPhaseNoHouse (
     mainPhase
 ) {
   override def toJson: Value = 

@@ -10,7 +10,7 @@ case class SubPhaseSetEventCards(
                                   card2: Option[RoundEventCard] = None,
                                   card3: Option[RoundEventCard] = None,
                                   mainPhase: MainPhase = PhaseRoundEvents
-                                ) extends SubPhaseNoHouse (
+                                )extends SubPhase(mainPhase) with SubPhaseNoHouse (
     mainPhase
   ) {
   def getSubPhaseName: String = "setEventCards"

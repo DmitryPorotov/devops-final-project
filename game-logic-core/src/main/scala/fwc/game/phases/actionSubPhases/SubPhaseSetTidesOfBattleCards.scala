@@ -10,7 +10,7 @@ case class SubPhaseSetTidesOfBattleCards(
                                           attackerCard: Option[Int] = None,
                                           defenderCard: Option[Int] = None,
                                           mainPhase: MainPhase = PhaseAction
-                                        ) extends SubPhaseNoHouse (
+                                        )extends SubPhase(mainPhase) with SubPhaseNoHouse (
     mainPhase
 ) {
   def getSubPhaseName: String = "setTidesOfBattleCards"

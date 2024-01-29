@@ -6,7 +6,7 @@ import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.board.{Armies, DominanceTokenType, TileNumber, Tracks}
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.houses.HouseType
-import fwc.game.phases.SubPhase
+import fwc.game.phases.{PhasePlanning, SubPhase}
 import fwc.game.planningPhase.{AvailableOrders, Order, OrderConsolidatePower, OrderType, PlacedOrders}
 import fwc.gameLoading.BoardTile
 import ujson.Value
@@ -22,7 +22,7 @@ case class GameState(
                       supplies: Supplies,
                       discardedHouseCards: DiscardedHouseCards,
                       powerTokens: PowerTokens,
-                    //TODO need to add used cards
+                    //TODO need to add used board cards
                       boardCards: BoardCards,
                       dominanceTokensUsage: DominanceTokensUsage,
                       usedMusteringPoints: UsedMusteringPoints,
@@ -36,16 +36,19 @@ case class GameState(
                     ) extends JsonSerializable {
 
   def toPersonalJson(myHouse: HouseType): ujson.Value = {
-    val placedOrdersP = placedOrders.copy(placedOrders = placedOrders.placedOrders.map(
-      (houseType: HouseType, orders: Map[TileNumber, Order]) =>
-        if houseType == myHouse then
-          houseType -> orders
-        else
-          houseType -> orders.map(
-            (tileNnum: TileNumber, order: Order) =>
-              tileNnum -> Order(OrderConsolidatePower)
-          )
-    ))
+    val placedOrdersP = 
+      if subPhase.getMainPhase == PhasePlanning then
+        placedOrders.copy(placedOrders = placedOrders.placedOrders.map(
+        (houseType: HouseType, orders: Map[TileNumber, Order]) =>
+          if houseType == myHouse then
+            houseType -> orders
+          else
+            houseType -> orders.map(
+              (tileNum: TileNumber, order: Order) =>
+                tileNum -> Order(OrderConsolidatePower)
+            )
+        ))
+      else placedOrders
     ujson.Obj(
       toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
         "placedOrders" -> placedOrdersP.toJson,

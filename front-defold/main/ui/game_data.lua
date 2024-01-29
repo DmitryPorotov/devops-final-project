@@ -9,7 +9,9 @@ local _M = {
 	},
 	me = nil,
 	user_data = nil,
-	game_id = 2
+	gameRules = nil,
+	game_id = 2,
+	creating_new_game = false
 }
 
 return _M

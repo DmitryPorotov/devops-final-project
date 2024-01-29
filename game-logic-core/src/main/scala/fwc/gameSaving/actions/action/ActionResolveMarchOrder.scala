@@ -61,8 +61,8 @@ case class ActionResolveMarchOrder(
       gameStateOrderRemoved.copy(
         subPhase =
           if hasAttackerPowerToken && hasNoArmyLeft
-          then NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderMarch, houseType)
-          else SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
+          then SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
+          else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderMarch, houseType)
         ,
         armies = updatedArmies
       )

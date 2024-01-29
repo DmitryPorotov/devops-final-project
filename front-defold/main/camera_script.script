@@ -10,7 +10,7 @@ local SCREEN_SIZE = {
 
 function init(self)
 	msg.post("#camera", "acquire_camera_focus")
-	msg.post(".", "acquire_input_focus")
+	-- msg.post(".", "acquire_input_focus")
 
 	self.camera_move_dir = vmath.vector3()
 	self.camera_drag_delta = vmath.vector3()
@@ -34,8 +34,7 @@ function init(self)
 
 	self.m_touch = {}
 	self.zoom_delay = 0
-
-
+	print(msg.url())
 end
 
 function final(self)
@@ -111,6 +110,11 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Learn more: https://defold.com/manuals/message-passing/
 	-- Remove this function if not needed
+	if message_id == hash("take_focus") then
+		msg.post(".", "acquire_input_focus")
+	elseif message_id == hash("release_focus") then
+		msg.post(".", "release_input_focus")
+	end
 end
 
 local function add_zoom(self)

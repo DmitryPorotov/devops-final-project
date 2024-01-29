@@ -77,11 +77,7 @@ function _M:update_usage(armies)
 	for i, v in ipairs(armies) do
 		table.insert(counts,count_units(v))
 	end
-	table.sort(counts, 
-		function(a, b) 
-			return a >= b
-		end
-	)
+	table.sort(counts, function(a, b) return b < a end)
 	for i = 1, #self.cur_max_armies do
 		for j = 1,  self.cur_max_armies[i] do
 			gui.set_color(gui.get_node("sup_dot" .. i .. j),

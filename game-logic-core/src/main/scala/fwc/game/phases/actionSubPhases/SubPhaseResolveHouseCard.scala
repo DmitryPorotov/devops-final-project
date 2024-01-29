@@ -8,7 +8,7 @@ case class SubPhaseResolveHouseCard(
                                     houseType: HouseType,
                                     cardCode: Int,
                                     mainPhase: MainPhase = PhaseAction
-                                  ) extends SubPhaseSingleHouse(
+                                  ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
   houseType, mainPhase
 ) {
   def getSubPhaseName: String = "resolveHouseCard"

@@ -8,7 +8,7 @@ case class SubPhaseResolveSupportOrder(
                                         houseType: HouseType,
                                         tilesNumbers: Seq[Int],
                                         mainPhase: MainPhase = PhaseAction
-                                      ) extends SubPhaseSingleHouse (
+                                      ) extends SubPhase(mainPhase) with SubPhaseSingleHouse (
   houseType, mainPhase
   ) {
   def getSubPhaseName: String = "resolveSupportOrder"

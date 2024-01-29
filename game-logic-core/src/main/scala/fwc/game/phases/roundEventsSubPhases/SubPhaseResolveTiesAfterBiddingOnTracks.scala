@@ -11,7 +11,7 @@ case class SubPhaseResolveTiesAfterBiddingOnTracks(
                                                     trackType: TrackType,
                                                     mainPhase: MainPhase = PhaseRoundEvents
                                                   )
-  extends SubPhaseSingleHouse(houseType, mainPhase) {
+  extends SubPhase(mainPhase) with SubPhaseSingleHouse(houseType, mainPhase) {
 
   override def toJson: Value =
     val json = super.toJson

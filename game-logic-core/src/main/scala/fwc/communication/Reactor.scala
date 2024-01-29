@@ -46,8 +46,23 @@ object Reactor {
           "gameId" -> ujson.Str(gameId),
           "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameSettings" -> result.toJson,
+        ).render(fwc.jsonIndentation)
+      case MessageGetGameState(userId, gameId, messageId) =>
+        val player =
+          if games(gameId).gameSettings.players.nonEmpty then
+             games(gameId).gameSettings.players.head.find(_.userId == userId)
+          else None
+        ujson.Obj(
+          "action" -> "get_game_state",
+          "gameId" -> ujson.Str(gameId),
+          "userId" -> userId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
           "gameRules" -> gameRules.toJson,
-          "gameState" -> games(gameId).currentGameState.toCleanJson,
+          "gameState" -> (
+            if player.nonEmpty && player.head.house.nonEmpty
+            then games(gameId).currentGameState.toPersonalJson(player.head.house.head)
+            else games(gameId).currentGameState.toCleanJson
+            ),
         ).render(fwc.jsonIndentation)
       case MessageCreateGame(userId, gameId, isRandomHouses, messageId) =>
         val result = ReactionCreateGame(userId, gameId, isRandomHouses)

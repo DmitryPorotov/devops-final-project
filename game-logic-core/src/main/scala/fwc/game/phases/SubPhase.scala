@@ -15,8 +15,10 @@ import ujson.Value
 import java.lang.reflect.Constructor
 import scala.util.Try
 
-trait SubPhase extends JsonSerializable {
+trait SubPhase(mainPhase: MainPhase) extends JsonSerializable {
   def getSubPhaseName: String
+  
+  def getMainPhase: MainPhase = mainPhase
 }
 
 object SubPhase extends JsonParsable {

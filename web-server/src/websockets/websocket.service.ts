@@ -71,9 +71,10 @@ class WebsocketService {
                 case "create_game":
                     await this.gameMessagingService.create(client, message);
                     break;
-                case "get_rules":
-                case "join_game":
-                case "start_game":
+                // case "get_game_state":
+                // case "join_game":
+                // case "start_game":
+                default:
                     await this.gameMessagingService.relayMessage(client, message);
                     break;
 

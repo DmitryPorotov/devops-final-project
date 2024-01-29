@@ -22,7 +22,8 @@ package object game {
 
     val otherRules = gameLoading.loadOtherRules()
 
-    val initPhase = SubPhaseAwaitingStart()
+    //TODO should be SubPhaseAwaitingStart
+    val initPhase = SubPhaseAddOrder(HouseType.getSeqOfAll) //SubPhaseAwaitingStart()
 
     GameState(
       initPhase,

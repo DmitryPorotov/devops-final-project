@@ -27,24 +27,31 @@ function _M.process_message(self, message)
 
 		elseif message.action == "join_game" then
 			update_players(game_data.players, message.gameSettings.players)
+			self.send({
+				type = "action",
+				action = "get_game_state",
+			})
+		elseif message.action == "get_game_state" then
+			game_data.gameRules = message.gameRules
 			-- TODO encapsulate supply_panel
 			supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
 			supply_panel:set_available(message.gameState.supplies[game_data.me])
 			supply_panel:set_current(message.gameState.supplies[game_data.me])
 			supply_panel:update_usage(filter_my_armies(message.gameState.armies))
-			
-			game_data.gameRules = message.gameRules
+
+			self.calc_stars_available(message.gameState.tracks.court)
+			self.show_orders_on_map(message.gameState.placedOrders)
 			self.set_players(game_data.players)
 			self.set_tracks(message.gameState.tracks)
 			self.set_game_state(message.gameState)
 			for i, v in pairs(message.gameState.armies) do
 				self.set_tile_units(i, v)
 			end
+			gui.delete_node(gui.get_node("login/back_drop"))
+			msg.post("/camera", "take_focus")
 		elseif message.action == "create_game" and game_data.me == "kraken" then
 			self.send({
 				type = "action",
-				userId = game_data.user_data.id,
-				lobbyId = game_data.game_id,
 				action = "join_game",
 				joinAs = game_data.me,
 				name = game_data.user_data.name
@@ -54,26 +61,20 @@ function _M.process_message(self, message)
 		if message.body.type == 'create' then
 			self.send({
 				type = "chat",
-				userId = game_data.user_data.id,
-				lobbyId = game_data.game_id,
 				body = {
 					type = "join"
 				}
 			})
 		elseif message.body.type == 'join' then
-			if game_data.me == "kraken" then
+			if game_data.creating_new_game then
 				self.send({
 					type = "action",
-					userId = game_data.user_data.id,
-					lobbyId = game_data.game_id,
 					action = "create_game",
 					isRandomHouses = false,
 				})
 			else
 				self.send({
 					type = "action",
-					userId = game_data.user_data.id,
-					lobbyId = game_data.game_id,
 					action = "join_game",
 					joinAs = game_data.me,
 					name = game_data.user_data.name
@@ -105,6 +106,14 @@ end
 
 function _M:set_set_players_cb(callback)
 	self.set_players = callback
+end
+
+function _M:set_calc_stars_available_cb(callback)
+	self.calc_stars_available = callback
+end
+
+function _M:set_show_orders_on_map_cb(callback)
+	self.show_orders_on_map = callback
 end
 
 return _M

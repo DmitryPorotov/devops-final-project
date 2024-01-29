@@ -1,6 +1,6 @@
 package fwc
 
-abstract trait JsonSerializable {
+trait JsonSerializable {
   def toJson: ujson.Value
 
   def toJsonString: String = toJson.render(fwc.jsonIndentation)

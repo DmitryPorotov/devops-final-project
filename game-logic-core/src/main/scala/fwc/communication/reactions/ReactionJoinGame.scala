@@ -13,13 +13,20 @@ object ReactionJoinGame {
     if houseType.isDefined
       && gameSettings.players.isDefined
       && gameSettings.players.head.nonEmpty
-      && gameSettings.players.head.foldLeft(false)(
-      (acc, player) =>
-        if player.house == houseType.head then
-          true
-        else false
-    )
-    then
-      throw new FWCException("Other player has selected this house already")
+      then {
+      if gameSettings.players.head.foldLeft(false)(
+        (acc, player) =>
+          if player.house == houseType.head then
+            true
+          else acc
+      )
+      then
+        throw new FWCException("Other player has selected this house already")
+      val player = gameSettings.players.head.find(_.userId == userId)
+      if player.nonEmpty && player.head.house.nonEmpty && player.head.house.head == houseType.head then
+        return gameSettings
+      else if player.nonEmpty then
+        throw new FWCException(s"You already joined as ${player.head.house.head}")
+    }
     gameSettings.copy(players = Some((gameSettings.players getOrElse Seq[Player]()) appended Player(userId, name, houseType)))
 }

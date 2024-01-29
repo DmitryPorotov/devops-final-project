@@ -45,6 +45,7 @@ object Message {
           name,
           messageId,
         )
+      case "get_game_state" => MessageGetGameState(userId, gameId, messageId)
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
   }

@@ -7,7 +7,7 @@ import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseSingleHou
 case class SubPhaseChooseDisableMarchPlus1OrDefendOrders(
                                                           houseType: HouseType,
                                                           mainPhase: MainPhase = PhaseRoundEvents
-                                                        ) extends SubPhaseSingleHouse(
+                                                        ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
     houseType, mainPhase
   ) {
   def getSubPhaseName: String = "chooseDisableMarchPlus1OrDefendOrders"

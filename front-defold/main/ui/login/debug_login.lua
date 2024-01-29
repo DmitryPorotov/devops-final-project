@@ -25,6 +25,7 @@ function _M:init()
 		pufferfish = gui.get_node("login/pufferfish"),
 		rose = gui.get_node("login/rose"),
 		wolf = gui.get_node("login/wolf"),
+		create_game = gui.get_node("login/create_game")
 	}
 	self.back_drop = gui.get_node("login/back_drop")
 end
@@ -36,29 +37,25 @@ function _M:on_input(action_id, action)
 				if gui.pick_node(v, action.x, action.y) then
 					local function cb(data)
 						game_data.user_data = data
-						-- game_data.players[k] = { id = data.id, name = data.name }
 						tracks:set_players(game_data.players)
-						if k == "kraken" then
+						if k == "create_game" then
 							ws.send({
 								type = "chat",
-								userId = data.id,
-								lobbyId = game_data.game_id,
 								body = { type = "create" }
 							})
+							game_data.creating_new_game = true
 						else
 							ws.send({
 								type = "chat",
-								userId = data.id,
-								lobbyId = game_data.game_id,
 								body = { type = "join" }
 							})
 						end
 					end
-					game_data.me = k
-					tracks:set_me(k)
-					ws.connect(self.login_creds[k], cb)
-					-- gui.set_enabled(gui.get_node("login/back_drop"), false)
-					gui.delete_node(gui.get_node("login/back_drop"))
+					local house = k == "create_game" and "kraken" or k
+					game_data.me = house
+					tracks:set_me(house)
+					ws.connect(self.login_creds[house], cb)
+					
 					self.disabled = true
 				end
 			end

@@ -24,6 +24,9 @@ function init(self)
 	local my_url = msg.url()
 	local inst_url = tostring(my_url.path):match("%[(/%w+%d+/)")
 	local star_url = inst_url .. "star"
+	local opened_url = inst_url .. "opened"
+	local closed_url = inst_url .. "closed"
+	
 	if self.number == 3 then
 		go.set_position(props.star_pos[utils.ORDERS[self.type]], star_url)
 	else
@@ -44,6 +47,11 @@ function init(self)
 		go.set_position(vmath.vector3(0,0,-1), number_url)
 	end
 	sprite.play_flipbook(inst_url .. "opened#order_sprite", utils.ORDERS[self.type])
+	sprite.play_flipbook(inst_url .. "closed#shield_sprite", utils.HOUSES[self.house] .. "-r")
+	if not self.is_opened then
+		go.set_position(vmath.vector3(0,0,0), opened_url)
+		go.set_position(vmath.vector3(0,0,.75), closed_url)
+	end
 	-- go.set_parent(nil, "/map")
 end
 
