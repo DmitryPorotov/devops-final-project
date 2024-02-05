@@ -7,13 +7,9 @@ local hints = require "main/ui/hints"
 
 local ws = require "main/messaging/websocket"
 local mes_poc = require "main/messaging/message_processing"
+local action_proc = require "main/ui/messaging/action_reply_processing"
 
-function init(self)
-	msg.post(".", "acquire_input_focus")
-	login:init()
-
-	ws:init()
-	
+local function register_callbacks()
 	mes_poc:set_set_tracks_cb(function(tracks_data)
 		tracks:set_tracks(tracks_data)
 	end)
@@ -32,7 +28,25 @@ function init(self)
 	mes_poc:set_set_addOrder_hints_cb(function(my_armies, my_orders)
 		hints:set_addOrder_hints(my_armies, my_orders)
 	end)
+
+
+	mes_poc:set_set_supply_usage_rules_cb(function(supplyUsageRules)
+		supply_panel:set_supply_usage_rules(supplyUsageRules)
+	end)
+	-- supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
+	supply_panel:set_available(message.gameState.supplies[game_data.me])
+	supply_panel:set_current(message.gameState.supplies[game_data.me])
+	local my_armies = filter_my_armies(message.gameState.armies)
+	supply_panel:update_usage(my_armies)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	login:init()
+
+	ws:init()
 	
+	register_callbacks()
 
 	self.tracks_open = false
 

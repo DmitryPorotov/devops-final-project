@@ -1,4 +1,7 @@
 local utils = require "main/utils"
+local game_data = require "main/ui/game_data"
+
+local ws = require "main/messaging/websocket"
 
 local _M = {
 	tiles_with_hints = {},
@@ -82,7 +85,14 @@ function _M:get_button_pressed(x, y)
 		return true
 	end
 	if gui.pick_node(self.next_button, x, y) then
-		
+		ws.send({
+			type = "action",
+			action = "game_action",
+			player_action = {
+				actionType = "openOrders",
+				houseType = game_data.me,	
+			}
+		})
 		return true
 	end
 	return false

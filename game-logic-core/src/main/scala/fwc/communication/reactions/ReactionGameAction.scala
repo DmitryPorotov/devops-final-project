@@ -129,11 +129,6 @@ object ReactionGameAction {
       case a: ActionAddOrder =>
         val json = a.copy(order = null).toJson
 
-        json.obj.addOne("housesLeft" ->
-          (if updatedGameState.subPhase.isInstanceOf[SubPhaseAddOrder]
-          then updatedGameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.length
-          else 0)
-        )
         buildMessageToAll(json)
       case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)
       case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)

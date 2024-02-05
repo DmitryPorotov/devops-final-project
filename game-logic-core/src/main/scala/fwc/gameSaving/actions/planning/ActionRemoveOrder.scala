@@ -21,6 +21,9 @@ case class ActionRemoveOrder (
     if !gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
     then throw new ActionException("Wrong phase")
 
+    if gameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(houseType)
+    then throw new ActionException("You have already confirmed your orders")
+
     if !tileNumber.isValid
     then throw new ActionException(s"Invalid tile number $tileNumber")
     
@@ -35,10 +38,7 @@ case class ActionRemoveOrder (
 
     val updatedAvOrders = (gameState.availableOrders.returnOrder _).tupled(order.head)
 
-    val updatedSubPhase = SubPhaseAddOrder(gameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.filter(_ != houseType))
-
     gameState.copy(
-      subPhase = updatedSubPhase,
       placedOrders = updatedOrders,
       availableOrders = updatedAvOrders
     )

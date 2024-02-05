@@ -1,7 +1,9 @@
-local _M = {}
+local _M = {
+	house_to_panel_num = {}
+}
 
--- TODO move to it's own file
 local function set_player_panel(self, player_panel_num, house_name)
+	_M.house_to_panel_num[house_name] = player_panel_num
 	local name = gui.get_node("player" .. player_panel_num .. "/player_name_text")
 	gui.set_text(name, self.players[house_name]["name"])
 	local shield = gui.get_node("player" .. player_panel_num .. "/shield")
@@ -37,7 +39,6 @@ local function set_player_panel(self, player_panel_num, house_name)
 
 end
 
--- TODO move to it's own file
 local function set_players_panels(self)
 	set_player_panel(self, 1, self.me)
 	local i = 2
@@ -47,6 +48,25 @@ local function set_players_panels(self)
 			i = i + 1
 		end
 	end
+end
+
+function _M:set_player_ready(house)
+	local bg = gui.get_node("player" .. self.house_to_panel_num[house] .. "/players_turn")
+	gui.set_color(bg, vmath.vector4(1,1,1,.7))
+end
+
+function _M:clear_ready_all()
+	for i = 1, 6 do
+		local bg = gui.get_node("player" .. self.house_to_panel_num[house] .. "/players_turn")
+		gui.set_color(bg, vmath.vector4(1,1,1,0))
+	end
+end
+
+function _M:set_player_turn(house)
+	self.clear_ready_all()
+	local bg = gui.get_node("player" .. self.house_to_panel_num[house] .. "/players_turn")
+	gui.set_color(bg, vmath.vector4(1,1,1,.5))
+	gui.animate(bg, "color.w", 1, gui.EASING_LINEAR, .5, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
 end
 
 function _M.set_players_panels(tracks_gui)

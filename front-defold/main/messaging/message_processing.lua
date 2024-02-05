@@ -1,5 +1,6 @@
 local game_data = require "main/ui/game_data"
 local supply_panel = require "main/ui/supply_panel"
+local action_proc = require "main/ui/messaging/action_reply_processing"
 
 local _M = {
 	send = nil,
@@ -21,10 +22,10 @@ local function filter_my_armies(armies)
 	return my
 end
 
-function _M.process_message(self, message)
+function _M:process_message(message)
 	if message.type == 'action' then
 		if message.action == "game_action" then
-			local a = 0
+			action_proc:process(message.reply)
 		elseif message.action == "join_game" then
 			update_players(game_data.players, message.gameSettings.players)
 			self.send({

@@ -3,12 +3,12 @@ package fwc.gameSaving.actions.planning
 import fwc.JsonSerializable
 import fwc.game.gameRules
 import fwc.game.{FWCException, GameState}
-import fwc.game.board.{TrackCourt, TrackThrone, Tracks}
-import fwc.game.houses.HouseType
+import fwc.game.board.{MilitaryUnit, TileNumber, TrackCourt, TrackThrone, Tracks}
+import fwc.game.houses.{HouseNeutral, HouseType}
 import fwc.game.phases.{SubPhase, planningSubPhases}
 import fwc.game.phases.actionSubPhases.{SubPhaseResolveMarchOrder, SubPhaseResolveRaidOrder, SubPhaseResolveSpecialConsolidatePower}
-import fwc.game.phases.planningSubPhases.{SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseReadyToOpenOrders}
-import fwc.game.planningPhase.{OrderConsolidatePower, OrderMarch, OrderRaid, PlacedOrders}
+import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseReadyToOpenOrders}
+import fwc.game.planningPhase.{Order, OrderConsolidatePower, OrderMarch, OrderRaid, PlacedOrders}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -17,17 +17,37 @@ case class ActionOpenOrders(
                              houseType: HouseType
                            ) extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
-    if !gameState.subPhase.isInstanceOf[SubPhaseReadyToOpenOrders]
+    if !gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
     then throw new ActionException("Wrong phase")
-    val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseReadyToOpenOrders]
-    val housesLeftToBeReady = currentPhase.houseTypes.filter(_ != houseType)
-    val newPhase = if housesLeftToBeReady.nonEmpty
-      then SubPhaseReadyToOpenOrders(housesLeftToBeReady)
-    else planningSubPhases.SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard(
-      gameState.tracks.ravenOwner
-    )
+
+    val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseAddOrder]
+
+    if currentPhase.houseTypes.contains(houseType)
+    then throw new ActionException("You have already confirmed your orders")
+
+    val ordersOfHouse = gameState.placedOrders.placedOrders(houseType)
+    val noOrderArmies: Map[TileNumber, Seq[MilitaryUnit]] =
+      gameState.armies.filter(
+        (tileNumber, army: Seq[MilitaryUnit]) =>
+          army.head.house == houseType && !ordersOfHouse.contains(tileNumber)
+          && army.exists(_.unitType.canBeMustered)
+      )
+
+    val newSubPhase =
+      if noOrderArmies.isEmpty || (noOrderArmies.nonEmpty && !gameState.availableOrders.hasAvailableOrders(houseType, gameState.tracks))
+      then
+        currentPhase.copy(
+          houseTypes = currentPhase.houseTypes appended houseType
+        )
+      else throw new ActionException(s"You have armies without orders at tiles [${noOrderArmies.map(_._1.toString).mkString(",")}]")
+
+    val updatedSubPhase =
+      if newSubPhase.houseTypes.size == 6 then
+        SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard(gameState.tracks.ravenOwner)
+      else newSubPhase
+
     gameState.copy(
-      subPhase = newPhase
+      subPhase = updatedSubPhase
     )
   }
 
