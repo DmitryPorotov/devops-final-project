@@ -20,13 +20,15 @@ local _M = {
 	placed_orders = {},
 
 	stars_available = 3,
-	stars_locks = nil
+	stars_locks = nil,
+	label_text = "Select an Order"
 }
 
 local count_stars_used, lock_stars_disable_special_buttons
 
 function _M:init()
 	self.panel = gui.get_node("orders/orders_panel")
+	self.label = gui.get_node("orders/label")
 	for _, v in ipairs(self.ORDER_TYPES) do
 		for i = 1, 3 do
 			self.buttons[v .. i] = {
@@ -55,7 +57,7 @@ function _M:calc_stars_available(court_track)
 	lock_stars_disable_special_buttons(self, count_stars_used(self))
 end
 
-function lock_stars_disable_special_buttons(self, num_stars_used)
+function lock_stars_disable_special_buttons(self, num_stars_used) --local
 	if self.stars_available > 1 then
 		for i = 1, self.stars_available do
 			gui.set_enabled(self.stars_locks[i], i <= num_stars_used)
@@ -80,7 +82,7 @@ function lock_stars_disable_special_buttons(self, num_stars_used)
 	end
 end
 
-function count_stars_used(self)
+function count_stars_used(self) --local
 	local count = 0
 	for _, v in ipairs(self.ORDER_TYPES) do
 		if self.buttons[v .. 3].label and self.buttons[v .. 3].label ~= "over_lim" then 
@@ -105,7 +107,7 @@ local function disable_button(self)
 	lock_stars_disable_special_buttons(self, count_stars_used(self))
 end
 
-function _M:open(for_label, tile_num ,deleted)
+function _M:open(for_label, tile_num, name, deleted)
 	if self.for_label and self.for_label == for_label then
 		self:close()
 		self.for_label = nil
@@ -114,11 +116,21 @@ function _M:open(for_label, tile_num ,deleted)
 	end
 	if deleted then
 		enable_button(self, deleted)
+		ws.send({
+			type = "action",
+			action = "game_action",
+			player_action = {
+				actionType = "removeOrder",
+				houseType = game_data.me,
+				tileNumber = tonumber(tile_num),
+			}
+		})
 	end
 	self.for_label = for_label
 	self.tile_num = tile_num
 	gui.set_enabled(self.panel, true)
 	gui.animate(self.panel, "position.x", 1050, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+	gui.set_text(self.label, self.label_text .. "\nfor " .. name)
 end
 
 local function on_closed(self, message_id, message, sender)
@@ -181,7 +193,7 @@ function _M:get_order_to_send()
 		player_action = {
 			actionType = "addOrder",
 			houseType = game_data.me,
-			tileNumber = self.tile_num,
+			tileNumber = tonumber(self.tile_num),
 			order = build_order_obj(self.button_selected)
 		}
 	}
@@ -212,7 +224,7 @@ function _M:show_orders_on_map(orders)
 				end
 			end
 			if h == game_data.me then
-				self.for_label = hash("/" .. labels.LABEL_IDS[tonumber(t)])
+				self.for_label = hash(labels.LABEL_IDS[tonumber(t)])
 				self.button_selected = order
 				self.tile_num = t
 				disable_button(self)

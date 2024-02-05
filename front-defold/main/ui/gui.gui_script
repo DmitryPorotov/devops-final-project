@@ -3,6 +3,7 @@ local top_panel = require "main/ui/top_panel"
 local orders = require "main/ui/orders"
 local login = require "main/ui/login/debug_login"
 local supply_panel = require "main/ui/supply_panel"
+local hints = require "main/ui/hints"
 
 local ws = require "main/messaging/websocket"
 local mes_poc = require "main/messaging/message_processing"
@@ -13,41 +14,33 @@ function init(self)
 
 	ws:init()
 	
-	local function set_tracks(tracks_data)
+	mes_poc:set_set_tracks_cb(function(tracks_data)
 		tracks:set_tracks(tracks_data)
-	end
-	mes_poc:set_set_tracks_cb(set_tracks)
-	local function set_game_state(game_state)
+	end)
+	mes_poc:set_set_game_state_cb(function(game_state)
 		top_panel:set_game_state(game_state)
-	end
-	mes_poc:set_set_game_state_cb(set_game_state)
-	local function set_players(players)
+	end)
+	mes_poc:set_set_players_cb(function(players)
 		tracks:set_players(players)
-	end
-	mes_poc:set_set_players_cb(set_players)
-	local function calc_stars_available(court_track)
+	end)
+	mes_poc:set_calc_stars_available_cb(function(court_track)
 		orders:calc_stars_available(court_track)
-	end
-	mes_poc:set_calc_stars_available_cb(calc_stars_available)
-	local function show_orders_on_map(orders_)
+	end)
+	mes_poc:set_show_orders_on_map_cb(function(orders_)
 		orders:show_orders_on_map(orders_)
-	end
-	mes_poc:set_show_orders_on_map_cb(show_orders_on_map)
+	end)
+	mes_poc:set_set_addOrder_hints_cb(function(my_armies, my_orders)
+		hints:set_addOrder_hints(my_armies, my_orders)
+	end)
+	
 
 	self.tracks_open = false
-	-- self.me = "kraken"
-	-- self.players = {
-	-- 	moose = { id = -1, name = "Waiting for player..." },
-	-- 	lion = { id = -1, name = "Waiting for player..." },
-	-- 	wolf = { id = -1, name = "Waiting for player..." },
-	-- 	pufferfish = { id = -1, name = "Waiting for player..." },
-	-- 	kraken = { id = -1, name = "Waiting for player..." },
-	-- 	rose = { id = -1, name = "Waiting for player..." }
-	-- }
+
 	tracks:init()
 	top_panel:init()
 	orders:init()
 	supply_panel:init()
+	hints:init()
 	--tracks:set_tracks(self.tracks)
 end
 
@@ -80,7 +73,10 @@ function on_message(self, message_id, message, sender)
 		local s = gui.get_node("debug")
 		gui.set_text(s, text)
 	elseif message_id == hash("show_orders_menu") then
-		orders:open(message.label, message.tile_num, message.deleted)
+		if message.deleted then
+			hints:set_has_order(message.tile_num, false)
+		end
+		orders:open(message.label, message.tile_num, message.name, message.deleted)
 	end
 end
 
@@ -99,8 +95,12 @@ function on_input(self, action_id, action)
 				-- open_tracks(self, tracks)
 			end	
 		elseif orders:get_button_pressed(action.x, action.y) then
-			ws.send(orders:get_order_to_send())
+			local order = orders:get_order_to_send()
+			hints:set_has_order(order.player_action.tileNumber, true)
+			ws.send(order)
 			orders:add_order_to_map()
+		elseif hints:get_button_pressed(action.x, action.y) then
+			return true
 		end
 	end
 end

@@ -11,11 +11,11 @@ function final(self)
 	-- Remove this function if not needed
 end
 
-function update(self, dt)
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
+-- function update(self, dt)
+-- 	-- Add update code here
+-- 	-- Learn more: https://defold.com/manuals/script/
+-- 	-- Remove this function if not needed
+-- end
 
 function fixed_update(self, dt)
 	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
@@ -36,6 +36,15 @@ function on_message(self, message_id, message, sender)
 		map_:select_label(message.id)
 	elseif message_id == hash("add_order") then
 		map_:add_order(message)
+	elseif message_id == hash("move_camera_to_house") then
+		local center = map_:get_center_of_territories(message.house)
+		msg.post("/camera", "animate_camera_to", {point = center})
+	elseif message_id == hash("move_camera_to_label") then
+		local label_hash = hash(labels.LABEL_IDS[tonumber(message.tile_num)])
+		local center = go.get_position(label_hash)
+		center.z = 0.25
+		map_:select_label(label_hash)
+		msg.post("/camera", "animate_camera_to", {point = center})
 	end
 end
 

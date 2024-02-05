@@ -5,7 +5,7 @@ import fwc.game.phases.*
 import fwc.game.phases.actionSubPhases.*
 import fwc.game.actionPhase.*
 import fwc.game.houses.HouseType
-import fwc.game.phases.planningSubPhases.SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard
+import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard}
 import fwc.game.phases.roundEventsSubPhases.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.gameSaving.GameReplay
@@ -126,7 +126,15 @@ object ReactionGameAction {
     }
 
     previousAction match
-      case a: ActionAddOrder => buildMessageToAll(a.copy(order = null).toJson)
+      case a: ActionAddOrder =>
+        val json = a.copy(order = null).toJson
+
+        json.obj.addOne("housesLeft" ->
+          (if updatedGameState.subPhase.isInstanceOf[SubPhaseAddOrder]
+          then updatedGameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.length
+          else 0)
+        )
+        buildMessageToAll(json)
       case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)
       case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)
       case _: ActionCalculateGameWinner => buildMessageToAll(

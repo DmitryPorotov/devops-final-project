@@ -1,12 +1,11 @@
+local utils = require "main/utils"
+
 local CAMERA_LIMITS = {
 	up = vmath.vector3(150, 950, 0),
 	down = vmath.vector3(-150, -870, 0)
 }
 
-local SCREEN_SIZE = {
-	x = 1200,
-	y = 675
-}
+local SCREEN_SIZE = vmath.vector3(1200,	675, 0)
 
 function init(self)
 	msg.post("#camera", "acquire_camera_focus")
@@ -73,6 +72,20 @@ local function update_camera_limits(self)
 	0)
 end
 
+local function impose_camera_limits(self, pos)
+	if pos.x < self.camera_down_limit.x then
+		pos.x = self.camera_down_limit.x
+	elseif pos.x > self.camera_up_limit.x then
+		pos.x = self.camera_up_limit.x
+	end
+	if pos.y < self.camera_down_limit.y then
+		pos.y = self.camera_down_limit.y
+	elseif pos.y > self.camera_up_limit.y then
+		pos.y = self.camera_up_limit.y
+	end
+	return pos
+end
+
 function update(self, dt)
 	if self.zoom_delay > 0 then
 		self.zoom_delay = self.zoom_delay - dt
@@ -81,17 +94,8 @@ function update(self, dt)
 		local pos = go.get_position()
 		pos = pos + self.camera_move_dir * self.camera_move_speed * dt
 		pos = pos - self.camera_drag_delta
-		if pos.x < self.camera_down_limit.x then
-			pos.x = self.camera_down_limit.x
-		elseif pos.x > self.camera_up_limit.x then
-			pos.x = self.camera_up_limit.x
-		end
-		if pos.y < self.camera_down_limit.y then
-			pos.y = self.camera_down_limit.y
-		elseif pos.y > self.camera_up_limit.y then
-			pos.y = self.camera_up_limit.y
-		end
-		go.set_position(pos)
+
+		go.set_position(impose_camera_limits(self, pos))
 		-- print("setting came pos to " .. pos)
 	end
 
@@ -107,13 +111,13 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Learn more: https://defold.com/manuals/message-passing/
-	-- Remove this function if not needed
 	if message_id == hash("take_focus") then
 		msg.post(".", "acquire_input_focus")
 	elseif message_id == hash("release_focus") then
 		msg.post(".", "release_input_focus")
+	elseif message_id == hash("animate_camera_to") then
+		local point = impose_camera_limits(self, (message.point * self.zoom) - (SCREEN_SIZE / 2 ))
+		go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, point, go.EASING_LINEAR, utils.ANIMATION_TIME)
 	end
 end
 

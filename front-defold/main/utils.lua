@@ -39,4 +39,12 @@ local _M = {
 	end
 }
 
+function _M.is_unit_commandable(type)
+	return type ~= "garrison" and type ~= "powerToken"
+end
+
+function _M.is_port(id)
+	return string.find(id, "%dport_")
+end
+
 return _M

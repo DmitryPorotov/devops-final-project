@@ -15,25 +15,36 @@ local _M = {
 		vmath.vector3(25, 0, 0.5),
 	},
 	armies = {},
+	armies_by_house = {},
 	phase = "addOrder",
 	orders = {},
 }
 
-function _M.is_unit_commandable(type)
-	return type ~= "garrison" and type ~= "powerToken"
+function _M:get_center_of_territories(house)
+	local positions = {}
+	for i, v in pairs(self.armies_by_house[house]) do
+		table.insert(positions, go.get_position(labels.LABEL_IDS[tonumber(i)]))
+	end
+	local sum = vmath.vector3()
+	for i = 1, #positions do
+		sum = sum + positions[i]
+	end
+	local avg = sum / #positions
+	avg.z = go.get_position("/camera").z
+	return avg
 end
 
-function _M.select_label(self, label_hash)
+function _M:select_label(label_hash)
 	local id_str = utils.hash_to_id(label_hash)
 	local tile_num = string.match(id_str, "^/(%d+)")
 	if self.phase == "addOrder" then
-		self:tile_selectable_for_order(tonumber(tile_num), label_hash)
+		self:tile_selectable_for_order(tile_num, label_hash)
 	end
 end
 
-function _M.tile_selectable_for_order(self, tile_num, label_hash)
-	if self.armies[tile_num] and #self.armies[tile_num] > 0 and self.armies[tile_num][1].house == game_data.me
-	and (self.is_unit_commandable(self.armies[tile_num][1].type) or #self.armies[tile_num] > 1)
+function _M:tile_selectable_for_order(tile_num, label_hash)
+	if self.armies_by_house[game_data.me][tile_num] and #self.armies_by_house[game_data.me][tile_num] > 0
+	and (utils.is_unit_commandable(self.armies[tile_num][1].type) or #self.armies[tile_num] > 1)
 	then
 		labels:select(label_hash)
 		local deleted = nil
@@ -43,12 +54,23 @@ function _M.tile_selectable_for_order(self, tile_num, label_hash)
 			deleted = utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
 			self.orders[label_hash] = nil
 		end
-		msg.post("/gui", "show_orders_menu", { label = label_hash, tile_num = tile_num, deleted = deleted })
+		local name
+		if utils.is_port(tostring(label_hash)) then
+			name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
+		else
+			name = label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
+		end
+		msg.post("/gui", "show_orders_menu", { 
+			label = label_hash, 
+			tile_num = tile_num, 
+			name = name, 
+			deleted = deleted 
+		})
 	end
 end
 
 function _M:add_order(message)
-	local label = type(message.label) == "number" and hash("/" .. labels.LABEL_IDS[message.label]) or message.label
+	local label = type(message.label) == "number" and hash(labels.LABEL_IDS[message.label]) or message.label
 	labels:unselect(label)
 	local order_type = hash(message.order:sub(1, -2))
 	local order_num = tonumber(message.order:sub(-1))
@@ -67,17 +89,20 @@ function _M:add_order(message)
 	self.orders[label] = order
 end
 
-function _M.set_units(self, tile_num, units)
-	table.insert(self.armies, tile_num, units)
-	-- table.insert(self.armies_by_house[units[1].house], tile_num, units)
+function _M:set_units(tile_num, units)
+	self.armies[tile_num] = units
+	if not self.armies_by_house[units[1].house] then
+		self.armies_by_house[units[1].house] = {}
+	end
+	self.armies_by_house[units[1].house][tile_num] = units
 	local label_id = labels.LABEL_IDS[tonumber(tile_num)]
-	local is_port = labels.is_port(label_id)
-	local label_location = go.get_position("/" .. label_id)
+	local is_port = utils.is_port(label_id)
+	local label_location = go.get_position(label_id)
 	if not is_port then
 		label_location = label_location + go.get_position("/" .. tile_num .. "shield")
 	end
 	for i, v in ipairs(units) do
-		if self.is_unit_commandable(v.type) then
+		if utils.is_unit_commandable(v.type) then
 			local position
 			if is_port then
 				position = label_location + self.PORT_SHIPS_OFFSET[i]

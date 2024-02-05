@@ -1,3 +1,5 @@
+local utils = require "main/utils"
+
 local _M = {
 	current_count = -1,
 	available_count = 0,
@@ -63,7 +65,7 @@ end
 local function count_units(army)
 	local cnt = 0
 	for i, v in ipairs(army) do
-		cnt = cnt + ((v.type ~= "garrison" and v.type ~= "powerToken") and 1 or 0)
+		cnt = cnt + (utils.is_unit_commandable(v.type) and 1 or 0)
 	end
 	return cnt
 end
@@ -74,7 +76,7 @@ end
 
 function _M:update_usage(armies)
 	local counts = {}
-	for i, v in ipairs(armies) do
+	for i, v in pairs(armies) do
 		table.insert(counts,count_units(v))
 	end
 	table.sort(counts, function(a, b) return b < a end)

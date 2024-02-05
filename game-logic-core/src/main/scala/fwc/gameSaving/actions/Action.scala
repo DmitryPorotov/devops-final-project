@@ -3,7 +3,7 @@ package fwc.gameSaving.actions
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.gameSaving.actions.action.*
-import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenChangeOrder, ActionRavenChooseChangeOrderOrLookAtWildlingCard, ActionRavenChoosePutWildlingsCardOnTopOrBottom}
+import fwc.gameSaving.actions.planning.*
 import fwc.gameSaving.actions.roundEvents.*
 
 trait Action(gameState: GameState) extends JsonSerializable {
@@ -17,6 +17,7 @@ object Action extends JsonParsableAction {
   def fromJson(gameState: GameState, json: ujson.Value): Action = {
     json(actionTypeJsonKey).str match
       case "addOrder" => ActionAddOrder.fromJson(gameState, json)
+      case "removeOrder" => ActionRemoveOrder.fromJson(gameState, json)
       case "openOrders" => ActionOpenOrders.fromJson(gameState, json)
 
       case "ravenChooseChangeOrderOrLookAtWildlingCard" => ActionRavenChooseChangeOrderOrLookAtWildlingCard.fromJson(gameState, json)
