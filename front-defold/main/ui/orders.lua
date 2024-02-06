@@ -209,7 +209,7 @@ function _M:add_order_to_map()
 	disable_button(self)
 end
 
-function _M:show_orders_on_map(orders)
+function _M:show_orders_on_map(orders, do_open)
 	for h, os in pairs(orders) do
 		for t, o in pairs(os) do
 			local order = o.type == "consolidatePower" and "consolidate" or o.type
@@ -234,7 +234,12 @@ function _M:show_orders_on_map(orders)
 				self.tile_num = t
 				disable_button(self)
 			end
-			msg.post("/map", "add_order", {order = order, label = tonumber(t), house = h, is_opened = h == game_data.me})
+			msg.post("/map", "add_order", {
+				order = order,
+				label = tonumber(t),
+				house = h,
+				is_opened = (do_open and true or (h == game_data.me))
+			})
 		end
 	end
 end

@@ -7,6 +7,7 @@ local _M = {
 		kraken = { id = -1, name = "Waiting for player..." },
 		rose = { id = -1, name = "Waiting for player..." }
 	},
+	i_joined = false,
 	me = nil,
 	user_data = nil,
 	gameRules = nil,

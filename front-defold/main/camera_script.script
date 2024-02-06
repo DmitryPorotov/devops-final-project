@@ -54,6 +54,7 @@ local function try_selecting(self, group, size)
 		msg.post("/map", 'select_label', {
 			id = result1.id
 		})
+		msg.post("/gui", "print_debug", { text = tostring(result1.id)})
 		return true
 	end
 	return false
@@ -175,7 +176,6 @@ function on_input(self, action_id, action)
 		-- go.animate("/map", "scale", go.PLAYBACK_ONCE_FORWARD, reduce_zoom(self), go.EASING_LINEAR, .5)
 		reduce_zoom(self)
 	elseif action_id == hash("touch_multi") then
-		msg.post("/gui", "touch_multi", action)
 		if #action.touch > 1 then
 			if #self.m_touch == 0 then
 				self.m_touch[1] = action.touch[1]

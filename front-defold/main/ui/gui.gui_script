@@ -42,6 +42,11 @@ local function register_callbacks()
 	mes_proc:set_update_usage_cb(function(supplies)
 		supply_panel:update_usage(supplies)
 	end)
+
+	action_proc.orders__show_orders_on_map = function(orders_, do_open)
+		orders:show_orders_on_map(orders_, do_open)
+	end
+	
 end
 
 function init(self)
@@ -51,8 +56,6 @@ function init(self)
 	ws:init()
 	
 	register_callbacks()
-
-	self.tracks_open = false
 
 	tracks:init()
 	top_panel:init()
@@ -69,27 +72,33 @@ function final(self)
 end
 
 function update(self, dt)
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
+	if self.action then
+		if login:on_input(self.action) then
+			
+		elseif gui.pick_node(tracks.tracks, self.action.x, self.action.y) then
+			if tracks.is_open then
+				tracks:close()
+			else
+				tracks:open()
+			end	
+		elseif orders:get_button_pressed(self.action.x, self.action.y) then
+			local order = orders:get_order_to_send()
+			hints:set_has_order(order.player_action.tileNumber, true)
+			ws.send(order)
+			orders:add_order_to_map()
+		elseif hints:get_button_pressed(self.action.x, self.action.y) then
+		end
+		self.action = nil
+	end
 end
 
 function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Learn more: https://defold.com/manuals/message-passing/
 	-- Remove this function if not needed
-	if message_id == hash("touch_multi") then
-		local text = ""
-		local sum = vmath.vector3()
-		if #message.touch > 1 then
-			sum = vmath.vector3(message.touch[1].dx + message.touch[2].dx, message.touch[1].dy + message.touch[2].dy, 0)
-		end
-		for i, touchdata in ipairs(message.touch) do
-			text = text .. "point " .. i .. ' x ' .. touchdata.x .. ' y ' .. touchdata.y .. ' dx ' .. touchdata.dx .. ' dy ' .. touchdata.dy .. "\n"
-		end
-		text = text .. 'sum of deltas ' .. sum
+	if message_id == hash("print_debug") then
 		local s = gui.get_node("debug")
-		gui.set_text(s, text)
+		gui.set_text(s, message.text)
 	elseif message_id == hash("show_orders_menu") then
 		if message.deleted then
 			hints:set_has_order(message.tile_num, false)
@@ -100,26 +109,8 @@ end
 
 
 function on_input(self, action_id, action)
-	if login:on_input(action_id, action) then
-		return true
-	end
 	if action_id == hash("touch") and action.pressed then
-		if gui.pick_node(tracks.tracks, action.x, action.y) then
-			if tracks.is_open then
-				tracks:close()
-				-- close_tracks(self, tracks)
-			else
-				tracks:open()
-				-- open_tracks(self, tracks)
-			end	
-		elseif orders:get_button_pressed(action.x, action.y) then
-			local order = orders:get_order_to_send()
-			hints:set_has_order(order.player_action.tileNumber, true)
-			ws.send(order)
-			orders:add_order_to_map()
-		elseif hints:get_button_pressed(action.x, action.y) then
-			return true
-		end
+		self.action = action
 	end
 end
 

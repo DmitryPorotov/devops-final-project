@@ -76,11 +76,12 @@ local _M = {
 		"/55sunspear",
 		"/56port_sunspear",
 		"/57east_summer_sea",
-	}
+	},
+	LABEL_HASHES = {}
 }
 
-function _M:select(label)
-	local id = utils.hash_to_id(label)
+function _M:select(label_hash)
+	local id = self.LABEL_HASHES[label_hash]
 	if utils.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', self.LABEL_SELECT_COLOR)
 	else
@@ -88,19 +89,19 @@ function _M:select(label)
 	end
 
 	if self.selected then
+		local s = self.selected
 		self:unselect(self.selected)
-		if self.selected == label then
-			self.selected = nil
+		if s == label_hash then
 			return false
 		end
 	end
 
-	self.selected = label
+	self.selected = label_hash
 	return true
 end
 
-function _M:unselect(label)
-	local id = utils.hash_to_id(label)
+function _M:unselect(label_hash)
+	local id = self.LABEL_HASHES[label_hash]
 	if self.selected then
 		self.selected = nil
 	end
@@ -111,7 +112,10 @@ function _M:unselect(label)
 	end
 end
 
-function _M.init(self)
+function _M:init()
+	for i = 0, 57 do
+		self.LABEL_HASHES[hash(self.LABEL_IDS[i])] = self.LABEL_IDS[i]
+	end
 	go.set(self.LABEL_IDS[2] .. "#label_bg", "tint", self.HOUSE_COLORS.wolf)
 	go.set(self.LABEL_IDS[3] .. "#label_bg", "tint", self.HOUSE_COLORS.wolf)
 	go.set(self.LABEL_IDS[7] .. "#label_bg", "tint", self.HOUSE_COLORS.wolf)

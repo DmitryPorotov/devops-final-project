@@ -30,8 +30,8 @@ function _M:init()
 	self.back_drop = gui.get_node("login/back_drop")
 end
 
-function _M:on_input(action_id, action)
-	if not self.disabled and action_id == hash("touch") then
+function _M:on_input(action)
+	if not self.disabled then
 		if action.pressed then
 			for k, v in pairs(self.buttons) do
 				if gui.pick_node(v, action.x, action.y) then
@@ -57,6 +57,7 @@ function _M:on_input(action_id, action)
 					ws.connect(self.login_creds[house], cb)
 					
 					self.disabled = true
+					return true
 				end
 			end
 		end

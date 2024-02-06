@@ -25,13 +25,18 @@ end
 function _M:process_message(message)
 	if message.type == 'action' then
 		if message.action == "game_action" then
-			action_proc:process(message.reply)
+			for _, reply in ipairs(message.reply) do
+				action_proc:process(reply)
+			end
 		elseif message.action == "join_game" then
 			update_players(game_data.players, message.gameSettings.players)
-			self.send({
-				type = "action",
-				action = "get_game_state",
-			})
+			if not game_data.i_joined then
+				game_data.i_joined = true
+				self.send({
+					type = "action",
+					action = "get_game_state",
+				})
+			end
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
 			self.supply_panel__set_supply_usage_rules(message.gameRules.supplyUsage)
@@ -68,7 +73,7 @@ function _M:process_message(message)
 					type = "join"
 				}
 			})
-		elseif message.body.type == 'join' then
+		elseif message.body.type == 'join' and message.userId == game_data.user_data.id then
 			if game_data.creating_new_game then
 				self.send({
 					type = "action",

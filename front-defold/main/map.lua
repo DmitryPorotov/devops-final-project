@@ -35,7 +35,7 @@ function _M:get_center_of_territories(house)
 end
 
 function _M:select_label(label_hash)
-	local id_str = utils.hash_to_id(label_hash)
+	local id_str = labels.LABEL_HASHES[label_hash]
 	local tile_num = string.match(id_str, "^/(%d+)")
 	if self.phase == "addOrder" then
 		self:tile_selectable_for_order(tile_num, label_hash)

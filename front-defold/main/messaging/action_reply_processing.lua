@@ -2,11 +2,27 @@ local game_data = require "main/ui/game_data"
 local player_panel = require "main/ui/player_panel"
 
 local _M = {
+	orders__show_orders_on_map = nil,
 	switch = {
-		addOrder = function(reply)
+		addOrder = function(self, reply)
+			if reply.player_action.houseType == game_data.me then
+				return
+			end
+			local order = reply.player_action.order ~= json.null and reply.player_action.order or {
+				type = "consolidatePower"
+			}
+			local to_send = {
+				[reply.player_action.houseType] = {
+					[reply.player_action.tileNumber] = order
+				}
+			}
+			self.orders__show_orders_on_map(to_send,
+			reply.player_action.order ~= json.null and true or false)
+		end,
+		removeOrder = function(self, reply)
 			
 		end,
-		openOrders = function(reply)
+		openOrders = function(self, reply)
 			
 		end,
 	}
@@ -18,7 +34,7 @@ function _M:process(reply)
 	elseif not self.switch[reply.player_action.actionType] then
 		print("unknown action type " .. reply.player_action.actionType)
 	else
-		self.switch[reply.player_action.actionType](reply)
+		self.switch[reply.player_action.actionType](self, reply)
 	end
 end
 
