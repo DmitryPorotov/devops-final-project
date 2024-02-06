@@ -50,7 +50,7 @@ function _M:tile_selectable_for_order(tile_num, label_hash)
 		local deleted = nil
 		if self.orders[label_hash] then
 			go.delete(self.orders[label_hash])
-			local script_url = tostring(self.orders[label_hash][hash('/order')]):match("%[(.+)%]") .. "#order"
+			local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
 			deleted = utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
 			self.orders[label_hash] = nil
 		end
@@ -81,12 +81,26 @@ function _M:add_order(message)
 			type = order_type,
 			number = order_num,
 			is_opened = message.is_opened,
-			house = hash(message.house)
+			house = hash(message.house),
 		}
 	},
 	.75)
 	go.set_parent(order[hash("/order")], label)
+	msg.post(order[hash("/order")], "set_urls", {
+		star_url = order[hash("/star")],
+		opened_url = order[hash("/opened")],
+		closed_url = order[hash("/closed")],
+		number_url = order[hash("/number")],
+	})
 	self.orders[label] = order
+end
+
+function _M:remove_order(tile_num)
+	local label_hash = hash(labels.LABEL_IDS[tile_num])
+	if self.orders[label_hash] then
+		go.delete(self.orders[label_hash])
+		self.orders[label_hash] = nil
+	end
 end
 
 function _M:set_units(tile_num, units)

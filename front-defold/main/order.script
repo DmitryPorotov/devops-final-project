@@ -5,97 +5,57 @@ go.property("type", hash("support"))
 go.property("number", 1)
 go.property("is_opened", true)
 
+go.property("star_url", false)
+go.property("opened_url", false)
+go.property("closed_url", false)
+go.property("number_url", false)
+
 local props = {
 	star_pos = {
-		consolidate = vmath.vector3(0, -16, 0),
-		raid = vmath.vector3(-12, 7, 0),
-		march = vmath.vector3(15, 2, 0),
-		defend = vmath.vector3(14, 8, 0),
-		support = vmath.vector3(-16, -8, 0),
+		[hash("consolidate")] = vmath.vector3(0, -16, 0),
+		[hash("raid")] = vmath.vector3(-12, 7, 0),
+		[hash("march")] = vmath.vector3(15, 2, 0),
+		[hash("defend")] = vmath.vector3(14, 8, 0),
+		[hash("support")] = vmath.vector3(-16, -8, 0),
 	},
 	num_pos = {
-		march = vmath.vector3(9, -12, 0),
-		defend = vmath.vector3(13, -7, 0),
-		support = vmath.vector3(0, -15, 0),
+		[hash("march")] = vmath.vector3(9, -12, 0),
+		[hash("defend")] = vmath.vector3(13, -7, 0),
+		[hash("support")] = vmath.vector3(0, -15, 0),
 	}
 }
 
-function init(self)
-	local my_url = msg.url()
-	local inst_url = tostring(my_url.path):match("%[(/%w+%d+/)")
-	local star_url = inst_url .. "star"
-	local opened_url = inst_url .. "opened"
-	local closed_url = inst_url .. "closed"
-	
-	if self.number == 3 then
-		go.set_position(props.star_pos[utils.ORDERS[self.type]], star_url)
-	else
-		go.set_position(vmath.vector3(0,0,-1), star_url)
-	end
-	local number_url = inst_url .. "number"
-	if self.type == hash("march") or self.type == hash("defend") or (self.type == hash("support") and self.number == 3) then
-		go.set_position(props.num_pos[utils.ORDERS[self.type]], number_url)
-		if self.type ~= hash("support") then
-			go.set(number_url .. "#bg", "tint", vmath.vector4(0,0,0,0))
-			if self.type == hash("march") then
-				label.set_text(inst_url .. "number#label", (self.number == 1 and "-1") or (self.number == 2 and "+0") or (self.number == 3 and "+1"))
-			elseif self.type == hash("defend") then
-				label.set_text(inst_url .. "number#label", ((self.number == 1 or self.number == 2) and "+1") or (self.number == 3 and "+2"))
-			end
-		end
-	else
-		go.set_position(vmath.vector3(0,0,-1), number_url)
-	end
-	sprite.play_flipbook(inst_url .. "opened#order_sprite", utils.ORDERS[self.type])
-	sprite.play_flipbook(inst_url .. "closed#shield_sprite", utils.HOUSES[self.house] .. "-r")
-	if not self.is_opened then
-		go.set_position(vmath.vector3(0,0,0), opened_url)
-		go.set_position(vmath.vector3(0,0,.75), closed_url)
-	end
-	-- go.set_parent(nil, "/map")
-end
-
-function final(self)
-	-- Add finalization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
-
--- function update(self, dt)
--- 	-- Add update code here
--- 	-- Learn more: https://defold.com/manuals/script/
--- 	-- Remove this function if not needed
--- end
-
-function fixed_update(self, dt)
-	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
-	-- Can be coupled with fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
-	-- Physics section of game.project
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Learn more: https://defold.com/manuals/message-passing/
-	-- Remove this function if not needed
-end
+	if message_id == hash("set_urls") then
+		self.star_url = message.star_url
+		self.opened_url = message.opened_url
+		self.closed_url = message.closed_url
+		self.number_url = message.number_url
 
-function on_input(self, action_id, action)
-	-- Add input-handling code here. The game object this script is attached to
-	-- must have acquired input focus:
-	--
-	--    msg.post(".", "acquire_input_focus")
-	--
-	-- All mapped input bindings will be received. Mouse and touch input will
-	-- be received regardless of where on the screen it happened.
-	-- Learn more: https://defold.com/manuals/input/
-	-- Remove this function if not needed
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Learn more: https://defold.com/manuals/hot-reload/
-	-- Remove this function if not needed
+		if self.number == 3 then
+			go.set_position(props.star_pos[self.type], self.star_url)
+		else
+			go.set_position(vmath.vector3(0,0,-1), self.star_url)
+		end
+		-- local number_url = inst_url .. "number"
+		if self.type == hash("march") or self.type == hash("defend") or (self.type == hash("support") and self.number == 3) then
+			go.set_position(props.num_pos[self.type], self.number_url)
+			if self.type ~= hash("support") then
+				go.set(msg.url("main", self.number_url, "bg"), "tint", vmath.vector4(0,0,0,0))
+				if self.type == hash("march") then
+					label.set_text(msg.url("main", self.number_url, "label"), (self.number == 1 and "-1") or (self.number == 2 and "+0") or (self.number == 3 and "+1"))
+				elseif self.type == hash("defend") then
+					label.set_text(msg.url("main", self.number_url, "label"), ((self.number == 1 or self.number == 2) and "+1") or (self.number == 3 and "+2"))
+				end
+			end
+		else
+			go.set_position(vmath.vector3(0,0,-1), self.number_url)
+		end
+		sprite.play_flipbook(msg.url("main", self.opened_url, "order_sprite"), utils.ORDERS[self.type])
+		sprite.play_flipbook(msg.url("main", self.closed_url, "shield_sprite"), utils.HOUSES[self.house] .. "-r")
+		if not self.is_opened then
+			go.set_position(vmath.vector3(0,0,0), self.opened_url)
+			go.set_position(vmath.vector3(0,0,.75), self.closed_url)
+		end
+	end
 end

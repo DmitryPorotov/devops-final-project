@@ -36,6 +36,8 @@ function on_message(self, message_id, message, sender)
 		map_:select_label(message.id)
 	elseif message_id == hash("add_order") then
 		map_:add_order(message)
+	elseif message_id == hash("remove_order") then
+		map_:remove_order(message.tile_num)
 	elseif message_id == hash("move_camera_to_house") then
 		local center = map_:get_center_of_territories(message.house)
 		msg.post("/camera", "animate_camera_to", {point = center})

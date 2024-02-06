@@ -98,7 +98,7 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 	if message_id == hash("print_debug") then
 		local s = gui.get_node("debug")
-		gui.set_text(s, message.text)
+		gui.set_text(s, tostring(message.text))
 	elseif message_id == hash("show_orders_menu") then
 		if message.deleted then
 			hints:set_has_order(message.tile_num, false)

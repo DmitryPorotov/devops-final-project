@@ -20,7 +20,10 @@ local _M = {
 			reply.player_action.order ~= json.null and true or false)
 		end,
 		removeOrder = function(self, reply)
-			
+			if reply.player_action.houseType == game_data.me then
+				return
+			end
+			msg.post("/map", "remove_order", {tile_num = reply.player_action.tileNumber})
 		end,
 		openOrders = function(self, reply)
 			
