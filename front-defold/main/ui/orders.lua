@@ -200,7 +200,12 @@ function _M:get_order_to_send()
 end
 
 function _M:add_order_to_map()
-	msg.post("/map", "add_order", {order = self.button_selected, label = self.for_label, house = game_data.me, is_opened = true})
+	msg.post("/map", "add_order", {
+		order = self.button_selected,
+		label = self.for_label,
+		house = game_data.me,
+		is_opened = true
+	})
 	disable_button(self)
 end
 

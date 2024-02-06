@@ -1,6 +1,6 @@
 local game_data = require "main/ui/game_data"
 local supply_panel = require "main/ui/supply_panel"
-local action_proc = require "main/ui/messaging/action_reply_processing"
+local action_proc = require "main/messaging/action_reply_processing"
 
 local _M = {
 	send = nil,
@@ -34,12 +34,11 @@ function _M:process_message(message)
 			})
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
-			-- TODO encapsulate supply_panel
-			supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
-			supply_panel:set_available(message.gameState.supplies[game_data.me])
-			supply_panel:set_current(message.gameState.supplies[game_data.me])
+			self.supply_panel__set_supply_usage_rules(message.gameRules.supplyUsage)
+			self.supply_panel__set_available(message.gameState.supplies[game_data.me])
+			self.supply_panel__set_current(message.gameState.supplies[game_data.me])
 			local my_armies = filter_my_armies(message.gameState.armies)
-			supply_panel:update_usage(my_armies)
+			self.supply_panel__update_usage(my_armies)
 			self.hints__set_addOrder_hints(my_armies, message.gameState.placedOrders[game_data.me] or {})
 
 			self.orders__calc_stars_available(message.gameState.tracks.court)
@@ -122,6 +121,19 @@ end
 
 function _M:set_set_addOrder_hints_cb(callback)
 	self.hints__set_addOrder_hints = callback
+end
+
+function _M:set_set_supply_usage_rules_cb(callback)
+	self.supply_panel__set_supply_usage_rules = callback
+end
+function _M:set_set_available_cb(callback)
+	self.supply_panel__set_available = callback
+end
+function _M:set_set_current_cb(supplies)
+	self.supply_panel__set_current = supplies
+end
+function _M:set_update_usage_cb(callback)
+	self.supply_panel__update_usage = callback
 end
 
 return _M

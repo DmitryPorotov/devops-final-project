@@ -6,38 +6,42 @@ local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 
 local ws = require "main/messaging/websocket"
-local mes_poc = require "main/messaging/message_processing"
-local action_proc = require "main/ui/messaging/action_reply_processing"
+local mes_proc = require "main/messaging/message_processing"
+local action_proc = require "main/messaging/action_reply_processing"
 
 local function register_callbacks()
-	mes_poc:set_set_tracks_cb(function(tracks_data)
+	mes_proc:set_set_tracks_cb(function(tracks_data)
 		tracks:set_tracks(tracks_data)
 	end)
-	mes_poc:set_set_game_state_cb(function(game_state)
+	mes_proc:set_set_game_state_cb(function(game_state)
 		top_panel:set_game_state(game_state)
 	end)
-	mes_poc:set_set_players_cb(function(players)
+	mes_proc:set_set_players_cb(function(players)
 		tracks:set_players(players)
 	end)
-	mes_poc:set_calc_stars_available_cb(function(court_track)
+	mes_proc:set_calc_stars_available_cb(function(court_track)
 		orders:calc_stars_available(court_track)
 	end)
-	mes_poc:set_show_orders_on_map_cb(function(orders_)
+	mes_proc:set_show_orders_on_map_cb(function(orders_)
 		orders:show_orders_on_map(orders_)
 	end)
-	mes_poc:set_set_addOrder_hints_cb(function(my_armies, my_orders)
+	mes_proc:set_set_addOrder_hints_cb(function(my_armies, my_orders)
 		hints:set_addOrder_hints(my_armies, my_orders)
 	end)
 
 
-	mes_poc:set_set_supply_usage_rules_cb(function(supplyUsageRules)
+	mes_proc:set_set_supply_usage_rules_cb(function(supplyUsageRules)
 		supply_panel:set_supply_usage_rules(supplyUsageRules)
 	end)
-	-- supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
-	supply_panel:set_available(message.gameState.supplies[game_data.me])
-	supply_panel:set_current(message.gameState.supplies[game_data.me])
-	local my_armies = filter_my_armies(message.gameState.armies)
-	supply_panel:update_usage(my_armies)
+	mes_proc:set_set_available_cb(function(supplies)
+		supply_panel:set_available(supplies)
+	end)
+	mes_proc:set_set_current_cb(function(supplies)
+		supply_panel:set_current(supplies)
+	end)
+	mes_proc:set_update_usage_cb(function(supplies)
+		supply_panel:update_usage(supplies)
+	end)
 end
 
 function init(self)
