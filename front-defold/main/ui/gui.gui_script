@@ -25,8 +25,8 @@ local function register_callbacks()
 	mes_proc:set_show_orders_on_map_cb(function(orders_)
 		orders:show_orders_on_map(orders_)
 	end)
-	mes_proc:set_set_addOrder_hints_cb(function(my_armies, my_orders)
-		hints:set_addOrder_hints(my_armies, my_orders)
+	mes_proc:set_set_addOrder_hints_cb(function(my_armies, my_orders, phase)
+		hints:set_addOrder_hints(my_armies, my_orders, phase)
 	end)
 
 

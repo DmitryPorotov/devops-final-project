@@ -44,7 +44,11 @@ function _M:process_message(message)
 			self.supply_panel__set_current(message.gameState.supplies[game_data.me])
 			local my_armies = filter_my_armies(message.gameState.armies)
 			self.supply_panel__update_usage(my_armies)
-			self.hints__set_addOrder_hints(my_armies, message.gameState.placedOrders[game_data.me] or {})
+			self.hints__set_addOrder_hints(
+				my_armies,
+				message.gameState.placedOrders[game_data.me] or {},
+				message.gameState.subPhase
+			)
 
 			self.orders__calc_stars_available(message.gameState.tracks.court)
 			self.orders__show_orders_on_map(message.gameState.placedOrders)
@@ -64,6 +68,10 @@ function _M:process_message(message)
 				joinAs = game_data.me,
 				name = game_data.user_data.name
 			})
+		elseif message.action == "error" then
+			print(message.message)
+			local s = gui.get_node("debug")
+			gui.set_text(s, message.message)
 		end
 	elseif message.type == 'chat' then
 		if message.body.type == 'create' then

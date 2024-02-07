@@ -7,6 +7,8 @@ import fwc.communication.reactions.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
+
+import scala.util.{Failure, Success, Try}
 //import org.zeromq.ZLoop
 
 object Reactor {
@@ -18,14 +20,26 @@ object Reactor {
     msg match
       case MessageGameAction(userId, gameId, gameAction, messageId) =>
         val gameReplay = games(gameId)
-        val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction(userId, gameReplay, gameAction)
-        games = games + (gameId -> replay)
-        ujson.Obj(
-          "action" -> "game_action",
-          "gameId" -> ujson.Str(gameId),
-          "messageId" -> (if messageId != null then messageId else ujson.Null),
-          "reply" -> reply
-        ).render(fwc.jsonIndentation)
+        val retVal: String = Try[String]{
+          val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction(userId, gameReplay, gameAction)
+          games = games + (gameId -> replay)
+          ujson.Obj(
+            "action" -> "game_action",
+            "gameId" -> ujson.Str(gameId),
+            "messageId" -> (if messageId != null then messageId else ujson.Null),
+            "reply" -> reply
+          ).render(fwc.jsonIndentation)
+        } match
+          case Success(value) => value
+          case Failure(e: FWCException) => ujson.Obj(
+            "action" -> "error",
+            "gameId" -> ujson.Str(gameId),
+            "userId" -> userId,
+            "messageId" -> (if messageId != null then messageId else ujson.Null),
+            "message" -> e.getMessage
+          ).render(fwc.jsonIndentation)
+          case Failure(e) => throw e
+        retVal
       case m: MessageTestConnectivity =>
         ujson.Obj(
           "action" -> "hello"

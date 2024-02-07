@@ -47,6 +47,8 @@ function on_message(self, message_id, message, sender)
 		center.z = 0.25
 		map_:select_label(label_hash)
 		msg.post("/camera", "animate_camera_to", {point = center})
+	elseif message_id == hash("set_phase") then
+		map_:set_phase(message.phase)
 	end
 end
 

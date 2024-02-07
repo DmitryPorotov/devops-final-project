@@ -33,12 +33,12 @@ object GameServer {
         val reply = Try[String](Reactor.apply(message)) match
           case Success(s) => s
           case Failure(e: FWCException) => ujson.Obj(
-              "error" -> "error",
+              "action" -> "error",
               "message" -> e.getMessage
             )
             .render(fwc.jsonIndentation)
           case Failure(e) => ujson.Obj(
-              "error" -> "error",
+              "action" -> "error",
               "message" -> e.getMessage,
               "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString))
             )

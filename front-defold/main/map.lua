@@ -39,7 +39,12 @@ function _M:select_label(label_hash)
 	local tile_num = string.match(id_str, "^/(%d+)")
 	if self.phase == "addOrder" then
 		self:tile_selectable_for_order(tile_num, label_hash)
+	elseif self.phase == "openOrders" then
 	end
+end
+
+function _M:set_phase(phase)
+	self.phase = phase
 end
 
 function _M:tile_selectable_for_order(tile_num, label_hash)
