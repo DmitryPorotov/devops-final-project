@@ -1,4 +1,4 @@
-local player_panels = require "main/ui/player_panel"
+--local player_panels = require "main/ui/player_panel"
 local utils = require "main/utils"
 
 local _M = {}
@@ -6,7 +6,8 @@ local _M = {}
 local STARTING_Y_POSITION = 185
 local Y_STEP = 70
 
-function _M:init()
+function _M:init(player_panels)
+	self.player_panels = player_panels
 	self.logic_tracks = nil
 	self.is_open = false
 	self.is_init = false
@@ -16,7 +17,7 @@ end
 function _M:set_players(players)
 	self.players = players
 	if self.logic_tracks then
-		player_panels.set_players_panels(self)
+		self.player_panels.set_players_panels(self)
 	end
 end
 
@@ -84,7 +85,7 @@ function _M:set_tracks(tracks)
 		self.my_t_idx = set_closed_locations(self, "throne")
 		self.my_f_idx = set_closed_locations(self, "fiefdoms")
 		self.my_c_idx = set_closed_locations(self, "court")
-		player_panels.set_players_panels(self)
+		self.player_panels.set_players_panels(self)
 	end
 end
 

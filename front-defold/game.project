@@ -32,3 +32,6 @@ heap_size = 512
 max_instances = 2048
 max_input_stack_entries = 32
 
+[engine]
+fixed_update_frequency = 30
+

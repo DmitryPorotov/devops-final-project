@@ -1,9 +1,11 @@
 local game_data = require "main/ui/game_data"
-local supply_panel = require "main/ui/supply_panel"
 local action_proc = require "main/messaging/action_reply_processing"
 
 local _M = {
 	send = nil,
+
+	get_hints_gui = nil,
+	get_player_panels_gui = nil
 }
 
 local function update_players(old, new)
@@ -44,12 +46,6 @@ function _M:process_message(message)
 			self.supply_panel__set_current(message.gameState.supplies[game_data.me])
 			local my_armies = filter_my_armies(message.gameState.armies)
 			self.supply_panel__update_usage(my_armies)
-			self.hints__set_addOrder_hints(
-				my_armies,
-				message.gameState.placedOrders[game_data.me] or {},
-				message.gameState.subPhase
-			)
-
 			self.orders__calc_stars_available(message.gameState.tracks.court)
 			self.orders__show_orders_on_map(message.gameState.placedOrders)
 			self.tracks__set_players(game_data.players)
@@ -58,6 +54,19 @@ function _M:process_message(message)
 			for i, v in pairs(message.gameState.armies) do
 				self.set_tile_units(i, v)
 			end
+			
+			if message.gameState.subPhase.subPhase == "addOrder" then
+				local phase = require "main/ui/phases/addOrder"
+				phase:init(
+					self.send,
+					self.get_hints_gui(),
+					self.get_player_panels_gui(),
+					my_armies,
+					message.gameState.placedOrders[game_data.me] or {},
+					message.gameState.subPhase
+				)
+			end
+			
 			gui.delete_node(gui.get_node("login/back_drop"))
 			msg.post("/camera", "take_focus")
 			msg.post("/map", "move_camera_to_house", {house = game_data.me})
@@ -130,10 +139,6 @@ end
 
 function _M:set_show_orders_on_map_cb(callback)
 	self.orders__show_orders_on_map = callback
-end
-
-function _M:set_set_addOrder_hints_cb(callback)
-	self.hints__set_addOrder_hints = callback
 end
 
 function _M:set_set_supply_usage_rules_cb(callback)

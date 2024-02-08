@@ -4,6 +4,7 @@ local orders = require "main/ui/orders"
 local login = require "main/ui/login/debug_login"
 local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
+local player_panels = require "main/ui/player_panel"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -25,10 +26,14 @@ local function register_callbacks()
 	mes_proc:set_show_orders_on_map_cb(function(orders_)
 		orders:show_orders_on_map(orders_)
 	end)
-	mes_proc:set_set_addOrder_hints_cb(function(my_armies, my_orders, phase)
-		hints:set_addOrder_hints(my_armies, my_orders, phase)
-	end)
 
+	mes_proc.get_hints_gui = function()
+		return hints
+	end
+
+	mes_proc.get_player_panels_gui = function()
+		return player_panels
+	end
 
 	mes_proc:set_set_supply_usage_rules_cb(function(supplyUsageRules)
 		supply_panel:set_supply_usage_rules(supplyUsageRules)
@@ -57,7 +62,7 @@ function init(self)
 	
 	register_callbacks()
 
-	tracks:init()
+	tracks:init(player_panels)
 	top_panel:init()
 	orders:init()
 	supply_panel:init()
@@ -83,25 +88,22 @@ function update(self, dt)
 			end	
 		elseif orders:get_button_pressed(self.action.x, self.action.y) then
 			local order = orders:get_order_to_send()
-			hints:set_has_order(order.player_action.tileNumber, true)
+			hints.set_has_order(order.player_action.tileNumber, true)
 			ws.send(order)
 			orders:add_order_to_map()
-		elseif hints:get_button_pressed(self.action.x, self.action.y) then
+		elseif hints:check_button_pressed(self.action.x, self.action.y) then
 		end
 		self.action = nil
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Learn more: https://defold.com/manuals/message-passing/
-	-- Remove this function if not needed
 	if message_id == hash("print_debug") then
 		local s = gui.get_node("debug")
 		gui.set_text(s, tostring(message.text))
 	elseif message_id == hash("show_orders_menu") then
 		if message.deleted then
-			hints:set_has_order(message.tile_num, false)
+			hints.set_has_order(message.tile_num, false)
 		end
 		orders:open(message.label, message.tile_num, message.name, message.deleted)
 	end
