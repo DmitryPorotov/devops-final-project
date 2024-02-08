@@ -127,7 +127,10 @@ object ReactionGameAction {
 
     previousAction match
       case a: ActionAddOrder =>
-        val json = a.copy(order = null).toJson
+        val json =
+          if a.gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
+          then a.copy(order = null).toJson
+          else a.toJson
 
         buildMessageToAll(json)
       case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)

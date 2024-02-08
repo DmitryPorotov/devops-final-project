@@ -38,8 +38,10 @@ function _M:select_label(label_hash)
 	local id_str = labels.LABEL_HASHES[label_hash]
 	local tile_num = string.match(id_str, "^/(%d+)")
 	if self.phase == "addOrder" then
-		self:tile_selectable_for_order(tile_num, label_hash)
+		self:tile_select_for_add_order(tile_num, label_hash)
 	elseif self.phase == "openOrders" then
+	elseif self.phase == "ravenChangeOrder" then
+		self:tile_select_for_raven_change_order(tile_num, label_hash)
 	end
 end
 
@@ -47,35 +49,50 @@ function _M:set_phase(phase)
 	self.phase = phase
 end
 
-function _M:tile_selectable_for_order(tile_num, label_hash)
+local function delete_order_if_exists(self, label_hash)
+	if self.orders[label_hash] then
+		go.delete(self.orders[label_hash])
+		local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
+		self.orders[label_hash] = nil
+		return utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
+	end
+end
+
+local function open_orders_menu_for_label(tile_num, label_hash, deleted)
+	local name
+	if utils.is_port(tostring(label_hash)) then
+		name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
+	else
+		name = label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
+	end
+	msg.post("/gui", "show_orders_menu", {
+		label = label_hash,
+		tile_num = tile_num,
+		name = name,
+		deleted = deleted
+	})
+end
+
+function _M:tile_select_for_add_order(tile_num, label_hash)
 	if self.armies_by_house[game_data.me][tile_num] and #self.armies_by_house[game_data.me][tile_num] > 0
 	and (utils.is_unit_commandable(self.armies[tile_num][1].type) or #self.armies[tile_num] > 1)
 	then
 		labels:select(label_hash)
-		local deleted = nil
-		if self.orders[label_hash] then
-			go.delete(self.orders[label_hash])
-			local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
-			deleted = utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
-			self.orders[label_hash] = nil
-		end
-		local name
-		if utils.is_port(tostring(label_hash)) then
-			name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
-		else
-			name = label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
-		end
-		msg.post("/gui", "show_orders_menu", { 
-			label = label_hash, 
-			tile_num = tile_num, 
-			name = name, 
-			deleted = deleted 
-		})
+		local deleted = delete_order_if_exists(self, label_hash)
+		open_orders_menu_for_label(tile_num, label_hash, deleted)
+	end
+end
+
+function _M:tile_select_for_raven_change_order(tile_num, label_hash)
+	if self.orders[label_hash] then
+		labels:select(label_hash)
+		open_orders_menu_for_label(tile_num, label_hash)
 	end
 end
 
 function _M:add_order(message)
 	local label = type(message.label) == "number" and hash(labels.LABEL_IDS[message.label]) or message.label
+	delete_order_if_exists(self, label)
 	labels:unselect(label)
 	local order_type = hash(message.order:sub(1, -2))
 	local order_num = tonumber(message.order:sub(-1))
