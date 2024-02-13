@@ -159,10 +159,11 @@ object ReactionGameAction {
         )
         else buildMessageToAll(a.toJson)
       case a: ActionOpenOrders =>
+        val json = a.toJson
         if updatedGameState.subPhase.isInstanceOf[SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard]
-        then buildMessageToAll(updatedGameState.placedOrders.toJson)
-        else buildMessageToAll(a.toJson)
-
+        then
+          json.obj.addOne("orders" -> updatedGameState.placedOrders.toJson)
+        buildMessageToAll(json)
       case a => buildMessageToAll(a.toJson)
   }
   private def buildMessageToAll(a: ujson.Value): ujson.Obj =

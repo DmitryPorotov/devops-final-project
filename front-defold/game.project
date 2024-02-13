@@ -12,9 +12,6 @@ title = front-defold
 version = 0.1.0
 dependencies#0 = https://github.com/defold/extension-websocket/archive/3.1.0.zip
 
-[tilemap]
-max_tile_count = 16384
-
 [display]
 width = 1200
 height = 675
@@ -30,8 +27,15 @@ heap_size = 512
 
 [collection]
 max_instances = 2048
-max_input_stack_entries = 32
+max_input_stack_entries = 128
 
 [engine]
-fixed_update_frequency = 30
+fixed_update_frequency = 20
+
+[graphics]
+default_texture_min_filter = nearest
+max_draw_calls = 2048
+
+[label]
+max_count = 128
 

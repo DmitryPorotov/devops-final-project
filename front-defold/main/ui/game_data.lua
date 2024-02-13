@@ -11,7 +11,7 @@ local _M = {
 	me = nil,
 	user_data = nil,
 	gameRules = nil,
-	gameState = nil,
+	tracks = nil,
 	game_id = 2,
 	creating_new_game = false
 }

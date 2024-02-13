@@ -7,6 +7,7 @@ import fwc.communication.reactions.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
+import fwc.gameSaving.actions.ActionException
 
 import scala.util.{Failure, Success, Try}
 //import org.zeromq.ZLoop
@@ -31,7 +32,7 @@ object Reactor {
           ).render(fwc.jsonIndentation)
         } match
           case Success(value) => value
-          case Failure(e: FWCException) => ujson.Obj(
+          case Failure(e: ActionException) => ujson.Obj(
             "action" -> "error",
             "gameId" -> ujson.Str(gameId),
             "userId" -> userId,

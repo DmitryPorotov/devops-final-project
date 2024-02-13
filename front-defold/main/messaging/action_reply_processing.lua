@@ -1,8 +1,10 @@
 local game_data = require "main/ui/game_data"
-local player_panel = require "main/ui/player_panel"
 
 local _M = {
 	orders__show_orders_on_map = nil,
+	player_panel__set_player_ready = nil,
+	player_panel__clear_ready_all = nil,
+	player_panel__set_player_turn = nil,
 	switch = {
 		addOrder = function(self, reply)
 			if reply.player_action.houseType == game_data.me then
@@ -26,7 +28,12 @@ local _M = {
 			msg.post("/map", "remove_order", {tile_num = reply.player_action.tileNumber})
 		end,
 		openOrders = function(self, reply)
-			player_panel:set_player_ready(reply.player_action.houseType)
+			self.player_panel__set_player_ready(reply.player_action.houseType)
+			if reply.player_action.orders then
+				self.orders__show_orders_on_map(reply.player_action.orders, true)
+				self.player_panel__clear_ready_all()
+				self.player_panel__set_player_turn(game_data.tracks["court"][1])
+			end
 		end,
 	}
 }

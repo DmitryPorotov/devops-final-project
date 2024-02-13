@@ -57,16 +57,16 @@ end
 
 function _M:clear_ready_all()
 	for i = 1, 6 do
-		local bg = gui.get_node("player" .. self.house_to_panel_num[house] .. "/players_turn")
+		local bg = gui.get_node("player" .. i .. "/players_turn")
 		gui.set_color(bg, vmath.vector4(1,1,1,0))
 	end
 end
 
 function _M:set_player_turn(house)
-	self.clear_ready_all()
+	self:clear_ready_all()
 	local bg = gui.get_node("player" .. self.house_to_panel_num[house] .. "/players_turn")
 	gui.set_color(bg, vmath.vector4(1,1,1,.5))
-	gui.animate(bg, "color.w", 1, gui.EASING_LINEAR, .5, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+	gui.animate(bg, "color.w", 1, gui.EASING_LINEAR, 1, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
 end
 
 function _M.set_players_panels(tracks_gui)

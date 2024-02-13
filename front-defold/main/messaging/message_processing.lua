@@ -41,13 +41,15 @@ function _M:process_message(message)
 			end
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
+			game_data.tracks = message.gameState.tracks
+			
 			self.supply_panel__set_supply_usage_rules(message.gameRules.supplyUsage)
 			self.supply_panel__set_available(message.gameState.supplies[game_data.me])
 			self.supply_panel__set_current(message.gameState.supplies[game_data.me])
 			local my_armies = filter_my_armies(message.gameState.armies)
 			self.supply_panel__update_usage(my_armies)
 			self.orders__calc_stars_available(message.gameState.tracks.court)
-			self.orders__show_orders_on_map(message.gameState.placedOrders)
+			self.orders__show_orders_on_map(message.gameState.placedOrders, "phasePlanning" ~= message.gameState.subPhase.mainPhase)
 			self.tracks__set_players(game_data.players)
 			self.tracks__set_tracks(message.gameState.tracks)
 			self.top_panel__set_game_state(message.gameState)
@@ -65,6 +67,8 @@ function _M:process_message(message)
 					message.gameState.placedOrders[game_data.me] or {},
 					message.gameState.subPhase
 				)
+			elseif message.gameState.subPhase.houseType then
+				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			end
 			
 			gui.delete_node(gui.get_node("login/back_drop"))
