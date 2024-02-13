@@ -5,7 +5,9 @@ local login = require "main/ui/login/debug_login"
 local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
-local raven_card_or_order = require("main/ui/raven_choose_card_or_order")
+local raven_card_or_order = require "main/ui/raven_choose_card_or_order"
+local save_load_menu = require "main/ui/settings/save_load"
+local misc_buttons = require "main/ui/misc_buttons"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -77,6 +79,8 @@ function init(self)
 	supply_panel:init()
 	hints:init()
 	raven_card_or_order:init()
+	save_load_menu:init()
+	misc_buttons:init()
 	--tracks:set_tracks(self.tracks)
 end
 
@@ -89,7 +93,7 @@ end
 function update(self, dt)
 	if self.action then
 		if login:on_input(self.action) then
-			
+		elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
 		elseif gui.pick_node(tracks.tracks, self.action.x, self.action.y) then
 			if tracks.is_open then
 				tracks:close()
@@ -113,6 +117,7 @@ function update(self, dt)
 			elseif raven_card_or_order:get_selected() == "card" then
 				
 			end
+		elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
 		end
 		self.action = nil
 	end

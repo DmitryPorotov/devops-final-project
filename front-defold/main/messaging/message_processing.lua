@@ -39,6 +39,10 @@ function _M:process_message(message)
 					action = "get_game_state",
 				})
 			end
+		elseif message.action == "list_saves" then
+			for i, v in ipairs(message.saves) do
+				print(v)
+			end
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
 			game_data.tracks = message.gameState.tracks

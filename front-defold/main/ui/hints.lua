@@ -41,8 +41,7 @@ function _M:check_button_pressed(x, y)
 	if gui.pick_node(self.goto_button, x, y) then
 		self.on_goto_button_pressed()
 		return true
-	end
-	if gui.pick_node(self.next_button, x, y) then
+	elseif gui.pick_node(self.next_button, x, y) then
 		self.on_next_button_pressed()
 		return true
 	end

@@ -27,6 +27,10 @@ object Message {
         val gameAction = json("player_action")
         MessageGameAction(userId, gameId, gameAction, messageId)
       case "hello" => MessageTestConnectivity(userId, messageId)
+      case "save" =>
+        val saveName = json("saveName").str
+        MessageSaveGame(userId, gameId, saveName, messageId)
+      case "list_saves" => MessageListSaves(userId, gameId, messageId)
       case "new_game" => MessageNewGame(gameId, messageId)
       case "create_game" =>
         val isRandomHouses = Try[Boolean](json.obj("isRandomHouses").bool) getOrElse true

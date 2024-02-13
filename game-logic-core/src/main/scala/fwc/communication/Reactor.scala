@@ -34,16 +34,32 @@ object Reactor {
           case Success(value) => value
           case Failure(e: ActionException) => ujson.Obj(
             "action" -> "error",
-            "gameId" -> ujson.Str(gameId),
+            "gameId" -> gameId,
             "userId" -> userId,
             "messageId" -> (if messageId != null then messageId else ujson.Null),
             "message" -> e.getMessage
           ).render(fwc.jsonIndentation)
           case Failure(e) => throw e
         retVal
-      case m: MessageTestConnectivity =>
+      case MessageTestConnectivity(_, messageId) =>
         ujson.Obj(
-          "action" -> "hello"
+          "action" -> "hello",
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
+        ).render(fwc.jsonIndentation)
+      case MessageSaveGame(userId, gameId, saveName, messageId) =>
+        ujson.Obj(
+          "action" -> "save",
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
+          "userId" -> userId,
+          "saveName" -> ReactionSaveGame(userId, gameId, saveName, games(gameId))
+        ).render(fwc.jsonIndentation)
+      case MessageListSaves(userId, gameId, messageId) =>
+        ujson.Obj(
+          "action" -> "list_saves",
+          "gameId" -> gameId,
+          "messageId" -> (if messageId != null then messageId else ujson.Null),
+          "userId" -> userId,
+          "saves" -> ReactionListSavedGames(userId)
         ).render(fwc.jsonIndentation)
       case MessageNewGame(gameId, messageId) =>
         ujson.Obj(
