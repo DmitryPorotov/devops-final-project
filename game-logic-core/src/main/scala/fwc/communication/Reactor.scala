@@ -70,7 +70,6 @@ object Reactor {
             "action" -> "load",
             "messageId" -> (if messageId != null then messageId else ujson.Null),
             "gameId" -> gameId,
-            "gameState" -> replay.currentGameState.toJson
           ).render(fwc.jsonIndentation)
         } match
           case Success(str) => str

@@ -3,10 +3,7 @@ package fwc.communication.reactions
 import fwc.game.FWCException
 import fwc.gameSaving.GameReplay
 
-import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
-import java.text.SimpleDateFormat
-import java.util.Date
 
 object ReactionLoadGame {
   def apply(userId: Int, saveName: String): GameReplay =
