@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
-    "sourceMap": true,
+    "inlineSourceMap": true,
+    "sourceRoot": "/home/dmitry/PhpstormProjects/table-games-monorepo/web-server/",
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,

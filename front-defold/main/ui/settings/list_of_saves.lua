@@ -1,3 +1,5 @@
+local ws = require "main/messaging/websocket"
+
 local _M = {}
 
 function _M:init() 
@@ -27,14 +29,28 @@ local function check_save_pressed(self, x, y)
 	return false
 end
 
+local function load_game(self)
+	if not self.save_selected then
+		return
+	else
+		local saveName = gui.get_text(self.save_selected[2])
+		ws.send({
+			type = 'action',
+			action = 'load',
+			saveName = saveName
+		})
+		gui.set_enabled(self.menu, false)
+		gui.set_enabled(gui.get_node("save_load/back_drop"), false)
+	end
+end
+
 function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.menu) then
 		if gui.pick_node(self.close_button, x, y) then
 			gui.set_enabled(self.menu, false)
 			return true
-
 		elseif gui.pick_node(self.load_button, x, y) then
-
+			load_game(self)
 			return true
 		elseif check_save_pressed(self, x, y) then
 			return true

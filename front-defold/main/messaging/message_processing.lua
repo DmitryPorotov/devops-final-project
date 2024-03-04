@@ -41,6 +41,11 @@ function _M:process_message(message)
 			end
 		elseif message.action == "list_saves" then
 			self.list_of_saves__show_saves(message.saves)
+		elseif message.action == "load" then
+			self.send({
+				type = "action",
+				action = "get_game_state",
+			})
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
 			game_data.tracks = message.gameState.tracks
@@ -73,7 +78,7 @@ function _M:process_message(message)
 				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			end
 			
-			gui.delete_node(gui.get_node("login/back_drop"))
+			pcall(function() gui.delete_node(gui.get_node("login/back_drop")) end)
 			msg.post("/camera", "take_focus")
 			msg.post("/map", "move_camera_to_house", {house = game_data.me})
 		elseif message.action == "create_game" and game_data.me == "kraken" then
