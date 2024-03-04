@@ -8,6 +8,7 @@ local player_panels = require "main/ui/player_panel"
 local raven_card_or_order = require "main/ui/raven_choose_card_or_order"
 local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
+local list_of_saves = require "main/ui/settings/list_of_saves"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -51,6 +52,10 @@ local function register_callbacks()
 		supply_panel:update_usage(supplies)
 	end)
 
+	mes_proc.list_of_saves__show_saves = function(saves)
+		list_of_saves:show_saves(saves)
+	end
+
 	action_proc.orders__show_orders_on_map = function(orders_, do_open)
 		orders:show_orders_on_map(orders_, do_open)
 	end
@@ -81,6 +86,7 @@ function init(self)
 	raven_card_or_order:init()
 	save_load_menu:init()
 	misc_buttons:init()
+	list_of_saves:init()
 	--tracks:set_tracks(self.tracks)
 end
 
@@ -93,6 +99,7 @@ end
 function update(self, dt)
 	if self.action then
 		if login:on_input(self.action) then
+		elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
 		elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
 		elseif gui.pick_node(tracks.tracks, self.action.x, self.action.y) then
 			if tracks.is_open then

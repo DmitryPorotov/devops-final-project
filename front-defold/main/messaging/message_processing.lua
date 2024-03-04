@@ -40,9 +40,7 @@ function _M:process_message(message)
 				})
 			end
 		elseif message.action == "list_saves" then
-			for i, v in ipairs(message.saves) do
-				print(v)
-			end
+			self.list_of_saves__show_saves(message.saves)
 		elseif message.action == "get_game_state" then
 			game_data.gameRules = message.gameRules
 			game_data.tracks = message.gameState.tracks

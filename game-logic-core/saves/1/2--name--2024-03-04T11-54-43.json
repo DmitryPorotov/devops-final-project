@@ -1,0 +1,167 @@
+{
+  "gameSettings": {
+    "gameId": "2",
+    "ownerId": 1,
+    "isInputOnly": false,
+    "isRandomHouses": false,
+    "isRandomEventsServerSide": true,
+    "players": [
+      {
+        "userId": 1,
+        "house": "kraken",
+        "name": "newUserName1"
+      },
+      {
+        "userId": 2,
+        "house": "lion",
+        "name": "user2"
+      }
+    ],
+    "playersInputting": null
+  },
+  "startingBoardCards": {
+    "deck1": [
+      0,
+      2,
+      4,
+      3,
+      1,
+      2,
+      0,
+      0,
+      1,
+      1
+    ],
+    "deck2": [
+      0,
+      3,
+      1,
+      0,
+      2,
+      2,
+      1,
+      1,
+      0,
+      4
+    ],
+    "deck3": [
+      0,
+      3,
+      0,
+      4,
+      5,
+      0,
+      2,
+      1,
+      1,
+      6
+    ],
+    "wildlings": [
+      7,
+      3,
+      1,
+      2,
+      4,
+      0,
+      8,
+      6,
+      5
+    ],
+    "tidesOfBattle": [
+      5,
+      0,
+      0,
+      2,
+      3,
+      4,
+      4,
+      1,
+      4,
+      0,
+      2,
+      5,
+      0,
+      0,
+      0,
+      1,
+      3,
+      2,
+      4,
+      0,
+      3,
+      3,
+      2,
+      0
+    ]
+  },
+  "actions": [
+    {
+      "actionType": "openOrders",
+      "houseType": "lion"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "isStar": true,
+        "modifier": 1
+      },
+      "houseType": "lion",
+      "tileNumber": 27
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "lion",
+      "tileNumber": 22
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "consolidatePower",
+        "isStar": true
+      },
+      "houseType": "lion",
+      "tileNumber": 21
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "kraken"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "support"
+      },
+      "houseType": "kraken",
+      "tileNumber": 16
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "defend",
+        "modifier": 1
+      },
+      "houseType": "kraken",
+      "tileNumber": 15
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "kraken",
+      "tileNumber": 12
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "consolidatePower"
+      },
+      "houseType": "kraken",
+      "tileNumber": 17
+    }
+  ]
+}
