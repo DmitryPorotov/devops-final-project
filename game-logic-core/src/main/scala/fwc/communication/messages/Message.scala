@@ -30,6 +30,9 @@ object Message {
       case "save" =>
         val saveName = json("saveName").str
         MessageSaveGame(userId, gameId, saveName, messageId)
+      case "load" =>
+        val saveName = json("saveName").str
+        MessageLoadGame(userId, gameId, saveName, messageId)
       case "list_saves" => MessageListSaves(userId, gameId, messageId)
       case "new_game" => MessageNewGame(gameId, messageId)
       case "create_game" =>

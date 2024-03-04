@@ -61,6 +61,35 @@ object Reactor {
           "userId" -> userId,
           "saves" -> ReactionListSavedGames(userId)
         ).render(fwc.jsonIndentation)
+      case MessageLoadGame(userId, gameId, saveName, messageId) =>
+        //todo: what if game already exists?
+        Try[String]{
+          val replay = ReactionLoadGame(userId, saveName)
+          games = games + (gameId -> replay)
+          ujson.Obj(
+            "action" -> "load",
+            "messageId" -> (if messageId != null then messageId else ujson.Null),
+            "gameId" -> gameId,
+            "gameState" -> replay.currentGameState.toJson
+          ).render(fwc.jsonIndentation)
+        } match
+          case Success(str) => str
+          case Failure(e: FWCException) =>
+            ujson.Obj(
+              "action" -> "error",
+              "messageId" -> (if messageId != null then messageId else ujson.Null),
+              "userId" -> userId,
+              "gameId" -> gameId,
+              "message" -> e.getMessage
+            ).render(fwc.jsonIndentation)
+          case Failure(e) =>
+            ujson.Obj(
+              "action" -> "error",
+              "messageId" -> (if messageId != null then messageId else ujson.Null),
+              "userId" -> userId,
+              "gameId" -> gameId,
+              "message" -> "Internal worker server error."
+            ).render(fwc.jsonIndentation)
       case MessageNewGame(gameId, messageId) =>
         ujson.Obj(
           "action" -> "new_game",
