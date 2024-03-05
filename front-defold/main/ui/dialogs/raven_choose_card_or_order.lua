@@ -22,26 +22,37 @@ function _M:close()
 		1325,
 		gui.PLAYBACK_ONCE_FORWARD,
 		utils.ANIMATION_TIME,
+		0,
 		function()
-			gui.set_enabled(self.panel, true)
+			gui.set_enabled(self.panel, false)
+			selected = false
 		end
 	)
-	selected = false
 end
 
 function _M:check_button_pressed(x, y)
-	if gui.pick_node(self.order_button, x, y) then
-		selected = "order"
-		return true
-	elseif gui.pick_node(self.card_button, x, y) then
-		selected = "card"
-		return true
+	if gui.is_enabled(self.panel) and not selected then
+		if gui.pick_node(self.order_button, x, y) then
+			selected = "changeOrder"
+			return true
+		elseif gui.pick_node(self.card_button, x, y) then
+			selected = "lookAtWildlingsCard"
+			return true
+		end
 	end
 	return false
 end
 
-function _M:get_selected()
-	return selected
+function _M:build_message()
+	local m = {
+		type = 'action',
+		action = 'game_action',
+		player_action = {
+			actionType = 'ravenChooseChangeOrderOrLookAtWildlingCard',
+			ravenChoice = selected
+		}
+	}
+	return m
 end
 
 return _M

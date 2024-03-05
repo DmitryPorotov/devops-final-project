@@ -121,7 +121,6 @@ function _M:open(for_label, tile_num, name, deleted)
 			action = "game_action",
 			player_action = {
 				actionType = "removeOrder",
-				houseType = game_data.me,
 				tileNumber = tonumber(tile_num),
 			}
 		})
@@ -192,7 +191,6 @@ function _M:get_order_to_send()
 		action = "game_action",
 		player_action = {
 			actionType = "addOrder",
-			houseType = game_data.me,
 			tileNumber = tonumber(self.tile_num),
 			order = build_order_obj(self.button_selected)
 		}

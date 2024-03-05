@@ -58,7 +58,7 @@ local function delete_order_if_exists(self, label_hash)
 	end
 end
 
-local function open_orders_menu_for_label(tile_num, label_hash, deleted)
+local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_raven)
 	local name
 	if utils.is_port(tostring(label_hash)) then
 		name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
@@ -69,7 +69,8 @@ local function open_orders_menu_for_label(tile_num, label_hash, deleted)
 		label = label_hash,
 		tile_num = tile_num,
 		name = name,
-		deleted = deleted
+		deleted = deleted,
+		for_raven = for_raven,
 	})
 end
 
@@ -86,7 +87,7 @@ end
 function _M:tile_select_for_raven_change_order(tile_num, label_hash)
 	if self.orders[label_hash] then
 		labels:select(label_hash)
-		open_orders_menu_for_label(tile_num, label_hash)
+		open_orders_menu_for_label(tile_num, label_hash, nil, true)
 	end
 end
 

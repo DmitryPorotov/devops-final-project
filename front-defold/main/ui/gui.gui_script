@@ -5,7 +5,7 @@ local login = require "main/ui/login/debug_login"
 local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
-local raven_card_or_order = require "main/ui/raven_choose_card_or_order"
+local raven_card_or_order = require "main/ui/dialogs/raven_choose_card_or_order"
 local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
@@ -68,6 +68,9 @@ local function register_callbacks()
 	action_proc.player_panel__set_player_turn = function(house_type)
 		player_panels:set_player_turn(house_type)
 	end
+	action_proc.raven_card_or_order__open = function()
+		raven_card_or_order:open()
+	end
 end
 
 function init(self)
@@ -96,6 +99,8 @@ function final(self)
 	-- Remove this function if not needed
 end
 
+local is_raven_order = false
+
 function update(self, dt)
 	if self.action then
 		if login:on_input(self.action) then
@@ -114,16 +119,17 @@ function update(self, dt)
 				self.show_orders_menu_message = nil
 			end
 			local order = orders:get_order_to_send()
-			hints.set_has_order(order.player_action.tileNumber, true)
+			if is_raven_order then
+				order.player_action.actionType = 'ravenChangeOrder'
+			else
+				hints.set_has_order(order.player_action.tileNumber, true)
+			end
 			ws.send(order)
 			orders:add_order_to_map()
 		elseif hints:check_button_pressed(self.action.x, self.action.y) then
 		elseif raven_card_or_order:check_button_pressed(self.action.x, self.action.y) then
-			if raven_card_or_order:get_selected() == "order" then
-				
-			elseif raven_card_or_order:get_selected() == "card" then
-				
-			end
+			ws.send(raven_card_or_order:build_message())
+			raven_card_or_order:close()
 		elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
 		end
 		self.action = nil
@@ -131,6 +137,8 @@ function update(self, dt)
 	if self.show_orders_menu_message then
 		if self.show_orders_menu_message.deleted then
 			hints.set_has_order(self.show_orders_menu_message.tile_num, false)
+		elseif self.show_orders_menu_message.for_raven then
+			is_raven_order = true
 		end
 		orders:open(
 			self.show_orders_menu_message.label, 

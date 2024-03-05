@@ -106,7 +106,6 @@ function _M:on_next_button_pressed()
 		action = "game_action",
 		player_action = {
 			actionType = "openOrders",
-			houseType = game_data.me,	
 		}
 	})
 end

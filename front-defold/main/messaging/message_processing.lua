@@ -60,6 +60,7 @@ function _M:process_message(message)
 			self.tracks__set_players(game_data.players)
 			self.tracks__set_tracks(message.gameState.tracks)
 			self.top_panel__set_game_state(message.gameState)
+			msg.post("/map", "set_phase", {phase = message.gameState.subPhase.subPhase})
 			for i, v in pairs(message.gameState.armies) do
 				self.set_tile_units(i, v)
 			end
@@ -74,6 +75,12 @@ function _M:process_message(message)
 					message.gameState.placedOrders[game_data.me] or {},
 					message.gameState.subPhase
 				)
+			elseif message.gameState.subPhase.subPhase == "ravenChooseChangeOrderOrLookAtWildlingCard" then
+				if message.gameState.subPhase.houseType == game_data.me then
+					action_proc.raven_card_or_order__open()
+					self:get_hints_gui()
+				end
+				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			elseif message.gameState.subPhase.houseType then
 				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			end
