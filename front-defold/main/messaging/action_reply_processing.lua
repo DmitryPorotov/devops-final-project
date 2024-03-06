@@ -24,9 +24,6 @@ local switch = {
 		self.orders__show_orders_on_map(to_send,
 		reply.player_action.order ~= json.null and true or false)
 	end,
-	ravenChangeOrder = function(self, reply)
-		switch.addOrder(self, reply)
-	end,
 	removeOrder = function(self, reply)
 		if reply.player_action.houseType == game_data.me then
 			return
@@ -51,6 +48,10 @@ local switch = {
 		end
 	end,
 }
+
+switch.ravenChangeOrder = function(self, reply)
+	switch.addOrder(self, reply)
+end
 
 function _M:process(reply)
 	if not reply.player_action.actionType then
