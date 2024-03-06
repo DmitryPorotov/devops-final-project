@@ -25,6 +25,10 @@ function _M:set_me(me)
 	self.me = me
 end
 
+function _M:check_pressed(x, y)
+	return gui.pick_node(self.tracks, x, y)
+end
+
 local function set_shields(tracks, track_name)
 	local prefix = string.sub(track_name, 1, 1)
 	for i = 1, 6 do

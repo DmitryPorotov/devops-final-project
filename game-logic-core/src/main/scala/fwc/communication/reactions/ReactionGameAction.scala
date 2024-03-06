@@ -132,7 +132,7 @@ object ReactionGameAction {
             if a.gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
             then a.copy(order = null).toJson
             else a.toJson
-
+  
           buildMessageToAll(json)
         case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)
         case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)

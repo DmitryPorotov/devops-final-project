@@ -18,6 +18,10 @@ function _M:set_supply_usage_rules(usage)
 	self.usage_rules = usage
 end
 
+function _M:check_pressed(x, y)
+	return gui.pick_node(self.sup_panel, x, y)
+end
+
 local function update_panel(self)
 	if not self.usage_rules or self.current_count < 0 then return end
 	local cur_count

@@ -107,7 +107,9 @@ local function disable_button(self)
 	lock_stars_disable_special_buttons(self, count_stars_used(self))
 end
 
-function _M:open(for_label, tile_num, name, deleted)
+local previous_deleted_button = false
+
+function _M:open(for_label, tile_num, name, deleted, for_raven)
 	if self.for_label and self.for_label == for_label then
 		self:close()
 		self.for_label = nil
@@ -116,14 +118,24 @@ function _M:open(for_label, tile_num, name, deleted)
 	end
 	if deleted then
 		enable_button(self, deleted)
-		ws.send({
-			type = "action",
-			action = "game_action",
-			player_action = {
-				actionType = "removeOrder",
-				tileNumber = tonumber(tile_num),
-			}
-		})
+		if not for_raven then
+			ws.send({
+				type = "action",
+				action = "game_action",
+				player_action = {
+					actionType = "removeOrder",
+					tileNumber = tonumber(tile_num),
+				}
+			})
+		elseif for_raven and previous_deleted_button then
+			self.button_selected = previous_deleted_button
+			disable_button(self)
+		end
+		if for_raven then
+			previous_deleted_button = deleted
+		else
+			previous_deleted_button = false
+		end
 	end
 	self.for_label = for_label
 	self.tile_num = tile_num
@@ -140,17 +152,23 @@ function _M:close()
 	gui.animate(self.panel, "position.x", 1350, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME, 0, on_closed)
 end
 
-function _M:get_button_pressed(x, y)
-	for k, v in pairs(self.buttons) do
-		if v.label then
-			goto continue
+function _M:check_pressed(x, y)
+	return gui.is_enabled(self.panel) and gui.pick_node(self.panel, x, y)
+end
+
+function _M:check_button_pressed(x, y)
+	if gui.is_enabled(self.panel) then
+		for k, v in pairs(self.buttons) do
+			if v.label then
+				goto continue
+			end
+			if gui.pick_node(v.node, x, y) then
+				self.button_selected = k
+				self:close()
+				return true
+			end
+			::continue::
 		end
-		if gui.pick_node(v.node, x, y) then
-			self.button_selected = k
-			self:close()
-			return true
-		end
-		::continue::
 	end
 	return false
 end

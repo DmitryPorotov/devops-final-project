@@ -58,6 +58,7 @@ end
 function _M:clear_ready_all()
 	for i = 1, 6 do
 		local bg = gui.get_node("player" .. i .. "/players_turn")
+		gui.cancel_animation(bg, "color.w")
 		gui.set_color(bg, vmath.vector4(1,1,1,0))
 	end
 end
@@ -70,7 +71,26 @@ function _M:set_player_turn(house)
 end
 
 function _M.set_players_panels(tracks_gui)
+	_M.panels = {
+		gui.get_node('player1/player_panel'),
+		gui.get_node('player2/player_panel'),
+		gui.get_node('player3/player_panel'),
+		gui.get_node('player4/player_panel'),
+		gui.get_node('player5/player_panel'),
+		gui.get_node('player6/player_panel'),
+	}
 	set_players_panels(tracks_gui)
+end
+
+function _M:check_pressed(x, y)
+	if self.panels then 
+		for _, v in ipairs(self.panels) do
+			if gui.pick_node(v, x, y) then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 return _M

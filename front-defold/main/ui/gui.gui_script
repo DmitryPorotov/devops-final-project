@@ -91,12 +91,31 @@ function init(self)
 	misc_buttons:init()
 	list_of_saves:init()
 	--tracks:set_tracks(self.tracks)
+
+	self.panels = {
+		tracks,
+		orders,
+		hints,
+		raven_card_or_order,
+		misc_buttons,
+		player_panels,
+		supply_panel,
+	}
 end
 
 function final(self)
 	-- Add finalization code here
 	-- Learn more: https://defold.com/manuals/script/
 	-- Remove this function if not needed
+end
+
+local function check_pressed(self, x, y)
+	for i, v in ipairs(self.panels) do
+		if v:check_pressed(x, y) then
+			return true
+		end
+	end
+	return false
 end
 
 local is_raven_order = false
@@ -106,13 +125,13 @@ function update(self, dt)
 		if login:on_input(self.action) then
 		elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
 		elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
-		elseif gui.pick_node(tracks.tracks, self.action.x, self.action.y) then
+		elseif tracks:check_pressed(self.action.x, self.action.y) then
 			if tracks.is_open then
 				tracks:close()
 			else
 				tracks:open()
 			end	
-		elseif orders:get_button_pressed(self.action.x, self.action.y) then
+		elseif orders:check_button_pressed(self.action.x, self.action.y) then
 			if self.show_orders_menu_message 
 			and self.show_orders_menu_message.label == orders.for_label 
 			then
@@ -131,11 +150,12 @@ function update(self, dt)
 			ws.send(raven_card_or_order:build_message())
 			raven_card_or_order:close()
 		elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
+			misc_buttons:do_action()
 		end
 		self.action = nil
 	end
 	if self.show_orders_menu_message then
-		if self.show_orders_menu_message.deleted then
+		if self.show_orders_menu_message.deleted and not self.show_orders_menu_message.for_raven then
 			hints.set_has_order(self.show_orders_menu_message.tile_num, false)
 		elseif self.show_orders_menu_message.for_raven then
 			is_raven_order = true
@@ -144,7 +164,8 @@ function update(self, dt)
 			self.show_orders_menu_message.label, 
 			self.show_orders_menu_message.tile_num, 
 			self.show_orders_menu_message.name, 
-			self.show_orders_menu_message.deleted
+			self.show_orders_menu_message.deleted,
+			is_raven_order
 		)
 		self.show_orders_menu_message = nil
 	end
@@ -161,6 +182,9 @@ end
 
 
 function on_input(self, action_id, action)
+	if action_id == hash("touch") and check_pressed(self, action.x, action.y) then
+		msg.post('/camera', 'gui_click')
+	end
 	if action_id == hash("touch") and action.pressed then
 		self.action = action
 	end

@@ -49,12 +49,17 @@ function _M:set_phase(phase)
 	self.phase = phase
 end
 
+local function get_order_type(self, label_hash)
+	local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
+	return utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
+end
+
 local function delete_order_if_exists(self, label_hash)
 	if self.orders[label_hash] then
-		go.delete(self.orders[label_hash])
-		local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
+		local order_type = get_order_type(self, label_hash)
+		go.delete(self.orders[label_hash], true)
 		self.orders[label_hash] = nil
-		return utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
+		return order_type
 	end
 end
 
@@ -85,9 +90,10 @@ function _M:tile_select_for_add_order(tile_num, label_hash)
 end
 
 function _M:tile_select_for_raven_change_order(tile_num, label_hash)
-	if self.orders[label_hash] then
+	if game_data.tracks.court[1] == game_data.me and self.orders[label_hash] then
 		labels:select(label_hash)
-		open_orders_menu_for_label(tile_num, label_hash, nil, true)
+		local selected_order = get_order_type(self, label_hash)
+		open_orders_menu_for_label(tile_num, label_hash, selected_order, true)
 	end
 end
 

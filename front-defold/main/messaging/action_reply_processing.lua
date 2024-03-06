@@ -34,18 +34,13 @@ local switch = {
 		self.player_panel__set_player_ready(reply.player_action.houseType)
 		if reply.player_action.orders then
 			self.orders__show_orders_on_map(reply.player_action.orders, true)
-			self.player_panel__clear_ready_all()
-			self.player_panel__set_player_turn(game_data.tracks["court"][1])
 			if game_data.me == game_data.tracks["court"][1] then
 				self.raven_card_or_order__open()
 			end
 		end
 	end,
 	ravenChooseChangeOrderOrLookAtWildlingCard = function(self, reply)
-		if reply.player_action.ravenChoice == 'changeOrder' 
-		and reply.player_action.houseType == game_data.me then
-			msg.post("/map", "set_phase", {phase = 'ravenChangeOrder'})
-		end
+		-- todo: show to everyone whether raven owner chose an order or a card
 	end,
 }
 
@@ -60,6 +55,11 @@ function _M:process(reply)
 		print("unknown action type " .. reply.player_action.actionType)
 	else
 		switch[reply.player_action.actionType](self, reply)
+		msg.post("/map", "set_phase", {phase = reply.current_phase.subPhase})
+		if reply.current_phase.houseType then
+			self.player_panel__clear_ready_all()
+			self.player_panel__set_player_turn(reply.current_phase.houseType)
+		end
 	end
 end
 

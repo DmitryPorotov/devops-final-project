@@ -13,6 +13,7 @@ function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.save_load_menu) then
 		if gui.pick_node(self.close_button, x, y) then
 			gui.set_enabled(self.save_load_menu, false)
+			msg.post('/camera', 'take_focus')
 			return true
 		elseif gui.pick_node(self.save_button, x, y) then
 			ws.send({

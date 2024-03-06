@@ -42,6 +42,7 @@ function _M:process_message(message)
 		elseif message.action == "list_saves" then
 			self.list_of_saves__show_saves(message.saves)
 		elseif message.action == "load" then
+			msg.post("/camera", "take_focus")
 			self.send({
 				type = "action",
 				action = "get_game_state",
@@ -78,7 +79,7 @@ function _M:process_message(message)
 			elseif message.gameState.subPhase.subPhase == "ravenChooseChangeOrderOrLookAtWildlingCard" then
 				if message.gameState.subPhase.houseType == game_data.me then
 					action_proc.raven_card_or_order__open()
-					self:get_hints_gui()
+					self:get_hints_gui():set_hints_enabled(false)
 				end
 				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			elseif message.gameState.subPhase.houseType then

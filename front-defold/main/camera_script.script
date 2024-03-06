@@ -88,6 +88,13 @@ local function impose_camera_limits(self, pos)
 end
 
 function update(self, dt)
+	if self.gui_click then
+		self.gui_click = false
+		self.moving_camera = false
+		self.camera_move_dir = vmath.vector3()
+		self.try_selecting = false
+		return
+	end
 	if self.zoom_delay > 0 then
 		self.zoom_delay = self.zoom_delay - dt
 	end
@@ -119,6 +126,8 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("animate_camera_to") then
 		local point = impose_camera_limits(self, (message.point * self.zoom) - (SCREEN_SIZE / 2 ))
 		go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, point, go.EASING_LINEAR, utils.ANIMATION_TIME)
+	elseif message_id == hash('gui_click') then
+		self.gui_click = true
 	end
 end
 

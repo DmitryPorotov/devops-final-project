@@ -6,6 +6,7 @@ local _M = {
 
 function _M:init()
 	self.hints = gui.get_node("hints/hints")
+	self.bar = gui.get_node("hints/bar")
 	self.goto_button = gui.get_node("hints/goto")
 	self.goto_count = gui.get_node("hints/count")
 	self.hint_text = gui.get_node("hints/hint")
@@ -37,12 +38,25 @@ local function orders_confirmed(self)
 	gui.set_enabled(self.hints, false)
 end
 
-function _M:check_button_pressed(x, y)
-	if gui.pick_node(self.goto_button, x, y) then
-		self.on_goto_button_pressed()
+function _M:check_pressed(x, y)
+	if not gui.is_enabled(self.hints) then
+		return false
+	elseif gui.pick_node(self.goto_button, x, y) then
 		return true
 	elseif gui.pick_node(self.next_button, x, y) then
-		self.on_next_button_pressed()
+		return true
+	elseif gui.pick_node(self.bar, x, y) then
+		return true
+	end
+	return false
+end
+
+function _M:check_button_pressed(x, y)
+	if gui.pick_node(self.goto_button, x, y) then
+		self.on_goto_button_pressed() 
+		return true
+	elseif gui.pick_node(self.next_button, x, y) then
+		self.on_next_button_pressed() 
 		return true
 	end
 	return false

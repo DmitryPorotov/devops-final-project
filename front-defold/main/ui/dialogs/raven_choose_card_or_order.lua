@@ -30,6 +30,10 @@ function _M:close()
 	)
 end
 
+function _M:check_pressed(x, y)
+	return gui.is_enabled(self.panel) and gui.pick_node(self.panel, x, y)
+end
+
 function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) and not selected then
 		if gui.pick_node(self.order_button, x, y) then
