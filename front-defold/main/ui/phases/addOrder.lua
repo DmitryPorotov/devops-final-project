@@ -81,7 +81,7 @@ end
 
 function _M:set_has_order(tile_num, has_order)
 	tile_num = tostring(tile_num)
-	for i, v in ipairs(self.tiles_with_hints) do
+	for _, v in ipairs(self.tiles_with_hints) do
 		if v.tile_num == tile_num then
 			v.has_order = has_order
 			goto end_loop

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+LUAROCKS_SYSCONFDIR='/etc/luarocks' exec '/usr/bin/lua5.1' -e 'package.path="./?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua;/usr/share/lua/5.1/?.lua;/usr/share/lua/5.1/?/init.lua;/home/dmitry/.luarocks/share/lua/5.1/?.lua;/home/dmitry/.luarocks/share/lua/5.1/?/init.lua";package.cpath="./?.so;/usr/local/lib/lua/5.1/?.so;/usr/lib/x86_64-linux-gnu/lua/5.1/?.so;/usr/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so;/home/dmitry/.luarocks/lib/lua/5.1/?.so"' '/usr/bin/luarocks' --project-tree /home/dmitry/PhpstormProjects/table-games-monorepo/front-defold/lua_modules "$@"

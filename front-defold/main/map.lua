@@ -40,6 +40,8 @@ function _M:select_label(label_hash)
 	if self.phase == "addOrder" then
 		self:tile_select_for_add_order(tile_num, label_hash)
 	elseif self.phase == "openOrders" then
+	elseif self.phase == "resolveMarchOrder" then
+		
 	elseif self.phase == "ravenChangeOrder" then
 		self:tile_select_for_raven_change_order(tile_num, label_hash)
 	end
@@ -65,7 +67,7 @@ end
 
 local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_raven)
 	local name
-	if utils.is_port(tostring(label_hash)) then
+	if utils.is_port(labels.LABEL_HASHES[label_hash]) then
 		name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
 	else
 		name = label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
@@ -78,6 +80,8 @@ local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_rav
 		for_raven = for_raven,
 	})
 end
+
+
 
 function _M:tile_select_for_add_order(tile_num, label_hash)
 	if self.armies_by_house[game_data.me][tile_num] and #self.armies_by_house[game_data.me][tile_num] > 0

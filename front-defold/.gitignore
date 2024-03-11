@@ -8,4 +8,8 @@ Thumbs.db
 .project
 .cproject
 builtins
-.idea
+.idea/
+.idea/luarocks
+/lua
+/lua_modules
+/.luarocks

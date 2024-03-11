@@ -22,6 +22,7 @@ function _M:check_button_pressed(x, y)
 				saveName = "name"
 			})
 			gui.set_enabled(self.save_load_menu, false)
+			msg.post('/camera', 'take_focus')
 			return true
 		elseif gui.pick_node(self.load_button, x, y) then --note: should be another button
 			ws.send({
