@@ -19733,8 +19733,8 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/current_todo_icon"
   id: "hints/goto"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
   parent: "hints/bar"
@@ -19924,8 +19924,8 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/next_button"
   id: "hints/next"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
   parent: "hints/bar"

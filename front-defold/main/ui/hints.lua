@@ -33,6 +33,18 @@ function _M:set_hint_text(text)
 	gui.set_text(self.hint_text, text)
 end
 
+function _M:none_actionable_hint(text)
+	self:set_hints_enabled(true)
+	self:set_goto_button_enabled(false)
+	self:set_next_button_enabled(false)
+	local _, num_lines = text:gsub('\n', '\n')
+	local size = gui.get_size(self.bar)
+	size.y = (num_lines + 1) * 52
+	gui.set_size(self.bar, size)
+	gui.set_position(self.bar, vmath.vector3(0, (26 * num_lines), 0))
+	self:set_hint_text(text)
+end
+
 local function orders_confirmed(self)
 	msg.post("/map", "set_phase", {phase = "openOrders"})
 	gui.set_enabled(self.hints, false)

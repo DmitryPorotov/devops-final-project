@@ -71,6 +71,9 @@ local function register_callbacks()
 	action_proc.raven_card_or_order__open = function()
 		raven_card_or_order:open()
 	end
+	action_proc.hints__none_actionable_hint = function(text)
+		hints:none_actionable_hint(text)
+	end
 end
 
 function init(self)
