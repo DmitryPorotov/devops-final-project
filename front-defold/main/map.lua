@@ -41,7 +41,7 @@ function _M:select_label(label_hash)
 		self:tile_select_for_add_order(tile_num, label_hash)
 	elseif self.phase == "openOrders" then
 	elseif self.phase == "resolveMarchOrder" then
-		
+		self:tile_select_for_order_resolve(tile_num, label_hash, 'march')
 	elseif self.phase == "ravenChangeOrder" then
 		self:tile_select_for_raven_change_order(tile_num, label_hash)
 	end
@@ -53,7 +53,7 @@ end
 
 local function get_order_type(self, label_hash)
 	local script_url = msg.url("main", self.orders[label_hash][hash('/order')], "order")
-	return utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number")
+	return utils.ORDERS[go.get(script_url, "type")] .. go.get(script_url, "number"), utils.HOUSES[go.get(script_url, "house")]
 end
 
 local function delete_order_if_exists(self, label_hash)
@@ -65,17 +65,19 @@ local function delete_order_if_exists(self, label_hash)
 	end
 end
 
-local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_raven)
-	local name
+local function get_tile_name(tile_num, label_hash)
 	if utils.is_port(labels.LABEL_HASHES[label_hash]) then
-		name = "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
+		return "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
 	else
-		name = label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
+		return label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
 	end
+end
+
+local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_raven)
 	msg.post("/gui", "show_orders_menu", {
 		label = label_hash,
 		tile_num = tile_num,
-		name = name,
+		name = get_tile_name(tile_num, label_hash),
 		deleted = deleted,
 		for_raven = for_raven,
 	})
@@ -98,6 +100,21 @@ function _M:tile_select_for_raven_change_order(tile_num, label_hash)
 		labels:select(label_hash)
 		local selected_order = get_order_type(self, label_hash)
 		open_orders_menu_for_label(tile_num, label_hash, selected_order, true)
+	end
+end
+
+function _M:tile_select_for_order_resolve(tile_num, label_hash, order_type)
+	if self.orders[label_hash] then
+		local order_on_label, house = get_order_type(self, label_hash)
+		if house == game_data.me and order_on_label:find(order_type) then
+			labels:select(label_hash)
+			msg.post("/gui", "resolve_order", {
+				label = label_hash,
+				tile_num = tile_num,
+				name = get_tile_name(tile_num, label_hash),
+				order = order_on_label
+			})
+		end
 	end
 end
 

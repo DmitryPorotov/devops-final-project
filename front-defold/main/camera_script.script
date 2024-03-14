@@ -125,6 +125,7 @@ function on_message(self, message_id, message, sender)
 		msg.post(".", "release_input_focus")
 	elseif message_id == hash("animate_camera_to") then
 		local point = impose_camera_limits(self, (message.point * self.zoom) - (SCREEN_SIZE / 2 ))
+		point.z = go.get_position().z
 		go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, point, go.EASING_LINEAR, utils.ANIMATION_TIME)
 	elseif message_id == hash('gui_click') then
 		self.gui_click = true

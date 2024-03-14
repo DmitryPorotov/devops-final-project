@@ -23,6 +23,7 @@ case class BoardTile(number: Int,
   def toNumberString: String = this.number.toString
 
   override def toJson: Value = ujson.Obj(
+    "number" -> number,
     "tileType" -> tileType.toString,
     "name" -> name,
     "neighbourTiles" -> neighbourTiles,

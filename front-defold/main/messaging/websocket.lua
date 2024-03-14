@@ -1,4 +1,5 @@
 local game_data = require "main/ui/game_data"
+local event_dispatcher = require "main/ui/event_dispatcher"
 local mes_proc = require "main/messaging/message_processing"
 local ws_to_use = require "main/messaging/websocket_native"
 -- local mes_poc = require "main/messaging/message_processing"
@@ -21,6 +22,9 @@ function _M.send(message)
 end
 
 function _M.init(self)
+	event_dispatcher.on('ws_send', function(message)
+		self.send(message)
+	end)
 	mes_proc.send = self.send
 	local function process_message(message)
 		mes_proc:process_message(message)

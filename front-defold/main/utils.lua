@@ -47,4 +47,17 @@ function _M.is_port(id)
 	return string.find(id, "%dport_")
 end
 
+function _M.noop()
+end
+
+function _M.filter_my_armies(armies, me)
+	local my = {}
+	for i, v in pairs(armies) do
+		if v[1].house == me then
+			my[i] = v
+		end
+	end
+	return my
+end
+
 return _M

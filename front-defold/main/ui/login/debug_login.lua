@@ -14,10 +14,11 @@ local _M = {
 
 }
 
+function _M:dispose()
+	pcall(function() gui.delete_node(self.back_drop) end)
+end
+
 function _M:init()
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
 	self.buttons = {
 		kraken = gui.get_node("login/kraken"),
 		lion = gui.get_node("login/lion"),

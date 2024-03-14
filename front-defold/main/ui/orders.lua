@@ -3,8 +3,6 @@ local labels = require "main/labels"
 local utils = require "main/utils"
 local game_data = require "main/ui/game_data"
 
-local ws = require "main/messaging/websocket"
-
 local _M = {
 	ORDER_TYPES = {
 		"consolidate",
@@ -21,7 +19,8 @@ local _M = {
 
 	stars_available = 3,
 	stars_locks = nil,
-	label_text = "Select an Order"
+	label_text = "Select an Order",
+	for_raven = false
 }
 
 local count_stars_used, lock_stars_disable_special_buttons
@@ -110,6 +109,7 @@ end
 local previous_deleted_button = false
 
 function _M:open(for_label, tile_num, name, deleted, for_raven)
+	self.for_raven = for_raven
 	if self.for_label and self.for_label == for_label then
 		self:close()
 		self.for_label = nil
@@ -118,16 +118,7 @@ function _M:open(for_label, tile_num, name, deleted, for_raven)
 	end
 	if deleted then
 		enable_button(self, deleted)
-		if not for_raven then
-			ws.send({
-				type = "action",
-				action = "game_action",
-				player_action = {
-					actionType = "removeOrder",
-					tileNumber = tonumber(tile_num),
-				}
-			})
-		elseif for_raven and previous_deleted_button then
+		if for_raven and previous_deleted_button and previous_deleted_button ~= deleted then
 			self.button_selected = previous_deleted_button
 			disable_button(self)
 		end
@@ -208,7 +199,7 @@ function _M:get_order_to_send()
 		type = "action",
 		action = "game_action",
 		player_action = {
-			actionType = "addOrder",
+			actionType = self.for_raven and 'ravenChangeOrder' or "addOrder",
 			tileNumber = tonumber(self.tile_num),
 			order = build_order_obj(self.button_selected)
 		}

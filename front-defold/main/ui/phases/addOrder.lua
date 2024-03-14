@@ -1,5 +1,10 @@
 local utils = require "main/utils"
 local game_data = require "main/ui/game_data"
+local hints = require "main/ui/hints"
+local player_panels = require "main/ui/player_panel"
+local orders = require "main/ui/orders"
+
+local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {
 	tiles_with_hints = {},
@@ -7,8 +12,6 @@ local _M = {
 	goto_count = -1,
 	addOrder_text = "Place an Order",
 	ready_text = "Confirm orders",
-	hints_gui = nil,
-	ws_send = nil
 }
 
 local function count_tiles_without_orders(self)
@@ -40,43 +43,100 @@ end
 
 local function update_hint_text(self)
 	local count = count_tiles_without_orders(self)
-	self.hints_gui:set_goto_count_text(count)
-	self.hints_gui:set_goto_button_enabled(count ~= 0)
-	self.hints_gui:set_next_button_enabled(count == 0)
-	self.hints_gui:set_hint_text(count == 0 and self.ready_text or self.addOrder_text)
+	hints:set_goto_count_text(count)
+	hints:set_goto_button_enabled(count ~= 0)
+	hints:set_next_button_enabled(count == 0)
+	hints:set_hint_text(count == 0 and self.ready_text or self.addOrder_text)
 end
 
 local function orders_confirmed(self)
 	msg.post("/map", "set_phase", {phase = "openOrders"})
-	self.hints_gui:set_hints_enabled(false)
+	hints:set_hints_enabled(false)
 end
 
-function _M:init(ws_send, hints_gui, player_panels_gui, my_armies, my_orders, phase)
-	self.ws_send = ws_send
-	self.hints_gui = hints_gui
-	self.player_panels_gui = player_panels_gui
-	hints_gui.on_goto_button_pressed = function()
+local function on_map_show_orders_menu(self, message)
+	orders:open(
+		message.label,
+		message.tile_num,
+		message.name,
+		message.deleted,
+		false
+	)
+	if message.deleted then
+		self:set_has_order(message.tile_num, false)
+		event_dispatcher.trigger('ws_send',{
+			type = "action",
+			action = "game_action",
+			player_action = {
+				actionType = "removeOrder",
+				tileNumber = tonumber(message.tile_num),
+			}
+		})
+	end
+end
+
+local function on_order_button_click(self)
+	local order = orders:get_order_to_send()
+	self:set_has_order(order.player_action.tileNumber, true)
+	event_dispatcher.trigger('ws_send', order)
+	orders:add_order_to_map()
+end
+
+local function on_ws_add_order(reply)
+	local order = reply.player_action.order or {
+		type = "consolidatePower"
+	}
+	local to_send = {
+		[reply.player_action.houseType] = {
+			[reply.player_action.tileNumber] = order
+		}
+	}
+	orders:show_orders_on_map(to_send, reply.player_action.order and true or false)
+end
+
+local function on_ws_open_orders(reply)
+	player_panels:set_player_ready(event_dispatcher.trigger('ws_add_order', reply))
+	if reply.player_action.orders then
+		orders:show_orders_on_map(reply.player_action.orders, true)
+	end
+end
+
+function _M:init(armies, my_orders, phase)
+	hints.on_goto_button_pressed = function()
 		self:on_goto_button_pressed()
 	end
-	hints_gui.on_next_button_pressed = function()
+	hints.on_next_button_pressed = function()
 		self:on_next_button_pressed()
 	end
-	hints_gui.set_has_order = function(tile_num, has_order)
-		self:set_has_order(tile_num, has_order)
-	end
+	local my_armies = utils.filter_my_armies(armies, game_data.me)
 	for tile_num, v in pairs(my_armies) do
 		if utils.is_unit_commandable(v[1].type) or #v > 1 then
 			table.insert(self.tiles_with_hints, { tile_num = tile_num, has_order = my_orders[tile_num] ~= nil})
 		end
 	end
 	update_hint_text(self)
-	self.hints_gui:set_hints_enabled(true)
+	hints:set_hints_enabled(true)
 	for _, v in ipairs(phase.houseTypes) do
 		if v == game_data.me then
 			orders_confirmed(self)
 		end
-		self.player_panels_gui:set_player_ready(v)
+		player_panels:set_player_ready(v)
 	end
+	event_dispatcher.on('map_show_orders_menu', function(message)
+		on_map_show_orders_menu(self, message)
+	end)
+	event_dispatcher.on('order_button_click', function()
+		on_order_button_click(self)
+	end)
+	event_dispatcher.on('ws_add_order', on_ws_add_order)
+	event_dispatcher.on('ws_open_orders', on_ws_open_orders)
+end
+
+function _M:clean_up()
+	event_dispatcher.off('map_show_orders_menu')
+	event_dispatcher.off('order_button_click')
+	event_dispatcher.off('ws_add_order')
+	event_dispatcher.off('ws_open_orders')
 end
 
 function _M:set_has_order(tile_num, has_order)

@@ -13,68 +13,17 @@ local list_of_saves = require "main/ui/settings/list_of_saves"
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
 local action_proc = require "main/messaging/action_reply_processing"
+local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {}
 
 local function register_callbacks()
-	mes_proc:set_set_tracks_cb(function(tracks_data)
-		tracks:set_tracks(tracks_data)
-	end)
-	mes_proc:set_set_game_state_cb(function(game_state)
-		top_panel:set_game_state(game_state)
-	end)
-	mes_proc:set_set_players_cb(function(players)
-		tracks:set_players(players)
-	end)
-	mes_proc:set_calc_stars_available_cb(function(court_track)
-		orders:calc_stars_available(court_track)
-	end)
-	mes_proc:set_show_orders_on_map_cb(function(orders_, do_open)
-		orders:show_orders_on_map(orders_, do_open)
-	end)
-
-	mes_proc.get_hints_gui = function()
-		return hints
-	end
-
-	mes_proc.get_player_panels_gui = function()
-		return player_panels
-	end
-
-	mes_proc:set_set_supply_usage_rules_cb(function(supplyUsageRules)
-		supply_panel:set_supply_usage_rules(supplyUsageRules)
-	end)
-	mes_proc:set_set_available_cb(function(supplies)
-		supply_panel:set_available(supplies)
-	end)
-	mes_proc:set_set_current_cb(function(supplies)
-		supply_panel:set_current(supplies)
-	end)
-	mes_proc:set_update_usage_cb(function(supplies)
-		supply_panel:update_usage(supplies)
-	end)
-
 	mes_proc.list_of_saves__show_saves = function(saves)
 		list_of_saves:show_saves(saves)
 	end
 
-	action_proc.orders__show_orders_on_map = function(orders_, do_open)
-		orders:show_orders_on_map(orders_, do_open)
-	end
-	action_proc.player_panel__set_player_ready = function(house_type)
-		player_panels:set_player_ready(house_type)
-	end
-	action_proc.player_panel__clear_ready_all = function()
-		player_panels:clear_ready_all()
-	end
 	action_proc.player_panel__set_player_turn = function(house_type)
 		player_panels:set_player_turn(house_type)
-	end
-	action_proc.raven_card_or_order__open = function()
-		raven_card_or_order:open()
-	end
-	action_proc.hints__none_actionable_hint = function(text)
-		hints:none_actionable_hint(text)
 	end
 end
 
@@ -115,8 +64,6 @@ function _M:check_pressed(x, y)
 	return false
 end
 
-local is_raven_order = false
-
 function _M:update(dt)
 	if self.action then
 		if login:on_input(self.action) then
@@ -129,42 +76,22 @@ function _M:update(dt)
 				tracks:open()
 			end
 		elseif orders:check_button_pressed(self.action.x, self.action.y) then
-			if self.show_orders_menu_message
-					and self.show_orders_menu_message.label == orders.for_label
-			then
-				self.show_orders_menu_message = nil
-			end
-			local order = orders:get_order_to_send()
-			if is_raven_order then
-				order.player_action.actionType = 'ravenChangeOrder'
-			else
-				hints.set_has_order(order.player_action.tileNumber, true)
-			end
-			ws.send(order)
-			orders:add_order_to_map()
+			event_dispatcher.trigger('order_button_click')
 		elseif hints:check_button_pressed(self.action.x, self.action.y) then
 		elseif raven_card_or_order:check_button_pressed(self.action.x, self.action.y) then
-			ws.send(raven_card_or_order:build_message())
-			raven_card_or_order:close()
+			event_dispatcher.trigger('raven_card_or_order_click')
 		elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
 			misc_buttons:do_action()
 		end
 		self.action = nil
 	end
 	if self.show_orders_menu_message then
-		if self.show_orders_menu_message.deleted and not self.show_orders_menu_message.for_raven then
-			hints.set_has_order(self.show_orders_menu_message.tile_num, false)
-		elseif self.show_orders_menu_message.for_raven then
-			is_raven_order = true
-		end
-		orders:open(
-				self.show_orders_menu_message.label,
-				self.show_orders_menu_message.tile_num,
-				self.show_orders_menu_message.name,
-				self.show_orders_menu_message.deleted,
-				is_raven_order
-		)
+		event_dispatcher.trigger('map_show_orders_menu', self.show_orders_menu_message)
 		self.show_orders_menu_message = nil
+	end
+	if self.resolve_order_message then
+		event_dispatcher.trigger('map_resolve_order', self.resolve_order_message)
+		self.resolve_order_message = nil
 	end
 end
 
@@ -174,6 +101,10 @@ end
 
 function _M:set_show_orders_menu_message(message)
 	self.show_orders_menu_message = message
+end
+
+function _M:set_resolve_order_message(message)
+	self.resolve_order_message = message
 end
 
 return _M

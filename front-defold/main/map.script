@@ -44,7 +44,6 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("move_camera_to_label") then
 		local label_hash = hash(labels.LABEL_IDS[tonumber(message.tile_num)])
 		local center = go.get_position(label_hash)
-		center.z = go.get_position("/camera").z
 		map_:select_label(label_hash)
 		msg.post("/camera", "animate_camera_to", {point = center})
 	elseif message_id == hash("set_phase") then
