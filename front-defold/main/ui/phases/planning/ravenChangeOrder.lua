@@ -1,7 +1,7 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
 local orders = require "main/ui/orders"
 local hints = require "main/ui/hints"
-local ravenChoose = require "main/ui/phases/ravenChooseChangeOrderOrLookAtWildlingCard"
+local ravenChoose = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
 local _M = {}
 
 function _M:init()

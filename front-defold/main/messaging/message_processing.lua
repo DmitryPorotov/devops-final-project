@@ -42,17 +42,17 @@ function _M:process_message(message)
 			 _get_game_state:init(message)
 			
 			if message.gameState.subPhase.subPhase == "addOrder" then
-				local phase = require "main/ui/phases/addOrder"
+				local phase = require "main/ui/phases/planning/addOrder"
 				phase:init(
 					message.gameState.armies,
 					message.gameState.placedOrders[game_data.me] or {},
 					message.gameState.subPhase
 				)
 			elseif message.gameState.subPhase.subPhase == "ravenChooseChangeOrderOrLookAtWildlingCard" then
-				local phase = require "main/ui/phases/ravenChooseChangeOrderOrLookAtWildlingCard"
+				local phase = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
 				phase:init()
 			elseif message.gameState.subPhase.subPhase == "ravenChangeOrder" then
-				local phase = require "main/ui/phases/ravenChangeOrder"
+				local phase = require "main/ui/phases/planning/ravenChangeOrder"
 				phase:init()
 			elseif message.gameState.subPhase.houseType then
 				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)

@@ -1,8 +1,8 @@
 local game_data = require "main/ui/game_data"
 
-local addOrder = require "main/ui/phases/addOrder"
-local ravenChoose = require "main/ui/phases/ravenChooseChangeOrderOrLookAtWildlingCard"
-local ravenChangeOrder = require "main/ui/phases/ravenChangeOrder"
+local addOrder = require "main/ui/phases/planning/addOrder"
+local ravenChoose = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
+local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
 
