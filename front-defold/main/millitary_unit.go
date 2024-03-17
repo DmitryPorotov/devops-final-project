@@ -16,10 +16,13 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/main/common.atlas\"\n"
-  "default_animation: \"ships\"\n"
+  data: "default_animation: \"ships\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
+  "textures {\n"
+  "  sampler: \"texture_sampler\"\n"
+  "  texture: \"/main/common.atlas\"\n"
+  "}\n"
   ""
   position {
     x: 0.0
@@ -33,8 +36,8 @@ embedded_components {
     w: 1.0
   }
   scale {
-    x: 0.2
-    y: 0.2
+    x: 0.15
+    y: 0.15
     z: 1.0
   }
 }

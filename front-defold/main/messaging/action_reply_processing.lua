@@ -4,6 +4,8 @@ local addOrder = require "main/ui/phases/planning/addOrder"
 local ravenChoose = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
 local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 
+local resolveMarchOrder = require "main/ui/phases/action/resolveMarchOrder"
+
 local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {
@@ -44,6 +46,13 @@ local switch = {
 switch.ravenChangeOrder = function(reply)
 	switch.addOrder(reply)
 	ravenChangeOrder:clean_up()
+	if reply.current_phase.subPhase == 'resolveRaidOrder' then
+		-- todo
+	elseif reply.current_phase.subPhase == 'resolveMarchOrder' then
+		resolveMarchOrder:init()
+	else
+		-- todo
+	end
 end
 
 function _M:process(reply)

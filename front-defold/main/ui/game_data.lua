@@ -12,6 +12,7 @@ local _M = {
 	user_data = nil,
 	gameRules = nil,
 	tracks = nil,
+	armies = nil,
 	game_id = 2,
 	creating_new_game = false
 }

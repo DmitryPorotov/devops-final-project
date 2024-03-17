@@ -6,6 +6,7 @@ local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
 local raven_card_or_order = require "main/ui/dialogs/raven_choose_card_or_order"
+local march_select_army = require "main/ui/dialogs/march_select_army"
 local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
@@ -43,6 +44,7 @@ function _M:init()
 	save_load_menu:init()
 	misc_buttons:init()
 	list_of_saves:init()
+	march_select_army:init()
 
 	self.panels = {
 		tracks,
@@ -52,6 +54,7 @@ function _M:init()
 		misc_buttons,
 		player_panels,
 		supply_panel,
+		march_select_army,
 	}
 end
 
@@ -66,32 +69,46 @@ end
 
 function _M:update(dt)
 	if self.action then
-		if login:on_input(self.action) then
-		elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
-		elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
-		elseif tracks:check_pressed(self.action.x, self.action.y) then
-			if tracks.is_open then
-				tracks:close()
-			else
-				tracks:open()
+		local status, err = pcall(function ()
+			if login:on_input(self.action) then
+			elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
+			elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
+			elseif tracks:check_pressed(self.action.x, self.action.y) then
+				if tracks.is_open then
+					tracks:close()
+				else
+					tracks:open()
+				end
+			elseif orders:check_button_pressed(self.action.x, self.action.y) then
+				event_dispatcher.trigger('order_button_click')
+			elseif hints:check_button_pressed(self.action.x, self.action.y) then
+			elseif raven_card_or_order:check_button_pressed(self.action.x, self.action.y) then
+			elseif march_select_army:check_button_pressed(self.action.x, self.action.y) then
+				--event_dispatcher.trigger('raven_card_or_order_click')
+			elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
+				misc_buttons:do_action()
 			end
-		elseif orders:check_button_pressed(self.action.x, self.action.y) then
-			event_dispatcher.trigger('order_button_click')
-		elseif hints:check_button_pressed(self.action.x, self.action.y) then
-		elseif raven_card_or_order:check_button_pressed(self.action.x, self.action.y) then
-			event_dispatcher.trigger('raven_card_or_order_click')
-		elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
-			misc_buttons:do_action()
-		end
+		end)
 		self.action = nil
+		if not status then
+			error(err)
+		end
 	end
 	if self.show_orders_menu_message then
-		event_dispatcher.trigger('map_show_orders_menu', self.show_orders_menu_message)
+		local status, err =
+			pcall(event_dispatcher.trigger, 'map_show_orders_menu', self.show_orders_menu_message)
 		self.show_orders_menu_message = nil
+		if not status then
+			error(err)
+		end
 	end
 	if self.resolve_order_message then
-		event_dispatcher.trigger('map_resolve_order', self.resolve_order_message)
+		local status, err =
+			pcall(event_dispatcher.trigger, 'map_resolve_order', self.resolve_order_message)
 		self.resolve_order_message = nil
+		if not status then
+			error(err)
+		end
 	end
 end
 

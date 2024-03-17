@@ -7,6 +7,19 @@ local CAMERA_LIMITS = {
 
 local SCREEN_SIZE = vmath.vector3(1200,	675, 0)
 
+local function update_camera_limits(self)
+	self.camera_up_limit = vmath.vector3(
+	CAMERA_LIMITS.up.x + ((CAMERA_LIMITS.up.x + SCREEN_SIZE.x) * (self.zoom - 1)),
+	-- SCREEN_SIZE.x * (self.zoom - 1),
+	CAMERA_LIMITS.up.y + ((CAMERA_LIMITS.up.y + SCREEN_SIZE.y) * (self.zoom - 1)),
+	0)
+	self.camera_down_limit = vmath.vector3(
+	CAMERA_LIMITS.down.x + (CAMERA_LIMITS.down.x * (self.zoom - 1)),
+	-- 0, 
+	CAMERA_LIMITS.down.y + (CAMERA_LIMITS.down.y * (self.zoom - 1)), 
+	0)
+end
+
 function init(self)
 	msg.post("#camera", "acquire_camera_focus")
 	-- msg.post(".", "acquire_input_focus")
@@ -22,7 +35,9 @@ function init(self)
 	-- self.camera_up_limit = vmath.vector3(2000, 2000, 0)
 	-- self.camera_down_limit = vmath.vector3(0, -2000, 0)
 
-	self.zoom = 1
+	self.zoom = 1.4
+	go.set_scale(self.zoom, "/map")
+	update_camera_limits(self)
 	
 	self.mouse_pressed = false
 	self.try_selecting = false
@@ -60,18 +75,6 @@ local function try_selecting(self, group, size)
 	return false
 end
 
-local function update_camera_limits(self)
-	self.camera_up_limit = vmath.vector3(
-	CAMERA_LIMITS.up.x + ((CAMERA_LIMITS.up.x + SCREEN_SIZE.x) * (self.zoom - 1)),
-	-- SCREEN_SIZE.x * (self.zoom - 1),
-	CAMERA_LIMITS.up.y + ((CAMERA_LIMITS.up.y + SCREEN_SIZE.y) * (self.zoom - 1)),
-	 0)
-	self.camera_down_limit = vmath.vector3(
-	CAMERA_LIMITS.down.x + (CAMERA_LIMITS.down.x * (self.zoom - 1)),
-	-- 0, 
-	CAMERA_LIMITS.down.y + (CAMERA_LIMITS.down.y * (self.zoom - 1)), 
-	0)
-end
 
 local function impose_camera_limits(self, pos)
 	if pos.x < self.camera_down_limit.x then

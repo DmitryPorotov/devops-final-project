@@ -18,6 +18,8 @@ local _M = {
 	armies_by_house = {},
 	phase = "addOrder",
 	orders = {},
+	house = false,
+	to_select_from_tile = false
 }
 
 function _M:get_center_of_territories(house)
@@ -41,7 +43,11 @@ function _M:select_label(label_hash)
 		self:tile_select_for_add_order(tile_num, label_hash)
 	elseif self.phase == "openOrders" then
 	elseif self.phase == "resolveMarchOrder" then
-		self:tile_select_for_order_resolve(tile_num, label_hash, 'march')
+		if self.to_select_from_tile then
+
+		else
+			self:tile_select_for_order_resolve(tile_num, label_hash, 'march')
+		end
 	elseif self.phase == "ravenChangeOrder" then
 		self:tile_select_for_raven_change_order(tile_num, label_hash)
 	end
@@ -49,6 +55,15 @@ end
 
 function _M:set_phase(phase)
 	self.phase = phase
+end
+
+function _M:set_house(house)
+	self.house = house
+end
+
+function _M:set_to_select_from_tile(tile_num)
+	self.to_select_from_tile = tile_num
+	self.calculate_possible_targets(self)
 end
 
 local function get_order_type(self, label_hash)
@@ -104,6 +119,9 @@ function _M:tile_select_for_raven_change_order(tile_num, label_hash)
 end
 
 function _M:tile_select_for_order_resolve(tile_num, label_hash, order_type)
+	if self.house ~= game_data.me then
+		return
+	end
 	if self.orders[label_hash] then
 		local order_on_label, house = get_order_type(self, label_hash)
 		if house == game_data.me and order_on_label:find(order_type) then

@@ -98,6 +98,7 @@ local function on_ws_open_orders(reply)
 	player_panels:set_player_ready(event_dispatcher.trigger('ws_add_order', reply))
 	if reply.player_action.orders then
 		orders:show_orders_on_map(reply.player_action.orders, true)
+		game_data.placedOrders = reply.player_action.orders
 	end
 end
 
@@ -137,6 +138,7 @@ function _M:clean_up()
 	event_dispatcher.off('order_button_click')
 	event_dispatcher.off('ws_add_order')
 	event_dispatcher.off('ws_open_orders')
+	hints:clean_up()
 end
 
 function _M:set_has_order(tile_num, has_order)

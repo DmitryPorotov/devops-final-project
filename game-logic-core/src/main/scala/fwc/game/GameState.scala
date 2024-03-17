@@ -6,7 +6,8 @@ import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.board.{Armies, DominanceTokenType, TileNumber, Tracks}
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.houses.HouseType
-import fwc.game.phases.{PhasePlanning, SubPhase}
+import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
+import fwc.game.phases.SubPhase
 import fwc.game.planningPhase.{AvailableOrders, Order, OrderConsolidatePower, OrderType, PlacedOrders}
 import fwc.gameLoading.BoardTile
 import ujson.Value
@@ -37,7 +38,7 @@ case class GameState(
 
   def toPersonalJson(myHouse: HouseType): ujson.Value = {
     val placedOrdersP = 
-      if subPhase.getMainPhase == PhasePlanning then
+      if subPhase.isInstanceOf[SubPhaseAddOrder] then
         placedOrders.copy(placedOrders = placedOrders.placedOrders.map(
         (houseType: HouseType, orders: Map[TileNumber, Order]) =>
           if houseType == myHouse then

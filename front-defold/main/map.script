@@ -17,15 +17,6 @@ end
 -- 	-- Remove this function if not needed
 -- end
 
-function fixed_update(self, dt)
-	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
-	-- Can be coupled with fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
-	-- Physics section of game.project
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Learn more: https://defold.com/manuals/message-passing/
@@ -46,8 +37,15 @@ function on_message(self, message_id, message, sender)
 		local center = go.get_position(label_hash)
 		map_:select_label(label_hash)
 		msg.post("/camera", "animate_camera_to", {point = center})
+	elseif message_id == hash("select_target") then
+		map_:set_to_select_from_tile(message.tile_num)
 	elseif message_id == hash("set_phase") then
 		map_:set_phase(message.phase)
+		if message.house then
+			map_:set_house(message.house)
+		else
+			map_:set_house(false)
+		end
 	end
 end
 

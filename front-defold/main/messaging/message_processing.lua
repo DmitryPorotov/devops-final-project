@@ -54,6 +54,9 @@ function _M:process_message(message)
 			elseif message.gameState.subPhase.subPhase == "ravenChangeOrder" then
 				local phase = require "main/ui/phases/planning/ravenChangeOrder"
 				phase:init()
+			elseif message.gameState.subPhase.subPhase == "resolveMarchOrder" then
+				local phase = require "main/ui/phases/action/resolveMarchOrder"
+				phase:init()
 			elseif message.gameState.subPhase.houseType then
 				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			end

@@ -22,7 +22,9 @@ end
 
 function _M:init(message)
 	game_data.gameRules = message.gameRules
-	game_data.tracks = message.gameState.tracks
+	for k, v in pairs(message.gameState) do
+		game_data[k] = v
+	end
 
 	supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
 	supply_panel:set_available(message.gameState.supplies[game_data.me])
@@ -34,7 +36,13 @@ function _M:init(message)
 	tracks:set_players(game_data.players)
 	tracks:set_tracks(message.gameState.tracks)
 	top_panel:set_game_state(message.gameState)
-	msg.post("/map", "set_phase", {phase = message.gameState.subPhase.subPhase})
+	local phase_to_map_msg = {
+		phase = message.gameState.subPhase.subPhase,
+	}
+	if message.gameState.subPhase.houseType then
+		phase_to_map_msg.house = message.gameState.subPhase.houseType
+	end
+	msg.post("/map", "set_phase", phase_to_map_msg)
 	for i, v in pairs(message.gameState.armies) do
 		set_tile_units(i, v)
 	end

@@ -17,7 +17,6 @@ end
 function _M:clean_up()
 	self.on_next_button_pressed = utils.noop
 	self.on_next_button_pressed = utils.noop
-	self.set_has_order = utils.noop
 	self:set_hints_enabled(false)
 end
 
