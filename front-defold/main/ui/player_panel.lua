@@ -93,4 +93,6 @@ function _M:check_pressed(x, y)
 	return false
 end
 
+_M.check_button_pressed = _M.check_pressed -- todo this function will open player details later
+
 return _M

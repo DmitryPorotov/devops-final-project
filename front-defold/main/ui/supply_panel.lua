@@ -22,6 +22,8 @@ function _M:check_pressed(x, y)
 	return gui.pick_node(self.sup_panel, x, y)
 end
 
+_M.check_button_pressed = _M.check_pressed
+
 local function update_panel(self)
 	if not self.usage_rules or self.current_count < 0 then return end
 	local cur_count
