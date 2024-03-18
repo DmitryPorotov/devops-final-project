@@ -1,5 +1,7 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
 local game_data = require "main/ui/game_data"
+local utils = require "main/utils"
+
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
@@ -16,12 +18,45 @@ local _M = {
 function _M:init()
 	event_dispatcher.on('map_resolve_order', function(message)
 		local army = game_data.armies[tostring(message.tile_num)]
-		self.current_tile_num = message.tile_num
+		self.current_tile_num = tonumber(message.tile_num)
 		march_select_army:open(army, message.label)
+		march_select_army:set_from(message.name)
 	end)
 	event_dispatcher.on('march_select_army_ok_button_click', function(to_send)
-		self.message_to_server.sourceTileNumber = tonumber(self.current_tile_num)
+		self.message_to_server.sourceTileNumber = self.current_tile_num
 		self.to_send = to_send
+		local targets = game_data:calculate_possible_destinations(self.current_tile_num)
+		msg.post('/map', 'show_targets', {
+			from_tile_num = self.current_tile_num,
+			targets = targets
+		})
+		self.count = #targets
+		self.current_order = 1
+		hints:set_goto_count_text(self.count)
+		hints:set_hint_text('Select a target territory.')
+		event_dispatcher.on('hints_goto_button_click',
+				function()
+					msg.post("/map", "move_camera_to_label", {tile_num = targets[self.current_order]})
+					if self.current_order >= self.count then
+						self.current_order = 1
+					else
+						self.current_order = self.current_order + 1
+					end
+				end
+		)
+	end)
+	event_dispatcher.on('march_select_army_to_send_changed', function(to_send)
+		local text = ''
+		if next(to_send) ~= nil then
+			for k, v in pairs(to_send) do
+				text = text .. utils.build_unit_and_count_phrase(k ,v) .. ', '
+			end
+			text = text:sub(1, -3)
+		end
+		march_select_army:set_who(text)
+	end)
+	event_dispatcher.on("map_target_selected", function(message)
+		march_select_army:set_to(message.name)
 	end)
 	if game_data.subPhase.houseType == game_data.me then
 		self:set_up_hint()
@@ -60,7 +95,6 @@ function _M:clean_up()
 	event_dispatcher.off('map_resolve_order')
 	event_dispatcher.off('march_select_army_ok_button_click')
 	event_dispatcher.off('hints_goto_button_click')
-
 end
 
 return _M

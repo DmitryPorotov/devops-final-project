@@ -241,7 +241,8 @@
     {
       "actionType": "addOrder",
       "order": {
-        "type": "consolidatePower"
+        "type": "march",
+        "modifier": -1
       },
       "houseType": "moose",
       "tileNumber": 31

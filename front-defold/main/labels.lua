@@ -77,7 +77,9 @@ local _M = {
 		"/56port_sunspear",
 		"/57east_summer_sea",
 	},
-	LABEL_HASHES = {}
+	LABEL_HASHES = {},
+	highlighted = {},
+	selected_target = nil,
 }
 
 function _M:select(label_hash)
@@ -90,7 +92,7 @@ function _M:select(label_hash)
 
 	if self.selected then
 		local s = self.selected
-		self:unselect(self.selected)
+		self:unselect()
 		if s == label_hash then
 			return false
 		end
@@ -100,16 +102,61 @@ function _M:select(label_hash)
 	return true
 end
 
-function _M:unselect(label_hash)
-	local id = self.LABEL_HASHES[label_hash]
-	if self.selected then
-		self.selected = nil
-	end
+function _M:unselect()
+	if not self.selected then return end
+	local id = self.LABEL_HASHES[self.selected]
+	self.selected = nil
 	if utils.is_port(id) then
 		go.set(id .. '#bg_selected', 'tint', vmath.vector4(1,1,1,0))
 	else
 		go.set(id .. '#label_bg_sel', 'tint', vmath.vector4(1,1,1,1))
 	end
+end
+
+local function build_bg_id(id)
+	if utils.is_port(id) then
+		return id .. '#bg_selected'
+	else
+		return id .. '#label_bg_sel'
+	end
+end
+
+function _M:highlight(tile_numbers)
+	for _, v in ipairs(tile_numbers) do
+		local id = build_bg_id(self.LABEL_IDS[v])
+
+		self.highlighted[tostring(v)] = id
+		go.set(id, 'tint', vmath.vector4(1,1,0,0))
+		go.animate(id, 'tint', go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,1,0,1), go.EASING_LINEAR, 0.7)
+	end
+end
+
+function _M:is_highlighted(tile_num)
+	if self.highlighted[tile_num] then
+		return true
+	end
+	return false
+end
+
+function _M:select_target(label_hash)
+	if label_hash == self.selected_target then
+		return
+	elseif self.selected_target then
+		self:unselect_target()
+	end
+	local id = build_bg_id(self.LABEL_HASHES[label_hash])
+	go.cancel_animations(id, 'tint')
+	go.set(id, 'tint', vmath.vector4(0,1,0,0))
+	go.animate(id, 'tint', go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(0,1,0,1), go.EASING_LINEAR, 0.7)
+	self.selected_target = label_hash
+end
+
+function _M:unselect_target()
+	local id = build_bg_id(self.LABEL_HASHES[self.selected_target])
+	go.cancel_animations(id, 'tint')
+	go.set(id, 'tint', vmath.vector4(1,1,0,0))
+	go.animate(id, 'tint', go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1,1,0,1), go.EASING_LINEAR, 0.7)
+	self.selected_target = nil
 end
 
 function _M:init()

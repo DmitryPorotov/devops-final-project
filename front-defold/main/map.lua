@@ -25,7 +25,7 @@ local _M = {
 function _M:get_center_of_territories(house)
 	local positions = {}
 	for i, v in pairs(self.armies_by_house[house]) do
-		table.insert(positions, go.get_position(labels.LABEL_IDS[tonumber(i)]))
+		positions[#positions + 1] = go.get_position(labels.LABEL_IDS[tonumber(i)])
 	end
 	local sum = vmath.vector3()
 	for i = 1, #positions do
@@ -44,7 +44,7 @@ function _M:select_label(label_hash)
 	elseif self.phase == "openOrders" then
 	elseif self.phase == "resolveMarchOrder" then
 		if self.to_select_from_tile then
-
+			self:tile_select_target(tile_num, label_hash)
 		else
 			self:tile_select_for_order_resolve(tile_num, label_hash, 'march')
 		end
@@ -63,7 +63,6 @@ end
 
 function _M:set_to_select_from_tile(tile_num)
 	self.to_select_from_tile = tile_num
-	self.calculate_possible_targets(self)
 end
 
 local function get_order_type(self, label_hash)
@@ -82,7 +81,7 @@ end
 
 local function get_tile_name(tile_num, label_hash)
 	if utils.is_port(labels.LABEL_HASHES[label_hash]) then
-		return "Port of " .. label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label")
+		return label.get_text(labels.LABEL_IDS[tile_num - 1] .. "#label") .. ' port'
 	else
 		return label.get_text(labels.LABEL_IDS[tonumber(tile_num)] .. "#label")
 	end
@@ -98,7 +97,16 @@ local function open_orders_menu_for_label(tile_num, label_hash, deleted, for_rav
 	})
 end
 
-
+function _M:tile_select_target(tile_num, label_hash)
+	if labels:is_highlighted(tile_num) then
+		labels:select_target(label_hash)
+		msg.post('/gui', 'target_selected', {
+			label = label_hash,
+			tile_num = tile_num,
+			name = get_tile_name(tile_num, label_hash),
+		})
+	end
+end
 
 function _M:tile_select_for_add_order(tile_num, label_hash)
 	if self.armies_by_house[game_data.me][tile_num] and #self.armies_by_house[game_data.me][tile_num] > 0
@@ -139,7 +147,7 @@ end
 function _M:add_order(message)
 	local label = type(message.label) == "number" and hash(labels.LABEL_IDS[message.label]) or message.label
 	delete_order_if_exists(self, label)
-	labels:unselect(label)
+	labels:unselect()
 	local order_type = hash(message.order:sub(1, -2))
 	local order_num = tonumber(message.order:sub(-1))
 	local position = vmath.vector3(0, 25, 0)

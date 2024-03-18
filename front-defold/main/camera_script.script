@@ -5,7 +5,7 @@ local CAMERA_LIMITS = {
 	down = vmath.vector3(-150, -870, 0)
 }
 
-local SCREEN_SIZE = vmath.vector3(1200,	675, 0)
+local SCREEN_SIZE = vmath.vector3(1200, 675, 0)
 
 local function update_camera_limits(self)
 	self.camera_up_limit = vmath.vector3(
@@ -132,6 +132,8 @@ function on_message(self, message_id, message, sender)
 		go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, point, go.EASING_LINEAR, utils.ANIMATION_TIME)
 	elseif message_id == hash('gui_click') then
 		self.gui_click = true
+	elseif message_id == hash('set_screen_size') then
+		SCREEN_SIZE = message.size
 	end
 end
 

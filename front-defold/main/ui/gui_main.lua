@@ -104,6 +104,14 @@ function _M:update(dt)
 			error(err)
 		end
 	end
+	if self.target_selected_message then
+		local status, err =
+			pcall(event_dispatcher.trigger, 'map_target_selected', self.target_selected_message)
+		self.target_selected_message = nil
+		if not status then
+			error(err)
+		end
+	end
 end
 
 function _M:set_action(action)
@@ -116,6 +124,10 @@ end
 
 function _M:set_resolve_order_message(message)
 	self.resolve_order_message = message
+end
+
+function _M:set_target_selected_message(message)
+	self.target_selected_message = message
 end
 
 return _M

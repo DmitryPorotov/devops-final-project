@@ -14,6 +14,9 @@ local _M = {
 	to_send = {},
 	for_label = false,
 	is_sent = false,
+	from = nil,
+	to = nil,
+	who = nil,
 }
 
 local function reset_counts(self)
@@ -38,7 +41,25 @@ function _M:init()
 				.. '/' .. self.unit_names[i] .. '/count')
 	end
 	self.ok_button = gui.get_node(self.panel_name .. '/ok_button')
+	self.from = gui.get_node('march_select_army/from')
+	self.to = gui.get_node('march_select_army/to')
+	self.who = gui.get_node('march_select_army/march')
 	reset_counts(self)
+end
+
+function _M:set_from(territory)
+	gui.set_text(self.from, 'From ' .. territory)
+end
+
+function _M:set_to(territory)
+	gui.set_text(self.to, 'To ' .. territory)
+end
+
+function _M:set_who(to_send)
+	if to_send == '' then
+		to_send = '...'
+	end
+	gui.set_text(self.who, 'March ' .. to_send)
 end
 
 local function reset_panel(self)
@@ -90,15 +111,29 @@ function _M:set_available_units(army)
 end
 
 function _M:enc_to_send(type)
+	if self.is_sent then return end
 	if self.to_send[type] < self.avail_counts[type] then
 		self.to_send[type] = self.to_send[type] + 1
+		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
 	end
 end
 
 function _M:dec_to_send(type)
+	if self.is_sent then return end
 	if self.to_send[type] > 0 then
 		self.to_send[type] = self.to_send[type] - 1
+		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
 	end
+end
+
+function _M:get_to_send()
+	local to_send = {}
+	for k, v in pairs(self.to_send) do
+		if v > 0 then
+			to_send[k] = v
+		end
+	end
+	return to_send
 end
 
 function _M:check_pressed(x, y)
@@ -125,12 +160,11 @@ function _M:check_button_pressed(x, y)
 		if gui.pick_node(self.ok_button, x, y) then
 			if not self.is_sent then
 				self.is_sent = true
-				local to_send = {}
-				for i, v in pairs(self.to_send) do
-					to_send[i] = v
+				for _, v in pairs(self.controls) do
+					gui.set_color(v.p, vmath.vector4(1,1,1,0.5))
+					v.en = false
 				end
-				event_dispatcher.trigger('march_select_army_ok_button_click', to_send)
-
+				event_dispatcher.trigger('march_select_army_ok_button_click', self:get_to_send())
 			end
 			return true
 		end

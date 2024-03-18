@@ -15,6 +15,8 @@ function on_message(self, message_id, message, sender)
 		gui.set_text(s, tostring(message.text))
 	elseif message_id == hash("show_orders_menu") then
 		gui_main:set_show_orders_menu_message(message)
+	elseif message_id == hash("target_selected") then
+		gui_main:set_target_selected_message(message)
 	elseif message_id == hash("resolve_order") then
 		gui_main:set_resolve_order_message(message)
 	end

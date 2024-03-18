@@ -37,8 +37,9 @@ function on_message(self, message_id, message, sender)
 		local center = go.get_position(label_hash)
 		map_:select_label(label_hash)
 		msg.post("/camera", "animate_camera_to", {point = center})
-	elseif message_id == hash("select_target") then
-		map_:set_to_select_from_tile(message.tile_num)
+	elseif message_id == hash("show_targets") then
+		map_:set_to_select_from_tile(message.from_tile_num)
+		labels:highlight(message.targets)
 	elseif message_id == hash("set_phase") then
 		map_:set_phase(message.phase)
 		if message.house then

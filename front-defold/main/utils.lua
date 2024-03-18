@@ -30,10 +30,35 @@ local _M = {
 		end
 		return nil
 	end,
-	hash_to_id = function(hash)
-		return string.sub(tostring(hash), 8, #tostring(hash) - 1)
-	end
 }
+
+function _M.build_unit_and_count_phrase(type, count)
+	if type == "footmen" then
+		if count == 1 then
+			return '1 footman'
+		else
+			return count .. ' footmen'
+		end
+	elseif type == "knights" then
+		if count == 1 then
+			return '1 knight'
+		else
+			return count .. ' knights'
+		end
+	elseif type == "ships" then
+		if count == 1 then
+			return '1 ship'
+		else
+			return count .. ' ships'
+		end
+	elseif type == "siegeEngines" then
+		if count == 1 then
+			return '1 siege engine'
+		else
+			return count .. ' siege engines'
+		end
+	end
+end
 
 function _M.is_unit_commandable(type)
 	return type ~= "garrison" and type ~= "powerToken"

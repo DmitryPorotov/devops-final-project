@@ -83,7 +83,7 @@ end
 function _M:update_usage(armies)
 	local counts = {}
 	for i, v in pairs(armies) do
-		table.insert(counts,count_units(v))
+		counts[#counts + 1] = count_units(v)
 	end
 	table.sort(counts, function(a, b) return b < a end)
 	for i = 1, #self.cur_max_armies do

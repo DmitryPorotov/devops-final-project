@@ -25,13 +25,6 @@ debug = 0
 [html5]
 heap_size = 512
 
-[collection]
-max_instances = 2048
-max_input_stack_entries = 128
-
-[engine]
-fixed_update_frequency = 20
-
 [graphics]
 default_texture_min_filter = nearest
 max_draw_calls = 2048

@@ -43,7 +43,7 @@ embedded_instances {
   children: "labels"
   data: "components {\n"
   "  id: \"map_scr\"\n"
-  "  component: \"/main/map.script\"\n"
+  "  component: \"/main/map_go.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
