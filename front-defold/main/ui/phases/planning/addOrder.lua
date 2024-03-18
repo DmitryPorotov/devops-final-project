@@ -95,7 +95,7 @@ local function on_ws_add_order(reply)
 end
 
 local function on_ws_open_orders(reply)
-	player_panels:set_player_ready(event_dispatcher.trigger('ws_add_order', reply))
+	player_panels:set_player_ready(reply.player_action.houseType)
 	if reply.player_action.orders then
 		orders:show_orders_on_map(reply.player_action.orders, true)
 		game_data.placedOrders = reply.player_action.orders
@@ -103,12 +103,12 @@ local function on_ws_open_orders(reply)
 end
 
 function _M:init(armies, my_orders, phase)
-	hints.on_goto_button_pressed = function()
+	event_dispatcher.on('hints_goto_button_click', function()
 		self:on_goto_button_pressed()
-	end
-	hints.on_next_button_pressed = function()
+	end)
+	event_dispatcher.on('hints_next_button_click', function()
 		self:on_next_button_pressed()
-	end
+	end)
 	local my_armies = utils.filter_my_armies(armies, game_data.me)
 	for tile_num, v in pairs(my_armies) do
 		if utils.is_unit_commandable(v[1].type) or #v > 1 then
@@ -138,6 +138,8 @@ function _M:clean_up()
 	event_dispatcher.off('order_button_click')
 	event_dispatcher.off('ws_add_order')
 	event_dispatcher.off('ws_open_orders')
+	event_dispatcher.off('hints_goto_button_click')
+	event_dispatcher.off('hints_next_button_click')
 	hints:clean_up()
 end
 
@@ -163,7 +165,7 @@ end
 
 function _M:on_next_button_pressed()
 	orders_confirmed(self)
-	self.ws_send({
+	event_dispatcher.trigger('ws_send', {
 		type = "action",
 		action = "game_action",
 		player_action = {

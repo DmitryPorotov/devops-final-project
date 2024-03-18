@@ -43,20 +43,24 @@ function _M:set_up_hint()
 	hints:set_goto_button_enabled(true)
 	hints:set_goto_count_text(self.count)
 	hints:set_hint_text('Select a March order to resolve.')
-	hints.on_goto_button_pressed = function()
-		msg.post("/map", "move_camera_to_label", {tile_num = self.marches_arr[self.current_order]})
-		if self.current_order >= self.count then
-			self.current_order = 1
-		else
-			self.current_order = self.current_order + 1
+	event_dispatcher.on('hints_goto_button_click',
+		function()
+			msg.post("/map", "move_camera_to_label", {tile_num = self.marches_arr[self.current_order]})
+			if self.current_order >= self.count then
+				self.current_order = 1
+			else
+				self.current_order = self.current_order + 1
+			end
 		end
-	end
+	)
 	hints:set_hints_enabled(true)
 end
 
 function _M:clean_up()
 	event_dispatcher.off('map_resolve_order')
 	event_dispatcher.off('march_select_army_ok_button_click')
+	event_dispatcher.off('hints_goto_button_click')
+
 end
 
 return _M

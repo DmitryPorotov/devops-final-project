@@ -1,9 +1,6 @@
-local utils = require "main/utils"
+local event_dispatcher = require "main/ui/event_dispatcher"
 
-local _M = {
-	on_goto_button_pressed = utils.noop,
-	on_next_button_pressed = utils.noop
-}
+local _M = {}
 
 function _M:init()
 	self.hints = gui.get_node("hints/hints")
@@ -15,8 +12,6 @@ function _M:init()
 end
 
 function _M:clean_up()
-	self.on_next_button_pressed = utils.noop
-	self.on_next_button_pressed = utils.noop
 	self:set_hints_enabled(false)
 end
 
@@ -71,11 +66,13 @@ function _M:check_pressed(x, y)
 end
 
 function _M:check_button_pressed(x, y)
+	if not gui.is_enabled(self.hints) then return false end
+
 	if gui.pick_node(self.goto_button, x, y) or gui.pick_node(self.bar, x, y) then
-		self.on_goto_button_pressed() 
+		event_dispatcher.trigger('hints_goto_button_click')
 		return true
 	elseif gui.pick_node(self.next_button, x, y) then
-		self.on_next_button_pressed() 
+		event_dispatcher.trigger('hints_next_button_click')
 		return true
 	end
 	return false
