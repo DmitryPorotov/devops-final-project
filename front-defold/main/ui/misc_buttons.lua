@@ -10,6 +10,7 @@ local node_clicked = false
 function _M:check_button_pressed(x, y)
 	if gui.pick_node(self.save_load_button, x, y) then
 		node_clicked = self.save_load_menu
+		self:do_action()
 		return true
 	end
 	return false

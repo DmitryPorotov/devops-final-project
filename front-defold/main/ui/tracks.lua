@@ -11,7 +11,7 @@ function _M:init(player_panels)
 	self.logic_tracks = nil
 	self.is_open = false
 	self.is_init = false
-	self.tracks = gui.get_node("tracks_full")
+	self.panel = gui.get_node("tracks_full")
 end
 
 function _M:set_players(players)
@@ -25,8 +25,18 @@ function _M:set_me(me)
 	self.me = me
 end
 
+function _M:check_button_pressed(x, y)
+	if gui.pick_node(self.panel, x, y) then
+		if self.is_open then
+			self:close()
+		else
+			self:open()
+		end
+	end
+end
+
 function _M:check_pressed(x, y)
-	return gui.pick_node(self.tracks, x, y)
+	return gui.pick_node(self.panel, x, y)
 end
 
 local function set_shields(tracks, track_name)
@@ -103,8 +113,8 @@ local function ani_open(prefix, i)
 	unshift_others(i, prefix)
 end
 
-function _M.open(self)
-	gui.animate(self.tracks, "position.y", 250, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+function _M:open()
+	gui.animate(self.panel, "position.y", 250, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
 	ani_open("t", self.my_t_idx)
 	ani_open("f", self.my_f_idx)
 	ani_open("c", self.my_c_idx)
@@ -121,8 +131,8 @@ local function ani_close(prefix, i)
 	shift_others(i, prefix)
 end
 
-function _M.close(self)
-	gui.animate(self.tracks, "position.y", -120, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+function _M:close()
+	gui.animate(self.panel, "position.y", -120, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
 	ani_close("t", self.my_t_idx)
 	ani_close("f", self.my_f_idx)
 	ani_close("c", self.my_c_idx)

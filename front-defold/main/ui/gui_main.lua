@@ -73,20 +73,14 @@ function _M:update(dt)
 			if login:on_input(self.action) then
 			elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
 			elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
-			elseif tracks:check_pressed(self.action.x, self.action.y) then
-				if tracks.is_open then
-					tracks:close()
-				else
-					tracks:open()
-				end
-			elseif orders:check_button_pressed(self.action.x, self.action.y) then
-				event_dispatcher.trigger('order_button_click')
-			elseif hints:check_button_pressed(self.action.x, self.action.y) then
-			elseif raven_card_or_order:check_button_pressed(self.action.x, self.action.y) then
-			elseif march_select_army:check_button_pressed(self.action.x, self.action.y) then
-				--event_dispatcher.trigger('raven_card_or_order_click')
-			elseif misc_buttons:check_button_pressed(self.action.x, self.action.y) then
-				misc_buttons:do_action()
+			else
+				(function()
+					for _, panel in ipairs(self.panels) do
+						if panel:check_button_pressed(self.action.x, self.action.y) then
+							return
+						end
+					end
+				end)()
 			end
 		end)
 		self.action = nil
