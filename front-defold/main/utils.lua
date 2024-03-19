@@ -22,6 +22,9 @@ local _M = {
 		[hash("support")] = "support",
 	},
 	ANIMATION_TIME = .15,
+	---Returns index of item in a table, returns nil if not found
+	---@param table table
+	---@param value any
 	index_of = function (table, value)
 		for i, v in ipairs(table) do
 			if v == value then

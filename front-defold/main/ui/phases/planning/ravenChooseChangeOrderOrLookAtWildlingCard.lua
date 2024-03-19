@@ -16,22 +16,22 @@ local function on_ws_raven_card_or_order(self, reply)
 	hints:none_actionable_hint(text)
 end
 
+local function on_raven_card_or_order_click()
+	event_dispatcher.trigger('ws_send', raven_card_or_order:build_message())
+	raven_card_or_order:close()
+end
+
 function _M:init()
 	if game_data.me == game_data.tracks["court"][1] then
 		raven_card_or_order:open()
-		event_dispatcher.on('raven_card_or_order_click', function()
-			event_dispatcher.trigger('ws_send', raven_card_or_order:build_message())
-			raven_card_or_order:close()
-		end)
+		event_dispatcher.on('raven_card_or_order_click', on_raven_card_or_order_click)
 	end
-	event_dispatcher.on('ws_raven_card_or_order', function(reply)
-		on_ws_raven_card_or_order(self, reply)
-	end)
+	event_dispatcher.on('ws_raven_card_or_order', on_ws_raven_card_or_order, self)
 end
 
 function _M:clean_up()
-	event_dispatcher.off('ws_raven_card_or_order')
-	event_dispatcher.off('raven_card_or_order_click')
+	event_dispatcher.off('ws_raven_card_or_order', on_ws_raven_card_or_order)
+	event_dispatcher.off('raven_card_or_order_click', on_raven_card_or_order_click)
 end
 
 return _M

@@ -1,5 +1,6 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
 local game_data = require "main/ui/game_data"
+local travel_logic = require "main/ui/travel_logic"
 local utils = require "main/utils"
 
 local march_select_army = require "main/ui/dialogs/march_select_army"
@@ -15,53 +16,73 @@ local _M = {
 	message_to_server = {}
 }
 
-function _M:init()
-	event_dispatcher.on('map_resolve_order', function(message)
-		local army = game_data.armies[tostring(message.tile_num)]
-		self.current_tile_num = tonumber(message.tile_num)
-		march_select_army:open(army, message.label)
-		march_select_army:set_from(message.name)
-	end)
-	event_dispatcher.on('march_select_army_ok_button_click', function(to_send)
-		self.message_to_server.sourceTileNumber = self.current_tile_num
-		self.to_send = to_send
-		local targets = game_data:calculate_possible_destinations(self.current_tile_num)
-		msg.post('/map', 'show_targets', {
-			from_tile_num = self.current_tile_num,
-			targets = targets
-		})
-		self.count = #targets
+function _M:on_map_resolve_order(message)
+	local army = game_data.armies[tostring(message.tile_num)]
+	self.current_tile_num = tonumber(message.tile_num)
+	march_select_army:open(army, message.label)
+	march_select_army:set_from(message.name)
+end
+
+local targets
+
+function _M:on_march_select_army_ok_button_click(to_send)
+	self.message_to_server.sourceTileNumber = self.current_tile_num
+	self.to_send = to_send
+	targets = travel_logic:calculate_possible_destinations(self.current_tile_num)
+	msg.post('/map', 'show_targets', {
+		from_tile_num = self.current_tile_num,
+		targets = targets
+	})
+	self.count = #targets
+	self.current_order = 1
+	hints:set_goto_count_text(self.count)
+	hints:set_hint_text('Select a target territory.')
+	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_source)
+	event_dispatcher.on('hints_goto_button_click', self.on_hints_goto_button_click_select_target, self)
+end
+
+function _M:on_hints_goto_button_click_select_target()
+	msg.post("/map", "move_camera_to_label", {tile_num = targets[self.current_order]})
+	if self.current_order >= self.count then
 		self.current_order = 1
-		hints:set_goto_count_text(self.count)
-		hints:set_hint_text('Select a target territory.')
-		event_dispatcher.on('hints_goto_button_click',
-				function()
-					msg.post("/map", "move_camera_to_label", {tile_num = targets[self.current_order]})
-					if self.current_order >= self.count then
-						self.current_order = 1
-					else
-						self.current_order = self.current_order + 1
-					end
-				end
-		)
-	end)
-	event_dispatcher.on('march_select_army_to_send_changed', function(to_send)
-		local text = ''
-		if next(to_send) ~= nil then
-			for k, v in pairs(to_send) do
-				text = text .. utils.build_unit_and_count_phrase(k ,v) .. ', '
-			end
-			text = text:sub(1, -3)
+	else
+		self.current_order = self.current_order + 1
+	end
+end
+
+function _M.on_march_select_army_to_send_changed(to_send)
+	local text = ''
+	if next(to_send) ~= nil then
+		for k, v in pairs(to_send) do
+			text = text .. utils.build_unit_and_count_phrase(k ,v) .. ', '
 		end
-		march_select_army:set_who(text)
-	end)
-	event_dispatcher.on("map_target_selected", function(message)
-		march_select_army:set_to(message.name)
-	end)
+		text = text:sub(1, -3)
+	end
+	march_select_army:set_who(text)
+end
+
+function _M.on_map_target_selected(message)
+	march_select_army:set_to(message.name)
+end
+
+function _M:init()
+	event_dispatcher.on('map_resolve_order', self.on_map_resolve_order, self)
+	event_dispatcher.on('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click, self)
+	event_dispatcher.on('march_select_army_to_send_changed', self.on_march_select_army_to_send_changed)
+	event_dispatcher.on("map_target_selected", self.on_map_target_selected)
 	if game_data.subPhase.houseType == game_data.me then
 		self:set_up_hint()
 	end
 	player_panels:set_player_turn(game_data.subPhase.houseType)
+end
+
+function _M:on_hints_goto_button_click_select_source()
+	msg.post("/map", "move_camera_to_label", {tile_num = self.marches_arr[self.current_order]})
+	if self.current_order >= self.count then
+		self.current_order = 1
+	else
+		self.current_order = self.current_order + 1
+	end
 end
 
 function _M:set_up_hint()
@@ -78,23 +99,20 @@ function _M:set_up_hint()
 	hints:set_goto_button_enabled(true)
 	hints:set_goto_count_text(self.count)
 	hints:set_hint_text('Select a March order to resolve.')
-	event_dispatcher.on('hints_goto_button_click',
-		function()
-			msg.post("/map", "move_camera_to_label", {tile_num = self.marches_arr[self.current_order]})
-			if self.current_order >= self.count then
-				self.current_order = 1
-			else
-				self.current_order = self.current_order + 1
-			end
-		end
-	)
+	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_target)
+	event_dispatcher.on('hints_goto_button_click', self.on_hints_goto_button_click_select_source, self)
 	hints:set_hints_enabled(true)
 end
 
 function _M:clean_up()
-	event_dispatcher.off('map_resolve_order')
-	event_dispatcher.off('march_select_army_ok_button_click')
-	event_dispatcher.off('hints_goto_button_click')
+	event_dispatcher.off('map_resolve_order', self.on_map_resolve_order)
+	event_dispatcher.off('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click)
+	event_dispatcher.off('march_select_army_to_send_changed', self.on_march_select_army_to_send_changed)
+	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_target)
+	event_dispatcher.off('map_target_selected', self.on_map_target_selected)
+	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_source)
+	hints:set_hints_enabled(false)
+	march_select_army:close()
 end
 
 return _M

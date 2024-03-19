@@ -6,13 +6,15 @@ local subscriptions = {}
 --- Subscribe to an event
 ---@param event string Event name
 ---@param callback function Event handler
-function _M.on(event, callback)
-	subscriptions[event] = callback
+---@param this self Optional self to be passed to the callback
+function _M.on(event, callback, this)
+	subscriptions[event] = { c = callback, t = this }
 end
 
 --- Unsubscribe from event
 ---@param event string Event name
-function _M.off(event)
+---@param callback function UNUSED. A callback used to subscribe to this event. Will be used if I switch to multiple handlers for the same event
+function _M.off(event, callback)
 	subscriptions[event] = nil
 end
 
@@ -20,7 +22,11 @@ end
 ---@param event string Event name
 function _M.trigger(event, ...)
 	if subscriptions[event] then
-		subscriptions[event](...)
+		if subscriptions[event].t then
+			subscriptions[event].c(subscriptions[event].t, ...)
+		else
+			subscriptions[event].c(...)
+		end
 	end
 end
 

@@ -35,9 +35,13 @@ case class ActionResolveRaidOrder(
     val targetTile = gameRules.board(targetTileNumber)
 
     if sourceTileNumber == targetTileNumber
-    then gameState.copy(
-      placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
-    )
+    then
+      val updatedGameState = gameState.copy(
+        placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
+      )
+      return updatedGameState.copy(
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderRaid, houseType)
+      )
     else if !sourceTile.isNeighbourOf(targetTile)
     then throw new ActionException(s"Tile ${sourceTile.name} is not a not a neighbour of ${targetTile.name}")
 

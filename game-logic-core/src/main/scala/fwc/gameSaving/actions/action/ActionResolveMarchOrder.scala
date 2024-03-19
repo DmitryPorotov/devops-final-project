@@ -14,6 +14,7 @@ import ujson.Value
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.util.Try
 
 case class ActionResolveMarchOrder(
                                     gameState: GameState,
@@ -37,6 +38,14 @@ case class ActionResolveMarchOrder(
       || sourceOrderOpt.head._1 != houseType
     then throw new ActionException(s"There is no march order of house \"$houseType\" in the source tile")
     else sourceOrderOpt.head._2
+    
+    if null == targets || targets.isEmpty then
+      val updatedGameState = gameState.copy(
+        placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
+      )
+      return updatedGameState.copy(
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderMarch, houseType)
+      )
 
     validateTargetTiles(sourceTileNumber, targets)
 
@@ -192,10 +201,10 @@ object ActionResolveMarchOrder extends JsonParsableAction {
       gameState,
       HouseType.fromString(json("houseType").str),
       json("sourceTileNumber").num.toInt,
-      json("targets")
+      Try(json("targets")
         .obj
         .map(
           (tn: String, army: ujson.Value) => tn.toInt -> army.arr.map(mu => MilitaryUnit.fromJson(mu)).toSeq
-        ).toMap
+        ).toMap).getOrElse(null)
     )
 }
