@@ -15,6 +15,8 @@ local function update_players(old, new)
 	end
 end
 
+local phase
+
 function _M:process_message(message)
 	if message.type == 'action' then
 		if message.action == "game_action" then
@@ -40,25 +42,30 @@ function _M:process_message(message)
 			})
 		elseif message.action == "get_game_state" then
 			 _get_game_state:init(message)
-			
+
+			if phase then
+				phase:clean_up()
+			end
+
 			if message.gameState.subPhase.subPhase == "addOrder" then
-				local phase = require "main/ui/phases/planning/addOrder"
+				phase = require "main/ui/phases/planning/addOrder"
 				phase:init(
 					message.gameState.armies,
 					message.gameState.placedOrders[game_data.me] or {},
 					message.gameState.subPhase
 				)
 			elseif message.gameState.subPhase.subPhase == "ravenChooseChangeOrderOrLookAtWildlingCard" then
-				local phase = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
+				phase = require "main/ui/phases/planning/ravenChooseChangeOrderOrLookAtWildlingCard"
 				phase:init()
 			elseif message.gameState.subPhase.subPhase == "ravenChangeOrder" then
-				local phase = require "main/ui/phases/planning/ravenChangeOrder"
+				phase = require "main/ui/phases/planning/ravenChangeOrder"
 				phase:init()
 			elseif message.gameState.subPhase.subPhase == "resolveMarchOrder" then
-				local phase = require "main/ui/phases/action/resolveMarchOrder"
+				phase = require "main/ui/phases/action/resolveMarchOrder"
 				phase:init()
-			elseif message.gameState.subPhase.houseType then
-				action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
+			else
+				error("Unknown or unimplemented phase " .. message.gameState.subPhase.subPhase)
+				--action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)
 			end
 		elseif message.action == "create_game" and game_data.me == "kraken" then
 			self.send({

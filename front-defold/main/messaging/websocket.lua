@@ -13,6 +13,8 @@ local function wrap(message)
 	end
 	if message.player_action then
 		message.player_action.houseType = game_data.me
+		message.type = 'action'
+		message.action = 'game_action'
 	end
 	return message
 end

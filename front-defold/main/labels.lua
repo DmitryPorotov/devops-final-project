@@ -131,6 +131,13 @@ function _M:highlight(tile_numbers)
 	end
 end
 
+function _M:unhighlight()
+	for _, bg_id in pairs(self.highlighted) do
+		go.cancel_animations(bg_id, 'tint')
+		go.set(bg_id, 'tint', utils.is_port(bg_id) and vmath.vector4(1,1,1,0) or vmath.vector4(1,1,1,1))
+	end
+end
+
 function _M:is_highlighted(tile_num)
 	if self.highlighted[tile_num] then
 		return true

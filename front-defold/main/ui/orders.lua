@@ -198,8 +198,6 @@ end
 
 function _M:get_order_to_send()
 	return {
-		type = "action",
-		action = "game_action",
 		player_action = {
 			actionType = self.for_raven and 'ravenChangeOrder' or "addOrder",
 			tileNumber = tonumber(self.tile_num),

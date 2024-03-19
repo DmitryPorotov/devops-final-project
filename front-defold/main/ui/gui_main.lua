@@ -10,6 +10,7 @@ local march_select_army = require "main/ui/dialogs/march_select_army"
 local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
+local confirm = require "main/ui/dialogs/confirm"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -45,6 +46,7 @@ function _M:init()
 	misc_buttons:init()
 	list_of_saves:init()
 	march_select_army:init()
+	confirm:init()
 
 	self.panels = {
 		tracks,
@@ -55,6 +57,7 @@ function _M:init()
 		player_panels,
 		supply_panel,
 		march_select_army,
+		confirm,
 	}
 end
 

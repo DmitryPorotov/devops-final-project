@@ -41,6 +41,9 @@ local switch = {
 			-- todo
 		end
 	end,
+	resolveMarchOrder = function(reply)
+
+	end,
 }
 
 switch.ravenChangeOrder = function(reply)
@@ -57,16 +60,17 @@ end
 
 function _M:process(reply)
 	if not reply.player_action.actionType then
-		print("no action type in reply")
+		error("no action type in the reply")
 	elseif not switch[reply.player_action.actionType] then
-		print("unknown action type " .. reply.player_action.actionType)
+		error("unknown or unimplemented action type " .. reply.player_action.actionType)
 	else
+		game_data.subPhase = reply.current_phase
 		switch[reply.player_action.actionType](reply)
-		-- note: add is_me field to know if any action is to be done?
 		msg.post("/map", "set_phase", {phase = reply.current_phase.subPhase})
-		if reply.current_phase.houseType then
-			self.player_panel__set_player_turn(reply.current_phase.houseType)
-		end
+		--if reply.current_phase.houseType then
+		--	--todo move to phases?
+		--	self.player_panel__set_player_turn(reply.current_phase.houseType)
+		--end
 	end
 end
 

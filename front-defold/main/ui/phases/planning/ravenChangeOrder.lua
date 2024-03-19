@@ -31,6 +31,8 @@ end
 function _M:clean_up()
 	event_dispatcher.off('map_show_orders_menu', on_map_show_orders_menu)
 	event_dispatcher.off('order_button_click', on_order_button_click)
+	orders:close()
+	hints:clean_up()
 end
 
 return _M

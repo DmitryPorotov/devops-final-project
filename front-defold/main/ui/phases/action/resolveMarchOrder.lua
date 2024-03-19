@@ -6,6 +6,7 @@ local utils = require "main/utils"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
+local confirm = require "main/ui/dialogs/confirm"
 
 local _M = {
 	current_order = 1,
@@ -13,7 +14,10 @@ local _M = {
 	marches = {},
 	count = 0,
 	current_tile_num = false,
-	message_to_server = {}
+	message_to_server = {
+		actionType = 'resolveMarchOrder'
+	},
+	from_name = '',
 }
 
 function _M:on_map_resolve_order(message)
@@ -21,12 +25,32 @@ function _M:on_map_resolve_order(message)
 	self.current_tile_num = tonumber(message.tile_num)
 	march_select_army:open(army, message.label)
 	march_select_army:set_from(message.name)
+	self.from_name = message.name
 end
 
 local targets
 
 function _M:on_march_select_army_ok_button_click(to_send)
 	self.message_to_server.sourceTileNumber = self.current_tile_num
+	if not next(to_send) then
+		confirm:open('Do you want to remove the March order\nfrom "'
+				.. self.from_name .. '" and finish your turn?',
+				function(result)
+				if result then
+					msg.post('/map', 'unselect_label')
+					self:clean_up()
+					self.message_to_server.targets = {}
+					event_dispatcher.trigger('ws_send', {
+						player_action = self.message_to_server
+					})
+				else
+					msg.post('/map', 'unselect_label')
+					msg.post('/map', 'hide_targets')
+					march_select_army:close()
+				end
+			end)
+		return
+	end
 	self.to_send = to_send
 	targets = travel_logic:calculate_possible_destinations(self.current_tile_num)
 	msg.post('/map', 'show_targets', {
@@ -111,8 +135,9 @@ function _M:clean_up()
 	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_target)
 	event_dispatcher.off('map_target_selected', self.on_map_target_selected)
 	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click_select_source)
-	hints:set_hints_enabled(false)
+	hints:clean_up()
 	march_select_army:close()
+	self.from_name = ''
 end
 
 return _M

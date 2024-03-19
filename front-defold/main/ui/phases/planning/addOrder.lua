@@ -65,8 +65,6 @@ local function on_map_show_orders_menu(self, message)
 	if message.deleted then
 		self:set_has_order(message.tile_num, false)
 		event_dispatcher.trigger('ws_send',{
-			type = "action",
-			action = "game_action",
 			player_action = {
 				actionType = "removeOrder",
 				tileNumber = tonumber(message.tile_num),
@@ -133,6 +131,7 @@ function _M:clean_up()
 	event_dispatcher.off('hints_goto_button_click', self.on_goto_button_pressed)
 	event_dispatcher.off('hints_next_button_click', self.on_next_button_pressed)
 	hints:clean_up()
+	orders:close()
 end
 
 function _M:set_has_order(tile_num, has_order)
@@ -158,8 +157,6 @@ end
 function _M:on_next_button_pressed()
 	orders_confirmed(self)
 	event_dispatcher.trigger('ws_send', {
-		type = "action",
-		action = "game_action",
 		player_action = {
 			actionType = "openOrders",
 		}

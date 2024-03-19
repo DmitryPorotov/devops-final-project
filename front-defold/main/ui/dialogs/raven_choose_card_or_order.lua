@@ -49,8 +49,6 @@ end
 
 function _M:build_message()
 	local m = {
-		type = 'action',
-		action = 'game_action',
 		player_action = {
 			actionType = 'ravenChooseChangeOrderOrLookAtWildlingCard',
 			ravenChoice = selected

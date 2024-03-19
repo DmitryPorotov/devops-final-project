@@ -69,7 +69,7 @@ local function try_selecting(self, group, size)
 		msg.post("/map", 'select_label', {
 			id = result1.id
 		})
-		msg.post("/gui", "print_debug", { text = tostring(result1.id)})
+		--msg.post("/gui", "print_debug", { text = tostring(result1.id)})
 		return true
 	end
 	return false
