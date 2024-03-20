@@ -1,5 +1,9 @@
+local game_data = require "main/ui/game_data"
+
 local _M = {
-	house_to_panel_num = {}
+	house_to_panel_num = {},
+	players = {},
+	logic_tracks = nil,
 }
 
 local function set_player_panel(self, player_panel_num, house_name)
@@ -40,10 +44,10 @@ local function set_player_panel(self, player_panel_num, house_name)
 end
 
 local function set_players_panels(self)
-	set_player_panel(self, 1, self.me)
+	set_player_panel(self, 1, game_data.me)
 	local i = 2
 	for _, v in ipairs(self.logic_tracks["throne"]) do
-		if v ~= self.me then
+		if v ~= game_data.me then
 			set_player_panel(self, i, v)
 			i = i + 1
 		end
@@ -70,8 +74,8 @@ function _M:set_player_turn(house)
 	gui.animate(bg, "color.w", 1, gui.EASING_LINEAR, 1, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
 end
 
-function _M.set_players_panels(tracks_gui)
-	_M.panels = {
+function _M:init()
+	self.panels = {
 		gui.get_node('player1/player_panel'),
 		gui.get_node('player2/player_panel'),
 		gui.get_node('player3/player_panel'),
@@ -79,7 +83,18 @@ function _M.set_players_panels(tracks_gui)
 		gui.get_node('player5/player_panel'),
 		gui.get_node('player6/player_panel'),
 	}
-	set_players_panels(tracks_gui)
+end
+
+function _M:set_players(players)
+	self.players = players
+	if self.logic_tracks then
+		set_players_panels(self)
+	end
+end
+
+function _M:set_tracks(tracks)
+	self.logic_tracks = tracks
+	set_players_panels(self)
 end
 
 function _M:check_pressed(x, y)

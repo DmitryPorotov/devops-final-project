@@ -14,12 +14,12 @@ function _M:init(player_panels)
 	self.panel = gui.get_node("tracks_full")
 end
 
-function _M:set_players(players)
-	self.players = players
-	if self.logic_tracks then
-		self.player_panels.set_players_panels(self)
-	end
-end
+--function _M:set_players(players)
+--	self.players = players
+--	if self.logic_tracks then
+--		self.player_panels.set_players_panels(self)
+--	end
+--end
 
 function _M:set_me(me)
 	self.me = me
@@ -99,7 +99,7 @@ function _M:set_tracks(tracks)
 		self.my_t_idx = set_closed_locations(self, "throne")
 		self.my_f_idx = set_closed_locations(self, "fiefdoms")
 		self.my_c_idx = set_closed_locations(self, "court")
-		self.player_panels.set_players_panels(self)
+		--self.player_panels.set_players_panels(self)
 	end
 end
 

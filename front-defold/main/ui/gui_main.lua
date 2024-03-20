@@ -11,6 +11,7 @@ local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
 local confirm = require "main/ui/dialogs/confirm"
+local partial_march_orders = require "main/ui/partial_march_orders"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -36,7 +37,8 @@ function _M:init()
 
 	register_callbacks()
 
-	tracks:init(player_panels)
+	player_panels:init()
+	tracks:init()
 	top_panel:init()
 	orders:init()
 	supply_panel:init()
@@ -47,6 +49,7 @@ function _M:init()
 	list_of_saves:init()
 	march_select_army:init()
 	confirm:init()
+	partial_march_orders:init()
 
 	self.panels = {
 		tracks,
@@ -58,6 +61,7 @@ function _M:init()
 		supply_panel,
 		march_select_army,
 		confirm,
+		partial_march_orders,
 	}
 end
 

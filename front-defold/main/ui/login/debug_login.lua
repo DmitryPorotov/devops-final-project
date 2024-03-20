@@ -1,6 +1,7 @@
 local ws = require "main/messaging/websocket"
 local tracks = require "main/ui/tracks"
 local game_data = require "main/ui/game_data"
+local player_panels = require "main/ui/player_panel"
 
 local _M = {
 	login_creds = {
@@ -38,7 +39,7 @@ function _M:on_input(action)
 				if gui.pick_node(v, action.x, action.y) then
 					local function cb(data)
 						game_data.user_data = data
-						tracks:set_players(game_data.players)
+						player_panels:set_players(game_data.players)
 						if k == "create_game" then
 							ws.send({
 								type = "chat",

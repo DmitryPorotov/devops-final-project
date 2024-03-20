@@ -1,26 +1,22 @@
 local utils = require 'main/utils'
 local event_dispatcher = require "main/ui/event_dispatcher"
+local army_logic = require "main/ui/army_logic"
 
 local _M = {
 	panel_name = 'march_select_army',
-	unit_names = {
-		'footmen',
-		'knights',
-		'siegeEngines',
-		'ships'
-	},
 	controls = {},
 	avail_counts = {},
 	to_send = {},
 	for_label = false,
-	is_sent = false,
+	army_selected = false,
+	target_selected = false,
 	from = nil,
 	to = nil,
 	who = nil,
 }
 
 local function reset_counts(self)
-	for _, v in ipairs(self.unit_names) do
+	for _, v in ipairs(army_logic.unit_names) do
 		self.avail_counts[v] = 0
 		self.to_send[v] = 0
 		gui.set_text(self.controls[v].label, '0/0')
@@ -29,16 +25,16 @@ end
 
 function _M:init()
 	self.panel = gui.get_node(self.panel_name .. '/panel')
-	for i, v in ipairs(self.unit_names) do
+	for i, v in ipairs(army_logic.unit_names) do
 		self.controls[v] = {}
 		self.controls[v].en = false
-		self.controls[v].p = gui.get_node(self.panel_name .. '/' .. self.unit_names[i] .. '/container')
+		self.controls[v].p = gui.get_node(self.panel_name .. '/' .. army_logic.unit_names[i] .. '/container')
 		self.controls[v].plus = gui.get_node(self.panel_name
-				.. '/' .. self.unit_names[i] .. '/plus_button')
+				.. '/' .. army_logic.unit_names[i] .. '/plus_button')
 		self.controls[v].minus = gui.get_node(self.panel_name
-				.. '/' .. self.unit_names[i] .. '/minus_button')
+				.. '/' .. army_logic.unit_names[i] .. '/minus_button')
 				self.controls[v].label = gui.get_node(self.panel_name 
-				.. '/' .. self.unit_names[i] .. '/count')
+				.. '/' .. army_logic.unit_names[i] .. '/count')
 	end
 	self.ok_button = gui.get_node(self.panel_name .. '/ok_button')
 	self.from = gui.get_node('march_select_army/from')
@@ -53,6 +49,7 @@ end
 
 function _M:set_to(territory)
 	gui.set_text(self.to, 'To ' .. territory)
+	self:set_target_selected()
 end
 
 function _M:set_who(to_send)
@@ -62,13 +59,19 @@ function _M:set_who(to_send)
 	gui.set_text(self.who, 'March ' .. to_send)
 end
 
+function _M:get_order_text()
+	return gui.get_text(self.from) .. ' ' .. gui.get_text(self.who) .. ' ' .. gui.get_text(self.to)
+end
+
 local function reset_panel(self)
 	for _, v in pairs(self.controls) do
 		v.en = false
 		gui.set_color(v.p, vmath.vector4(1,1,1,0.5))
 	end
+	gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
 	self.for_label = false
-	self.is_sent = false
+	self.army_selected = false
+	self.target_selected = false
 	reset_counts(self)
 end
 
@@ -95,11 +98,7 @@ function _M:close()
 end
 
 function _M:set_available_units(army)
-	for _, v in ipairs(army) do
-		if utils.index_of(self.unit_names, v.type) and not v.isDefeated then
-			self.avail_counts[v.type] = self.avail_counts[v.type] + 1
-		end
-	end
+	self.avail_counts = army
 	for k, v in pairs(self.avail_counts) do
 		if v > 0 then
 			local panel = self.controls[k]
@@ -111,7 +110,7 @@ function _M:set_available_units(army)
 end
 
 function _M:enc_to_send(type)
-	if self.is_sent then return end
+	if self.army_selected then return end
 	if self.to_send[type] < self.avail_counts[type] then
 		self.to_send[type] = self.to_send[type] + 1
 		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
@@ -119,11 +118,16 @@ function _M:enc_to_send(type)
 end
 
 function _M:dec_to_send(type)
-	if self.is_sent then return end
+	if self.army_selected then return end
 	if self.to_send[type] > 0 then
 		self.to_send[type] = self.to_send[type] - 1
 		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
 	end
+end
+
+function _M:set_target_selected()
+	self.target_selected = true
+	gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
 end
 
 function _M:get_to_send()
@@ -158,13 +162,18 @@ function _M:check_button_pressed(x, y)
 			::continue::
 		end
 		if gui.pick_node(self.ok_button, x, y) then
-			if not self.is_sent then
-				self.is_sent = true
+			if not self.army_selected then
+				self.army_selected = true
 				for _, v in pairs(self.controls) do
 					gui.set_color(v.p, vmath.vector4(1,1,1,0.5))
 					v.en = false
 				end
+				gui.set_color(self.ok_button, vmath.vector4(1,1,1,0.5))
 				event_dispatcher.trigger('march_select_army_ok_button_click', self:get_to_send())
+			elseif self.target_selected then
+				gui.set_color(self.ok_button, vmath.vector4(1,1,1,0.5))
+				self.target_selected = false
+				event_dispatcher.trigger('march_select_army_ok_button_click', false)
 			end
 			return true
 		end

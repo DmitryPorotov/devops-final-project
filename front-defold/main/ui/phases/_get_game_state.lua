@@ -6,6 +6,7 @@ local top_panel = require "main/ui/top_panel"
 local orders = require "main/ui/orders"
 local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
+local player_panels = require "main/ui/player_panel"
 
 local _M = {}
 
@@ -33,7 +34,8 @@ function _M:init(message)
 	supply_panel:update_usage(my_armies)
 	orders:calc_stars_available(message.gameState.tracks.court)
 	orders:show_orders_on_map(message.gameState.placedOrders, "addOrder" ~= message.gameState.subPhase.subPhase)
-	tracks:set_players(game_data.players)
+	player_panels:set_players(game_data.players)
+	player_panels:set_tracks(message.gameState.tracks)
 	tracks:set_tracks(message.gameState.tracks)
 	top_panel:set_game_state(message.gameState)
 	local phase_to_map_msg = {
