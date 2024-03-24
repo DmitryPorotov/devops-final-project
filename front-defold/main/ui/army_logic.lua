@@ -1,4 +1,5 @@
 local utils = require 'main/utils'
+local game_data = require 'main/ui/game_data'
 
 local _M = {
 	unit_names = {
@@ -24,15 +25,15 @@ function _M.build_unit_and_count_phrase(type, count)
 		end
 	elseif type == _M.unit_names[3] then
 		if count == 1 then
-			return '1 ship'
-		else
-			return count .. ' ships'
-		end
-	elseif type == _M.unit_names[4] then
-		if count == 1 then
 			return '1 siege engine'
 		else
 			return count .. ' siege engines'
+		end
+	elseif type == _M.unit_names[4] then
+		if count == 1 then
+			return '1 ship'
+		else
+			return count .. ' ships'
 		end
 	end
 end
@@ -47,6 +48,22 @@ function _M.to_gui_format(army)
 		end
 	end
 	return avail_counts
+end
+
+function _M.to_server_format(counts)
+	local army = {}
+	for k, v in pairs(counts) do
+		if not utils.index_of(_M.unit_names, k) then
+			error("Unknown military unit type" .. k)
+		end
+		for i = 1, v do
+			army[#army + 1] = {
+				house = game_data.me,
+				type = k
+			}
+		end
+	end
+	return army
 end
 
 return _M

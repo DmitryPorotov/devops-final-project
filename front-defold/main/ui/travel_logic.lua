@@ -22,7 +22,7 @@ local function traveling_on_land_and_by_ship(from_tile, candidates, visited_seas
 			and not utils.index_of(visited_seas, c.number)
 		then
 			visited_seas[#visited_seas + 1] = c.number
-			traveling_on_land_and_by_ship(c.number, candidates)
+			traveling_on_land_and_by_ship(c.number, candidates, visited_seas)
 		end
 	end
 	return candidates
@@ -39,7 +39,7 @@ end
 function _M:calculate_possible_destinations(from_tile)
 	local f_t = game_data.gameRules.board[from_tile + 1]
 	if f_t.number ~= from_tile then
-		error('Tile number ' .. from_tile .. 'does not correspond to ' .. f_t.number)
+		error('Tile number ' .. from_tile .. ' does not correspond to ' .. f_t.number)
 	end
 	local candidates = {}
 	if f_t.tileType == 'sea' then

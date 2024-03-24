@@ -45,6 +45,10 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("show_targets") then
 		map_:set_to_select_from_tile(message.from_tile_num)
 		labels:highlight(message.targets)
+		print('in map_go, targets:')
+		for i, v in ipairs(message.targets) do
+			print(v .. ', ')
+		end
 	elseif message_id == hash("set_phase") then
 		map_:set_phase(message.phase)
 		if message.house then

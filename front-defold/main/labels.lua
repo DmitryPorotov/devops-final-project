@@ -136,6 +136,8 @@ function _M:unhighlight()
 		go.cancel_animations(bg_id, 'tint')
 		go.set(bg_id, 'tint', utils.is_port(bg_id) and vmath.vector4(1,1,1,0) or vmath.vector4(1,1,1,1))
 	end
+	self.highlighted = {}
+	self.selected_target = nil
 end
 
 function _M:is_highlighted(tile_num)

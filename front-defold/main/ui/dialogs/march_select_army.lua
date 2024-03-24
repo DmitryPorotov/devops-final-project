@@ -98,6 +98,12 @@ function _M:close()
 end
 
 function _M:set_available_units(army)
+	self.army_selected = false
+	self.target_selected = false
+	self:set_who('')
+	gui.set_text(self.to, 'To ...')
+	gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
+	reset_counts(self)
 	self.avail_counts = army
 	for k, v in pairs(self.avail_counts) do
 		if v > 0 then
