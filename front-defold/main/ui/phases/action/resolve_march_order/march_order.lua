@@ -5,10 +5,11 @@ local utils = require "main/utils"
 
 ---@param source_tile_num number Source tile number
 ---@param init_army table Army in GUI format
-local function newMarchOrder(source_tile_num, init_army)
+local function new_march_order(source_tile_num, init_army)
 	local o = {
 		init_army = init_army,
 		to_send = {
+			actionType = 'resolveMarchOrder',
 			sourceTileNumber = tonumber(source_tile_num),
 			targets = {}
 		},
@@ -18,7 +19,6 @@ local function newMarchOrder(source_tile_num, init_army)
 
 	local function get_message_to_server()
 		return {
-			actionType = 'resolveMarchOrder',
 			player_action = o.to_send
 		}
 	end
@@ -61,11 +61,12 @@ local function newMarchOrder(source_tile_num, init_army)
 	end
 
 	---@param to_tile_num string Tile number as string
+	---@return boolean Partial orders are empty
 	local function delete_partial_order(to_tile_num)
 		o.to_send.targets[to_tile_num] = nil
 		o.sent[to_tile_num] = nil
 		o.possible_targets[#o.possible_targets + 1] = tonumber(to_tile_num)
-		return next(o.to_send.targets)
+		return not next(o.to_send.targets)
 	end
 
 	return {
@@ -78,4 +79,4 @@ local function newMarchOrder(source_tile_num, init_army)
 	}
 end
 
-return newMarchOrder
+return new_march_order

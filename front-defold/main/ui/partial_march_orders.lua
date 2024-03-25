@@ -42,6 +42,7 @@ function _M:set_enabled(enabled)
 		for _, v in ipairs(self.panels) do
 			gui.set_enabled(v.p, false)
 		end
+		self.enabled_panels = {}
 	end
 end
 

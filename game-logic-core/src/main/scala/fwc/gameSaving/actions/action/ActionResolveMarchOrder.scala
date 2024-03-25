@@ -57,6 +57,8 @@ case class ActionResolveMarchOrder(
           && !(armies.size == 1 && armies.head.unitType == MilitaryUnitPowerToken)
     )
 
+    println(enemyArmiesAtTargets)
+
     if enemyArmiesAtTargets.size > 1
     then throw new ActionException("Can not start more then one combat with one march order")
 
@@ -66,10 +68,10 @@ case class ActionResolveMarchOrder(
     if enemyArmiesAtTargets.isEmpty
     then
       val updatedArmies = moveMultipleArmies(gameStateOrderRemoved.armies, targets)
-      val hasNoArmyLeft = updatedArmies.contains(sourceTileNumber) && !(gameRules.board(sourceTileNumber).homeOf == houseType)
+      val hasArmyLeftAtSourceTile = updatedArmies.contains(sourceTileNumber) || (gameRules.board(sourceTileNumber).homeOf == houseType)
       gameStateOrderRemoved.copy(
         subPhase =
-          if hasAttackerPowerToken && hasNoArmyLeft
+          if hasAttackerPowerToken && !hasArmyLeftAtSourceTile
           then SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
           else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderMarch, houseType)
         ,
@@ -101,7 +103,8 @@ case class ActionResolveMarchOrder(
           tileNumberUnderAttack,
           enemyArmiesAtTargets.head._2.head.house,
           enemyArmiesAtTargets.head._2,
-          gameState.placedOrders.getOrderByTileNumber(tileNumberUnderAttack).orNull._2,
+          if gameState.placedOrders.getOrderByTileNumber(tileNumberUnderAttack).isEmpty
+          then null else gameState.placedOrders.getOrderByTileNumber(tileNumberUnderAttack).get._2,
           null,
           false,
           null,

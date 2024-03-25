@@ -15,6 +15,21 @@ local _M = {
 	who = nil,
 }
 
+function _M:to_send_changed()
+	local text = ''
+	local to_send = self:get_to_send()
+	if next(to_send) then
+		for k, v in pairs(to_send) do
+			text = text .. army_logic.build_unit_and_count_phrase(k ,v) .. ', '
+		end
+		text = text:sub(1, -3)
+		gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
+	elseif self.is_multi_march then
+		gui.set_color(self.ok_button, vmath.vector4(1,1,1,.5))
+	end
+	self:set_who(text)
+end
+
 local function reset_counts(self)
 	for _, v in ipairs(army_logic.unit_names) do
 		self.avail_counts[v] = 0
@@ -75,17 +90,20 @@ local function reset_panel(self)
 	reset_counts(self)
 end
 
-function _M:open(army, label)
-	if label ~= self.for_label then
+function _M:open_or_toggle(army, label)
+	if label and label ~= self.for_label then
 		reset_panel(self)
 		self.for_label = label
-	else
+	elseif label == self.for_label then
 		self:close()
-		return
+		return false
 	end
-	self:set_available_units(army)
-	gui.set_enabled(self.panel, true)
-	gui.animate(self.panel, "position.x", 1065, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+	self:set_available_units(army, not label)
+	if not gui.is_enabled(self.panel) then
+		gui.set_enabled(self.panel, true)
+		gui.animate(self.panel, "position.x", 1065, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+	end
+	return true
 end
 
 function _M:close()
@@ -97,12 +115,17 @@ function _M:close()
 	)
 end
 
-function _M:set_available_units(army)
+function _M:set_available_units(army, is_multi_march)
+	self.is_multi_march = is_multi_march
 	self.army_selected = false
 	self.target_selected = false
 	self:set_who('')
 	gui.set_text(self.to, 'To ...')
-	gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
+	if is_multi_march then
+		gui.set_color(self.ok_button, vmath.vector4(1,1,1,.5))
+	else
+		gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
+	end
 	reset_counts(self)
 	self.avail_counts = army
 	for k, v in pairs(self.avail_counts) do
@@ -119,7 +142,8 @@ function _M:enc_to_send(type)
 	if self.army_selected then return end
 	if self.to_send[type] < self.avail_counts[type] then
 		self.to_send[type] = self.to_send[type] + 1
-		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
+		self:to_send_changed()
+		--event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
 	end
 end
 
@@ -127,7 +151,8 @@ function _M:dec_to_send(type)
 	if self.army_selected then return end
 	if self.to_send[type] > 0 then
 		self.to_send[type] = self.to_send[type] - 1
-		event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
+		self:to_send_changed()
+		--event_dispatcher.trigger('march_select_army_to_send_changed', self:get_to_send())
 	end
 end
 
@@ -168,6 +193,9 @@ function _M:check_button_pressed(x, y)
 			::continue::
 		end
 		if gui.pick_node(self.ok_button, x, y) then
+			if self.is_multi_march and not next(self:get_to_send()) then
+				return
+			end
 			if not self.army_selected then
 				self.army_selected = true
 				for _, v in pairs(self.controls) do
