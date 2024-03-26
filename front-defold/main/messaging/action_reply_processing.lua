@@ -42,7 +42,13 @@ local switch = {
 		end
 	end,
 	resolveMarchOrder = function(reply)
-
+		for k, v in pairs(reply.player_action.targets) do
+			msg.post('/map', 'move_units', {
+				from_tile = reply.player_action.sourceTileNumber,
+				to_tile = k,
+				units = v
+			})
+		end
 	end,
 }
 
@@ -62,15 +68,15 @@ function _M:process(reply)
 	if not reply.player_action.actionType then
 		error("no action type in the reply")
 	elseif not switch[reply.player_action.actionType] then
-		error("unknown or unimplemented action type " .. reply.player_action.actionType)
+		error("Unknown or unimplemented action type " .. reply.player_action.actionType)
 	else
 		game_data.subPhase = reply.current_phase
-		switch[reply.player_action.actionType](reply)
 		msg.post("/map", "set_phase", {phase = reply.current_phase.subPhase})
 		--if reply.current_phase.houseType then
 		--	--todo move to phases?
 		--	self.player_panel__set_player_turn(reply.current_phase.houseType)
 		--end
+		switch[reply.player_action.actionType](reply)
 	end
 end
 

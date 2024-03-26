@@ -1,6 +1,6 @@
 package fwc.gameSaving.actions.action
 
-import fwc.JsonSerializable
+import fwc.{JsonSerializable, game}
 import enrichment.ExtSeq
 import fwc.game.{GameState, gameRules}
 import fwc.game.actionPhase.Combat
@@ -57,8 +57,6 @@ case class ActionResolveMarchOrder(
           && !(armies.size == 1 && armies.head.unitType == MilitaryUnitPowerToken)
     )
 
-    println(enemyArmiesAtTargets)
-
     if enemyArmiesAtTargets.size > 1
     then throw new ActionException("Can not start more then one combat with one march order")
 
@@ -71,7 +69,7 @@ case class ActionResolveMarchOrder(
       val hasArmyLeftAtSourceTile = updatedArmies.contains(sourceTileNumber) || (gameRules.board(sourceTileNumber).homeOf == houseType)
       gameStateOrderRemoved.copy(
         subPhase =
-          if hasAttackerPowerToken && !hasArmyLeftAtSourceTile
+          if hasAttackerPowerToken && !hasArmyLeftAtSourceTile && game.gameRules.board(sourceTileNumber).tileType == BoardTileLand
           then SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
           else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderMarch, houseType)
         ,
@@ -82,7 +80,8 @@ case class ActionResolveMarchOrder(
       val fightingArmy = targets(tileNumberUnderAttack)
       val notFightingArmies = targets - tileNumberUnderAttack
       val unitsLeftInAttackingTile = Armies.subtractArmies(gameStateOrderRemoved.armies(sourceTileNumber), fightingArmy)
-      val hasNoArmyLeft = unitsLeftInAttackingTile.isEmpty && !(gameRules.board(sourceTileNumber).homeOf == houseType)
+      val hasNoArmyLeft = unitsLeftInAttackingTile.isEmpty
+        && !(gameRules.board(sourceTileNumber).homeOf == houseType)
       val tmpArmies = moveMultipleArmies(gameStateOrderRemoved.armies, notFightingArmies) - tileNumberUnderAttack
 
       val gameStateNoPhase = gameStateOrderRemoved.copy(
@@ -112,7 +111,7 @@ case class ActionResolveMarchOrder(
         )
       )
 
-      if hasAttackerPowerToken && hasNoArmyLeft
+      if hasAttackerPowerToken && hasNoArmyLeft && game.gameRules.board(sourceTileNumber).tileType == BoardTileLand
       then gameStateNoPhase.copy(subPhase = SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber))
       else
         try {

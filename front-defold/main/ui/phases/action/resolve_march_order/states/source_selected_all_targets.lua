@@ -13,7 +13,7 @@ local function set_to_start_state(cb)
 end
 
 local function init()
-	hints:set_hints_enabled(true)
+	hints:set_enabled(true)
 	hints:set_next_button_enabled(true)
 	hints:set_goto_button_enabled(false)
 	hints:set_hint_text('Confirm order.')
@@ -22,12 +22,8 @@ end
 
 local function on_partial_march_remove(self, tile_num)
 	if self.march_order.delete_partial_order(tile_num) then
-		--self.state = no_source_selected
-		--self.state.init(self)
 		to_start_state()
 	else
-		--self.state = source_selected_partial_targets
-		--self.state.init(self, self.march_order.get_remaining_army())
 		to_prev_state()
 	end
 end

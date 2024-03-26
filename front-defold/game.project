@@ -30,5 +30,5 @@ default_texture_min_filter = nearest
 max_draw_calls = 2048
 
 [label]
-max_count = 128
+max_count = 256
 

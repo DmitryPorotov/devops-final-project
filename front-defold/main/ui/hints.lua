@@ -12,10 +12,10 @@ function _M:init()
 end
 
 function _M:clean_up()
-	self:set_hints_enabled(false)
+	self:set_enabled(false)
 end
 
-function _M:set_hints_enabled(is_enabled)
+function _M:set_enabled(is_enabled)
 	gui.set_enabled(self.hints, is_enabled)
 end
 
@@ -45,7 +45,7 @@ function _M:set_hint_text(text)
 end
 
 function _M:none_actionable_hint(text)
-	self:set_hints_enabled(true)
+	self:set_enabled(true)
 	self:set_goto_button_enabled(false)
 	self:set_next_button_enabled(false)
 	adjust_bar_size(self, text)

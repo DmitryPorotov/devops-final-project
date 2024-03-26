@@ -58,7 +58,7 @@ end
 
 function _M:on_hints_next_button_click()
 	event_dispatcher.trigger('ws_send', self.march_order.get_message_to_server())
-	hints:set_hints_enabled(false)
+	hints:set_enabled(false)
 	partial_march_orders:set_enabled(false)
 	march_select_army:close()
 end
@@ -122,7 +122,7 @@ function _M:set_up_hint()
 	hints:set_next_button_enabled(false)
 	hints:set_goto_count_text(self.count)
 	hints:set_hint_text('Select a March order to resolve.')
-	hints:set_hints_enabled(true)
+	hints:set_enabled(true)
 end
 
 function _M:clean_up()

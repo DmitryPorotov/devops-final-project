@@ -199,10 +199,42 @@ function _M:set_units(tile_num, units)
 			else
 				position = label_location + self.UNIT_OFFSETS[i]
 			end
-			factory.create("/map#millitary_unit_facrory", position, nil, {house = hash(v.house), type = hash(v.type)})
+			v.hash = factory.create("/map#millitary_unit_facrory", position, nil, {house = hash(v.house), type = hash(v.type)})
 		end
 	end
 	-- factory.create("/map#millitary_unit_facrory", vmath.vector3(350, 250, 0.125), nil, {house = hash("lion"), type = hash("siegeEngines")})
+end
+
+local function pluck_last_unit_of_type(units_at_tile, unit)
+	for i = 1 ,#units_at_tile do
+		if units_at_tile[i].house == unit.house and units_at_tile[i].type == unit.type then
+			return table.remove(units_at_tile, i)
+		end
+	end
+end
+
+function _M:move_units(from_tile, to_tile, units, through_tiles)
+	local to_tile_id = labels.LABEL_IDS[tonumber(to_tile)]
+	local to_tile_is_port = utils.is_port(to_tile_id)
+	for _, v in ipairs(units) do
+		local u = pluck_last_unit_of_type(self.armies[tostring(from_tile)], v)
+		local num_units_at_target = self.armies[to_tile] and #self.armies[to_tile] or 0
+		local to_pos = go.get_position(to_tile_id)
+				+ (
+				to_tile_is_port
+				and self.PORT_SHIPS_OFFSET[num_units_at_target + 1]
+				or (
+						self.UNIT_OFFSETS[num_units_at_target + 1]
+						+ go.get_position("/" .. to_tile .. "shield")
+					)
+				)
+		if not self.armies[to_tile] then
+			self.armies[to_tile] = {u}
+		else
+			self.armies[to_tile][#self.armies[to_tile]+1] = u
+		end
+		go.animate(u.hash, 'position', go.PLAYBACK_ONCE_FORWARD, to_pos, go.EASING_LINEAR, 1)
+	end
 end
 
 return _M

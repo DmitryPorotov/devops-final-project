@@ -14,13 +14,9 @@ end
 local function on_march_select_army_confirm_target(self)
 	common.on_march_select_army_confirm_target(self, function(army_left)
 		if next(army_left) then
-			--self.state = source_selected_partial_targets
-			--self.state.init(self, army_left)
 			to_next_state(army_left)
 		else
 			to_end_state()
-			--self.state = source_selected_all_targets
-			--self.state.init(self)
 		end
 	end)
 end

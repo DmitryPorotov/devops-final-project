@@ -51,7 +51,7 @@ end
 
 local function orders_confirmed(self)
 	msg.post("/map", "set_phase", {phase = "openOrders"})
-	hints:set_hints_enabled(false)
+	hints:set_enabled(false)
 end
 
 local function on_map_show_orders_menu(self, message)
@@ -110,7 +110,7 @@ function _M:init(armies, my_orders, phase)
 		end
 	end
 	update_hint_text(self)
-	hints:set_hints_enabled(true)
+	hints:set_enabled(true)
 	for _, v in ipairs(phase.houseTypes) do
 		if v == game_data.me then
 			orders_confirmed(self)

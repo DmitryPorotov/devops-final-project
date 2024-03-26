@@ -14,7 +14,7 @@ local function set_to_end_state(cb)
 end
 
 local function init(army_left)
-	hints:set_hints_enabled(true)
+	hints:set_enabled(true)
 	hints:set_next_button_enabled(true)
 	hints:set_goto_button_enabled(false)
 	march_select_army:open_or_toggle(army_left, nil)
@@ -25,12 +25,6 @@ end
 
 local function on_partial_march_remove(self, tile_num)
 	if self.march_order.delete_partial_order(tile_num) then
-		--msg.post('/map', 'hide_targets')
-		--msg.post('/map', 'set_order_source_tile', {})
-		--msg.post('/map', 'unselect_label')
-		--march_select_army:close()
-		--self.state = no_source_selected
-		--self.state.init(self)
 		to_start_state()
 	else
 		init(self.march_order.get_remaining_army())
@@ -42,24 +36,9 @@ local function on_march_select_army_confirm_target(self)
 		if next(army_left) then
 			init(army_left)
 		else
-			--self.state = source_selected_all_targets
-			--self.march_select_army:open_or_toggle(self.march_order.get_remaining_army(), message.label)state.init(self)
 			to_end_state()
 		end
 	end)
-	--createMarchOrderTarget(self)
-	--
-	--local army_left = self.march_order.get_remaining_army()
-	--if next(army_left) then
-	--	march_select_army:set_available_units(army_left, true)
-	--	msg.post('/map', 'hide_targets')
-	--	hints:set_hint_text('Send another army or confirm March Order')
-	--else
-	--	hints:set_hint_text('Confirm order.')
-	--	march_select_army:close()
-	--end
-	--hints:set_goto_button_enabled(false)
-	--hints:set_next_button_enabled(true)
 end
 
 local function on_march_select_army_confirm_army(self, to_send)

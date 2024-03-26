@@ -41,10 +41,19 @@ function on_message(self, message_id, message, sender)
 		msg.post("/camera", "animate_camera_to", {point = center})
 	elseif message_id == hash("set_order_source_tile") then
 		map_:set_to_select_from_tile(message.from_tile_num)
+	elseif message_id == hash('move_units') then
+		map_:move_units(
+			message.from_tile,
+			message.to_tile,
+			message.units,
+			message.through_tiles
+		)
 	elseif message_id == hash("hide_targets") then
 		labels:unhighlight()
 	elseif message_id == hash("show_targets") then
 		labels:highlight(message.targets)
+	elseif message_id == hash("clean_up") then
+
 	elseif message_id == hash("set_phase") then
 		map_:set_phase(message.phase)
 		if message.house then
