@@ -20,6 +20,11 @@ local function update_camera_limits(self)
 	0)
 end
 
+local function set_map_scale(self, zoom)
+	self.zoom = zoom or self.zoom
+	go.set_scale(vmath.vector3(self.zoom, self.zoom, 1), "/map")
+end
+
 function init(self)
 	msg.post("#camera", "acquire_camera_focus")
 	-- msg.post(".", "acquire_input_focus")
@@ -35,8 +40,7 @@ function init(self)
 	-- self.camera_up_limit = vmath.vector3(2000, 2000, 0)
 	-- self.camera_down_limit = vmath.vector3(0, -2000, 0)
 
-	self.zoom = 1.4
-	go.set_scale(self.zoom, "/map")
+	set_map_scale(self, 1.4)
 	update_camera_limits(self)
 	
 	self.mouse_pressed = false
@@ -140,7 +144,7 @@ end
 local function add_zoom(self)
 	if self.zoom < 2 then
 		self.zoom = self.zoom + .1
-		go.set_scale(self.zoom, "/map")
+		set_map_scale(self)
 		-- go.animate("/map", "scale", go.PLAYBACK_ONCE_FORWARD, self.zoom, go.EASING_LINEAR, .3)
 		local pos = go.get_position()
 		self.camera_drag_delta = vmath.vector3(-60,-(pos.y/10),0)
@@ -152,7 +156,7 @@ end
 local function reduce_zoom(self)
 	if self.zoom > 1 then
 		self.zoom = self.zoom - .1
-		go.set_scale(self.zoom, "/map")
+		set_map_scale(self)
 		-- go.animate("/map", "scale", go.PLAYBACK_ONCE_FORWARD, self.zoom, go.EASING_LINEAR, .3)
 		local pos = go.get_position()
 		self.camera_drag_delta = vmath.vector3(60,(pos.y/10),0)

@@ -58,9 +58,7 @@ end
 
 function _M:on_hints_next_button_click()
 	event_dispatcher.trigger('ws_send', self.march_order.get_message_to_server())
-	hints:set_enabled(false)
-	partial_march_orders:set_enabled(false)
-	march_select_army:close()
+	self:clean_up()
 end
 
 function _M:init()
@@ -129,10 +127,14 @@ function _M:clean_up()
 	event_dispatcher.off('map_resolve_order', self.on_map_resolve_order)
 	event_dispatcher.off('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click)
 	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click)
+	event_dispatcher.off('hints_next_button_click', self.on_hints_next_button_click)
 	event_dispatcher.off('map_target_selected', self.on_map_target_selected)
 	event_dispatcher.off('partial_march_remove', self.on_partial_march_remove)
+	msg.post('/map', 'unselect_label')
+	msg.post('/map', 'unhighlight')
 	hints:clean_up()
 	march_select_army:close()
+	partial_march_orders:set_enabled(false)
 	self.from_name = ''
 end
 

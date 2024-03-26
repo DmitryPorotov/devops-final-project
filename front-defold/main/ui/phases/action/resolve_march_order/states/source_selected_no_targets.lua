@@ -21,11 +21,15 @@ local function on_march_select_army_confirm_target(self)
 	end)
 end
 
+local function on_march_select_army_confirm_army(self)
+	print('in no targets')
+	common.on_march_select_army_confirm_army(self)
+end
 
 return {
 	init = utils.noop,
 	on_map_resolve_order = utils.noop,
-	on_march_select_army_confirm_army = common.on_march_select_army_confirm_army,
+	on_march_select_army_confirm_army = on_march_select_army_confirm_army,
 	on_march_select_army_confirm_target = on_march_select_army_confirm_target,
 	on_hints_goto_button_click = common.on_hints_goto_button_click,
 	on_map_target_selected = utils.noop,

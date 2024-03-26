@@ -17,6 +17,7 @@ local function init()
 	hints:set_next_button_enabled(true)
 	hints:set_goto_button_enabled(false)
 	hints:set_hint_text('Confirm order.')
+	msg.post('/map', 'hide_targets')
 	march_select_army:close()
 end
 

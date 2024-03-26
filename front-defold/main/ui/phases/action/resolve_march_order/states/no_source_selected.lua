@@ -4,12 +4,8 @@ local march_select_army = require "main/ui/dialogs/march_select_army"
 local army_logic = require "main/ui/army_logic"
 local utils = require "main/utils"
 local common = require "main/ui/phases/action/resolve_march_order/states/common"
-
-
---local function to_next_state(self)
---	self.state = source_selected_no_targets
---	self.state.init(self)
---end
+local confirm = require "main/ui/dialogs/confirm"
+local event_dispatcher = require "main/ui/event_dispatcher"
 
 local to_next_state
 
@@ -18,7 +14,6 @@ local function set_to_next_state(cb)
 end
 
 local function on_map_resolve_order(self, message)
-	print('no source selected, in resolve order')
 	local army = game_data.armies[tostring(message.tile_num)]
 	self.march_order = march_order_ctr(message.tile_num, army_logic.to_gui_format(army))
 	march_select_army:set_from(message.name)
@@ -35,9 +30,26 @@ local function on_hints_goto_button_click(self)
 	end
 end
 
-local function on_march_select_army_confirm_target(self, to_send)
-	common.on_march_select_army_confirm_army(self, to_send)
-	to_next_state()
+local function on_march_select_army_confirm_army(self, to_send)
+	print('in no source')
+	if not next(to_send) then
+		confirm:open('Do you want to remove the March order\nfrom "'
+				.. self.from_name .. '" and finish your turn?',
+				function(result)
+					if result then
+						event_dispatcher.trigger('hints_next_button_click')
+					else
+						msg.post('/map', 'unselect_label')
+						msg.post('/map', 'hide_targets')
+						msg.post('/map', 'set_order_source_tile', {})
+						march_select_army:close()
+					end
+				end)
+		return
+	else
+		common.on_march_select_army_confirm_army(self)
+		to_next_state()
+	end
 end
 
 local function init(self)
@@ -51,7 +63,7 @@ end
 return {
 	init = init,
 	on_map_resolve_order = on_map_resolve_order,
-	on_march_select_army_confirm_army = on_march_select_army_confirm_target,
+	on_march_select_army_confirm_army = on_march_select_army_confirm_army,
 	on_march_select_army_confirm_target = utils.noop,
 	on_hints_goto_button_click = on_hints_goto_button_click,
 	on_map_target_selected = utils.noop,

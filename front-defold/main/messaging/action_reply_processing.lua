@@ -42,13 +42,17 @@ local switch = {
 		end
 	end,
 	resolveMarchOrder = function(reply)
-		for k, v in pairs(reply.player_action.targets) do
+		if reply.player_action.targets and next(reply.player_action.targets) then
 			msg.post('/map', 'move_units', {
 				from_tile = reply.player_action.sourceTileNumber,
-				to_tile = k,
-				units = v
+				targets = reply.player_action.targets
 			})
 		end
+		if reply.player_action.houseType == game_data.me then
+			msg.post('/map', 'unselect_label')
+			msg.post('/map', 'set_order_source_tile', {})
+		end
+		msg.post('/map', 'remove_order', {tile_num = reply.player_action.sourceTileNumber})
 	end,
 }
 

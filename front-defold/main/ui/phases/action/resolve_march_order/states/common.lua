@@ -1,31 +1,8 @@
-local confirm = require "main/ui/dialogs/confirm"
-local event_dispatcher = require "main/ui/event_dispatcher"
 local hints = require "main/ui/hints"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local partial_march_orders = require "main/ui/partial_march_orders"
 
-local function on_march_select_army_confirm_army(self, to_send)
-	if not next(to_send) then
-		if next(self.march_order.get_message_to_server().player_action.targets) then
-			return
-		end
-		confirm:open('Do you want to remove the March order\nfrom "'
-				.. self.from_name .. '" and finish your turn?',
-				function(result)
-					if result then
-						msg.post('/map', 'unselect_label')
-						self:clean_up()
-						event_dispatcher.trigger('ws_send', self.march_order.get_message_to_server())
-					else
-						msg.post('/map', 'unselect_label')
-						msg.post('/map', 'hide_targets')
-						msg.post('/map', 'set_order_source_tile', {})
-						march_select_army:close()
-					end
-				end)
-		return
-	end
-
+local function on_march_select_army_confirm_army(self)
 	msg.post('/map', 'show_targets', {
 		targets = self.march_order.get_possible_targets(),
 	})

@@ -19,10 +19,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/label-neutral-shield.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/assets/round-small-shields/kraken-r.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }

@@ -22,6 +22,7 @@ local function clean_up()
 end
 
 function _M:init(message)
+	msg.post('/map', 'clean_up')
 	game_data.gameRules = message.gameRules
 	for k, v in pairs(message.gameState) do
 		game_data[k] = v
@@ -48,6 +49,7 @@ function _M:init(message)
 	for i, v in pairs(message.gameState.armies) do
 		set_tile_units(i, v)
 	end
+	msg.post('/map', 'reassign_labels')
 
 	pcall(function() gui.delete_node(gui.get_node("login/back_drop")) end)
 

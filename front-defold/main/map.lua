@@ -2,6 +2,8 @@ local labels = require "main/labels"
 local utils = require "main/utils"
 local game_data = require "main/ui/game_data"
 
+local MOVEMENT_SPEED = 200
+
 local _M = {
 	UNIT_OFFSETS = {
 		vmath.vector3(10, -30, 0.5),
@@ -193,6 +195,9 @@ function _M:set_units(tile_num, units)
 	end
 	for i, v in ipairs(units) do
 		if utils.is_unit_commandable(v.type) then
+			if i == #units and not is_port then
+				labels:set_tile_owner(tile_num, v.house)
+			end
 			local position
 			if is_port then
 				position = label_location + self.PORT_SHIPS_OFFSET[i]
@@ -200,9 +205,9 @@ function _M:set_units(tile_num, units)
 				position = label_location + self.UNIT_OFFSETS[i]
 			end
 			v.hash = factory.create("/map#millitary_unit_facrory", position, nil, {house = hash(v.house), type = hash(v.type)})
+			go.set_scale(go.get_scale(v.hash) / go.get_scale('/map').x, v.hash)
 		end
 	end
-	-- factory.create("/map#millitary_unit_facrory", vmath.vector3(350, 250, 0.125), nil, {house = hash("lion"), type = hash("siegeEngines")})
 end
 
 local function pluck_last_unit_of_type(units_at_tile, unit)
@@ -213,28 +218,130 @@ local function pluck_last_unit_of_type(units_at_tile, unit)
 	end
 end
 
-function _M:move_units(from_tile, to_tile, units, through_tiles)
+local function calc_animation_time(...)
+	local arg = {...}
+	local dist = 0
+	for i, v in ipairs(arg) do
+		if arg[i+1] then
+			dist = dist + math.abs(vmath.length(v - arg[i+1]))
+		end
+	end
+	return dist / MOVEMENT_SPEED
+end
+
+local function shift_leftover_army(self, source_tile_num)
+	local army = self.armies[tostring(source_tile_num)]
+	if army and army[1] then
+		for i, v in ipairs(army) do
+			if utils.is_unit_commandable(v.type) then
+				local current_pos = go.get_position(v.hash)
+				local id = labels.LABEL_IDS[source_tile_num]
+				local needed_pos = go.get_position(id)
+				if utils.is_port(id) then
+					needed_pos = needed_pos
+							+ self.PORT_SHIPS_OFFSET[i]
+				else
+					needed_pos = needed_pos
+							+ self.UNIT_OFFSETS[i]
+							+ go.get_position('/'..source_tile_num..'shield')
+				end
+				if math.abs(vmath.length(current_pos - needed_pos)) > 1 then
+					go.animate(
+							v.hash,
+							'position',
+							go.PLAYBACK_ONCE_FORWARD,
+							needed_pos,
+							go.EASING_LINEAR,
+							0.2
+					)
+				end
+			end
+		end
+	end
+end
+
+local function move_units_serially(self, from_tile, targets, through_tiles, call_idx)
+	if not next(targets) and call_idx == 1 then
+		self:reassign_labels()
+		shift_leftover_army(self, from_tile)
+		return
+	elseif not next(targets) then
+		return
+	end
+
+	local to_tile, units = next(targets)
 	local to_tile_id = labels.LABEL_IDS[tonumber(to_tile)]
 	local to_tile_is_port = utils.is_port(to_tile_id)
-	for _, v in ipairs(units) do
+	for i, v in ipairs(units) do
 		local u = pluck_last_unit_of_type(self.armies[tostring(from_tile)], v)
+		if #self.armies[tostring(from_tile)] == 0 then
+			self.armies[tostring(from_tile)] = nil
+		end
 		local num_units_at_target = self.armies[to_tile] and #self.armies[to_tile] or 0
 		local to_pos = go.get_position(to_tile_id)
 				+ (
 				to_tile_is_port
-				and self.PORT_SHIPS_OFFSET[num_units_at_target + 1]
-				or (
+						and self.PORT_SHIPS_OFFSET[num_units_at_target + 1]
+						or (
 						self.UNIT_OFFSETS[num_units_at_target + 1]
-						+ go.get_position("/" .. to_tile .. "shield")
-					)
+								+ go.get_position("/" .. to_tile .. "shield")
 				)
+		)
 		if not self.armies[to_tile] then
 			self.armies[to_tile] = {u}
 		else
 			self.armies[to_tile][#self.armies[to_tile]+1] = u
 		end
-		go.animate(u.hash, 'position', go.PLAYBACK_ONCE_FORWARD, to_pos, go.EASING_LINEAR, 1)
+		targets[to_tile] = nil
+		go.animate(
+				u.hash,
+				'position',
+				go.PLAYBACK_ONCE_FORWARD,
+				to_pos,
+				go.EASING_LINEAR,
+				calc_animation_time(go.get_position(u.hash), to_pos),
+				0,
+				function()
+					move_units_serially(self, from_tile, targets, through_tiles, i)
+				end
+		)
 	end
+end
+
+function _M:move_units(from_tile, targets, through_tiles)
+	move_units_serially(self, from_tile, targets, through_tiles)
+end
+
+
+function _M:reassign_labels()
+	for i = 0, 57 do
+		local army = self.armies[tostring(i)]
+		if army and #army > 0 then
+			labels:set_tile_owner(i, army[1].house)
+		elseif game_data.gameRules.board[i + 1].homeOf then
+			labels:set_tile_owner(i, game_data.gameRules.board[i + 1].homeOf)
+		else
+			labels:set_tile_owner(i, 'neutral')
+		end
+	end
+end
+
+function _M:clean_up()
+	for tile, armies in pairs(self.armies) do
+		for unit_idx, v in ipairs(armies) do
+			if v.hash
+			then go.delete(v.hash)
+			end
+		end
+	end
+	self.armies = {}
+	self.armies_by_house = {}
+	for _, v in pairs(self.orders) do
+		if v
+		then go.delete(v)
+		end
+	end
+	self.orders = {}
 end
 
 return _M

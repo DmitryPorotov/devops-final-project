@@ -41,8 +41,9 @@ local function on_march_select_army_confirm_target(self)
 	end)
 end
 
-local function on_march_select_army_confirm_army(self, to_send)
-	common.on_march_select_army_confirm_army(self, to_send)
+local function on_march_select_army_confirm_army(self)
+	print('in partial targets')
+	common.on_march_select_army_confirm_army(self)
 	army_selected = true
 end
 

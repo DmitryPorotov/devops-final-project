@@ -44,16 +44,19 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash('move_units') then
 		map_:move_units(
 			message.from_tile,
-			message.to_tile,
-			message.units,
+			message.targets,
 			message.through_tiles
 		)
 	elseif message_id == hash("hide_targets") then
 		labels:unhighlight()
 	elseif message_id == hash("show_targets") then
 		labels:highlight(message.targets)
+	elseif message_id == hash("reassign_labels") then
+		map_:reassign_labels()
 	elseif message_id == hash("clean_up") then
-
+		map_:clean_up()
+		labels:unhighlight()
+		labels:unselect()
 	elseif message_id == hash("set_phase") then
 		map_:set_phase(message.phase)
 		if message.house then
