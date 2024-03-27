@@ -31,7 +31,6 @@ local function on_hints_goto_button_click(self)
 end
 
 local function on_march_select_army_confirm_army(self, to_send)
-	print('in no source')
 	if not next(to_send) then
 		confirm:open('Do you want to remove the March order\nfrom "'
 				.. self.from_name .. '" and finish your turn?',
@@ -64,10 +63,10 @@ return {
 	init = init,
 	on_map_resolve_order = on_map_resolve_order,
 	on_march_select_army_confirm_army = on_march_select_army_confirm_army,
-	on_march_select_army_confirm_target = utils.noop,
+	on_march_select_army_confirm_target = utils.unimplemented,
 	on_hints_goto_button_click = on_hints_goto_button_click,
-	on_map_target_selected = utils.noop,
-	on_partial_march_remove = utils.noop,
+	on_map_target_selected = utils.unimplemented,
+	on_partial_march_remove = utils.unimplemented,
 
 	set_to_next_state = set_to_next_state
 }

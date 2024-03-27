@@ -46,6 +46,10 @@ end
 function _M.noop()
 end
 
+function _M.unimplemented()
+	error('This function is unimplemented.')
+end
+
 function _M.filter_my_armies(armies, me)
 	local my = {}
 	for i, v in pairs(armies) do

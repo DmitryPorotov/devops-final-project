@@ -1,4 +1,4 @@
-local utils = require "main/utils"
+local supply_logic = require 'main/ui/supply_logic'
 
 local _M = {
 	current_count = -1,
@@ -6,6 +6,8 @@ local _M = {
 	x = -105,
 	y = 112,
 	step = 50,
+	usage_rules = nil,
+	cur_max_armies = nil,
 }
 
 function _M:init()
@@ -68,28 +70,16 @@ function _M:set_available(count)
 	update_counter_color(self)
 end
 
-local function count_units(army)
-	local cnt = 0
-	for i, v in ipairs(army) do
-		cnt = cnt + (utils.is_unit_commandable(v.type) and 1 or 0)
-	end
-	return cnt
-end
-
 local function get_dot_color(flag)
 	return flag and vmath.vector4(1,1,0,1) or vmath.vector4(1,1,1,1)
 end
 
 function _M:update_usage(armies)
-	local counts = {}
-	for i, v in pairs(armies) do
-		counts[#counts + 1] = count_units(v)
-	end
-	table.sort(counts, function(a, b) return b < a end)
+	local counts = supply_logic.order_by_units_per_tile(armies)
 	for i = 1, #self.cur_max_armies do
 		for j = 1,  self.cur_max_armies[i] do
 			gui.set_color(gui.get_node("sup_dot" .. i .. j),
-					get_dot_color(j <= counts[i])
+					get_dot_color(j <= counts[i].c)
 			)
 		end
 	end

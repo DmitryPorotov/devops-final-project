@@ -1,3 +1,13 @@
+---@class MilitaryUnit
+---@field house "'wolf'" | "'moose'" | "'pufferfish'" | "'kraken'" | "'rose'" | "'lion'" | "'neutral'"
+---@field type "'footmen'" | "'knights'" | "'ships'" | "'siegeEngines'" | "'garrison'" | "'powerToken'"
+---@field isDefeated boolean
+---@field defPoints number
+
+
+---@module game_data
+---@field me string
+---@field armies table<string, MilitaryUnit[]>
 local _M = {
 	players = {
 		moose = { id = -1, name = "Waiting for player..." },
@@ -14,7 +24,8 @@ local _M = {
 	gameRules = nil,
 
 	tracks = nil,
-	armies = nil,
+	---@type table<string, MilitaryUnit[]>
+	armies = {},
 	subPhase = nil,
 	supplies = nil,
 	wildlingCounter = 0,

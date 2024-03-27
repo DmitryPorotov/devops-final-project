@@ -73,7 +73,6 @@ function _M:init()
 	no_source_selected.init(self)
 	no_source_selected.set_to_next_state(function()
 		self.state = source_selected_no_targets
-		self.state.init(self)
 	end)
 
 	local function to_end_state()

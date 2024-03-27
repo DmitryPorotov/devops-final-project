@@ -28,12 +28,12 @@ end
 
 return {
 	init = utils.noop,
-	on_map_resolve_order = utils.noop,
+	on_map_resolve_order = utils.unimplemented,
 	on_march_select_army_confirm_army = on_march_select_army_confirm_army,
 	on_march_select_army_confirm_target = on_march_select_army_confirm_target,
 	on_hints_goto_button_click = common.on_hints_goto_button_click,
-	on_map_target_selected = utils.noop,
-	on_partial_march_remove = utils.noop,
+	on_map_target_selected = utils.unimplemented,
+	on_partial_march_remove = utils.unimplemented,
 
 	set_to_next_state = set_to_next_state,
 	set_to_end_state = set_to_end_state,

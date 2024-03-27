@@ -68,11 +68,15 @@ switch.ravenChangeOrder = function(reply)
 	end
 end
 
+setmetatable(switch, {
+	__index = function(_, k)
+		error("Unknown or unimplemented action type '" .. k .. "'")
+	end
+})
+
 function _M:process(reply)
 	if not reply.player_action.actionType then
-		error("no action type in the reply")
-	elseif not switch[reply.player_action.actionType] then
-		error("Unknown or unimplemented action type " .. reply.player_action.actionType)
+		error("No action type in the reply")
 	else
 		game_data.subPhase = reply.current_phase
 		msg.post("/map", "set_phase", {phase = reply.current_phase.subPhase})
