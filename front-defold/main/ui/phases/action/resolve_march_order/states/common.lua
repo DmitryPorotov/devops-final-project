@@ -2,14 +2,14 @@ local hints = require "main/ui/hints"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local partial_march_orders = require "main/ui/partial_march_orders"
 
-local function on_march_select_army_confirm_army(self)
+local function on_march_select_army_confirm_army(self, to_send)
 	msg.post('/map', 'show_targets', {
-		targets = self.march_order.get_possible_targets(),
+		targets = self.march_order.get_possible_targets(to_send),
 	})
 	msg.post('/map', 'set_order_source_tile', {
 		from_tile_num = self.march_order.get_source_tile_num(),
 	})
-	self.count = #self.march_order.get_possible_targets()
+	self.count = #self.march_order.get_possible_targets(to_send)
 	self.current_order = 1
 	hints:set_goto_count_text(self.count)
 	hints:set_goto_button_enabled(true)

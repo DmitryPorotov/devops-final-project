@@ -1,5 +1,5 @@
 local game_data = require "main/ui/game_data"
-local march_order_ctr = require "main/ui/phases/action/resolve_march_order/march_order"
+local new_march_order = require "main/ui/phases/action/resolve_march_order/march_order"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local army_logic = require "main/ui/army_logic"
 local utils = require "main/utils"
@@ -14,8 +14,10 @@ local function set_to_next_state(cb)
 end
 
 local function on_map_resolve_order(self, message)
-	local army = game_data.armies[tostring(message.tile_num)]
-	self.march_order = march_order_ctr(message.tile_num, army_logic.to_gui_format(army))
+	self.march_order = new_march_order(
+		tostring(message.tile_num),
+		army_logic.house_armies_to_gui_format(game_data.me, game_data.armies)
+	)
 	march_select_army:set_from(message.name)
 	march_select_army:open_or_toggle(self.march_order.get_remaining_army(), message.label)
 	self.from_name = message.name
@@ -46,7 +48,7 @@ local function on_march_select_army_confirm_army(self, to_send)
 				end)
 		return
 	else
-		common.on_march_select_army_confirm_army(self)
+		common.on_march_select_army_confirm_army(self, to_send)
 		to_next_state()
 	end
 end

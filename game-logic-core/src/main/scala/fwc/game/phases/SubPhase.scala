@@ -32,7 +32,8 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfSingleHouse(json)
         SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard(f._1, f._2)
       case "chooseHouseCard" =>
-        SubPhaseChooseHouseCard(getFieldsOfNoHouse(json))
+        val f = getFieldsOfMultipleHouses(json)
+        SubPhaseChooseHouseCard(f._1, f._2)
       case "chooseHouseCardAfterLion5" =>
         val bannedCardCode = json("bannedCardCode").num.toInt
         val (houseType: HouseType, mainPhase: MainPhase) = getFieldsOfSingleHouse(json)

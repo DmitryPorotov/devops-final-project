@@ -21,9 +21,9 @@ local function on_march_select_army_confirm_target(self)
 	end)
 end
 
-local function on_march_select_army_confirm_army(self)
+local function on_march_select_army_confirm_army(self, to_send)
 	print('in no targets')
-	common.on_march_select_army_confirm_army(self)
+	common.on_march_select_army_confirm_army(self, to_send)
 end
 
 return {

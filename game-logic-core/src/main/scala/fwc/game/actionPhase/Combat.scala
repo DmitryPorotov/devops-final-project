@@ -37,23 +37,23 @@ case class Combat(
     "attackerHouse" -> attackerHouse.toString,
     "attackerArmy" -> ujson.Value(attackerArmy.map(_.toJson)),
     "attackerOrder" -> attackerOrder.toJson,
-    "attackerCard" -> attackerCard.code,
+    "attackerCard" -> (if attackerCard != null then attackerCard.code else ujson.Null),
     "attackerCardResolved" -> attackerCardResolved,
-    "attackerTidesOfBattle" -> attackerTidesOfBattle.code,
+    "attackerTidesOfBattle" -> (if attackerTidesOfBattle != null then attackerTidesOfBattle.code else ujson.Null),
     "attackerSupport" -> ujson.Arr.from(attackerSupport),
     "defenderTileNum" -> defenderTileNum,
     "defenderHouse" -> defenderHouse.toString,
     "defenderArmy" -> ujson.Value(defenderArmy.map(_.toJson)),
     "defenderOrder" -> (if defenderOrder != null then defenderOrder.toJson else ujson.Null),
-    "defenderCard" -> defenderCard.code,
+    "defenderCard" -> (if defenderCard != null then defenderCard.code else ujson.Null),
     "defenderCardResolved" -> defenderCardResolved,
-    "defenderTidesOfBattle" -> defenderTidesOfBattle.code,
+    "defenderTidesOfBattle" -> (if defenderTidesOfBattle != null then defenderTidesOfBattle.code else ujson.Null),
     "defenderSupport" -> ujson.Arr.from(defenderSupport),
-    "combatOutcome" -> combatOutcome.toJson
+    "combatOutcome" -> (if combatOutcome != null then combatOutcome.toJson else ujson.Null)
   )
 
   def addHouseCard(houseCard: HouseCard): Combat = {
-    def throw_ = throw new ActionException(s"House ${houseCard.house} has chosen a card already")
+    def throw_ : Nothing = throw new ActionException(s"House ${houseCard.house} has chosen a card already")
     
     if attackerHouse == houseCard.house
     then

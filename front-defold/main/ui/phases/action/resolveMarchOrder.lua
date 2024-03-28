@@ -24,6 +24,7 @@ local _M = {
 	from_name = '',
 	last_selected_target_id = nil,
 	march_order = nil,
+
 }
 
 function _M:on_map_resolve_order(message)
@@ -62,6 +63,11 @@ function _M:on_hints_next_button_click()
 end
 
 function _M:init()
+	player_panels:set_player_turn(game_data.subPhase.houseType)
+	if game_data.subPhase.houseType ~= game_data.me then
+		return
+	end
+
 	event_dispatcher.on('map_resolve_order', self.on_map_resolve_order, self)
 	event_dispatcher.on('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click, self)
 	event_dispatcher.on("map_target_selected", self.on_map_target_selected, self)
@@ -97,14 +103,9 @@ function _M:init()
 		self.state = source_selected_partial_targets
 		self.state.init(self.march_order.get_remaining_army())
 	end)
-
-	player_panels:set_player_turn(game_data.subPhase.houseType)
 end
 
 function _M:set_up_hint()
-	if game_data.subPhase.houseType ~= game_data.me then
-		return
-	end
 	self.marches = {}
 	self.marches_arr = {}
 	self.count = 0

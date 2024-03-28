@@ -48,6 +48,7 @@ case class ActionResolveSupportOrder(
         gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
           .filter((tn, _) => remainingSupportOrdersTiles.contains(tn)),
         gameState.tracks(TrackThrone),
+        gameState.combat.attackerHouse,
         gameState.combat.defenderHouse
       )
 

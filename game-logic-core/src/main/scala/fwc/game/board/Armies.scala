@@ -69,7 +69,7 @@ case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()
     )
 
     val toConsolidate = Supplies.findArmiesToConsolidate(newArmies, houseSupplies, houseType)
-    if toConsolidate(houseType).nonEmpty
+    if toConsolidate.nonEmpty && toConsolidate(houseType).nonEmpty
     then throw new FWCException(s"Not enough supplies to move army to ${gameRules.board(targetTileNum).name} ($targetTileNum)")
     newArmies
   }

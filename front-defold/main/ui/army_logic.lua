@@ -10,6 +10,17 @@ local _M = {
 	},
 }
 
+---@param tile_num string
+function _M.has_tile_enemy_army(tile_num)
+	local army = game_data.armies[tile_num]
+	if army and army[1] and army[1].house ~= game_data.me
+		and not (army[1].type == 'powerToken' and #army == 1)
+	then
+		return true
+	end
+	return false
+end
+
 function _M.build_unit_and_count_phrase(type, count)
 	if type == _M.unit_names[1] then
 		if count == 1 then
@@ -39,7 +50,7 @@ function _M.build_unit_and_count_phrase(type, count)
 end
 
 ---@param army table Server format army
----@return table GUI format army
+---@return GUIArmyToSend GUI format army
 function _M.to_gui_format(army)
 	local avail_counts = {}
 	for _, v in ipairs(army) do
@@ -50,13 +61,23 @@ function _M.to_gui_format(army)
 	return avail_counts
 end
 
+function _M.house_armies_to_gui_format(house, armies)
+	local result = {}
+	for tile_num, army in pairs(armies) do
+		if army and army[1].house == house then
+			result[tile_num] = _M.to_gui_format(army)
+		end
+	end
+	return result
+end
+
 function _M.to_server_format(counts)
 	local army = {}
 	for k, v in pairs(counts) do
 		if not utils.index_of(_M.unit_names, k) then
 			error("Unknown military unit type" .. k)
 		end
-		for i = 1, v do
+		for _ = 1, v do
 			army[#army + 1] = {
 				house = game_data.me,
 				type = k

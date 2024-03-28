@@ -1,4 +1,5 @@
 local game_data = require "main/ui/game_data"
+local supply_logic = require "main/ui/supply_logic"
 local utils = require "main/utils"
 
 local tracks = require "main/ui/tracks"
@@ -27,6 +28,7 @@ function _M:init(message)
 	for k, v in pairs(message.gameState) do
 		game_data[k] = v
 	end
+	supply_logic.set_usage_rules(game_data.gameRules.supplyUsage)
 
 	supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
 	supply_panel:set_available(message.gameState.supplies[game_data.me])

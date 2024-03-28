@@ -2,6 +2,12 @@ local utils = require 'main/utils'
 local event_dispatcher = require "main/ui/event_dispatcher"
 local army_logic = require "main/ui/army_logic"
 
+---@class GUIArmyToSend
+---@field footmen number
+---@field knights number
+---@field siegeEngines number
+---@field ships number
+
 local _M = {
 	panel_name = 'march_select_army',
 	controls = {},
@@ -161,6 +167,7 @@ function _M:set_target_selected()
 	gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
 end
 
+---@return GUIArmyToSend
 function _M:get_to_send()
 	local to_send = {}
 	for k, v in pairs(self.to_send) do

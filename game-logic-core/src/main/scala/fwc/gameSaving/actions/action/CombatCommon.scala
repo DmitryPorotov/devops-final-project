@@ -15,7 +15,8 @@ object CombatCommon {
   def getNewSubPhaseForMarchSupport(
                                      supportOrdersForTile: Map[TileNumber, (HouseType, Order)],
                                      sortedHouses: Seq[HouseType],
-                                     defendingHouse: HouseType
+                                     attackingHouse: HouseType,
+                                     defendingHouse: HouseType,
                                    ): SubPhase = {
     val supportOrders = supportOrdersForTile
       .foldLeft[(Set[Int], Set[HouseType])]((Set(), Set()))(
@@ -31,7 +32,7 @@ object CombatCommon {
       supportOrders._1.toSeq
     )
     else if defendingHouse != HouseNeutral
-    then SubPhaseChooseHouseCard()
+    then SubPhaseChooseHouseCard(Seq(attackingHouse, defendingHouse))
     else throw new AttackNeutralException
   }
 

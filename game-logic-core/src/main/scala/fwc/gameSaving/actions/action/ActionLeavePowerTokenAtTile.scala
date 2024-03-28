@@ -41,6 +41,7 @@ case class ActionLeavePowerTokenAtTile(
         else CombatCommon.getNewSubPhaseForMarchSupport(
           updatedGameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum),
           gameState.tracks(TrackThrone),
+          gameState.combat.attackerHouse,
           gameState.combat.defenderHouse
         )
       updatedGameState.copy(subPhase = updatedSubPhase)

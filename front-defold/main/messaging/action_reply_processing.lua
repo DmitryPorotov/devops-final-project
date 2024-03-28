@@ -53,6 +53,14 @@ local switch = {
 			msg.post('/map', 'set_order_source_tile', {})
 		end
 		msg.post('/map', 'remove_order', {tile_num = reply.player_action.sourceTileNumber})
+		resolveMarchOrder:clean_up()
+		if reply.current_phase.subPhase == 'resolveMarchOrder' then
+			resolveMarchOrder:init()
+		elseif reply.current_phase.subPhase == 'resolveSupportOrder'then
+			-- todo
+		elseif reply.current_phase.subPhase == 'chooseHouseCard'then
+			-- todo
+		end
 	end,
 }
 

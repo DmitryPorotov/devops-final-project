@@ -1,5 +1,3 @@
-local utils = require 'main/utils'
-
 local supply_logic = {
 	usage_rules = nil,
 	avail_supplies = 0,
@@ -20,12 +18,12 @@ local function get_max_armies()
 	return supply_logic.usage_rules[supply_logic.avail_supplies + 1]
 end
 
----@param army MilitaryUnit[]
+---@param army GUIArmyToSend
 ---@return number
 local function count_units(army)
 	local cnt = 0
-	for _, v in ipairs(army) do
-		cnt = cnt + (utils.is_unit_commandable(v.type) and 1 or 0)
+	for _, v in pairs(army) do
+		cnt = cnt + v
 	end
 	return cnt
 end
@@ -37,7 +35,6 @@ local function comparator(a, b) return b.c < a.c end
 ---@field tn string Tile number
 
 ---@return table<number, TileNumberAndCount> | TileNumberAndCount[]
----@return table<string, TileNumberAndCount>
 local function order_by_units_per_tile(army)
 	local r1 = {}
 	for k, v in pairs(army) do
@@ -54,23 +51,34 @@ end
 ---@param from_tile string
 ---@param to_tile string
 ---@param sorted_armies TileNumberAndCount[]
-local function simulate_move(from_tile, to_tile, how_many ,sorted_armies)
+local function simulate_move(from_tile, to_tile, how_many, sorted_armies)
+	local tiles_changed = 0
 	for _, v in ipairs(sorted_armies) do
 		if v.tn == from_tile then
 			v.c = v.c - how_many
+			tiles_changed = tiles_changed + 1
+			if tiles_changed == 2 then break end
 		elseif v.tn == to_tile then
 			v.c = v.c + how_many
+			tiles_changed = tiles_changed + 1
+			if tiles_changed == 2 then break end
 		end
+	end
+	if tiles_changed == 1 then
+		sorted_armies[#sorted_armies + 1] = {
+			c = how_many,
+			tn = to_tile,
+		}
 	end
 	table.sort(sorted_armies, comparator)
 	return sorted_armies
-end
+	end
 
 ---@param sorted_armies TileNumberAndCount[]
 local function check_supply_is_ok(sorted_armies)
 	local limits = get_max_armies()
 	for i, v in ipairs(sorted_armies) do
-		if (not limits[i] and v.c > 1) or v.c > (limits[i] or 0) then
+		if (not limits[i] and v.c > 1) or v.c > (limits[i] or 1) then
 			return false
 		elseif v.c == 1 then
 			return true
@@ -82,7 +90,7 @@ end
 ---@param from_tile string Source tile number
 ---@param how_many number How many units to move
 ---@param targets number[] Array of reachable tiles
----@param my_armies table<string, MilitaryUnit[]> A map of tile numbers to armies
+---@param my_armies table<string, GUIArmyToSend> A map of tile numbers to armies
 local function filter_target_candidates(from_tile, how_many , targets, my_armies)
 	local sorted_units_per_tile = order_by_units_per_tile(my_armies)
 	if sorted_units_per_tile[1].c + how_many <= get_max_armies()[1] then
@@ -91,13 +99,13 @@ local function filter_target_candidates(from_tile, how_many , targets, my_armies
 	local result = {}
 	local idx = 1
 	repeat
-		local resorted = simulate_move(from_tile, tostring(targets[idx]), sorted_units_per_tile)
+		local resorted = simulate_move(from_tile, tostring(targets[idx]), how_many, sorted_units_per_tile)
 		if check_supply_is_ok(resorted) then
 			result[#result + 1] = targets[idx]
 		end
 		idx = idx + 1
 		sorted_units_per_tile = order_by_units_per_tile(my_armies)
-	until idx <= #targets
+	until idx > #targets
 
 	return result
 end
@@ -107,4 +115,5 @@ return {
 	set_available_supplies = set_available_supplies,
 	get_max_armies = get_max_armies,
 	order_by_units_per_tile = order_by_units_per_tile,
+	filter_target_candidates = filter_target_candidates,
 }

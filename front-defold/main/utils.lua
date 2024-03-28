@@ -1,3 +1,8 @@
+--note: a mock for tests to work
+if not hash then
+	function hash(v) return v end
+end
+
 local _M = {
 	HOUSES = {
 		[hash("lion")] = "lion",

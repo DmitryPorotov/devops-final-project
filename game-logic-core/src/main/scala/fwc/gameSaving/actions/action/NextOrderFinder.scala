@@ -23,7 +23,7 @@ object NextOrderFinder {
     NextOrderFinder.buildSubPhase(next._1, next._2)
   }
 
-  def next(
+  private def next(
             tracks: Tracks,
             placedOrders: PlacedOrders,
             orderTypeToSearch: OrderType,
@@ -32,15 +32,19 @@ object NextOrderFinder {
     
     @tailrec
     def reorderThroneTrack(originalTrack: Seq[HouseType], newTrack: Seq[HouseType] = Seq()): Seq[HouseType] =
+      val updatedNewTrack = newTrack :+ originalTrack.head
       if originalTrack.head == lastHouseWhoResolvedOrder
-      then newTrack :++ (originalTrack.tail :+ originalTrack.head)
-      else reorderThroneTrack(originalTrack.tail, newTrack :+ originalTrack.head)
+      then originalTrack.tail :++ updatedNewTrack
+      else reorderThroneTrack(originalTrack.tail, updatedNewTrack)
 
     
     val tempThroneTrack = 
       if lastHouseWhoResolvedOrder == null
       then tracks(TrackThrone)
       else reorderThroneTrack(tracks(TrackThrone))
+
+    println("tmp throne track")
+    println(tempThroneTrack)
 
     val flatOrders = (
       for (
@@ -94,7 +98,7 @@ object NextOrderFinder {
     else None
   }
 
-  def buildSubPhase(houseType: HouseType, orderType: OrderType): SubPhase = {
+  private def buildSubPhase(houseType: HouseType, orderType: OrderType): SubPhase = {
     orderType match
       case OrderRaid => SubPhaseResolveRaidOrder(houseType)
       case OrderMarch => SubPhaseResolveMarchOrder(houseType)

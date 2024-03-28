@@ -118,6 +118,7 @@ case class ActionResolveMarchOrder(
           val newPhase = CombatCommon.getNewSubPhaseForMarchSupport(
             gameStateOrderRemoved.placedOrders.getSupportOrdersForTile(tileNumberUnderAttack),
             gameStateOrderRemoved.tracks(TrackThrone),
+            houseType,
             enemyArmiesAtTargets.head._2.head.house
           )
           gameStateNoPhase.copy(
