@@ -12,7 +12,7 @@ class Websocket {
     static protocol = 'ws:';
     static baseUrl = Api.baseUrl;
     static playerId;
-
+    static worker;
     /**
      * @type Map
      */
@@ -36,34 +36,53 @@ class Websocket {
 
     static makeSocket() {
         return new Promise((resolve => {
-
-            this.socket = new WebSocket(
-                this.protocol + this.baseUrl
-                + '?token=' + JSON.parse(window.sessionStorage.getItem('_user')).token
-            );
-
-            this.socket.addEventListener('message', (message) => {
-                console.log(message.data);
+            Websocket.worker = new SharedWorker('/worker/worker.js');
+            Websocket.onerror = (e) => console.log(e);
+            Websocket.worker.onmessageerror = (e) => {
+                console.log(e)
+            };
+            Websocket.worker.port.postMessage({
+                action: 'init',
+                args: [
+                    Websocket.playerId,
+                    JSON.parse(window.sessionStorage.getItem('_user')).token
+                ]
             });
-
-            const errorCb = (message) => {
-                console.log(message);
-                setTimeout(() => {
-                    Websocket.makeSocket().then(() => {
-                        Websocket.eventHandlers.forEach((cb) => {
-                            Websocket.socket.addEventListener('message', cb);
-                        })
-                    });
-                }, 1000);
-            };
-
-            this.socket.addEventListener('error', errorCb);
-
-            this.socket.addEventListener('close', errorCb);
-
-            this.socket.onopen = () => {
-                resolve()
-            };
+            const opened = (message) => {
+               if (message.data === 'opened') {
+                   Websocket.worker.port.removeEventListener('message', opened);
+                   resolve();
+               }
+            } ;
+            Websocket.worker.port.addEventListener('message', opened);
+            Websocket.worker.port.start();
+            // this.socket = new WebSocket(
+            //     this.protocol + this.baseUrl
+            //     + '?token=' + JSON.parse(window.sessionStorage.getItem('_user')).token
+            // );
+            //
+            // this.socket.addEventListener('message', (message) => {
+            //     console.log(message.data);
+            // });
+            //
+            // const errorCb = (message) => {
+            //     console.log(message);
+            //     setTimeout(() => {
+            //         Websocket.makeSocket().then(() => {
+            //             Websocket.eventHandlers.forEach((cb) => {
+            //                 Websocket.socket.addEventListener('message', cb);
+            //             })
+            //         });
+            //     }, 1000);
+            // };
+            //
+            // this.socket.addEventListener('error', errorCb);
+            //
+            // this.socket.addEventListener('close', errorCb);
+            //
+            // this.socket.onopen = () => {
+            //     resolve()
+            // };
         }));
     }
 
@@ -76,43 +95,53 @@ class Websocket {
      * @param {function(Message)} callBack
      */
     static onMessage(lobbyId, callBack) {
-        const cbWrapper = (message) => {
+        const cbWrapper = (msg) => {
             /**
-             * @type {Message}
+             * @type {Message} msg
              */
-            const msg = JSON.parse(message.data);
+            // const msg = JSON.parse(message.data);
             if (msg.lobbyId === lobbyId) {
                 callBack(msg);
             }
         };
-        this.eventHandlers.set(callBack, cbWrapper);
-        Websocket.socket.addEventListener('message', cbWrapper);
+        Websocket.eventHandlers.set(callBack, cbWrapper);
+        Websocket.worker.port.addEventListener('message', cbWrapper);
     }
 
     static offMessage(callBack) {
-        const wrapper = this.eventHandlers.get(callBack);
+        const wrapper = Websocket.eventHandlers.get(callBack);
         if (!wrapper) return;
-        this.eventHandlers.delete(callBack);
-        Websocket.socket.removeEventListener('message', wrapper);
+        Websocket.eventHandlers.delete(callBack);
+        Websocket.worker.port.removeEventListener('message', wrapper);
     }
 
     static send(message) {
-        this.socket.send(JSON.stringify(message));
+        this.worker.port.postMessage({
+            action: 'send',
+            args: [message]
+        });
     }
 
     static subscribe(lobbyId) {
-        Websocket.socket.send(
-            JSON.stringify({
-                userId: this.playerId,
-                type: 'chat',
-                lobbyId,
-                body: {
-                    to: [],
-                    type: 'join',
-                    body: ''
-                }
-            })
-        )
+        Websocket.worker.port.postMessage({
+            action: 'setLobbyId',
+            args: [lobbyId]
+        });
+        Websocket.worker.port.postMessage({
+            action: 'subscribe',
+        })
+        // Websocket.socket.send(
+        //     JSON.stringify({
+        //         userId: this.playerId,
+        //         type: 'chat',
+        //         lobbyId,
+        //         body: {
+        //             to: [],
+        //             type: 'join',
+        //             body: ''
+        //         }
+        //     })
+        // )
     }
 }
 

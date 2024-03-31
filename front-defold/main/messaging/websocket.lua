@@ -2,7 +2,6 @@ local game_data = require "main/ui/game_data"
 local event_dispatcher = require "main/ui/event_dispatcher"
 local mes_proc = require "main/messaging/message_processing"
 local ws_to_use = require "main/messaging/websocket_native"
--- local mes_poc = require "main/messaging/message_processing"
 
 local _M = {}
 
