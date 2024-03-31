@@ -23,6 +23,8 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 	if message_id == hash("set_units") then
 		map_:set_units(message.tile_num, message.units)
+	elseif message_id == hash("set_attacker_units") then
+		map_:set_attacker_units(message.tile_num, message.units)
 	elseif message_id == hash("select_label") then
 		map_:select_label(message.id)
 	elseif message_id == hash("unselect_label") then
@@ -46,6 +48,12 @@ function on_message(self, message_id, message, sender)
 			message.from_tile,
 			message.targets,
 			message.through_tiles
+		)
+	elseif message_id == hash('move_units_for_attack') then
+		map_:move_units_for_attack(
+				message.from_tile,
+				message.targets,
+				message.through_tiles
 		)
 	elseif message_id == hash("hide_targets") then
 		labels:unhighlight()

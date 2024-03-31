@@ -21,6 +21,19 @@ function _M.has_tile_enemy_army(tile_num)
 	return false
 end
 
+function _M.separate_targets_with_no_enemies(targets)
+	local enemy = {}
+	local no_enemies = {}
+	for tile_num, army in pairs(targets) do
+		if _M.has_tile_enemy_army(tile_num) then
+			enemy[tile_num] = army
+		else
+			no_enemies[tile_num] = army
+		end
+	end
+	return no_enemies, enemy
+end
+
 function _M.build_unit_and_count_phrase(type, count)
 	if type == _M.unit_names[1] then
 		if count == 1 then

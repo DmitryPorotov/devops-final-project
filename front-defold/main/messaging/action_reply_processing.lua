@@ -7,6 +7,7 @@ local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 local resolveMarchOrder = require "main/ui/phases/action/resolveMarchOrder"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
+local army_logic = require "main/ui/army_logic"
 
 local _M = {
 	player_panel__set_player_turn = nil,
@@ -43,10 +44,19 @@ local switch = {
 	end,
 	resolveMarchOrder = function(reply)
 		if reply.player_action.targets and next(reply.player_action.targets) then
-			msg.post('/map', 'move_units', {
-				from_tile = reply.player_action.sourceTileNumber,
-				targets = reply.player_action.targets
-			})
+			local no_en, enemy = army_logic.separate_targets_with_no_enemies(reply.player_action.targets)
+			if next(no_en) then
+				msg.post('/map', 'move_units', {
+					from_tile = reply.player_action.sourceTileNumber,
+					targets = no_en
+				})
+			end
+			if next(enemy) then
+				msg.post('/map', 'move_units_for_attack', {
+					from_tile = reply.player_action.sourceTileNumber,
+					targets = enemy
+				})
+			end
 		end
 		if reply.player_action.houseType == game_data.me then
 			msg.post('/map', 'unselect_label')

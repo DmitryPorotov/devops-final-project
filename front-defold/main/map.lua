@@ -11,6 +11,12 @@ local _M = {
 		vmath.vector3(60, -30, 0.5),
 		vmath.vector3(85, -30, 0.5),
 	},
+	ATTACKER_UNIT_OFFSETS = {
+		vmath.vector3(15, -60, 0.5),
+		vmath.vector3(40, -60, 0.5),
+		vmath.vector3(65, -60, 0.5),
+		vmath.vector3(90, -60, 0.5),
+	},
 	PORT_SHIPS_OFFSET = {
 		vmath.vector3(-0, 0, 0.5),
 		vmath.vector3(-25, 0, 0.5),
@@ -210,6 +216,20 @@ function _M:set_units(tile_num, units)
 	end
 end
 
+function _M:set_attacker_units(tile_num, units)
+	self.armies_by_house[units[1].house][tile_num] = units
+	for _, v in ipairs(units) do
+		self.armies[tile_num][#self.armies[tile_num] + 1] = v
+	end
+	local label_id = labels.LABEL_IDS[tonumber(tile_num)]
+	local label_location = go.get_position(label_id) + go.get_position("/" .. tile_num .. "shield")
+	for i, v in ipairs(units) do
+		local position = label_location + self.ATTACKER_UNIT_OFFSETS[i]
+		v.hash = factory.create("/map#millitary_unit_facrory", position, nil, {house = hash(v.house), type = hash(v.type)})
+		go.set_scale(go.get_scale(v.hash) / go.get_scale('/map').x, v.hash)
+	end
+end
+
 local function pluck_last_unit_of_type(units_at_tile, unit)
 	for i = 1 ,#units_at_tile do
 		if units_at_tile[i].house == unit.house and units_at_tile[i].type == unit.type then
@@ -260,7 +280,7 @@ local function shift_leftover_army(self, source_tile_num)
 	end
 end
 
-local function move_units_serially(self, from_tile, targets, through_tiles, call_idx)
+local function move_units_serially(self, from_tile, targets, through_tiles, for_attack, call_idx)
 	if not next(targets) and call_idx == 1 then
 		self:reassign_labels()
 		shift_leftover_army(self, from_tile)
@@ -270,6 +290,7 @@ local function move_units_serially(self, from_tile, targets, through_tiles, call
 	end
 
 	local to_tile, units = next(targets)
+	targets[to_tile] = nil
 	local to_tile_id = labels.LABEL_IDS[tonumber(to_tile)]
 	local to_tile_is_port = utils.is_port(to_tile_id)
 	for i, v in ipairs(units) do
@@ -277,13 +298,17 @@ local function move_units_serially(self, from_tile, targets, through_tiles, call
 		if #self.armies[tostring(from_tile)] == 0 then
 			self.armies[tostring(from_tile)] = nil
 		end
-		local num_units_at_target = self.armies[to_tile] and #self.armies[to_tile] or 0
+		local num_units_at_target = for_attack and 0 or (self.armies[to_tile] and #self.armies[to_tile] or 0)
 		local to_pos = go.get_position(to_tile_id)
 				+ (
 				to_tile_is_port
 						and self.PORT_SHIPS_OFFSET[num_units_at_target + 1]
 						or (
-						self.UNIT_OFFSETS[num_units_at_target + 1]
+						(
+								for_attack and
+								self.ATTACKER_UNIT_OFFSETS[num_units_at_target + 1] or
+								self.UNIT_OFFSETS[num_units_at_target + 1]
+						)
 								+ go.get_position("/" .. to_tile .. "shield")
 				)
 		)
@@ -292,7 +317,6 @@ local function move_units_serially(self, from_tile, targets, through_tiles, call
 		else
 			self.armies[to_tile][#self.armies[to_tile]+1] = u
 		end
-		targets[to_tile] = nil
 		go.animate(
 				u.hash,
 				'position',
@@ -302,7 +326,7 @@ local function move_units_serially(self, from_tile, targets, through_tiles, call
 				calc_animation_time(go.get_position(u.hash), to_pos),
 				0,
 				function()
-					move_units_serially(self, from_tile, targets, through_tiles, i)
+					move_units_serially(self, from_tile, targets, through_tiles, for_attack, i)
 				end
 		)
 	end
@@ -312,6 +336,9 @@ function _M:move_units(from_tile, targets, through_tiles)
 	move_units_serially(self, from_tile, targets, through_tiles)
 end
 
+function _M:move_units_for_attack(from_tile, targets, through_tiles)
+	move_units_serially(self, from_tile, targets, through_tiles, true)
+end
 
 function _M:reassign_labels()
 	for i = 0, 57 do

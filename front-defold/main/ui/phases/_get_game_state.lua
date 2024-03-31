@@ -51,6 +51,16 @@ function _M:init(message)
 	for i, v in pairs(message.gameState.armies) do
 		set_tile_units(i, v)
 	end
+	if message.gameState.combat then
+		set_tile_units(
+				tostring(message.gameState.combat.defenderTileNum),
+				message.gameState.combat.defenderArmy
+		)
+		msg.post("/map", "set_attacker_units", {
+			tile_num = tostring(message.gameState.combat.defenderTileNum),
+			units = message.gameState.combat.attackerArmy
+		})
+	end
 	msg.post('/map', 'reassign_labels')
 
 	pcall(function() gui.delete_node(gui.get_node("login/back_drop")) end)
