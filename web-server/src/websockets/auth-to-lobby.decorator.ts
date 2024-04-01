@@ -79,6 +79,8 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                             type: 'chat',
                             userId: client.user.id,
                             lobbyId: message.lobbyId,
+                            name: client.user.name,
+                            time: (new Date).toISOString(),
                             body
                         })
                     } catch (e) {

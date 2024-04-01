@@ -9,6 +9,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chat from "../components/Chat";
@@ -57,6 +59,9 @@ const LobbyHeader = styled('div')(
 const Lobby = () => {
     let {id} = useParams();
 
+    /**
+     * @type {number}
+     */
     id = parseInt(id);
 
     const [isInit, setIsInit] = useState(false);
@@ -92,10 +97,25 @@ const Lobby = () => {
         }
     };
 
+    const [isInitChat, setIsInitChat] = useState(false);
+
+    const [missedMessages] = useState([]);
+
+    const afterChatInitSetMissedMessages = () => {
+        if (!isInitChat) {
+            setIsInitChat(true);
+            return missedMessages;
+        }
+        else return []
+    };
+
 
     useEffect(() => {
         if (!isInit) return ;
         const receiveMessage = (message) => {
+            if (!isInitChat) {
+                missedMessages.push(message);
+            }
             if (message.type === 'chat') {
                 switch (message.body.type) {
                     case 'join':
@@ -143,6 +163,8 @@ const Lobby = () => {
                     default:
                         break;
                 }
+            } else if (message.type === 'action') {
+
             }
         };
         ws.websocket.onMessage(id, receiveMessage);
@@ -224,9 +246,25 @@ const Lobby = () => {
             </LobbyHeader>
             <div style={{display: "flex"}}>
                 <div style={{flexFlow: "row", flexGrow: 2}}>
-                    {!isLoginModalOpen && <Chat lobbyId={id}/>}
+                    {!isLoginModalOpen && <Chat lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
                 </div>
                 <div style={{flexFlow: "row", flexGrow: 1, padding:".2rem"}}>
+                    {
+                        ws.lobbyData?.owner.id === ws.websocket.playerId &&
+                            <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
+                                <CardContent>
+                                    <Select defaultValue={'moose'} autoWidth={true}>
+                                        <MenuItem value={'moose'}>Moose</MenuItem>
+                                        <MenuItem value={'kraken'}>Kraken</MenuItem>
+                                        <MenuItem value={'wolf'}>Wolf</MenuItem>
+                                        <MenuItem value={'rose'}>Rose</MenuItem>
+                                        <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>
+                                        <MenuItem value={'lion'}>Lion</MenuItem>
+                                    </Select>
+                                    <Button>Create Game</Button>
+                                </CardContent>
+                            </Card>
+                    }
                     <Card sx={{minWidth: 100}}>
                         <CardContent>
                             <List>

@@ -139,10 +139,9 @@ function _M:set_has_order(tile_num, has_order)
 	for _, v in ipairs(self.tiles_with_hints) do
 		if v.tile_num == tile_num then
 			v.has_order = has_order
-			goto end_loop
+			break
 		end
 	end
-	::end_loop::
 	update_hint_text(self)
 end
 

@@ -8,7 +8,7 @@ import Lobby from "./Pages/Lobby";
 import {Outlet} from "react-router";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import Websocket from "./http/websocket";
+import websocket from "./http/websocket";
 
 const RoutesWrapper = () => {
     const auth = useContext(AuthContext);
@@ -93,7 +93,7 @@ const App = () => {
     }), [storeUser, setIsLoginShown, isLoginShown]);
 
     const wsContextValue = {
-        websocket: Websocket,
+        websocket,
         lobbyData,
         setLobbyData
     };

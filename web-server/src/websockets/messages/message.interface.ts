@@ -7,6 +7,7 @@ export interface MessageInterface {
     isRandomHouses?: boolean;
     messageId: string;
     name?: string;
+    time?: string;
     type: 'chat' | 'action' | 'test' | 'error';
     lobbyId?: number;
     body: ChatMessageInterface;

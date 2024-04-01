@@ -151,16 +151,12 @@ end
 function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) then
 		for k, v in pairs(self.buttons) do
-			if v.label then
-				goto continue
-			end
-			if gui.pick_node(v.node, x, y) then
+			if not v.label and gui.pick_node(v.node, x, y) then
 				self.button_selected = k
 				self:close()
 				event_dispatcher.trigger('order_button_click')
 				return true
 			end
-			::continue::
 		end
 	end
 	return false

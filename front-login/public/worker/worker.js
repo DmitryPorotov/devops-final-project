@@ -1,6 +1,3 @@
-const url = '//localhost:3001';
-const proto = 'ws:';
-
 const ws = {
     /**
      * @type WebSocket
@@ -8,24 +5,24 @@ const ws = {
     webSocket: null,
     isInit: false,
     playerId: -1,
-    init(port, playerId, token) {
+    init(port, url, playerId, token) {
         if (this.isInit) {
+            port.postMessage('opened');
             return
         }
         this.isInit = true;
         this.playerId = playerId;
 
-        this.makeSocket(token)
+        this.makeSocket(url, token)
     },
-    makeSocket(token) {
-        this.webSocket = new WebSocket(proto + url + '?token=' + token);
-        console.log('opening websocket ', proto + url + '?token=' + token)
+    makeSocket(url, token) {
+        this.webSocket = new WebSocket(url + '?token=' + token);
         const messageHandler = (message) => {
             const msg = JSON.parse(message.data);
             for (const p of this.ports) {
                 // if (p.lobbyId === msg.lobbyId) {
                     p.postMessage(msg);
-                    break;
+                    // break;
                 // }
             }
         };
@@ -77,22 +74,6 @@ onconnect = (e) => {
     ws.ports.push(port);
 
     port.onmessage = (e) => {
-        // switch (e.data.action) {
-        //     case 'setLobbyId':
-        //         port.lobbyId = e.data.lobbyId;
-        //         break;
-        //     case 'subscribe':
-        //         ws.subscribe(port.lobbyId);
-        //         break;
-        //     default:
-        //         ws[e.data.action](port,...e.data.args);
-        //         break;
-        // }
-        // if (e.data.action === 'setLobbyId') {
-        //     port.lobbyId = e.data.lobbyId
-        // }
-        // else {
-            ws[e.data.action](port, ...e.data.args)
-        // }
+            ws[e.data.action](port, ...(e.data.args || []))
     };
 };

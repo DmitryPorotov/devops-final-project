@@ -111,11 +111,4 @@ function _M:process_message(message)
 	end
 end
 
-function _M.set_tile_units(tile_num, units)
-	msg.post("/map", "set_units", {
-		tile_num = tile_num,
-		units = units
-	})
-end
-
 return _M

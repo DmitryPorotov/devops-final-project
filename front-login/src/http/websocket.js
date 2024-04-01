@@ -27,7 +27,6 @@ class Websocket {
             Websocket.isInit = true;
             Websocket.eventHandlers = new Map();
             Websocket.playerId = playerId;
-            // window.mywebsoc = this;
         }
         else return;
 
@@ -44,6 +43,7 @@ class Websocket {
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [
+                    Websocket.protocol + Websocket.baseUrl,
                     Websocket.playerId,
                     JSON.parse(window.sessionStorage.getItem('_user')).token
                 ]
@@ -56,33 +56,6 @@ class Websocket {
             } ;
             Websocket.worker.port.addEventListener('message', opened);
             Websocket.worker.port.start();
-            // this.socket = new WebSocket(
-            //     this.protocol + this.baseUrl
-            //     + '?token=' + JSON.parse(window.sessionStorage.getItem('_user')).token
-            // );
-            //
-            // this.socket.addEventListener('message', (message) => {
-            //     console.log(message.data);
-            // });
-            //
-            // const errorCb = (message) => {
-            //     console.log(message);
-            //     setTimeout(() => {
-            //         Websocket.makeSocket().then(() => {
-            //             Websocket.eventHandlers.forEach((cb) => {
-            //                 Websocket.socket.addEventListener('message', cb);
-            //             })
-            //         });
-            //     }, 1000);
-            // };
-            //
-            // this.socket.addEventListener('error', errorCb);
-            //
-            // this.socket.addEventListener('close', errorCb);
-            //
-            // this.socket.onopen = () => {
-            //     resolve()
-            // };
         }));
     }
 
@@ -96,12 +69,8 @@ class Websocket {
      */
     static onMessage(lobbyId, callBack) {
         const cbWrapper = (msg) => {
-            /**
-             * @type {Message} msg
-             */
-            // const msg = JSON.parse(message.data);
-            if (msg.lobbyId === lobbyId) {
-                callBack(msg);
+            if (msg.data.lobbyId === lobbyId) {
+                callBack(msg.data);
             }
         };
         Websocket.eventHandlers.set(callBack, cbWrapper);
@@ -130,18 +99,6 @@ class Websocket {
         Websocket.worker.port.postMessage({
             action: 'subscribe',
         })
-        // Websocket.socket.send(
-        //     JSON.stringify({
-        //         userId: this.playerId,
-        //         type: 'chat',
-        //         lobbyId,
-        //         body: {
-        //             to: [],
-        //             type: 'join',
-        //             body: ''
-        //         }
-        //     })
-        // )
     }
 }
 

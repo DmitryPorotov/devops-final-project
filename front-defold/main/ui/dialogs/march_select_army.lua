@@ -185,21 +185,19 @@ end
 function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) then
 		for k, v in pairs(self.controls) do
-			if not v.en then
-				goto continue
+			if v.en then
+				if gui.pick_node(v.plus, x, y) then
+					self:enc_to_send(k)
+					gui.set_text(v.label, self.to_send[k] .. '/' .. self.avail_counts[k])
+					return true
+				elseif gui.pick_node(v.minus, x, y) then
+					self:dec_to_send(k)
+					gui.set_text(v.label, self.to_send[k] .. '/' .. self.avail_counts[k])
+					return true
+				end
 			end
-			if gui.pick_node(v.plus, x, y) then
-				self:enc_to_send(k)
-				gui.set_text(v.label, self.to_send[k] .. '/' .. self.avail_counts[k])
-				return true
-			elseif gui.pick_node(v.minus, x, y) then
-				self:dec_to_send(k)
-				gui.set_text(v.label, self.to_send[k] .. '/' .. self.avail_counts[k])
-				return true
-			end
-			::continue::
 		end
-		if gui.pick_node(self.ok_button, x, y) then
+		if gui.is_enabled(self.ok_button) and gui.pick_node(self.ok_button, x, y) then
 			if self.is_multi_march and not next(self:get_to_send()) then
 				return
 			end

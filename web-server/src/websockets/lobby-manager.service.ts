@@ -4,7 +4,6 @@ import {MessageInterface} from "./messages/message.interface";
 import {Lobby as LobbyEntity} from "../lobby/entities/lobby.entity";
 import {LoginUserDto} from "../user/dto/login-user.dto";
 import {LobbyService} from "../lobby/lobby.service";
-import { RabbitMqService } from "../rabbit-mq/rabbit-mq.service"
 import { AuthToLobby } from "./auth-to-lobby.decorator"
 import ChatService from "../redis/chat.service";
 import LobbiesClientsMapService from "./lobbies-clients-map.service"
@@ -40,9 +39,6 @@ class LobbyManagerService {
         if (!lobby) {
             this.logger.warn('No lobby ' + msg.lobbyId);
             return;
-        }
-        if (msg.type === 'chat') {
-            msg.name = lobby.clients.find(x => x.user.id === msg.userId)?.user?.name
         }
         lobby.clients.forEach(c => {
                 if (

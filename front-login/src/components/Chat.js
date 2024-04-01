@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import {serverIsDeadHandler} from "../Pages/common/GlobalErrorHandlers";
 import {AuthContext, WsContext} from "../App";
 
-const Chat = ({lobbyId}) => {
+const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
     const [isInit, setIsInit] = useState(false);
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
@@ -15,20 +15,31 @@ const Chat = ({lobbyId}) => {
     const auth = useContext(AuthContext);
     const ws = useContext(WsContext);
 
+    const formatDate = (time) => `[${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}:${String(time.getSeconds()).padStart(2, '0')}]`;
+
     useEffect(() => {
         if (!ws.lobbyData) return ;
         const receiveMessage = (message) => {
             if (message.type === 'chat') {
-                const time = new Date();
-                message.ts = `[${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}:${String(time.getSeconds()).padStart(2, '0')}]`;
+                message.ts = formatDate(new Date());
                 setChatMessages([...chatMessages, message]);
-
                 setTimeout(() => {
                     scrollToRef.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
                 }, 0)
             }
         };
         ws.websocket.onMessage(lobbyId,receiveMessage);
+        const messages = afterInitGetMissedMessages();
+        if (messages.length) {
+            for (let i = 0; i < messages.length; i++) {
+                messages[i].ts = formatDate(messages[i].time ? new Date(messages[i].time): new Date());
+            }
+            setChatMessages(messages);
+            setTimeout(() => {
+                scrollToRef.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
+            }, 1)
+        }
+
         return () => ws.websocket.offMessage(receiveMessage);
     }, [chatMessages, ws, lobbyId]);
 
@@ -37,7 +48,6 @@ const Chat = ({lobbyId}) => {
         const doInit = async () => {
             await ws.websocket.init(JSON.parse(window.sessionStorage.getItem('_user')).id);
             await ws.websocket.subscribe(lobbyId);
-            setChatMessages([]);
         };
 
         if (!isInit) {
@@ -76,7 +86,7 @@ const Chat = ({lobbyId}) => {
                     return `${header} [to ${msg.body.to
                         .reduce((a,c) => {
                             const pl = ws.lobbyData.participants.find(p => p.id === c);
-                            if (pl && c !== ws.websocket.playerId) {
+                            if (pl && c !== msg.userId) {
                                 a.push(pl.name)
                             }
                             return a;
