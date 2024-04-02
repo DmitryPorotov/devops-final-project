@@ -55,6 +55,14 @@ const LobbyHeader = styled('div')(
 `,
 );
 
+const houses = {
+    'moose': true,
+    'kraken': true,
+    'wolf': true,
+    'rose': true,
+    'pufferfish': true,
+    'lion': true,
+};
 
 const Lobby = () => {
     let {id} = useParams();
@@ -73,6 +81,9 @@ const Lobby = () => {
     const [lobbySettingsErrors, setLobbySettingsErrors] = useState({});
 
     const [passwordErrors, setPasswordErrors] = useState([]);
+
+    const [housesSelected, setHousesSelected] = useState([]);
+    const [housesSelectedChanged, setHousesSelectedChanged] = useState(false);
 
     const auth = useContext(AuthContext);
 
@@ -100,6 +111,8 @@ const Lobby = () => {
     const [isInitChat, setIsInitChat] = useState(false);
 
     const [missedMessages] = useState([]);
+
+    const [unusedHouseOptions, setUnusedHouseOptions] = useState({...houses});
 
     const afterChatInitSetMissedMessages = () => {
         if (!isInitChat) {
@@ -160,6 +173,18 @@ const Lobby = () => {
                             name: message.body.lobbyName
                         });
                         break;
+                    case 'message':
+                        const house = message.body.body.match(/^selected house '(.*)'/)
+                        if (house) {
+                            debugger
+                            housesSelected.push({
+                                userId: message.userId,
+                                house: house[1]
+                            });
+                            setHousesSelectedChanged(true);
+                            setHousesSelected([...housesSelected]);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -202,6 +227,45 @@ const Lobby = () => {
         });
         if (!isInit) getLobbyData();
     }, [isLoginModalOpen, setIsLoginModalOpen, ws, auth, isInit, id]);
+
+    useEffect(() => {
+        debugger
+        if (!ws.lobbyData || !housesSelectedChanged) return;
+
+        const unusedHouses = {};
+        for (const s of housesSelected) {
+            for (const ld of ws.lobbyData.participants) {
+                if (s.userId === ld.id) {
+                    if (s.userId === ws.websocket.playerId) {
+                        unusedHouses[s.house] = true;
+                    }
+                    else if (ld.house !== 'none' && s.house === 'none') {
+                        unusedHouses[ld.house] = true;
+                    }
+                    else if (s.house !== 'none') {
+                        unusedHouses[s.house] = false;
+                    }
+                    if (s.house === 'none') {
+                        delete unusedHouses.house
+                    }
+                    else  {
+                        ld.house = s.house;
+                    }
+                    break;
+                }
+            }
+        }
+        // debugger
+        setUnusedHouseOptions({
+            ...houses,
+            ...unusedHouses
+        });
+        ws.setLobbyData({
+            ...ws.lobbyData,
+            participants: ws.lobbyData.participants
+        });
+        setHousesSelectedChanged(false)
+    }, [housesSelected, ws.lobbyData]);
 
     const handleLeaveClick = (event) => {
         ws.websocket.send({
@@ -248,23 +312,36 @@ const Lobby = () => {
                 <div style={{flexFlow: "row", flexGrow: 2}}>
                     {!isLoginModalOpen && <Chat lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
                 </div>
-                <div style={{flexFlow: "row", flexGrow: 1, padding:".2rem"}}>
-                    {
-                        ws.lobbyData?.owner.id === ws.websocket.playerId &&
-                            <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
-                                <CardContent>
-                                    <Select defaultValue={'moose'} autoWidth={true}>
-                                        <MenuItem value={'moose'}>Moose</MenuItem>
-                                        <MenuItem value={'kraken'}>Kraken</MenuItem>
-                                        <MenuItem value={'wolf'}>Wolf</MenuItem>
-                                        <MenuItem value={'rose'}>Rose</MenuItem>
-                                        <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>
-                                        <MenuItem value={'lion'}>Lion</MenuItem>
-                                    </Select>
-                                    <Button>Create Game</Button>
-                                </CardContent>
-                            </Card>
-                    }
+                <div style={{flexFlow: "row", flexGrow: 1, padding:".2rem"}}> 
+                    <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
+                        <CardContent style={{display:"flex", justifyContent: "space-between"}}>
+                            <Select 
+                                onChange={(e) => {
+                                    ws.websocket.send({
+                                        userId: ws.websocket.playerId,
+                                        type: 'chat',
+                                        lobbyId: id,
+                                        body: {
+                                            type: 'message',
+                                            body: `selected house '${e.target.value}'`
+                                        }
+                                    });
+                                }}
+                                value={ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId)?.house || 'none'}
+                                style={{minWidth: 220}}
+                                defaultValue={'none'}
+                            >
+                                <MenuItem value={'none'}>Please select a house...</MenuItem>
+                                {unusedHouseOptions.moose && <MenuItem value={'moose'}>Moose</MenuItem>}
+                                {unusedHouseOptions.kraken && <MenuItem value={'kraken'}>Kraken</MenuItem>}
+                                {unusedHouseOptions.wolf && <MenuItem value={'wolf'}>Wolf</MenuItem>}
+                                {unusedHouseOptions.rose && <MenuItem value={'rose'}>Rose</MenuItem>}
+                                {unusedHouseOptions.pufferfish && <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>}
+                                {unusedHouseOptions.lion && <MenuItem value={'lion'}>Lion</MenuItem>}
+                            </Select>
+                            {ws.lobbyData?.owner.id === ws.websocket.playerId && <Button>Start Game</Button>}
+                        </CardContent>
+                    </Card>
                     <Card sx={{minWidth: 100}}>
                         <CardContent>
                             <List>
@@ -275,7 +352,13 @@ const Lobby = () => {
                                                 <ListItem>
                                                     <ListItemText
                                                         primary={cur.name}
-                                                        secondary={cur.id === ws.lobbyData.owner.id ? 'owner' : null}
+                                                        // secondary={cur.id === ws.lobbyData.owner.id ? <span>owner </span> : null}
+                                                        secondary={
+                                                            <>
+                                                            {cur.id === ws.lobbyData?.owner.id ? <span>owner </span> : null}
+                                                            {cur.house ? <span>{cur.house}</span>: null}
+                                                            </>
+                                                        }
                                                     />
                                                     {
                                                         cur.id !== ws.websocket.playerId &&
@@ -321,6 +404,7 @@ const Lobby = () => {
                     }
                 }}
                 passwordErrors={passwordErrors}
+                handleClose={()=>{setIsLoginModalOpen(false); navigate('/')}}
             />
             }
             {
