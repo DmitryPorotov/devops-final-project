@@ -1,19 +1,16 @@
-import WebsocketWithUserInterface from "./websocket-with-user.interface"
-import { MessageInterface } from "./messages/message.interface"
-import LobbyManagerService from "./lobby-manager.service"
-import { Lobby } from "../lobby/entities/lobby.entity"
+import WebsocketWithUserInterface from "../../websocket-with-user.interface"
+import { MessageInterface } from "../../messages/message.interface"
 import { ConflictException } from "@nestjs/common"
-import { ChatMessageInterface } from "./messages/chat-message.interface"
+import {BaseLobbyAction} from "./base-lobby-action";
 
 
 export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
-    return function <T2 = (this: LobbyManagerService, client: WebsocketWithUserInterface, message: MessageInterface, lobby: Lobby) => Promise<void>>
-    (target: LobbyManagerService, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
+    return function <T2 = (this: BaseLobbyAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
+    (target: BaseLobbyAction, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
         const original = descriptor.value as (WebsocketWithUserInterface, MessageInterface, Lobby) => Promise<void>;
 
-        descriptor.value = async function (this: LobbyManagerService, client: WebsocketWithUserInterface, message: MessageInterface, lobby: Lobby = null) {
+        descriptor.value = async function (this: BaseLobbyAction, client: WebsocketWithUserInterface, message: MessageInterface) {
             try {
-                await this.init();
                 const lobbyEntity = await this.getLobbyIfIsParticipant(message, client.user);
                 this.logger.debug('has lobbyEntity', lobbyEntity != null);
                 if (client.user.id !== message.userId) {
@@ -52,7 +49,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                             this.lobbies.set(lobbyEntity.id, lobby)
                         } else {
                             lobby = this.lobbies.get(message.lobbyId);
-                            const clientIdx = lobby.clients.findIndex(c => c.user.id === client.user.id)
+                            const clientIdx = lobby.clients.findIndex(c => c.user.id === client.user.id);
                             if (clientIdx >= 0) {
                                 lobby.clients.splice(clientIdx, 1)
                             }
@@ -63,26 +60,6 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                         }
                         this.logger.debug('trying to process in decorator');
                         await original.call(this, client, message, lobbyEntity);
-                        const body: ChatMessageInterface = {
-                            type: message.body?.type,
-                            body: message.body?.body,
-                            to: message.body?.to
-                        };
-                        if (message.body.deletePassword != null) {
-                            body.deletePassword = message.body.deletePassword;
-                        }
-                        if (message.body.lobbyName) {
-                            body.lobbyName = message.body.lobbyName;
-                        }
-                        await this.messagingService.sendToChat(lobbyEntity.id, {
-                            messageId: message.messageId,
-                            type: 'chat',
-                            userId: client.user.id,
-                            lobbyId: message.lobbyId,
-                            name: client.user.name,
-                            time: (new Date).toISOString(),
-                            body
-                        })
                     } catch (e) {
                         if (e instanceof ConflictException) {
                             const error: MessageInterface = {

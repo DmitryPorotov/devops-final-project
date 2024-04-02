@@ -1,112 +1,45 @@
 import {Injectable, Logger} from "@nestjs/common";
 import {MessageInterface} from "./messages/message.interface";
-import {LobbyService} from "../lobby/lobby.service";
-import {Lobby as LobbyEntity} from "../lobby/entities/lobby.entity";
-import {LoginUserDto} from "../user/dto/login-user.dto";
-import LobbyManagerService from "./lobby-manager.service";
+import LobbyManagerService from "./lobby/lobby-manager.service";
 import WebsocketWithUserInterface from "./websocket-with-user.interface";
 import ConnectivityTestService from "./connectivity-test.service";
-import {Buffer} from "buffer";
-import GameMessagingService from "./game-messaging.service"
+import GameMessagingService from "./game/game-messaging.service"
 
-interface Lobby {
-    id: number;
-    owner: number;
-    participants: Array<number>;
-    clients: Array<WebsocketWithUserInterface>
-}
 
 @Injectable()
 class WebsocketService {
-    private logger = new Logger(WebsocketService.name)
+    private logger = new Logger(WebsocketService.name);
 
-    constructor(private lobbyService: LobbyService,
-                private lobbyManagerService: LobbyManagerService,
+    constructor(private lobbyManagerService: LobbyManagerService,
                 private connectivityTestService: ConnectivityTestService,
                 private gameMessagingService: GameMessagingService) {
     }
 
-    // private lobbies: Map<number,Lobby> = new Map<number, Lobby>();
-    //
-    // private isSenderParticipantInLobby(user: LoginUserDto, lobby: LobbyEntity): boolean {
-    //     return lobby.participants.reduce((acc, cur) => {
-    //         if (cur.id === user.id) acc = true;
-    //         return acc;
-    //     }, false)
-    // }
-
     async handleMessage(client: WebsocketWithUserInterface, message: MessageInterface) {
+        if (!message.userId) {
+            const error: MessageInterface = {
+                userId: client.user?.id,
+                type: 'error',
+                messageId: message.messageId,
+                body: {
+                    type: 'error',
+                    body: 'No \'userId\' in message.'
+                }
+            };
+            client.send(JSON.stringify(error));
+            return
+        }
         if (message.type === "chat") {
-            switch (message.body.type) {
-                case "create": {
-                    this.logger.debug('in create')
-                    await this.lobbyManagerService.create(client, message);
-                    break;
-                }
-                case "join": {
-                    await this.lobbyManagerService.join(client, message);
-                    break;
-                }
-                case "leave": {
-                    await this.lobbyManagerService.leave(client, message);
-                    break;
-                }
-                case "kick": {
-                    await this.lobbyManagerService.kick(client, message);
-                    break;
-                }
-                case "edit":
-                case "message": {
-                    await this.lobbyManagerService.message(client, message);
-                    break;
-                }
-            }
+            await this.lobbyManagerService.processMessage(client, message)
         } else if (message.type === 'test') {
             await this.connectivityTestService.sendToWorker(JSON.stringify(message), (msg) => {
                 this.logger.debug("from worker: " + JSON.stringify(msg));
                 client.send(JSON.stringify(msg))
             }) 
         } else if (message.type === 'action') {
-            switch (message.action) {
-                case "create_game":
-                    await this.gameMessagingService.create(client, message);
-                    break;
-                // case "get_game_state":
-                // case "join_game":
-                // case "start_game":
-                default:
-                    await this.gameMessagingService.relayMessage(client, message);
-                    break;
-
-            }
+            await this.gameMessagingService.processMessage(client, message)
         }
 
-        /*if (!this.lobbies.has(message.lobbyId)) {
-            const lobby = await this.lobbyService.findOne(message.lobbyId);
-            if (this.isSenderParticipantInLobby(client.user, lobby)) {
-                this.lobbies.set(lobby.id, {
-                    id: lobby.id,
-                    owner: lobby.owner.id,
-                    clients: [client],
-                    participants: lobby.participants.map(u => u.id)
-                })
-            }
-            else return;
-        }
-
-        const lobby = this.lobbies.get(message.lobbyId);
-        //note assume only chat for now
-        for (let u of lobby.clients) {
-            u.send(JSON.stringify({
-                lobbyId: lobby.id,
-                from: message.from,
-                type: "chat",
-                body: {
-                    to: [],
-                    body: "Hello"
-                }
-            } as MessageInterface))
-        }*/
     }
 
 

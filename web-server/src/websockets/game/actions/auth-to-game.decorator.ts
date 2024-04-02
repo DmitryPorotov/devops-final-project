@@ -1,17 +1,16 @@
-import WebsocketWithUserInterface from "./websocket-with-user.interface"
-import { MessageInterface } from "./messages/message.interface"
+import WebsocketWithUserInterface from "../../websocket-with-user.interface"
+import { MessageInterface } from "../../messages/message.interface"
 import { ConflictException } from "@nestjs/common"
-import GameMessagingService from "./game-messaging.service"
+import {BaseGameAction} from "./base-game-action";
 
 export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
-    return function <T2 = (this: GameMessagingService, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
-    (target: GameMessagingService, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
+    return function <T2 = (this: BaseGameAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
+    (target: BaseGameAction, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
         const original = descriptor.value as (WebsocketWithUserInterface, MessageInterface) => Promise<void>;
 
-        descriptor.value = async function (this: GameMessagingService, client: WebsocketWithUserInterface, message: MessageInterface) {
+        descriptor.value = async function (this: BaseGameAction, client: WebsocketWithUserInterface, message: MessageInterface) {
             try {
-                await this.init();
-                const lobby = this.lobbies.get(message.lobbyId)
+                const lobby = this.lobbies.get(message.lobbyId);
                 if (client.user.id !== message.userId) {
                     this.logger.debug('corrupt message, messageId ' + message.messageId);
                     const error: MessageInterface = {

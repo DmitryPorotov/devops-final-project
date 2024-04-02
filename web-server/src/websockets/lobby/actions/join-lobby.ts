@@ -1,0 +1,32 @@
+import {BaseLobbyAction} from "./base-lobby-action";
+import WebsocketWithUserInterface from "../../websocket-with-user.interface";
+import {MessageInterface} from "../../messages/message.interface";
+import {Lobby} from "../../../lobby/entities/lobby.entity";
+import ChatService from "../../../redis/chat.service";
+import {AuthToLobby} from "./auth-to-lobby.decorator";
+import {LobbyService} from "../../../lobby/lobby.service";
+import LobbiesClientsMapService from "../../lobbies-clients-map.service";
+import {Logger} from "@nestjs/common";
+
+
+export class JoinLobby extends BaseLobbyAction {
+
+    protected readonly logger = new Logger(JoinLobby.name);
+
+    constructor(protected chatService: ChatService, protected lobbyService: LobbyService, protected lobbies: LobbiesClientsMapService) {
+        super(chatService, lobbyService, lobbies);
+    }
+    @AuthToLobby()
+    async doAction(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity: Lobby = null): Promise<void> {
+        await this.chatService.getAllChatMessages(lobbyEntity.id, (msg: MessageInterface) => {
+            if (msg.body.type === 'message') {
+                this.logger.debug(msg);
+                client.send(
+                    JSON.stringify(msg)
+                )
+            }
+        });
+        super.relayToChat(client, message, message.body, lobbyEntity)
+    }
+
+}

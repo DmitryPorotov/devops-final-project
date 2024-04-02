@@ -6,15 +6,14 @@ import WebsocketService from "./websocket.service";
 import {LobbyService} from "../lobby/lobby.service";
 import {lobbyProviders} from "../lobby/entities/lobby,providers";
 import {DatabaseModule} from "../database/database.module";
-import LobbyManagerService from "./lobby-manager.service";
-import {RabbitMqModule} from "../rabbit-mq/rabbit-mq.module";
+import LobbyManagerService from "./lobby/lobby-manager.service";
 import ConnectivityTestService from "./connectivity-test.service";
 import { RedisModule } from "../redis/redis.module";
 import LobbiesClientsMapService from "./lobbies-clients-map.service"
-import GameMessagingService from "./game-messaging.service"
+import GameMessagingService from "./game/game-messaging.service"
 
 @Module({
-    imports:[JwtModule, DatabaseModule, RabbitMqModule, RedisModule],
+    imports:[JwtModule, DatabaseModule, RedisModule],
     providers: [EventsGateway, AuthGuard, WebsocketService, LobbyManagerService, LobbiesClientsMapService, GameMessagingService, LobbyService, ConnectivityTestService, ...lobbyProviders],
 })
 export class EventsModule {}

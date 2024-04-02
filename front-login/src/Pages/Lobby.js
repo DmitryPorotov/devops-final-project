@@ -350,6 +350,7 @@ const Lobby = () => {
                                 setLobbySettingsErrors(lobbyData.message);
                             }
                         }}
+                        handleClose={()=> setIsSettingsModalOpen(false)}
                     />
             }
         </div>

@@ -58,7 +58,7 @@ export default class ChatService implements MessagingProviderInterface {
     //     this.redisPubSub.sendToWorkerTest(message);
     // }
 
-    async getWholeChat(lobbyId: number, cb: (msg: Object) => void) {
+    async getAllChatMessages(lobbyId: number, cb: (msg: Object) => void) {
         const chatCb = (msg: string) => {
            const data = JSON.parse(msg);
            cb(data)

@@ -1,4 +1,4 @@
-import { LobbyClients } from "./lobby-manager.service"
+import { LobbyClients } from "./lobby-clients.interface";
 import { Injectable } from "@nestjs/common"
 
 @Injectable()
