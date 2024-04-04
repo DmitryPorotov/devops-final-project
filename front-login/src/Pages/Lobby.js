@@ -23,7 +23,7 @@ import LobbyEditModal from "../components/LobbyEditModal";
  * @param {{participants: Array.<{id:number,name:string}>}} data
  */
 const amParticipating = ({participants}) => {
-    const myId = JSON.parse(window.sessionStorage.getItem('_user')).id;
+    const myId = JSON.parse(window.localStorage.getItem('_user')).id;
     return participants.reduce((acc, cur) => {
         if (cur.id === myId) acc = true;
         return acc;
@@ -174,8 +174,11 @@ const Lobby = () => {
                         });
                         break;
                     case 'message':
-                        const house = message.body.body.match(/^selected house '(.*)'/)
+                        const house = message.body.body.match(/^selected house '(.*)'/);
                         if (house) {
+                            if (message.userId === ws.websocket.playerId) {
+                                window.localStorage.setItem(`_lobby${id}house`, house[1])
+                            }
                             housesSelected.push({
                                 userId: message.userId,
                                 house: house[1]
@@ -188,7 +191,9 @@ const Lobby = () => {
                         break;
                 }
             } else if (message.type === 'action') {
-
+                if (message.action === 'create_game') {
+                    window.open(`/lobby/${id}/game/`)
+                }
             }
         };
         ws.websocket.onMessage(id, receiveMessage);
@@ -197,8 +202,13 @@ const Lobby = () => {
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
+            const storedUser = window.localStorage.getItem('_user');
+            if (!storedUser) {
+                navigate('/');
+                return ;
+            }
             setIsInit(true);
-            await ws.websocket.init(JSON.parse(window.sessionStorage.getItem('_user')).id);
+            await ws.websocket.init(JSON.parse(storedUser).id);
             let data;
             try {
                 const response = await Api.get(`/lobby/${id}`);
@@ -271,6 +281,16 @@ const Lobby = () => {
         event.stopPropagation();
     };
 
+    const createGame = () => {
+        ws.websocket.send({
+            userId: ws.websocket.playerId,
+            lobbyId: id,
+            type: 'action',
+            action: 'create_game',
+            isRandomHouses: false,
+        });
+    };
+
     const handleKickClick = (playerId, name) => {
         //TODO add a prompt
         ws.websocket.send({
@@ -333,7 +353,11 @@ const Lobby = () => {
                                 {unusedHouseOptions.pufferfish && <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>}
                                 {unusedHouseOptions.lion && <MenuItem value={'lion'}>Lion</MenuItem>}
                             </Select>
-                            {ws.lobbyData?.owner.id === ws.websocket.playerId && <Button>Start Game</Button>}
+                            {ws.lobbyData?.owner.id === ws.websocket.playerId &&
+                            <Button
+                                onClick={createGame}
+                            >Start Game</Button>
+                            }
                         </CardContent>
                     </Card>
                     <Card sx={{minWidth: 100}}>

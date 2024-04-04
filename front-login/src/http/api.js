@@ -6,8 +6,8 @@ class Api {
 
     static headers(isLoggedIn){
         const headers = {"Content-Type": "application/json"};
-        if (isLoggedIn && window.sessionStorage.getItem('_user')) {
-            headers['Authorization'] = 'Bearer ' + JSON.parse(window.sessionStorage.getItem('_user')).token;
+        if (isLoggedIn && window.localStorage.getItem('_user')) {
+            headers['Authorization'] = 'Bearer ' + JSON.parse(window.localStorage.getItem('_user')).token;
         }
         return headers;
     };

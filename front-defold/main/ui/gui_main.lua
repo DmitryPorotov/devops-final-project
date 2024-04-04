@@ -17,6 +17,7 @@ local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
 local action_proc = require "main/messaging/action_reply_processing"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local game_data = require "main/ui/game_data"
 
 local _M = {}
 
@@ -31,13 +32,28 @@ local function register_callbacks()
 end
 
 function _M:init()
+	local path_ = sys.get_application_path()
+	if string.match(path_, '^http') then
+		game_data.is_html5 = true
+		login:dispose()
+	else
+		game_data.is_html5 = false
 	login:init()
+	end
 
 	ws:init()
 
+	player_panels:init()
+
+	if game_data.is_html5 then
+		ws.connect({}, function()
+			player_panels:set_players(game_data.players)
+			tracks:set_me(game_data.me)
+		end)
+	end
+
 	register_callbacks()
 
-	player_panels:init()
 	tracks:init()
 	top_panel:init()
 	orders:init()
@@ -75,19 +91,18 @@ function _M:check_pressed(x, y)
 end
 
 function _M:update(dt)
+	ws.on_update(dt)
 	if self.action then
 		local status, err = pcall(function ()
 			if login:on_input(self.action) then
 			elseif list_of_saves:check_button_pressed(self.action.x, self.action.y) then
 			elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
 			else
-				(function()
-					for _, panel in ipairs(self.panels) do
-						if panel:check_button_pressed(self.action.x, self.action.y) then
-							return
-						end
+				for _, panel in ipairs(self.panels) do
+					if panel:check_button_pressed(self.action.x, self.action.y) then
+						break
 					end
-				end)()
+				end
 			end
 		end)
 		self.action = nil

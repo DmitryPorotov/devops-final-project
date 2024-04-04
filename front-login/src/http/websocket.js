@@ -36,7 +36,7 @@ class Websocket {
     static makeSocket() {
         return new Promise((resolve => {
             Websocket.worker = new SharedWorker('/worker/worker.js');
-            Websocket.onerror = (e) => console.log(e);
+            Websocket.worker.onerror = (e) => console.log(e);
             Websocket.worker.onmessageerror = (e) => {
                 console.log(e)
             };
@@ -45,7 +45,7 @@ class Websocket {
                 args: [
                     Websocket.protocol + Websocket.baseUrl,
                     Websocket.playerId,
-                    JSON.parse(window.sessionStorage.getItem('_user')).token
+                    JSON.parse(window.localStorage.getItem('_user')).token
                 ]
             });
             const opened = (message) => {
@@ -69,7 +69,7 @@ class Websocket {
      */
     static onMessage(lobbyId, callBack) {
         const cbWrapper = (msg) => {
-            if (msg.data.lobbyId === lobbyId) {
+            if (msg.data.lobbyId === lobbyId || msg.data.gameId == lobbyId) {
                 callBack(msg.data);
             }
         };

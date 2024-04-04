@@ -41,7 +41,8 @@ function _M:process_message(message)
 				action = "get_game_state",
 			})
 		elseif message.action == "get_game_state" then
-			 _get_game_state:init(message)
+			print('got game state')
+			_get_game_state:init(message)
 
 			if phase then
 				phase:clean_up()

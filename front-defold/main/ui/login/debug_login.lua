@@ -16,7 +16,8 @@ local _M = {
 }
 
 function _M:dispose()
-	pcall(function() gui.delete_node(self.back_drop) end)
+	self.disabled = true
+	pcall(function() gui.delete_node(gui.get_node("login/back_drop")) end)
 end
 
 function _M:init()

@@ -18,7 +18,7 @@ const SignupForm = () => {
             });
         },
         onSuccess(result) {
-            window.sessionStorage.setItem('_token', result.token)
+            window.localStorage.setItem('_token', result.token)
         },
         onFailure(messages) {
             setNameErrors(messages.n);

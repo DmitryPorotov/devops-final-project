@@ -20,10 +20,9 @@ const ws = {
         const messageHandler = (message) => {
             const msg = JSON.parse(message.data);
             for (const p of this.ports) {
-                // if (p.lobbyId === msg.lobbyId) {
+                if (p.lobbyId == msg.lobbyId || p.lobbyId == msg.gameId) {
                     p.postMessage(msg);
-                    // break;
-                // }
+                }
             }
         };
         this.webSocket.addEventListener('message', messageHandler);

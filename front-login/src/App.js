@@ -81,7 +81,7 @@ const App = () => {
     const [isLoginShown, setIsLoginShown] = useState(false);
     const [lobbyData, setLobbyData] = useState();
     const storeUser = useCallback(result => {
-        window.sessionStorage.setItem('_user',  JSON.stringify(result));
+        window.localStorage.setItem('_user',  JSON.stringify(result));
     },[]);
 
     const authContextValue = useMemo(() => ({

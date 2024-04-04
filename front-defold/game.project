@@ -24,6 +24,7 @@ debug = 0
 
 [html5]
 heap_size = 512
+htmlfile = /js/engine_template.html
 
 [graphics]
 default_texture_min_filter = nearest

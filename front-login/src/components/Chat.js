@@ -46,7 +46,11 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
     useEffect(() => {
         const doInit = async () => {
-            await ws.websocket.init(JSON.parse(window.sessionStorage.getItem('_user')).id);
+            const storedUser = window.localStorage.getItem('_user');
+            if (!storedUser) {
+                return ;
+            }
+            await ws.websocket.init(JSON.parse(storedUser).id);
             await ws.websocket.subscribe(lobbyId);
         };
 

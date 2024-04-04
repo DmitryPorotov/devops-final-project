@@ -23,6 +23,7 @@
 
 ---@module game_data
 ---@field me string
+---@field is_html5 boolean
 ---@field armies table<string, MilitaryUnit[]>
 ---@field gameRules GameRules
 local _M = {
@@ -37,6 +38,7 @@ local _M = {
 	i_joined = false,
 	me = nil,
 	user_data = nil,
+	is_html5 = false,
 
 	gameRules = nil,
 

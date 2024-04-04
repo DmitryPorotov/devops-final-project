@@ -54,6 +54,10 @@ function _M:init(process_message)
 	self.process_message = process_message
 end
 
+function _M:on_update(dt)
+
+end
+
 function _M:connect(creds)
 	local function handle_response(self_, id, response)
 		local data = json.decode(response.response)
