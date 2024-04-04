@@ -176,7 +176,6 @@ const Lobby = () => {
                     case 'message':
                         const house = message.body.body.match(/^selected house '(.*)'/)
                         if (house) {
-                            debugger
                             housesSelected.push({
                                 userId: message.userId,
                                 house: house[1]
@@ -229,36 +228,31 @@ const Lobby = () => {
     }, [isLoginModalOpen, setIsLoginModalOpen, ws, auth, isInit, id]);
 
     useEffect(() => {
-        debugger
         if (!ws.lobbyData || !housesSelectedChanged) return;
 
-        const unusedHouses = {};
+        const availableForSelectionHouses = {};
         for (const s of housesSelected) {
-            for (const ld of ws.lobbyData.participants) {
-                if (s.userId === ld.id) {
-                    if (s.userId === ws.websocket.playerId) {
-                        unusedHouses[s.house] = true;
-                    }
-                    else if (ld.house !== 'none' && s.house === 'none') {
-                        unusedHouses[ld.house] = true;
-                    }
-                    else if (s.house !== 'none') {
-                        unusedHouses[s.house] = false;
-                    }
+            for (const participant of ws.lobbyData.participants) {
+                if (s.userId === participant.id) {
+
+                    if (participant.house)
+                        availableForSelectionHouses[participant.house] = true;
+
+                    availableForSelectionHouses[s.house] = participant.id === ws.websocket.playerId;
+
                     if (s.house === 'none') {
-                        delete unusedHouses.house
+                        delete participant.house
                     }
                     else  {
-                        ld.house = s.house;
+                        participant.house = s.house;
                     }
                     break;
                 }
             }
         }
-        // debugger
         setUnusedHouseOptions({
             ...houses,
-            ...unusedHouses
+            ...availableForSelectionHouses
         });
         ws.setLobbyData({
             ...ws.lobbyData,
@@ -352,10 +346,9 @@ const Lobby = () => {
                                                 <ListItem>
                                                     <ListItemText
                                                         primary={cur.name}
-                                                        // secondary={cur.id === ws.lobbyData.owner.id ? <span>owner </span> : null}
                                                         secondary={
                                                             <>
-                                                            {cur.id === ws.lobbyData?.owner.id ? <span>owner </span> : null}
+                                                            {cur.id === ws.lobbyData?.owner.id ? <span>[lobby owner] </span> : null}
                                                             {cur.house ? <span>{cur.house}</span>: null}
                                                             </>
                                                         }

@@ -2,6 +2,7 @@
 class Api {
     static protocol = 'http:';
     static baseUrl = '//localhost:3001';
+    static apiPrefix = '/api/v1';
 
     static headers(isLoggedIn){
         const headers = {"Content-Type": "application/json"};
@@ -63,7 +64,7 @@ class Api {
             headers: Api.headers(isLoggedIn)
         };
         if (body) init.body = body;
-        const response = await fetch(Api.protocol + Api.baseUrl + url, init);
+        const response = await fetch(Api.protocol + Api.baseUrl + Api.apiPrefix + url, init);
 
         // if (response.status === 401) {
         //     // const callbackPtr = {func: null};

@@ -69,7 +69,7 @@ function _M:connect(creds)
 		["Content-Type"] = "application/json"
 	}
 	local body = json.encode(creds)
-	http.request("http://127.0.0.1:3001/auth/login", "POST", handle_response, headers, body)
+	http.request("http://127.0.0.1:3001/api/v1/auth/login", "POST", handle_response, headers, body)
 end
 
 return _M

@@ -1,0 +1,3 @@
+#!/bin/sh
+cd front-defold/ &&
+java -jar ~/Defold/bob.jar bundle -p wasm-web -a

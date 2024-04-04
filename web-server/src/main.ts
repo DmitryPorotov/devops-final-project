@@ -13,6 +13,7 @@ async function bootstrap() {
       AppModule,
       new FastifyAdapter({ logger: true })
   );
+  await app.setGlobalPrefix('api/v1');
   await app.useWebSocketAdapter(new WsAdapter(app));
   app.enableCors({
     origin: '*'
@@ -31,6 +32,6 @@ async function bootstrap() {
 
     )
   }));
-  await app.listen(3001, "0.0.0.0");
+  await app.listen(80, "0.0.0.0");
 }
 bootstrap();
