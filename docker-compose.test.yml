@@ -71,7 +71,7 @@ services:
     image: "nginx:1.25.4"
     volumes:
       - ./nginx.conf.d/fwc.conf:/etc/nginx/nginx.conf
-      - ./front-defold/build/default/front-defold/:/www/data/html
+      - ./front-defold/build/:/www/data/html
     ports:
       - "8888:80"
     networks:

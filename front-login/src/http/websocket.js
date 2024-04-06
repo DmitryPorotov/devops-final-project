@@ -11,6 +11,7 @@ class Websocket {
     static isInit = false;
     static protocol = 'ws:';
     static baseUrl = Api.baseUrl;
+    static port = ':3001';
     static playerId;
     static worker;
     /**
@@ -43,7 +44,7 @@ class Websocket {
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [
-                    Websocket.protocol + Websocket.baseUrl,
+                    Websocket.protocol + Websocket.baseUrl + Websocket.port,
                     Websocket.playerId,
                     JSON.parse(window.localStorage.getItem('_user')).token
                 ]
