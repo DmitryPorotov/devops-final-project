@@ -64,7 +64,7 @@ function _M:connect(creds)
 		self.login_data = data
 
 		print(self.login_data.token)
-		self.url = "ws://127.0.0.1:3001/?_token=" .. self.login_data.token
+		self.url = "ws://127.0.0.1:3001/ws?_token=" .. self.login_data.token
 		print(self.url)
 		self.connection = websocket.connect(self.url, params, websocket_callback)
 	end

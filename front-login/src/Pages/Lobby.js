@@ -5,20 +5,15 @@ import LobbyLoginModal from "../components/LobbyLoginModal";
 import {AuthContext, WsContext} from "../App";
 import {serverIsDeadHandler} from "./common/GlobalErrorHandlers";
 import styled from "@mui/material/styles/styled";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chat from "../components/Chat";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import LobbyEditModal from "../components/LobbyEditModal";
 import Storage from "../http/storage";
+import PlayersList from "../components/PlayersList";
 
 /**
  * @param {{participants: Array.<{id:number,name:string}>}} data
@@ -83,9 +78,6 @@ const Lobby = () => {
 
     const [passwordErrors, setPasswordErrors] = useState([]);
 
-    const [housesSelected, setHousesSelected] = useState([]);
-    const [housesSelectedChanged, setHousesSelectedChanged] = useState(false);
-
     const [gameCreated, setGameCreated] = useState(false);
 
     const [canJoin, setCanJoin] = useState(false);
@@ -131,12 +123,10 @@ const Lobby = () => {
         else return []
     };
 
-    useEffect(() => {
-        !alreadyJoined && window.open(`/lobby/${id}/game/`, `lobby${id}`);
-    },[alreadyJoined]);
+    let gameWindowRef;
 
-    const openGameTabIfMe = (player) => {
-        if (player.userId === ws.websocket.playerId) {
+    const setHouseIfMe = (player) => {
+        if (player.userId === ws.websocket.playerId && player.house) {
             Storage.setHouseForLobby(id, player.house).then();
             return true;
         }
@@ -164,10 +154,17 @@ const Lobby = () => {
                         }
                         else {
                             const participants = ws.lobbyData.participants.filter(p => p.id !== message.userId);
+                            let newOwner;
+                            if (message.userId === ws.lobbyData.owner.id) {
+                                const response = await Api.get(`/lobby/${id}`);
+                                const data = await response.json();
+                                newOwner = data.owner;
+
+                            }
                             ws.setLobbyData({
                                 ...ws.lobbyData,
                                 participants,
-                                owner: participants.length === 1 ? participants[0] : ws.lobbyData.owner
+                                owner: newOwner || ws.lobbyData.owner
                             })
                         }
                         break;
@@ -206,15 +203,20 @@ const Lobby = () => {
                         if (message.status.created) {
                             if (message.status.details.gameSettings.players) {
                                 const unusedHouses = {};
+                                let joined;
                                 for (const p of message.status.details.gameSettings.players) {
                                     const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
                                     participant.house = p.house;
                                     unusedHouses[p.house] = p.userId === ws.websocket.playerId;
-                                    const joined = openGameTabIfMe(p);
-                                    if (joined) {
-                                        setCanSelectHouse(false);
-                                        setAlreadyJoined(true);
-                                    }
+                                    !joined && (joined = setHouseIfMe(p));
+                                }
+                                if (joined) {
+                                    setCanSelectHouse(false);
+                                    setAlreadyJoined(true);
+                                    !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
+                                } else {
+                                    setCanSelectHouse(true);
+                                    setAlreadyJoined(false);
                                 }
                                 setUnusedHouseOptions({
                                     ...houses,
@@ -233,7 +235,7 @@ const Lobby = () => {
                         const unusedHouses = {};
                         for (const p of message.gameSettings.players) {
                             const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
-                            openGameTabIfMe(p) && setCanSelectHouse(false);
+                            setHouseIfMe(p) && setCanSelectHouse(false);
                             participant.house = p.house;
                             unusedHouses[p.house] = p.userId === ws.websocket.playerId;
                         }
@@ -285,6 +287,8 @@ const Lobby = () => {
                 await joinLobby(id);
             }
             ws.setLobbyData(data);
+            await ws.websocket.init(storedUser.id);
+            await ws.websocket.subscribe(id);
             setTimeout(() => {
                 ws.websocket.send({
                     action: 'get_status',
@@ -294,17 +298,6 @@ const Lobby = () => {
         });
         if (!isInit) getLobbyData();
     }, [isLoginModalOpen, setIsLoginModalOpen, ws, auth, isInit, id]);
-
-
-    const handleLeaveClick = (event) => {
-        ws.websocket.send({
-            userId: ws.websocket.playerId,
-            type: 'chat',
-            lobbyId: id,
-            body: {type:'leave'}
-        });
-        event.stopPropagation();
-    };
 
     const createGame = () => {
         ws.websocket.send({
@@ -322,30 +315,21 @@ const Lobby = () => {
             action: 'join_game',
             name: (await Storage.getUser()).name,
             joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
-        })
+        });
+        setAlreadyJoined(true);
+        !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
     };
 
-    const handleKickClick = (playerId, name) => {
-        //TODO add a prompt
-        ws.websocket.send({
-            userId: ws.websocket.playerId,
-            type: 'chat',
-            lobbyId: id,
-            body: {type:'kick', to: [playerId]}
-        })
-    };
 
-    const handlePMChange = (event, playerId) => {
-        let sendTo = ws.lobbyData.sendTo || [];
-        if (event.target.checked) {
-            sendTo.push(playerId)
-        } else {
-            sendTo = sendTo.filter(i => i !== playerId);
-        }
+    const houseSelectionChanged = (e) => {
+        setCanJoin(e.target.value !== 'none');
+        const me = ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId);
+        if (e.target.value === 'none')
+            delete me.house;
+        else me.house = e.target.value;
         ws.setLobbyData({
             ...ws.lobbyData,
-            sendTo
-        })
+        });
     };
 
     return (
@@ -365,16 +349,7 @@ const Lobby = () => {
                         <CardContent style={{display:"flex", justifyContent: "space-between"}}>
                             <Select
                                 disabled={!canSelectHouse}
-                                onChange={(e) => {
-                                    setCanJoin(e.target.value !== 'none');
-                                    const me = ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId);
-                                    if (e.target.value === 'none')
-                                        delete me.house;
-                                    else me.house = e.target.value;
-                                    ws.setLobbyData({
-                                        ...ws.lobbyData,
-                                    });
-                                }}
+                                onChange={houseSelectionChanged}
                                 value={ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId)?.house || 'none'}
                                 style={{minWidth: 220}}
                                 defaultValue={'none'}
@@ -394,51 +369,11 @@ const Lobby = () => {
                             }
                             {
                                 gameCreated &&
-                                    <Button disabled={!canJoin} onClick={joinGame}>Join</Button>
+                                    <Button disabled={!canJoin || alreadyJoined} onClick={joinGame}>Join</Button>
                             }
                         </CardContent>
                     </Card>
-                    <Card sx={{minWidth: 100}}>
-                        <CardContent>
-                            <List>
-                                {
-                                    ws.lobbyData?.participants.map((cur, i) => {
-                                        return (
-                                            <div key={`user-${i}`}>
-                                                <ListItem>
-                                                    <ListItemText
-                                                        primary={cur.name}
-                                                        secondary={
-                                                            <>
-                                                            {cur.id === ws.lobbyData?.owner.id ? <span>[lobby owner] </span> : null}
-                                                            {cur.house ? <span>{cur.house}</span>: null}
-                                                            </>
-                                                        }
-                                                    />
-                                                    {
-                                                        cur.id !== ws.websocket.playerId &&
-                                                        <FormControlLabel control={
-                                                            <Checkbox aria-label={'private message'} onChange={(e) => handlePMChange(e, cur.id)}/>
-                                                        } label="Private message" />
-
-                                                    }
-                                                    {
-                                                        cur.id !== ws.lobbyData.owner.id &&
-                                                        ws.lobbyData.owner.id === ws.websocket.playerId &&
-                                                            <Button onClick={() => handleKickClick(cur.id, cur.name)}>Kick</Button>
-                                                    }
-                                                </ListItem>
-                                                {(i < ws.lobbyData.participants.length - 1) &&
-                                                <Divider/>
-                                                }
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </List>
-                            <Button onClick={handleLeaveClick}>Leave</Button>
-                        </CardContent>
-                    </Card>
+                    <PlayersList id={id}/>
                 </div>
             </div>
             {isLoginModalOpen &&

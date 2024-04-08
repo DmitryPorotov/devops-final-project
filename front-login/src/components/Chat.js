@@ -28,8 +28,11 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
                     scrollToRef.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
                 }, 0)
             }
+            else if (message.type === 'error') {
+                console.warn(message);
+            }
         };
-        ws.websocket.onMessage(lobbyId,receiveMessage);
+        ws.websocket.onMessage(lobbyId, receiveMessage);
         const messages = afterInitGetMissedMessages();
         if (messages.length) {
             for (let i = 0; i < messages.length; i++) {
@@ -43,23 +46,6 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
         return () => ws.websocket.offMessage(receiveMessage);
     }, [chatMessages, ws, lobbyId]);
-
-
-    useEffect(() => {
-        const doInit = async () => {
-            const storedUser = await Storage.getUser();
-            if (!storedUser) {
-                return ;
-            }
-            await ws.websocket.init(storedUser.id);
-            await ws.websocket.subscribe(lobbyId);
-        };
-
-        if (!isInit) {
-            doInit();
-            setIsInit(true);
-        }
-    }, [setIsInit, isInit, lobbyId, ws.websocket]);
 
     const handleSubmit = (event) => {
         event.preventDefault();

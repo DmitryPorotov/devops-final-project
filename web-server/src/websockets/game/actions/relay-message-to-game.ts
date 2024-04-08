@@ -7,7 +7,7 @@ import WorkerRelayService from "../../../redis/worker-relay.service";
 import AuthToGame from "./auth-to-game.decorator";
 
 export class RelayMessageToGame extends BaseGameAction{
-    protected logger: Logger;
+    protected logger: Logger = new Logger(RelayMessageToGame.name);
 
     constructor(protected lobbies: LobbiesClientsMapService, protected workerRelayService: WorkerRelayService) {
         super(lobbies);

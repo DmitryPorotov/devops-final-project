@@ -13,6 +13,7 @@ class Websocket {
     static protocol = 'ws:';
     static baseUrl = Api.baseUrl;
     static port = ':3001';
+    static path = '/ws';
     static playerId;
     static worker;
     /**
@@ -46,7 +47,7 @@ class Websocket {
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [
-                    Websocket.protocol + Websocket.baseUrl + Websocket.port,
+                    Websocket.protocol + Websocket.baseUrl + Websocket.port + Websocket.path,
                     Websocket.playerId,
                     user.token
                 ]
@@ -77,6 +78,7 @@ class Websocket {
      * @param {OnMessageCallBack} callBack
      */
     static onMessage(lobbyId, callBack) {
+        if (Websocket.eventHandlers.has(callBack)) return;
         const cbWrapper = (msg) => {
             if (msg.data.lobbyId === lobbyId || msg.data.gameId == lobbyId) {
                 callBack(msg.data).then();

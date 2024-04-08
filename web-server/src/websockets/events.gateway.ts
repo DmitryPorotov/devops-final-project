@@ -16,7 +16,7 @@ import WebsocketWithUserInterface from "./websocket-with-user.interface";
     cors: {
         origin: '*',
     },
-    path: '/'
+    path: '/ws'
 })
 
 export class EventsGateway implements OnGatewayConnection{
