@@ -1,4 +1,5 @@
 import Api from "./api";
+import Storage from "./storage";
 
 // export interface MessageInterface {
 //     from: number;
@@ -35,18 +36,19 @@ class Websocket {
     }
 
     static makeSocket() {
-        return new Promise((resolve => {
+        return new Promise(async resolve => {
             Websocket.worker = new SharedWorker('/worker/worker.js');
             Websocket.worker.onerror = (e) => console.log(e);
             Websocket.worker.onmessageerror = (e) => {
                 console.log(e)
             };
+            const user = await Storage.getUser();
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [
                     Websocket.protocol + Websocket.baseUrl + Websocket.port,
                     Websocket.playerId,
-                    JSON.parse(window.localStorage.getItem('_user')).token
+                    user.token
                 ]
             });
             const opened = (message) => {
@@ -57,7 +59,7 @@ class Websocket {
             } ;
             Websocket.worker.port.addEventListener('message', opened);
             Websocket.worker.port.start();
-        }));
+        });
     }
 
     /**
@@ -65,13 +67,19 @@ class Websocket {
      */
 
     /**
+     * @callback OnMessageCallBack
+     * @param message
+     * @return Promise
+     */
+
+    /**
      * @param {number} lobbyId
-     * @param {function(Message)} callBack
+     * @param {OnMessageCallBack} callBack
      */
     static onMessage(lobbyId, callBack) {
         const cbWrapper = (msg) => {
             if (msg.data.lobbyId === lobbyId || msg.data.gameId == lobbyId) {
-                callBack(msg.data);
+                callBack(msg.data).then();
             }
         };
         Websocket.eventHandlers.set(callBack, cbWrapper);

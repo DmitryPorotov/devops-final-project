@@ -1,3 +1,5 @@
+import Storage from "./storage";
+
 
 class Api {
     static protocol = 'http:';
@@ -5,10 +7,11 @@ class Api {
     static port = ':8888';
     static apiPrefix = '/api/v1';
 
-    static headers(isLoggedIn){
+    static async headers(isLoggedIn){
         const headers = {"Content-Type": "application/json"};
-        if (isLoggedIn && window.localStorage.getItem('_user')) {
-            headers['Authorization'] = 'Bearer ' + JSON.parse(window.localStorage.getItem('_user')).token;
+        const user = await Storage.getUser();
+        if (isLoggedIn && user) {
+            headers['Authorization'] = 'Bearer ' + user.token;
         }
         return headers;
     };
@@ -19,7 +22,7 @@ class Api {
      * @param {?string=} body
      * @param {boolean=} isLoggedIn
      */
-    static get(url, body, isLoggedIn = true) {
+    static async get(url, body, isLoggedIn = true) {
         return Api.doFetch(url, body, 'GET', isLoggedIn);
     }
 
@@ -29,7 +32,7 @@ class Api {
      * @param {?string=} body
      * @param {boolean=} isLoggedIn
      */
-    static post(url, body, isLoggedIn = true) {
+    static async post(url, body, isLoggedIn = true) {
         return Api.doFetch(url, body, 'POST', isLoggedIn);
     }
     /**
@@ -38,7 +41,7 @@ class Api {
      * @param {?string=} body
      * @param {boolean=} isLoggedIn
      */
-    static delete_(url, body, isLoggedIn = true) {
+    static async delete_(url, body, isLoggedIn = true) {
         return Api.doFetch(url, body, 'DELETE', isLoggedIn);
     }
 
@@ -48,7 +51,7 @@ class Api {
      * @param {?string=} body
      * @param {boolean=} isLoggedIn
      */
-    static patch(url, body, isLoggedIn = true) {
+    static async patch(url, body, isLoggedIn = true) {
         return Api.doFetch(url, body, 'PATCH', isLoggedIn);
     }
 
@@ -62,7 +65,7 @@ class Api {
     static async doFetch(url, body, method, isLoggedIn = true) {
         const init = {
             method,
-            headers: Api.headers(isLoggedIn)
+            headers: await Api.headers(isLoggedIn)
         };
         if (body) init.body = body;
         const response = await fetch(Api.protocol + Api.baseUrl + Api.port + Api.apiPrefix + url, init);

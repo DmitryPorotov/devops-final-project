@@ -9,6 +9,7 @@ import {Outlet} from "react-router";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import websocket from "./http/websocket";
+import Storage from "./http/storage";
 
 const RoutesWrapper = () => {
     const auth = useContext(AuthContext);
@@ -80,8 +81,8 @@ export const WsContext = createContext({});
 const App = () => {
     const [isLoginShown, setIsLoginShown] = useState(false);
     const [lobbyData, setLobbyData] = useState();
-    const storeUser = useCallback(result => {
-        window.localStorage.setItem('_user',  JSON.stringify(result));
+    const storeUser = useCallback( async result => {
+        await Storage.setUser(result)
     },[]);
 
     const authContextValue = useMemo(() => ({

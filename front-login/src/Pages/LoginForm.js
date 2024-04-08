@@ -17,8 +17,9 @@ const LoginForm = () => {
             return JSON.stringify(this.getEmailAndPassword());
         },
         onSuccess(result) {
-            auth.storeUser(result);
-            if (auth.loginCallback) auth.loginCallback();
+            auth.storeUser(result).then(()=>{
+                if (auth.loginCallback) auth.loginCallback();
+            });
         }
     };
     return (

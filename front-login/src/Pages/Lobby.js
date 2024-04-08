@@ -18,12 +18,13 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import LobbyEditModal from "../components/LobbyEditModal";
+import Storage from "../http/storage";
 
 /**
  * @param {{participants: Array.<{id:number,name:string}>}} data
  */
 const amParticipating = ({participants}) => {
-    const myId = JSON.parse(window.localStorage.getItem('_user')).id;
+    const myId = Storage.getUser().id;
     return participants.reduce((acc, cur) => {
         if (cur.id === myId) acc = true;
         return acc;
@@ -85,6 +86,14 @@ const Lobby = () => {
     const [housesSelected, setHousesSelected] = useState([]);
     const [housesSelectedChanged, setHousesSelectedChanged] = useState(false);
 
+    const [gameCreated, setGameCreated] = useState(false);
+
+    const [canJoin, setCanJoin] = useState(false);
+
+    const [canSelectHouse, setCanSelectHouse] = useState(false);
+
+    const [alreadyJoined, setAlreadyJoined] = useState(false);
+
     const auth = useContext(AuthContext);
 
     const ws = useContext(WsContext);
@@ -122,10 +131,20 @@ const Lobby = () => {
         else return []
     };
 
+    useEffect(() => {
+        !alreadyJoined && window.open(`/lobby/${id}/game/`, `lobby${id}`);
+    },[alreadyJoined]);
+
+    const openGameTabIfMe = (player) => {
+        if (player.userId === ws.websocket.playerId) {
+            Storage.setHouseForLobby(id, player.house).then();
+            return true;
+        }
+    };
 
     useEffect(() => {
         if (!isInit) return ;
-        const receiveMessage = (message) => {
+        const receiveMessage = async (message) => {
             if (!isInitChat) {
                 missedMessages.push(message);
             }
@@ -173,26 +192,59 @@ const Lobby = () => {
                             name: message.body.lobbyName
                         });
                         break;
-                    case 'message':
-                        const house = message.body.body.match(/^selected house '(.*)'/);
-                        if (house) {
-                            if (message.userId === ws.websocket.playerId) {
-                                window.localStorage.setItem(`_lobby${id}house`, house[1])
-                            }
-                            housesSelected.push({
-                                userId: message.userId,
-                                house: house[1]
-                            });
-                            setHousesSelectedChanged(true);
-                            setHousesSelected([...housesSelected]);
-                        }
-                        break;
                     default:
                         break;
                 }
             } else if (message.type === 'action') {
-                if (message.action === 'create_game') {
-                    window.open(`/lobby/${id}/game/`)
+                switch (message.action) {
+                    case "create_game":
+                        setGameCreated(true);
+                        setCanSelectHouse(true);
+                        break;
+                    case "get_status":
+                        setGameCreated(message.status.created);
+                        if (message.status.created) {
+                            if (message.status.details.gameSettings.players) {
+                                const unusedHouses = {};
+                                for (const p of message.status.details.gameSettings.players) {
+                                    const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
+                                    participant.house = p.house;
+                                    unusedHouses[p.house] = p.userId === ws.websocket.playerId;
+                                    const joined = openGameTabIfMe(p);
+                                    if (joined) {
+                                        setCanSelectHouse(false);
+                                        setAlreadyJoined(true);
+                                    }
+                                }
+                                setUnusedHouseOptions({
+                                    ...houses,
+                                    ...unusedHouses,
+                                });
+                                ws.setLobbyData({
+                                    ...ws.lobbyData
+                                });
+                            }
+                            else {
+                                setCanSelectHouse(true);
+                            }
+                        }
+                        break;
+                    case "join_game":
+                        const unusedHouses = {};
+                        for (const p of message.gameSettings.players) {
+                            const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
+                            openGameTabIfMe(p) && setCanSelectHouse(false);
+                            participant.house = p.house;
+                            unusedHouses[p.house] = p.userId === ws.websocket.playerId;
+                        }
+                        setUnusedHouseOptions({
+                            ...houses,
+                            ...unusedHouses,
+                        });
+                        ws.setLobbyData({
+                            ...ws.lobbyData
+                        });
+                        break;
                 }
             }
         };
@@ -202,13 +254,13 @@ const Lobby = () => {
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
-            const storedUser = window.localStorage.getItem('_user');
+            const storedUser = await Storage.getUser();
             if (!storedUser) {
                 navigate('/');
                 return ;
             }
             setIsInit(true);
-            await ws.websocket.init(JSON.parse(storedUser).id);
+            await ws.websocket.init(storedUser.id);
             let data;
             try {
                 const response = await Api.get(`/lobby/${id}`);
@@ -233,43 +285,16 @@ const Lobby = () => {
                 await joinLobby(id);
             }
             ws.setLobbyData(data);
+            setTimeout(() => {
+                ws.websocket.send({
+                    action: 'get_status',
+                    type: "action",
+                });
+            }, 1)
         });
         if (!isInit) getLobbyData();
     }, [isLoginModalOpen, setIsLoginModalOpen, ws, auth, isInit, id]);
 
-    useEffect(() => {
-        if (!ws.lobbyData || !housesSelectedChanged) return;
-
-        const availableForSelectionHouses = {};
-        for (const s of housesSelected) {
-            for (const participant of ws.lobbyData.participants) {
-                if (s.userId === participant.id) {
-
-                    if (participant.house)
-                        availableForSelectionHouses[participant.house] = true;
-
-                    availableForSelectionHouses[s.house] = participant.id === ws.websocket.playerId;
-
-                    if (s.house === 'none') {
-                        delete participant.house
-                    }
-                    else  {
-                        participant.house = s.house;
-                    }
-                    break;
-                }
-            }
-        }
-        setUnusedHouseOptions({
-            ...houses,
-            ...availableForSelectionHouses
-        });
-        ws.setLobbyData({
-            ...ws.lobbyData,
-            participants: ws.lobbyData.participants
-        });
-        setHousesSelectedChanged(false)
-    }, [housesSelected, ws.lobbyData]);
 
     const handleLeaveClick = (event) => {
         ws.websocket.send({
@@ -289,6 +314,15 @@ const Lobby = () => {
             action: 'create_game',
             isRandomHouses: false,
         });
+    };
+
+    const joinGame = async () => {
+        ws.websocket.send({
+            type: 'action',
+            action: 'join_game',
+            name: (await Storage.getUser()).name,
+            joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
+        })
     };
 
     const handleKickClick = (playerId, name) => {
@@ -329,16 +363,16 @@ const Lobby = () => {
                 <div style={{flexFlow: "row", flexGrow: 1, padding:".2rem"}}> 
                     <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
                         <CardContent style={{display:"flex", justifyContent: "space-between"}}>
-                            <Select 
+                            <Select
+                                disabled={!canSelectHouse}
                                 onChange={(e) => {
-                                    ws.websocket.send({
-                                        userId: ws.websocket.playerId,
-                                        type: 'chat',
-                                        lobbyId: id,
-                                        body: {
-                                            type: 'message',
-                                            body: `selected house '${e.target.value}'`
-                                        }
+                                    setCanJoin(e.target.value !== 'none');
+                                    const me = ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId);
+                                    if (e.target.value === 'none')
+                                        delete me.house;
+                                    else me.house = e.target.value;
+                                    ws.setLobbyData({
+                                        ...ws.lobbyData,
                                     });
                                 }}
                                 value={ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId)?.house || 'none'}
@@ -353,10 +387,14 @@ const Lobby = () => {
                                 {unusedHouseOptions.pufferfish && <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>}
                                 {unusedHouseOptions.lion && <MenuItem value={'lion'}>Lion</MenuItem>}
                             </Select>
-                            {ws.lobbyData?.owner.id === ws.websocket.playerId &&
-                            <Button
-                                onClick={createGame}
-                            >Start Game</Button>
+                            {ws.lobbyData?.owner.id === ws.websocket.playerId && !canJoin && !gameCreated &&
+                                <Button
+                                    onClick={createGame}
+                                >Create Game</Button>
+                            }
+                            {
+                                gameCreated &&
+                                    <Button disabled={!canJoin} onClick={joinGame}>Join</Button>
                             }
                         </CardContent>
                     </Card>

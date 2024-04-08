@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import InputField from "../components/InputField";
 import BaseLoginSignupForm from "./common/BaseLoginSignupForm";
 import {Link} from "react-router-dom";
+import Storage from "../http/storage";
 
 
 const SignupForm = () => {
@@ -18,7 +19,13 @@ const SignupForm = () => {
             });
         },
         onSuccess(result) {
-            window.localStorage.setItem('_token', result.token)
+            Storage.getUser().then(u => {
+                u = u || {};
+                Storage.setUser({
+                    ...u,
+                    token: result.token
+                }).then()
+            });
         },
         onFailure(messages) {
             setNameErrors(messages.n);

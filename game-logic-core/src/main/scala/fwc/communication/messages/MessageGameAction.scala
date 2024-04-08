@@ -1,8 +1,8 @@
 package fwc.communication.messages
 
 case class MessageGameAction(
-                              userId: Int,
-                              gameId: String,
+                              override val userId: Int,
+                              override val gameId: String,
                               gameAction: ujson.Value,
-                              messageId: String,
-                            ) extends Message
+                              override val messageId: String,
+                            ) extends Message(userId: Int, gameId: String, messageId: String)

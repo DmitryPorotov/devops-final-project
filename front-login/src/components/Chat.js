@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {serverIsDeadHandler} from "../Pages/common/GlobalErrorHandlers";
 import {AuthContext, WsContext} from "../App";
+import Storage from '../http/storage';
 
 const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
     const [isInit, setIsInit] = useState(false);
@@ -19,7 +20,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
     useEffect(() => {
         if (!ws.lobbyData) return ;
-        const receiveMessage = (message) => {
+        const receiveMessage = async (message) => {
             if (message.type === 'chat') {
                 message.ts = formatDate(new Date());
                 setChatMessages([...chatMessages, message]);
@@ -46,11 +47,11 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
     useEffect(() => {
         const doInit = async () => {
-            const storedUser = window.localStorage.getItem('_user');
+            const storedUser = await Storage.getUser();
             if (!storedUser) {
                 return ;
             }
-            await ws.websocket.init(JSON.parse(storedUser).id);
+            await ws.websocket.init(storedUser.id);
             await ws.websocket.subscribe(lobbyId);
         };
 
@@ -84,31 +85,32 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
     const buildMessageBody = msg => {
         const header = `${msg.ts} ${msg.name}`;
-        switch (msg.body.type) {
-            case 'message':
-                if (msg.body.to?.length) {
-                    return `${header} [to ${msg.body.to
-                        .reduce((a,c) => {
-                            const pl = ws.lobbyData.participants.find(p => p.id === c);
-                            if (pl && c !== msg.userId) {
-                                a.push(pl.name)
-                            }
-                            return a;
-                        }, []).join(', ')}] : ${msg.body.body}`
-                } else {
-                    return `${header} : ${msg.body.body}`;
-                }
-            case 'join':
-                return `${header} joins.`;
-            case 'kick':
-                return `${header} is kicked.`;
-            case 'leave':
-                return `${header} leaves.`;
-            case 'edit':
-                return `${header} changed lobby name to ${msg.body.lobbyName}`;
-            default:
-                return '';
-        }
+        if (msg.type === 'chat')
+            switch (msg.body.type) {
+                case 'message':
+                    if (msg.body.to?.length) {
+                        return `${header} [to ${msg.body.to
+                            .reduce((a,c) => {
+                                const pl = ws.lobbyData.participants.find(p => p.id === c);
+                                if (pl && c !== msg.userId) {
+                                    a.push(pl.name)
+                                }
+                                return a;
+                            }, []).join(', ')}] : ${msg.body.body}`
+                    } else {
+                        return `${header} : ${msg.body.body}`;
+                    }
+                case 'join':
+                    return `${header} joins.`;
+                case 'kick':
+                    return `${header} is kicked.`;
+                case 'leave':
+                    return `${header} leaves.`;
+                case 'edit':
+                    return `${header} changed lobby name to ${msg.body.lobbyName}`;
+                default:
+                    return '';
+            }
     };
 
 

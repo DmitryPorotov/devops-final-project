@@ -3,10 +3,10 @@ package fwc.communication.messages
 import fwc.game.houses.HouseType
 
 case class MessageJoinGame(
-                          userId: Int,
-                          gameId: String,
-                          joinAs: Option[HouseType],
-                          name: String,
-                          messageId: String,
+                            override val userId: Int,
+                            override val gameId: String,
+                            joinAs: Option[HouseType],
+                            name: String,
+                            override val messageId: String,
                           )
-  extends Message
+  extends Message(userId: Int, gameId: String, messageId: String)

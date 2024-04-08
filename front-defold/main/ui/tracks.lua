@@ -91,13 +91,6 @@ local function set_closed_locations(self, track_name)
 end
 
 function _M:set_tracks(tracks)
-	print('tracks', tracks)
-	for t, places in pairs(tracks) do
-		print(t)
-		for i, p in ipairs(places) do
-			print(i , p)
-		end
-	end
 	self.logic_tracks = tracks
 	if not self.is_init then
 		set_shields(tracks, "throne")

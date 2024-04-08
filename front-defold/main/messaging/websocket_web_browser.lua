@@ -36,9 +36,7 @@ function _M:connect(creds)
 	game_data.me = me
 	self:send({
 		type = "action",
-		action = "join_game",
-		joinAs = game_data.me,
-		name = game_data.user_data.name,
+		action = "get_game_state",
 	})
 	self.on_connected(json.decode(data))
 end
