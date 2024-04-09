@@ -6,10 +6,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {serverIsDeadHandler} from "../Pages/common/GlobalErrorHandlers";
 import {AuthContext, WsContext} from "../App";
-import Storage from '../http/storage';
 
 const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
-    const [isInit, setIsInit] = useState(false);
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const scrollToRef = useRef();

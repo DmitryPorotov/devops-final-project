@@ -35,10 +35,10 @@ export class LobbyController {
   @Patch(':id/join')
   join(
       @Param('id') id: string,
-      @Body() joinLobbyDto: JoinLobbyDto,
-      @Req() request: FastifyRequest
+      @Req() request: FastifyRequest,
+      @Body() joinLobbyDto?: JoinLobbyDto,
   ) {
-    return this.lobbyService.join(+id, joinLobbyDto, request['user'] as User)
+    return this.lobbyService.join(+id, request['user'] as User, joinLobbyDto)
   }
 
 

@@ -12,14 +12,14 @@ import CardContent from "@mui/material/CardContent";
 import Chat from "../components/Chat";
 import Button from "@mui/material/Button";
 import LobbyEditModal from "../components/LobbyEditModal";
-import Storage from "../http/storage";
+import Storage_ from "../http/storage";
 import PlayersList from "../components/PlayersList";
 
 /**
  * @param {{participants: Array.<{id:number,name:string}>}} data
  */
-const amParticipating = ({participants}) => {
-    const myId = Storage.getUser().id;
+const amParticipating = async ({participants}) => {
+    const myId = (await Storage_.getUser()).id;
     return participants.reduce((acc, cur) => {
         if (cur.id === myId) acc = true;
         return acc;
@@ -256,7 +256,7 @@ const Lobby = () => {
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
-            const storedUser = await Storage.getUser();
+            const storedUser = await Storage_.getUser();
             if (!storedUser) {
                 navigate('/');
                 return ;
@@ -281,7 +281,7 @@ const Lobby = () => {
                 return;
             }
 
-            if (data.password && !amParticipating(data)) {
+            if (data.password && !(await amParticipating(data))) {
                 setIsLoginModalOpen(true);
             } else {
                 await joinLobby(id);

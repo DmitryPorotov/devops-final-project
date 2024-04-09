@@ -104,7 +104,7 @@ export class LobbyService {
     return LobbyService.censorPassword(lobby);
   }
 
-  async join(id: number, joinLobbyDto: JoinLobbyDto, user: User) {
+  async join(id: number, user: User, joinLobbyDto?: JoinLobbyDto) {
     return this.transactionWrapper(async lobbyRepository => {
       const lobby = await lobbyRepository.findOne({
         ...this.selectJoinLockOpt,
@@ -116,7 +116,7 @@ export class LobbyService {
       if (lobby.participants.length > 5) {
         throw new ConflictException('The lobby is full.')
       }
-      if (lobby.password && lobby.password != joinLobbyDto.password) {
+      if (lobby.password && lobby.password != joinLobbyDto?.password) {
         throw new ForbiddenException('The password for lobby is incorrect.');
       }
       lobby.participants.push({id: user.id, name: user.name} as User);
