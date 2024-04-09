@@ -1,6 +1,7 @@
 import RedisPubSub from "./redis.pub-sub"
 import { Injectable, Logger } from "@nestjs/common"
 import RedisCacheStorage from "./redis.cache-storage"
+import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
 
 @Injectable()
 class WorkerRelayService {
@@ -37,7 +38,7 @@ class WorkerRelayService {
             worker: workerName,
             gamesCount: gamesCount
         })
-    }
+    };
 
     sendToWorkersTest(message): void {
         this.redisPubSub.sendToWorkerTest(message);
@@ -46,31 +47,28 @@ class WorkerRelayService {
     private gameCb = (message: string, channel: string) => {
         const data = JSON.parse(message);
         this.workerCallback(data);
-    }
+    };
 
     async subscribeToGame(gameId: number) {
         if (this.gameSubscriptions.has(gameId)) return ;
-        await this.redisPubSub.subscribe(`game${gameId}.*`, this.gameCb)
+        await this.redisPubSub.subscribe(`game${gameId}.*`, this.gameCb);
         this.gameSubscriptions.set(gameId,true);
     }
 
     async unsubscribeFromGame(gameId: number) {
         if (!this.gameSubscriptions.has(gameId)) return ;
-        await this.redisPubSub.unsubscribe(`game${gameId}.*`)
+        await this.redisPubSub.unsubscribe(`game${gameId}.*`);
         this.gameSubscriptions.delete(gameId);
-    }
-
-    async sendToWorker(gameId: number, message: string) {
-        const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
-        this.redisPubSub.publishToWorker(workerName, message)
     }
 
     async sendToGame(gameId: number, message: string) {
         const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
+        if (!workerName) throw new NoGameInRedisCacheError();
         this.redisPubSub.publishToGame(workerName, `game${gameId}`, message);
     }
 
     async createNewGame(userId: number, gameId: number, isRandomHouses: boolean, messageId: string) {
+        if (this.pendingNewGames.has(gameId)) return ;
         this.redisPubSub.publishToWorker( 'new_game', JSON.stringify({
             userId,
             gameId: String(gameId),
@@ -88,7 +86,7 @@ class WorkerRelayService {
                     gameId: String(gameId),
                     messageId,
                     isRandomHouses
-                }))
+                }));
                 this.redisCacheStorage.set(`game:${gameId}`, worker.worker);
             }
             else {

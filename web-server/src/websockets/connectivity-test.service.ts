@@ -1,5 +1,4 @@
 import {Injectable} from "@nestjs/common";
-import {RabbitMqService} from "../rabbit-mq/rabbit-mq.service";
 import WorkerRelayService from "../redis/worker-relay.service";
 
 @Injectable()

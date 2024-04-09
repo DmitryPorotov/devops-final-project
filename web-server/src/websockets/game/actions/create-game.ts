@@ -16,10 +16,12 @@ export class CreateGame extends BaseGameAction {
     @AuthToGame(true)
     public async doAction(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
-        await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
-            ...message,
-            gameId: String(message.lobbyId)
-        }))
+        await this.workerRelayService.createNewGame(
+            client.user.id,
+            message.lobbyId,
+            message.isRandomHouses,
+            message.messageId
+        )
     }
 
 }

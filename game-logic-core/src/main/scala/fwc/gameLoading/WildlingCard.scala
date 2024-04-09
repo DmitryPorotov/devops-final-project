@@ -15,7 +15,7 @@ case class WildlingCard(
   override def toJson: Value = ujson.Obj(
     "code" -> code,
     "title" -> title,
-    "wildlingVictoryLowestBidderText" -> wildlingVictoryEveryoneElseText,
+    "wildlingVictoryLowestBidderText" -> wildlingVictoryLowestBidderText,
     "wildlingVictoryEveryoneElseText" -> wildlingVictoryEveryoneElseText,
     "playerVictoryText" -> playerVictoryText,
   )
