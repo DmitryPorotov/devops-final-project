@@ -4,7 +4,7 @@ import fwc.game.GameState
 import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, MilitaryUnitPowerToken}
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.{HousePufferfish, HouseRose}
-import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterRound, SubPhaseLeavePowerTokenAtTile}
+import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveConsolidatePowerOrder}
 import fwc.gameLoading
 import fwc.gameSaving.actions.action.ActionResolveMarchOrder
 import org.scalatest.flatspec.*
@@ -35,7 +35,7 @@ class MoveUnitsAndRemoveEnemyPowerTokenSpec extends AnyFlatSpec with should.Matc
       MilitaryUnitKnights
     )))
 
-    assert(updatedState.subPhase.isInstanceOf[SubPhaseCleanUpAfterRound])
+    assert(updatedState.subPhase.isInstanceOf[SubPhaseResolveConsolidatePowerOrder])
   }
 
   "ActionResolveMarchOrder" should "be able to ask to leave a power token on empty tile" in {
