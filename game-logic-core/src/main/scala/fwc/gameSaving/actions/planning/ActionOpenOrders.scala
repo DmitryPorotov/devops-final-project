@@ -22,7 +22,7 @@ case class ActionOpenOrders(
 
     val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseAddOrder]
 
-    if currentPhase.houseTypes.contains(houseType)
+    if !currentPhase.houseTypes.contains(houseType)
     then throw new ActionException("You have already confirmed your orders")
 
     val ordersOfHouse = gameState.placedOrders(houseType)
@@ -37,12 +37,12 @@ case class ActionOpenOrders(
       if noOrderArmies.isEmpty || (noOrderArmies.nonEmpty && !gameState.availableOrders.hasAvailableOrders(houseType, gameState.tracks))
       then
         currentPhase.copy(
-          houseTypes = currentPhase.houseTypes appended houseType
+          houseTypes = currentPhase.houseTypes.filter(_ != houseType)
         )
       else throw new ActionException(s"You have armies without orders at tiles [${noOrderArmies.map(_._1.toString).mkString(",")}]")
 
     val updatedSubPhase =
-      if newSubPhase.houseTypes.size == 6 then
+      if newSubPhase.houseTypes.isEmpty then
         SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard(gameState.tracks.ravenOwner)
       else newSubPhase
 

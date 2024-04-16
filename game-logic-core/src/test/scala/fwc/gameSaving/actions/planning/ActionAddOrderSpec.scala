@@ -46,8 +46,8 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       "Wolf has 3 orders placed"
     )
     assert(
-      !gameStateAfter3.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(HouseWolf),
-      "Wolf does not need to add more orders"
+      gameStateAfter3.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(HouseWolf),
+      "Wolf needs to confirm orders"
     )
   }
 }

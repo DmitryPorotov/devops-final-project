@@ -1,7 +1,7 @@
 package integration.replays
 
 import fwc.game.phases.SubPhase
-import fwc.game.phases.planningSubPhases.SubPhaseReadyToOpenOrders
+import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseReadyToOpenOrders}
 import fwc.gameSaving.GameReplay
 import org.scalatest.*
 import org.scalatest.flatspec.*
@@ -13,7 +13,7 @@ class ReplayAllOrdersRound1Spec extends AnyFlatSpec with should.Matchers {
 
     val replay = GameReplay.fromJson(jsonStr)
 
-    assert(replay.currentGameState.subPhase.asInstanceOf[SubPhaseReadyToOpenOrders].houseTypes.size == 6)
+    assert(replay.currentGameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.size == 6)
     assert(replay.currentGameState.roundCounter == 1)
   }
 }

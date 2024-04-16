@@ -8,27 +8,33 @@
     "players": [
       {
         "userId": 1,
-        "house": "rose"
+        "house": "rose",
+        "name": "name"
       },
       {
         "userId": 2,
-        "house": "wolf"
+        "house": "wolf",
+        "name": "name"
       },
       {
         "userId": 3,
-        "house": "lion"
+        "house": "lion",
+        "name": "name"
       },
       {
         "userId": 4,
-        "house": "moose"
+        "house": "moose",
+        "name": "name"
       },
       {
         "userId": 5,
-        "house": "pufferfish"
+        "house": "pufferfish",
+        "name": "name"
       },
       {
         "userId": 6,
-        "house": "kraken"
+        "house": "kraken",
+        "name": "name"
       }
     ],
     "playersInputting": null

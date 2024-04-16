@@ -13,7 +13,8 @@ class Card2Spec extends AnyFlatSpec with should.Matchers {
       HouseMoose,
       2,
       false
-    )
+    ),
+    wildlingsStartedFrom12Points = Some(true)
   )
 
   "Card2" should "be able to get loser cards" in {
