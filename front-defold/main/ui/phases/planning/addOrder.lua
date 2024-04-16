@@ -14,6 +14,16 @@ local _M = {
 	ready_text = "Confirm orders",
 }
 
+local function get_readied_players(not_ready_players)
+	local rv = {}
+	for house, _ in pairs(game_data.players) do
+		if not utils.index_of(not_ready_players, house) then
+			rv[#rv+1] = house
+		end
+	end
+	return rv
+end
+
 local function count_tiles_without_orders(self)
 	local count = 0
 	for _, v in ipairs(self.tiles_with_hints) do
@@ -111,7 +121,7 @@ function _M:init(armies, my_orders, phase)
 	end
 	update_hint_text(self)
 	hints:set_enabled(true)
-	for _, v in ipairs(phase.houseTypes) do
+	for _, v in ipairs(get_readied_players(phase.houseTypes)) do
 		if v == game_data.me then
 			orders_confirmed(self)
 		end
