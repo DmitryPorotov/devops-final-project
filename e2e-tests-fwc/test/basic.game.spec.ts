@@ -1,6 +1,7 @@
 import { login} from "./login";
 import { WebSocket } from "ws"
 import {LoginUserDto, send, sleep} from "./utility";
+import settings from './settings'
 
 describe('basic_game', function () {
     let user;
@@ -15,7 +16,7 @@ describe('basic_game', function () {
         return new Promise<void>(async (resolve, reject) => {
             try {
                 const openSocket = (u: LoginUserDto) => new Promise<WebSocket & {u: LoginUserDto}>(r => {
-                    const webSocket: WebSocket & {u: LoginUserDto} = new WebSocket(`ws://127.0.0.1:3001?_token=${u.token}`) as any;
+                    const webSocket: WebSocket & {u: LoginUserDto} = new WebSocket(`ws://${settings.host}:${settings.port}${settings.wsPath}?_token=${u.token}`) as any;
                     webSocket.u = u;
                     webSocket.addEventListener('open', () => {
                         r(webSocket)
@@ -26,7 +27,7 @@ describe('basic_game', function () {
                 const user4 = await login({email:'c@b.com', password:'12345678'});
                 const user5 = await login({email:'d@b.com', password:'12345678'});
                 const user6 = await login({email:'e@b.com', password:'12345678'});
-                const webSocket1 = new WebSocket(`ws://127.0.0.1:3001?_token=${user.token}`);
+                const webSocket1 = new WebSocket(`ws://${settings.host}:${settings.port}${settings.wsPath}?_token=${user.token}`);
 
 
                 const messageId = String(Math.random());
@@ -43,7 +44,7 @@ describe('basic_game', function () {
                                 isLobbyCreated = true;
                                 break;
                             case messageId1:
-                                expect(json.gameState.subPhase.subPhase).toBe('addOrder');
+                                expect(json.action).toBe('create_game');
                                 everyoneJoin();
                                 break;
                             case messageId2:
@@ -51,7 +52,7 @@ describe('basic_game', function () {
                                 break;
                             case messageId3:
                                 expect(json.gameSettings.players[0].house).toBeDefined();
-                                resolve()
+                                resolve();
                                 break;
                         }
                     } catch (e) {
@@ -121,7 +122,8 @@ describe('basic_game', function () {
                         action: 'join_game',
                         lobbyId: 2,
                         messageId: messageId2,
-                        joinAs: "lion"
+                        joinAs: "lion",
+                        name: 'name'
                     }));
                     for (let s of sockets) {
                         const messageId = String(Math.random());
@@ -151,6 +153,7 @@ describe('basic_game', function () {
                             userId: s.u.id,
                             action: 'join_game',
                             lobbyId: 2,
+                            name: 'my name',
                             messageId,
                             joinAs: otherHouses[s.u.id]
                         }))

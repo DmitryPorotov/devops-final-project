@@ -1,6 +1,7 @@
 import {setTimeout} from "timers";
 import * as http from "http";
 import {ErrorEvent, WebSocket} from "ws"
+import settings from './settings'
 
 export interface LoginUserDto {
     id: number;
@@ -21,9 +22,9 @@ export async function send(path: string, message: string, token?: string, method
             headers['Authorization'] = `Bearer ${token}`;
         }
         const request = http.request({
-            hostname: 'localhost',
-            port: 3001,
-            path,
+            hostname: settings.host,
+            port: settings.port,
+            path: settings.apiPath + path,
             headers,
             method,
 

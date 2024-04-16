@@ -24,20 +24,18 @@ export class LobbiesSeeder implements Seeder {
         const user = new User();
         user.id = 1;
 
-        const lobby1 = new Lobby();
-        lobby1.name = 'test1';
-        lobby1.password = '1234';
-        lobby1.owner = user;
-        lobby1.participants = [];
-        lobby1.participants.push(user);
+        const lobbies = [];
+        for (const i of [1,2,3,4,5]) {
+            const lobby = new Lobby();
+            lobby.name = 'test' + i;
+            if (i === 1) lobby.password = '1234';
+            lobby.owner = user;
+            lobby.participants = [];
+            lobby.participants.push(user);
+            lobbies.push(lobby)
+        }
 
-        const lobby2 = new Lobby();
-        lobby2.name = 'test2';
-        lobby2.owner = user;
-        lobby2.participants = [];
-        lobby2.participants.push(user);
-
-        return await this.lobbyRepository.save([lobby1, lobby2]);
+        return await this.lobbyRepository.save(lobbies);
     }
 
 }

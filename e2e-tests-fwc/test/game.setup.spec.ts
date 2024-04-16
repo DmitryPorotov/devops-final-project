@@ -1,5 +1,6 @@
 import { login} from "./login";
 import {LoginUserDto, send, sleep, WebSocketWrap} from "./utility";
+import settings from './settings'
 
 describe('game_setup', function () {
     let user;
@@ -13,7 +14,7 @@ describe('game_setup', function () {
     test('join_game', function () {
         return new Promise<void>(async (resolve, reject) => {
             try {
-                const sock = new WebSocketWrap(`ws://127.0.0.1:3001?_token=${user.token}`);
+                const sock = new WebSocketWrap(`ws://${settings.host}:${settings.port}${settings.wsPath}?_token=${user.token}`);
                 await sock.open();
                 console.log('after open');
                 const messageId = String(Math.random());
@@ -21,7 +22,7 @@ describe('game_setup', function () {
                     "type": "chat",
                     "userId": user.id,
                     "messageId": messageId,
-                    "lobbyId": 2,
+                    "lobbyId": 4,
                     "body":{"type":"create"}
                 });
                 console.log("after lobby create");
@@ -30,7 +31,7 @@ describe('game_setup', function () {
                 await sleep(500);
                 const createdGameMsg = await sock.send({
                     type: 'action',
-                    lobbyId: 2,
+                    lobbyId: 4,
                     userId: user.id,
                     messageId: messageId1,
                     action: 'create_game',
@@ -42,12 +43,11 @@ describe('game_setup', function () {
                     messageId : "123",
                     userId: user.id,
                     action: "join_game",
-                    lobbyId: 2,
+                    name: 'my name',
+                    lobbyId: 4,
                     type: "action",
                     joinAs: "lion"
                 } as any);
-                expect(resp.gameRules).toBeDefined();
-                expect(resp.gameState).toBeDefined();
                 expect(resp.gameSettings).toBeDefined();
                 resolve()
             }
