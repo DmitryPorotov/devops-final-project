@@ -17,7 +17,7 @@ export class LobbiesSeeder implements Seeder {
 
     async drop(): Promise<any> {
         await this.dataSource.createQueryRunner().query("TRUNCATE TABLE lobby_participants_user");
-        return await this.lobbyRepository.clear();
+        return this.lobbyRepository.clear();
     }
 
     async seed(): Promise<any> {
@@ -35,7 +35,7 @@ export class LobbiesSeeder implements Seeder {
             lobbies.push(lobby)
         }
 
-        return await this.lobbyRepository.save(lobbies);
+        return this.lobbyRepository.save(lobbies);
     }
 
 }

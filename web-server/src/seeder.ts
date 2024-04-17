@@ -6,6 +6,7 @@ import {LobbiesSeeder} from "../seeder/lobbies.seeder";
 import {lobbyProviders} from "./lobby/entities/lobby,providers";
 import { ConfigModule } from "@nestjs/config"
 
+const { exit } = require('node:process');
 
 seeder({
     imports:[
@@ -17,4 +18,5 @@ seeder({
         ...userProviders, ...lobbyProviders
     ]
 
-}).run([UsersSeeder, LobbiesSeeder]);
+}).run([UsersSeeder, LobbiesSeeder])
+    .then(exit);
