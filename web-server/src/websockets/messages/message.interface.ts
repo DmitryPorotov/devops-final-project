@@ -8,7 +8,7 @@ export interface MessageInterface {
     messageId: string;
     name?: string;
     time?: string;
-    type: 'chat' | 'action' | 'test' | 'error';
+    type: 'chat' | 'action' | 'test' | 'error' | 'system';
     lobbyId?: number;
     body: ChatMessageInterface;
 }

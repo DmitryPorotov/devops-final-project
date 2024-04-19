@@ -33,7 +33,7 @@ class WorkerRelayService {
         }
     }
     private onNewGameMessageCallback = (gameId: string, workerName: string, gamesCount: number) => {
-        this.logger.debug('in worker new game message')
+        this.logger.debug('in worker new game message');
         this.pendingNewGames.get(parseInt(gameId)).push({
             worker: workerName,
             gamesCount: gamesCount

@@ -11,9 +11,21 @@ import ConnectivityTestService from "./connectivity-test.service";
 import { RedisModule } from "../redis/redis.module";
 import LobbiesClientsMapService from "./lobbies-clients-map.service"
 import GameMessagingService from "./game/game-messaging.service"
+import SystemMessageService from "./system-message.service";
 
 @Module({
     imports:[JwtModule, DatabaseModule, RedisModule],
-    providers: [EventsGateway, AuthGuard, WebsocketService, LobbyManagerService, LobbiesClientsMapService, GameMessagingService, LobbyService, ConnectivityTestService, ...lobbyProviders],
+    providers: [
+        EventsGateway,
+        AuthGuard,
+        WebsocketService,
+        LobbyManagerService,
+        LobbiesClientsMapService,
+        GameMessagingService,
+        LobbyService,
+        ConnectivityTestService,
+        SystemMessageService,
+        ...lobbyProviders
+    ],
 })
 export class EventsModule {}

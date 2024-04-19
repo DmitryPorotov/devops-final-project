@@ -4,5 +4,8 @@ export default {
     LOBBY_REPOSITORY: 'LOBBY_REPOSITORY',
     HASH_SALT_ROUNDS: 10,
     JWT_SECRET: 'bottom-secret',
+
+    WS_PING_INTERVAL: 20000,
+    CHAT_PREFIX: 'chat',
 };
 

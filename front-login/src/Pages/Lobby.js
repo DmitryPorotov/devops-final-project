@@ -126,8 +126,8 @@ const Lobby = () => {
     let gameWindowRef;
 
     const setHouseIfMe = (player) => {
-        if (player.userId === ws.websocket.playerId && player.house) {
-            Storage.setHouseForLobby(id, player.house).then();
+        if ((player.userId === ws.websocket.playerId) && player.house) {
+            Storage_.setHouseForLobby(id, player.house).then();
             return true;
         }
     };
@@ -206,7 +206,7 @@ const Lobby = () => {
                                 let joined;
                                 for (const p of message.status.details.gameSettings.players) {
                                     const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
-                                    participant.house = p.house;
+                                    participant && (participant.house = p.house);
                                     unusedHouses[p.house] = p.userId === ws.websocket.playerId;
                                     !joined && (joined = setHouseIfMe(p));
                                 }
@@ -313,7 +313,7 @@ const Lobby = () => {
         ws.websocket.send({
             type: 'action',
             action: 'join_game',
-            name: (await Storage.getUser()).name,
+            name: (await Storage_.getUser()).name,
             joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
         });
         setAlreadyJoined(true);

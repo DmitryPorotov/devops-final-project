@@ -7,15 +7,22 @@ import {LoginUserDto} from "../../../user/dto/login-user.dto";
 import {LobbyService} from "../../../lobby/lobby.service";
 import {Logger} from "@nestjs/common";
 import LobbiesClientsMapService from "../../lobbies-clients-map.service";
+import SystemMessageService from "../../system-message.service";
 
 export abstract class BaseLobbyAction {
     protected abstract readonly logger: Logger;
 
-    protected constructor (protected chatService: ChatService, protected lobbyService: LobbyService, protected lobbies: LobbiesClientsMapService) {}
+    protected constructor (
+        protected chatService: ChatService,
+        protected lobbyService: LobbyService,
+        protected lobbies: LobbiesClientsMapService,
+        protected systemMessageService: SystemMessageService
+    ) {}
 
     abstract doAction(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity?: LobbyEntity): void
 
     protected async relayToChat(client: WebsocketWithUserInterface, message: MessageInterface, body: ChatMessageInterface, lobbyEntity: LobbyEntity): Promise<void> {
+        await this.systemMessageService.subscribeToSystemEvents(lobbyEntity.id);
         await this.chatService.sendToChat(lobbyEntity.id, {
             messageId: message.messageId,
             type: 'chat',

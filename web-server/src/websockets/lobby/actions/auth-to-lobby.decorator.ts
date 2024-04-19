@@ -51,10 +51,10 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                             lobby = this.lobbies.get(message.lobbyId);
                             const clientIdx = lobby.clients.findIndex(c => c.user.id === client.user.id);
                             if (clientIdx >= 0) {
-                                lobby.clients.splice(clientIdx, 1)
+                                lobby.clients[clientIdx] = client
                             }
-                            if (!lobby.clients.includes(client)) {
-                                lobby.clients.push(client);
+                            else {
+                                lobby.clients.push(client)
                             }
                             lobby.participants = lobbyEntity.participants.map(u => u.id);
                         }

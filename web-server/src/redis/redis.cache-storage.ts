@@ -1,10 +1,10 @@
-import { createClient } from "redis"
+import {createClient, RedisClientType} from "redis"
 import { env } from "process"
 import { Logger } from "@nestjs/common"
 
 class RedisCacheStorage {
     private readonly logger = new Logger(RedisCacheStorage.name);
-    private redisStorage;
+    private redisStorage: RedisClientType;
     async init() {
         this.redisStorage = createClient({url: env.REDIS_URL});
         this.redisStorage.on('error', (err) => this.logger.error('Redis Client Error', err));

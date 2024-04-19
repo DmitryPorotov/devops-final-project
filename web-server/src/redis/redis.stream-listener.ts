@@ -1,14 +1,17 @@
 import { createClient } from "redis";
 import { env } from "process"
-import { Logger } from "@nestjs/common"
-import {sleep} from "../common/utilities";
+import {Injectable, Logger} from "@nestjs/common"
 
+@Injectable()
 class RedisStreamListener {
     private readonly logger = new Logger(RedisStreamListener.name);
     private redisClient;
     private listeners: {[n: string]: { callbacks: Array<(msg: string) => void>, timeout: NodeJS.Timeout }} = {};
+    private isInit = false;
 
     async init() {
+        if (this.isInit) return ;
+        this.isInit = true;
         this.logger.debug('redis url ', env.REDIS_URL);
         this.redisClient = await createClient({url: env.REDIS_URL});
         this.redisClient.on('error', (err) => this.logger.error('Redis Client Error', err));

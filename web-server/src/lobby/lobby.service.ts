@@ -1,7 +1,7 @@
 import {ConflictException, ForbiddenException, Inject, Injectable} from '@nestjs/common';
 import {CreateLobbyDto} from './dto/create-lobby.dto';
 import {UpdateLobbyDto} from './dto/update-lobby.dto';
-import {DataSource, Repository} from "typeorm";
+import {DataSource, FindManyOptions, Repository} from "typeorm";
 import {Lobby} from "./entities/lobby.entity";
 import constants from '../constants';
 import {User} from "../user/entities/user.entity";
@@ -68,6 +68,20 @@ export class LobbyService {
     if (lobby?.password) lobby.password = '*';
     return lobby;
   }
+
+  async findLobbyIdsByParticipantId(participantId: number): Promise<Array<number>> {
+    return (await this.lobbyRepository.find({
+      relations: {
+        participants: true
+      },
+      where: {
+        participants: {
+          id: participantId
+        }
+      }
+    })).map(l => l.id);
+  }
+
 
   private selectJoinOpt: FindOneOptions<Lobby> = {
     relations: {

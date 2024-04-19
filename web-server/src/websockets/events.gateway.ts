@@ -9,6 +9,9 @@ import {IncomingMessage} from "http";
 import WebsocketService from "./websocket.service";
 import { Logger, UnauthorizedException } from "@nestjs/common"
 import WebsocketWithUserInterface from "./websocket-with-user.interface";
+import constants from "../constants";
+import {sleep} from "../common/utilities";
+import SystemMessageService from "./system-message.service";
 
 
 
@@ -25,6 +28,7 @@ export class EventsGateway implements OnGatewayConnection{
     constructor(
         private authGuard: AuthGuard,
         private websocketService: WebsocketService,
+        private systemMessageService: SystemMessageService
     ) {
     }
     @WebSocketServer()
@@ -53,7 +57,7 @@ export class EventsGateway implements OnGatewayConnection{
                 this.websocketService.handleMessage(client, JSON.parse(strMessage));
             }
             catch (e) {
-                this.logger.debug('in catch', e)
+                this.logger.debug('in catch', e);
                 if (e instanceof SyntaxError) {
                     if (e.message.includes('JSON')) {
                         client.send(JSON.stringify({
@@ -70,6 +74,30 @@ export class EventsGateway implements OnGatewayConnection{
         });
         client.addListener("close", (id, data) => {
             this.logger.debug(`User ${user.id} - ${user.email} disconnected from the websocket`);
-        })
+            client.pingInterval && clearInterval(client.pingInterval);
+        });
+        client.addListener('error', (err) => {
+            this.logger.debug(`User ${user.id} - ${user.email} had a connection error on the websocket. ${err.name}: ${err.message}`);
+        });
+        const pingPongHandler = () => client.lastPong = new Date().getTime();
+        client.addListener('pong', pingPongHandler);
+        client.addListener('ping', pingPongHandler);
+        client.pingInterval = setInterval(async () => {
+            const now = new Date().getTime();
+            client.ping();
+            await sleep(5000);
+            if (!client.lastPong || (now - client.lastPong > 5000)) {
+                await this.systemMessageService.relayToLobbies(client, {
+                    type: "system",
+                    userId: client.user.id,
+                    messageId: String(Math.random()),
+                    time: new Date().toISOString(),
+                    body: {
+                        type: 'error',
+                        body: `Player ${client.user.name} id ${client.user.id} is timing out.`
+                    }
+                })
+            }
+        }, constants.WS_PING_INTERVAL) as unknown as number;
     }
 }
