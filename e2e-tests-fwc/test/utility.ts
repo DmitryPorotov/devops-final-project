@@ -81,12 +81,17 @@ export class WebSocketWrap {
         });
     }
 
+    public sendSync(data) {
+        console.log('in send sync')
+        this.webSocket.send(JSON.stringify(data));
+    }
+
     public async send(data: {messageId: string} | any): Promise<any> {
         const messageId = data.messageId;
-        return new Promise<object>((resolve, reject) => {
+        return new Promise<object>(async (resolve, reject) => {
             this.webSocket.addEventListener("message", event => {
                 try {
-                    // console.log("on message")
+
                     const json = JSON.parse(event.data as string);
                     if (messageId == json.messageId) {
                         resolve(json);

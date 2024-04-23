@@ -1,5 +1,5 @@
 import { login} from "./login";
-import {LoginUserDto, send, sleep, WebSocketWrap} from "./utility";
+import {sleep, WebSocketWrap} from "./utility";
 import settings from './settings'
 
 describe('game_setup', function () {

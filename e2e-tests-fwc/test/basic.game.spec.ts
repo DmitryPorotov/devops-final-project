@@ -1,16 +1,36 @@
 import { login} from "./login";
 import { WebSocket } from "ws"
-import {LoginUserDto, send, sleep} from "./utility";
+import {LoginUserDto, send, sleep, WebSocketWrap} from "./utility";
 import settings from './settings'
 
 describe('basic_game', function () {
-    let user;
+    let user: LoginUserDto;
 
     beforeAll(function () {
         return login({email: 'a@b.com', password: "12345678"}).then(res => {
             user = res;
         })
     });
+
+/*    test('connection', function () {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                const sock = new WebSocketWrap(`ws://${settings.host}:${settings.port}${settings.wsPath}?_token=${user.token}`);
+                console.log('after open socket');
+                const reply = await sock.send({
+                    messageId: '12345',
+                    action: 'hello',
+                    type: 'test',
+                    userId: user.id
+                });
+                console.log(reply);
+                expect(reply.action).toBe('hello');
+                resolve();
+            } catch (e) {
+                reject(e);
+            }
+        })
+    });*/
 
     test('game_create', function () {
         return new Promise<void>(async (resolve, reject) => {

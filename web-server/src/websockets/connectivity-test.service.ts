@@ -3,7 +3,10 @@ import WorkerRelayService from "../redis/worker-relay.service";
 
 @Injectable()
 class ConnectivityTestService {
-    constructor(private messagingService: WorkerRelayService) {
+    private messagingService;
+    constructor(
+    ) {
+        this.messagingService = new WorkerRelayService()
     }
 
     async sendToWorker(message, callback: (msg: string) => void ) {
