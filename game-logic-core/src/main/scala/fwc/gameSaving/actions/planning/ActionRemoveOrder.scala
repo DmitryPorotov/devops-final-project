@@ -21,7 +21,7 @@ case class ActionRemoveOrder (
     if !gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
     then throw new ActionException("Wrong phase")
 
-    if gameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(houseType)
+    if !gameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(houseType)
     then throw new ActionException("You have already confirmed your orders")
 
     if !tileNumber.isValid

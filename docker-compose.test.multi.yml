@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.2.2
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - net1
+  mysql:
+    image: "mysql:8.0.34"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootPassword"
+      MYSQL_DATABASE: "fwc"
+      MYSQL_USER: "bpuser"
+      MYSQL_PASSWORD: "123456"
+    networks:
+      - net1
+  web-server:
+    image: "node:18"
+    ports: 
+      - "3001:80"
+      - "9229:9229"
+    volumes:
+      - "./web-server:/web-server"
+    working_dir: "/web-server"
+    command: ["npx", "nest", "start", "--debug=0.0.0.0:9229", "--watch"]
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+    networks:
+      - net1
+  web-server2:
+    image: "node:18"
+    ports: 
+      - "3002:80"
+      - "9230:9229"
+    volumes:
+      - "./web-server:/web-server"
+    working_dir: "/web-server"
+    command: ["npx", "nest", "start", "--debug=0.0.0.0:9229", "--watch"]
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - SEVER_NAME=server2
+    networks:
+      - net1
+  react:
+    image: "node:18"
+    ports:
+      - "3000:3000"
+      - "9228:9228"
+    volumes:
+      - "./front-login:/front-login"
+    working_dir: "/front-login"
+    depends_on:
+      - "web-server"
+    command: ["npm", "run", "start", "--debug=0.0.0.0:9228"]
+    networks:
+      - net1
+  worker:
+    image: "eclipse-temurin:17.0.8.1_1-jdk"
+    restart: on-failure
+    volumes:
+      - "./game-logic-core/saves/:/fwc/saves"
+      - "./game-logic-core/target/scala-3.1.2/:/fwc"
+      - "./game-logic-core/textures/:/fwc/textures"
+    working_dir: "/fwc"
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - WORKER_NAME=worker1
+    command: ["java","-cp", "lib/jedis-4.4.0.jar:lib/geny_3-0.7.1.jar:lib/ujson_3-1.6.0.jar:lib/upack_3-1.6.0.jar:lib/upickle-core_3-1.6.0.jar:lib/upickle-implicits_3-1.6.0.jar:lib/upickle_3-1.6.0.jar:lib/amqp-client-5.16.0.jar:lib/scalajs-library_2.11-1.8.0.jar:lib/scala-library-2.13.8.jar:lib/scala-reflect-2.11.12.jar:lib/scala3-library_3-3.1.2.jar:lib/slf4j-api-1.7.36.jar:./classes", "fwc.FunWithChairs"]
+    networks:
+      - net1
+    depends_on:
+      - redis
+  reverse_proxy:
+    image: "nginx:1.25.4"
+    volumes:
+      - ./nginx.conf.d/fwc.conf:/etc/nginx/nginx.conf
+      - ./front-defold/build/:/www/data/html
+    ports:
+      - "8888:80"
+    networks:
+      - net1
+
+
+networks:
+  net1:

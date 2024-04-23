@@ -4,7 +4,7 @@ import { Logger } from "@nestjs/common";
 
 class RedisPubSub {
     private readonly logger = new Logger(RedisPubSub.name);
-    private readonly SERVER_NAME = 'server1';//todo get from env
+    private readonly SERVER_NAME = env.SERVER_NAME;
 
     private redisPublisher;
     private redisSubscriber;
