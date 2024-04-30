@@ -212,6 +212,8 @@ function _M:set_units(tile_num, units)
 			end
 			v.hash = factory.create("/map#millitary_unit_facrory", position, nil, {house = hash(v.house), type = hash(v.type)})
 			go.set_scale(go.get_scale(v.hash) / go.get_scale('/map').x, v.hash)
+		elseif v.type == 'powerToken' then
+			labels:enable_power_token(tonumber(tile_num))
 		end
 	end
 end
@@ -369,6 +371,7 @@ function _M:clean_up()
 		end
 	end
 	self.orders = {}
+	labels:clean_up()
 end
 
 return _M

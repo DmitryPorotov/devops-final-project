@@ -35,6 +35,12 @@ export class LobbiesSeeder implements Seeder {
             lobbies.push(lobby)
         }
 
+        for (const i of [2,3,4,5,6]) {
+            const user = new User();
+            user.id = i;
+            lobbies[1].participants.push(user);
+        }
+
         return this.lobbyRepository.save(lobbies);
     }
 

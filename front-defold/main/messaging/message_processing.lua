@@ -105,6 +105,8 @@ function _M:process_message(message)
 			end
 
 		end
+	elseif message.type == 'system'	then
+		-- todo
 	else
 		print(message.message)
 		local s = gui.get_node("debug")

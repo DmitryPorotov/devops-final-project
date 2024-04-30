@@ -80,6 +80,10 @@ local _M = {
 	LABEL_HASHES = {},
 	highlighted = {},
 	selected_target = nil,
+	LAND_TILES = {
+		1, 3, 5, 6, 7, 9, 11, 12, 13, 16, 18, 19, 20, 22, 24, 25, 26, 27, 28,
+		29, 31, 33, 34, 35, 38, 39, 40, 42, 44, 45, 46, 48, 49, 51, 52, 53, 54, 55
+	}
 }
 
 function _M:select(label_hash)
@@ -168,10 +172,17 @@ function _M:unselect_target()
 	self.selected_target = nil
 end
 
+function _M:clean_up()
+	for _, v in ipairs(self.LAND_TILES) do
+		go.set(self.LABEL_IDS[v] .. "#pt-flag", 'tint', vmath.vector4(0,0,0,0))
+	end
+end
+
 function _M:init()
 	for i = 0, 57 do
 		self.LABEL_HASHES[hash(self.LABEL_IDS[i])] = self.LABEL_IDS[i]
 	end
+	self:clean_up()
 	go.set(self.LABEL_IDS[3] .. "#label_bg", "tint", self.HOUSE_COLORS.wolf)
 	go.set(self.LABEL_IDS[7] .. "#label_bg", "tint", self.HOUSE_COLORS.wolf)
 
@@ -245,6 +256,14 @@ function _M:init()
 	go.set(self.LABEL_IDS[52] .. "#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set(self.LABEL_IDS[53] .. "#label_bg", "tint", self.HOUSE_COLORS.neutral)
 	go.set(self.LABEL_IDS[57] .. "#label_bg", "tint", self.HOUSE_COLORS.neutral)
+end
+
+function _M:enable_power_token(tile_num)
+	go.set(self.LABEL_IDS[tile_num] .. "#pt-flag", 'tint', vmath.vector4(0,0,0,1))
+end
+
+function _M:disable_power_token(tile_num)
+	go.set(self.LABEL_IDS[tile_num] .. "#pt-flag", 'tint', vmath.vector4(0,0,0,0))
 end
 
 function _M:set_tile_owner(tile_num, house)
