@@ -5,5 +5,6 @@ export interface ChatActionsEnum {
     kick,
     message,
     error,
-    edit
+    edit,
+    ping
 }

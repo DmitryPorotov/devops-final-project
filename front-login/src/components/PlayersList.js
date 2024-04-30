@@ -73,6 +73,7 @@ const PlayersList = () => {
                                                     {cur.id === ws.lobbyData?.owner.id ?
                                                         <span>[lobby owner] </span> : null}
                                                     {cur.house ? <span>{cur.house}</span> : null}
+                                                    {cur.ping ? <span> {cur.ping}ms</span> : ''}
                                                 </>
                                             }
                                         />

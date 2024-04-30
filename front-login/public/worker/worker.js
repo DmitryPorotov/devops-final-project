@@ -16,7 +16,21 @@ const ws = {
         this.makeSocket(url, token)
     },
     makeSocket(url, token) {
-        this.webSocket = new WebSocket(url + '?token=' + token);
+        const errorCb = (message) => {
+            console.log(message);
+            this.webSocket.removeEventListener('message', messageHandler);
+            this.webSocket.removeEventListener('error', errorCb);
+            this.webSocket.removeEventListener('close', errorCb);
+            this.webSocket = null;
+            setTimeout(()=>this.makeSocket(url, token), 1000)
+        };
+        try {
+            this.webSocket = new WebSocket(url + '?token=' + token);
+        } catch (e) {
+            console.log(e);
+            errorCb(e.message || 'Could not connect to web socket.')
+        }
+
         const messageHandler = (message) => {
             const msg = JSON.parse(message.data);
             for (const p of this.ports) {
@@ -26,11 +40,6 @@ const ws = {
             }
         };
         this.webSocket.addEventListener('message', messageHandler);
-
-        const errorCb = (message) => {
-            console.log(message);
-            setTimeout(()=>this.makeSocket(token), 1000)
-        };
 
         this.webSocket.addEventListener('error', errorCb);
 

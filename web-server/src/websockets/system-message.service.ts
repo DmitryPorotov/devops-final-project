@@ -23,6 +23,7 @@ class SystemMessageService {
         await this.redisStreamListener.init();
         const lobbyIds = await this.lobbyService.findLobbyIdsByParticipantId(client.user.id);
         for (const lobbyId of lobbyIds) {
+            message.lobbyId = lobbyId;
             await this.redisStreamListener.send(`${constants.CHAT_PREFIX}${lobbyId}sys`, JSON.stringify(message));
         }
     }

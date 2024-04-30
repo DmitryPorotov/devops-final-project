@@ -1,8 +1,8 @@
 import {LoginUserDto, send} from "./utility";
 
-export async function login({email, password}): Promise<LoginUserDto> {
+export async function login({email, password}, port = null): Promise<LoginUserDto> {
     return await send('/auth/login', JSON.stringify({
         email,
         password,
-    })) as LoginUserDto
+    }), null, 'POST', port) as LoginUserDto
 }

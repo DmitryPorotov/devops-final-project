@@ -18,7 +18,7 @@ describe('game_setup', function () {
                 await sock.open();
                 console.log('after open');
                 const messageId = String(Math.random());
-                const createdLobbyMsg = await sock.send({
+                const [createdLobbyMsg] = await sock.send({
                     "type": "chat",
                     "userId": user.id,
                     "messageId": messageId,
@@ -29,7 +29,7 @@ describe('game_setup', function () {
                 expect(createdLobbyMsg.body.type).toBe('create');
                 const messageId1 = String(Math.random());
                 await sleep(500);
-                const createdGameMsg = await sock.send({
+                const [createdGameMsg] = await sock.send({
                     type: 'action',
                     lobbyId: 4,
                     userId: user.id,
@@ -39,7 +39,7 @@ describe('game_setup', function () {
                 });
                 console.log("after game create");
                 expect(createdGameMsg.action).toBe('create_game');
-                const resp = await sock.send({
+                const [resp] = await sock.send({
                     messageId : "123",
                     userId: user.id,
                     action: "join_game",

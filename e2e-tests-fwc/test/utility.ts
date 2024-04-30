@@ -13,7 +13,7 @@ export interface LoginUserDto {
     token: string;
 }
 
-export async function send(path: string, message: string, token?: string, method = 'POST') {
+export async function send(path: string, message: string, token?: string, method = 'POST', port = null) {
     return new Promise((resolve, reject) => {
         const headers = {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export async function send(path: string, message: string, token?: string, method
         }
         const request = http.request({
             hostname: settings.host,
-            port: settings.port,
+            port: port || settings.port,
             path: settings.apiPath + path,
             headers,
             method,
@@ -82,26 +82,25 @@ export class WebSocketWrap {
     }
 
     public sendSync(data) {
-        console.log('in send sync')
+        console.log('in send sync');
         this.webSocket.send(JSON.stringify(data));
     }
 
-    public async send(data: {messageId: string} | any): Promise<any> {
+    public async send(data: {messageId: string} | any): Promise<Array<any>> {
         const messageId = data.messageId;
-        return new Promise<object>(async (resolve, reject) => {
+        const messages = [];
+        return new Promise<Array<any>>(async (resolve, reject) => {
             this.webSocket.addEventListener("message", event => {
                 try {
-
                     const json = JSON.parse(event.data as string);
+                    messages.push(json);
                     if (messageId == json.messageId) {
-                        resolve(json);
+                        resolve(messages)
                     }
                 }
                 catch (e) {
                     reject(e)
                 }
-            }, {
-                once: true
             });
             this.webSocket.send(JSON.stringify(data), {}, err => {
                 if (err) reject(err);

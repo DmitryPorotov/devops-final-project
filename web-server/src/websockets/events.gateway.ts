@@ -75,6 +75,16 @@ export class EventsGateway implements OnGatewayConnection{
         client.addListener("close", (id, data) => {
             this.logger.debug(`User ${user.id} - ${user.email} disconnected from the websocket`);
             client.pingInterval && clearInterval(client.pingInterval);
+            this.systemMessageService.relayToLobbies(client, {
+                type: "system",
+                userId: client.user.id,
+                messageId: String(Math.random()),
+                time: new Date().toISOString(),
+                body: {
+                    type: 'error',
+                    body: `Player ${client.user.name} id ${client.user.id} has closed connection.`
+                }
+            }).then()
         });
         client.addListener('error', (err) => {
             this.logger.debug(`User ${user.id} - ${user.email} had a connection error on the websocket. ${err.name}: ${err.message}`);
@@ -82,11 +92,18 @@ export class EventsGateway implements OnGatewayConnection{
         const pingPongHandler = () => client.lastPong = new Date().getTime();
         client.addListener('pong', pingPongHandler);
         client.addListener('ping', pingPongHandler);
-        client.pingInterval = setInterval(async () => {
+        const pingFunc = this.makePingFunc(client);
+        pingFunc().then();
+        client.pingInterval = setInterval(pingFunc, constants.WS_PING_INTERVAL) as unknown as number;
+    }
+
+    private makePingFunc(client: WebsocketWithUserInterface): () => Promise<void> {
+        return async () => {
             const now = new Date().getTime();
             client.ping();
             await sleep(5000);
-            if (!client.lastPong || (now - client.lastPong > 5000)) {
+            this.logger.debug(`after ping, user id ${client.user.id} delay ${client.lastPong - now}`);
+            if (!client.lastPong || (client.lastPong - now > 3000)) {
                 await this.systemMessageService.relayToLobbies(client, {
                     type: "system",
                     userId: client.user.id,
@@ -98,6 +115,18 @@ export class EventsGateway implements OnGatewayConnection{
                     }
                 })
             }
-        }, constants.WS_PING_INTERVAL) as unknown as number;
+            else {
+                await this.systemMessageService.relayToLobbies(client, {
+                    type: "system",
+                    userId: client.user.id,
+                    messageId: String(Math.random()),
+                    time: new Date().toISOString(),
+                    body: {
+                        type: 'ping',
+                        body: `${client.lastPong - now}`
+                    }
+                })
+            }
+        }
     }
 }

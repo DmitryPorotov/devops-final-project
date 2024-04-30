@@ -16,7 +16,7 @@ import Storage_ from "../http/storage";
 import PlayersList from "../components/PlayersList";
 
 /**
- * @param {{participants: Array.<{id:number,name:string}>}} data
+ * @param {{participants: Array.<{id:number,name:string,ping:string,connected:boolean}>}} data
  */
 const amParticipating = async ({participants}) => {
     const myId = (await Storage_.getUser()).id;
@@ -144,7 +144,7 @@ const Lobby = () => {
                         if (ws.lobbyData && !ws.lobbyData.participants.find(p => p.id === message.userId)) {
                             ws.setLobbyData({
                                 ...ws.lobbyData,
-                                participants: [...ws.lobbyData.participants, {id: message.userId, name: message.name}]
+                                participants: [...ws.lobbyData.participants, {id: message.userId, name: message.name, connected: true}]
                             })
                         }
                         break;
@@ -248,6 +248,20 @@ const Lobby = () => {
                         });
                         break;
                 }
+            }
+            else if (message.type === 'system') {
+                console.log(message)
+                const p = ws.lobbyData?.participants.find(pr => pr.id === message.userId);
+                if (p) {
+                    if (message.body.type === 'error') {
+                        p.connected = false;
+                    } else if (message.body.type === 'ping') {
+                        p.ping = message.body.body;
+                    }
+                }
+                ws.setLobbyData({
+                    ...ws.lobbyData
+                })
             }
         };
         ws.websocket.onMessage(id, receiveMessage);
