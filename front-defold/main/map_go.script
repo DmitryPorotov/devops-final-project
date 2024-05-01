@@ -3,6 +3,7 @@ local labels = require "main/labels"
 
 function init(self)
 	labels:init()
+	map_:init()
 end
 
 function final(self)

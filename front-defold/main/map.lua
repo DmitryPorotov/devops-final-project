@@ -22,6 +22,16 @@ local _M = {
 		vmath.vector3(-25, 0, 0.5),
 		vmath.vector3(25, 0, 0.5),
 	},
+	GARRISON_URLS = {
+		'/3garrison',
+		'/16garrison',
+		'/22garrison',
+		'/26garrison',
+		'/31garrison',
+		'/35garrison',
+		'/38garrison',
+		'/55garrison',
+	},
 	armies = {},
 	armies_by_house = {},
 	phase = "addOrder",
@@ -29,6 +39,12 @@ local _M = {
 	house = false,
 	to_select_from_tile = false
 }
+
+function _M:init()
+	for _, url in ipairs(self.GARRISON_URLS) do
+		go.set(url, 'position.z', -.5)
+	end
+end
 
 function _M:get_center_of_territories(house)
 	local positions = {}
@@ -214,6 +230,8 @@ function _M:set_units(tile_num, units)
 			go.set_scale(go.get_scale(v.hash) / go.get_scale('/map').x, v.hash)
 		elseif v.type == 'powerToken' then
 			labels:enable_power_token(tonumber(tile_num))
+		else
+			go.set('/' .. tile_num .. 'garrison', 'position.z', 0)
 		end
 	end
 end

@@ -1,6 +1,10 @@
-local utils = require "main/utils"
+local base = require "main/ui/dialogs/base_dialog"
+local event_dispatcher = require "main/ui/event_dispatcher"
 
+---@module RavenChooseCardOrOrder : BaseDialog
 local _M = {}
+
+setmetatable(_M, base)
 
 function _M:init()
 	self.panel = gui.get_node("raven_card_or_order/panel")
@@ -8,39 +12,21 @@ function _M:init()
 	self.card_button = gui.get_node("raven_card_or_order/card")
 end
 
-function _M:open()
-	gui.set_enabled(self.panel, true)
-	gui.animate(self.panel, "position.x", 1075, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
-end
-
 local selected = false
 
-function _M:close()
-	gui.animate(
-		self.panel, 
-		"position.x",
-		1325,
-		gui.PLAYBACK_ONCE_FORWARD,
-		utils.ANIMATION_TIME,
-		0,
-		function()
-			gui.set_enabled(self.panel, false)
-			selected = false
-		end
-	)
-end
-
-function _M:check_pressed(x, y)
-	return gui.is_enabled(self.panel) and gui.pick_node(self.panel, x, y)
+function _M:on_closed()
+	selected = false
 end
 
 function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) and not selected then
 		if gui.pick_node(self.order_button, x, y) then
 			selected = "changeOrder"
+			event_dispatcher.trigger('raven_card_or_order_click')
 			return true
 		elseif gui.pick_node(self.card_button, x, y) then
 			selected = "lookAtWildlingsCard"
+			event_dispatcher.trigger('raven_card_or_order_click')
 			return true
 		end
 	end

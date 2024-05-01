@@ -1,6 +1,6 @@
-local utils = require 'main/utils'
 local event_dispatcher = require "main/ui/event_dispatcher"
 local army_logic = require "main/ui/army_logic"
+local base = require "main/ui/dialogs/base_dialog"
 
 ---@class GUIArmyToSend
 ---@field footmen number
@@ -8,6 +8,7 @@ local army_logic = require "main/ui/army_logic"
 ---@field siegeEngines number
 ---@field ships number
 
+---@module MarchSelectArmy : BaseDialog
 local _M = {
 	panel_name = 'march_select_army',
 	controls = {},
@@ -19,7 +20,11 @@ local _M = {
 	from = nil,
 	to = nil,
 	who = nil,
+	closed_position = 1335,
+	opened_position = 1065,
 }
+
+setmetatable(_M, base)
 
 function _M:to_send_changed()
 	local text = ''
@@ -106,19 +111,13 @@ function _M:open_or_toggle(army, label)
 	end
 	self:set_available_units(army, not label)
 	if not gui.is_enabled(self.panel) then
-		gui.set_enabled(self.panel, true)
-		gui.animate(self.panel, "position.x", 1065, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME)
+		self:open()
 	end
 	return true
 end
 
-function _M:close()
-	gui.animate(self.panel, "position.x", 1335, gui.PLAYBACK_ONCE_FORWARD, utils.ANIMATION_TIME, 0,
-			function()
-				gui.set_enabled(self.panel, false)
-				reset_panel(self)
-			end
-	)
+function _M:on_closed()
+	reset_panel(self)
 end
 
 function _M:set_available_units(army, is_multi_march)
@@ -176,10 +175,6 @@ function _M:get_to_send()
 		end
 	end
 	return to_send
-end
-
-function _M:check_pressed(x, y)
-	return gui.is_enabled(self.panel) and gui.pick_node(self.panel, x, y)
 end
 
 function _M:check_button_pressed(x, y)

@@ -1,4 +1,5 @@
 local game_data = require "main/ui/game_data"
+local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {
 	house_to_panel_num = {},
@@ -75,6 +76,7 @@ function _M:set_player_turn(house)
 end
 
 function _M:init()
+	event_dispatcher.on('set_power_tokens', self.set_player_power_tokens, self)
 	self.panels = {
 		gui.get_node('player1/player_panel'),
 		gui.get_node('player2/player_panel'),
@@ -106,6 +108,12 @@ function _M:check_pressed(x, y)
 		end
 	end
 	return false
+end
+
+function _M:set_player_power_tokens(house, tokens_count)
+	local panel_num = self.house_to_panel_num[house]
+	local node = gui.get_node("player" .. panel_num .. "/power_count")
+	gui.set_text(node, tokens_count)
 end
 
 _M.check_button_pressed = _M.check_pressed -- todo this function will open player details later

@@ -259,7 +259,7 @@ function _M:init()
 end
 
 function _M:enable_power_token(tile_num)
-	go.set(self.LABEL_IDS[tile_num] .. "#pt-flag", 'tint', vmath.vector4(0,0,0,1))
+	go.set(self.LABEL_IDS[tile_num] .. "#pt-flag", 'tint', vmath.vector4(1,1,1,1))
 end
 
 function _M:disable_power_token(tile_num)

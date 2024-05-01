@@ -6,6 +6,7 @@ local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
 local raven_card_or_order = require "main/ui/dialogs/raven_choose_card_or_order"
+local leave_power_token = require "main/ui/dialogs/leave_power_token"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local save_load_menu = require "main/ui/settings/save_load"
 local misc_buttons = require "main/ui/misc_buttons"
@@ -60,6 +61,7 @@ function _M:init()
 	supply_panel:init()
 	hints:init()
 	raven_card_or_order:init()
+	leave_power_token:init()
 	save_load_menu:init()
 	misc_buttons:init()
 	list_of_saves:init()
@@ -78,6 +80,7 @@ function _M:init()
 		march_select_army,
 		confirm,
 		partial_march_orders,
+		leave_power_token,
 	}
 end
 

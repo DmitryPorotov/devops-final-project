@@ -8,6 +8,7 @@ local orders = require "main/ui/orders"
 local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
+local power_tokens_logic = require "main/ui/power_tokens_logic"
 
 local _M = {}
 
@@ -29,6 +30,8 @@ function _M:init(message)
 		game_data[k] = v
 	end
 	supply_logic.set_usage_rules(game_data.gameRules.supplyUsage)
+
+	power_tokens_logic.init(message.gameState.powerTokens)
 
 	supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
 	supply_panel:set_available(message.gameState.supplies[game_data.me])
