@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/current_todo_bar"
+  texture: "gui/hint-bg"
   id: "panel"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -55,9 +55,9 @@ nodes {
   layer: ""
   inherit_alpha: true
   slice9 {
-    x: 10.0
+    x: 30.0
     y: 10.0
-    z: 10.0
+    z: 30.0
     w: 10.0
   }
   clipping_mode: CLIPPING_MODE_NONE

@@ -31,10 +31,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/player_panel/current_todo_bar.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/assets/player_panel/current_todo_icon.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -104,6 +100,10 @@ images {
 }
 images {
   image: "/assets/yes.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/hint-bg.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
