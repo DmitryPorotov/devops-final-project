@@ -10,7 +10,7 @@ input_method = HiddenInputField
 [project]
 title = front-defold
 version = 0.1.0
-dependencies#0 = https://github.com/defold/extension-websocket/archive/3.1.0.zip
+dependencies#0 = https://github.com/defold/extension-websocket/archive/3.2.0.zip
 
 [display]
 width = 1200

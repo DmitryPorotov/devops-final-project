@@ -24,6 +24,11 @@ parser.add_argument('-f', '--force', action='store_true')
 args = parser.parse_args()
 
 
+def does_docker_image_sbt_xrandr_exists():
+    result = subprocess.run(["docker", "images", "sbt_xrandr", "--format", "{{.Repository}}"], capture_output=True)
+    return result.stdout.decode('utf8').startswith('sbt_xrandr')
+
+
 def start():
     if not check_docker():
         print_error('Docker is not installed')
@@ -110,6 +115,20 @@ def start():
         else:
             write_bob_downloaded_flag_file(url)
             print_success("Bob was successfully downloaded.")
+    else:
+        print('Bob the builder is already downloaded.')
+
+    if not does_docker_image_sbt_xrandr_exists() or args.force:
+        print('Building docker image for Bob...')
+        result = subprocess.run(['docker', 'build',
+                                 '--tag', 'sbt_xrandr',
+                                 '../../game-logic-core/docker/'])
+        if result.returncode == 0:
+            print_success('Docker image for Bob the builder was successfully built.')
+        else:
+            print_error('Building of docker image for Bob the builder has failed.')
+    else:
+        print('Docker image for Bob the builder was built already.')
 
 
 if __name__ == '__main__':

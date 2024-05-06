@@ -1,3 +1,2 @@
 #!/bin/sh
-cd front-defold/ &&
-java -jar ~/Defold/bob.jar build bundle -p js-web -a
+docker run -v ./front-defold:/fd_fwc -v ./tools/init/.cache:/bob -w /fd_fwc sbt_xrandr java -jar /bob/bob.jar --settings=web.properties -bo /fd_fwc/build/default/__htmlLaunchDir build bundle -p js-web -a
