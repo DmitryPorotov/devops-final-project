@@ -3,12 +3,14 @@ local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {
 	house_to_panel_num = {},
+	panel_num_to_house = {},
 	players = {},
 	logic_tracks = nil,
 }
 
 local function set_player_panel(self, player_panel_num, house_name)
-	_M.house_to_panel_num[house_name] = player_panel_num
+	self.house_to_panel_num[house_name] = player_panel_num
+	self.panel_num_to_house[player_panel_num] = house_name
 	local name = gui.get_node("player" .. player_panel_num .. "/player_name_text")
 	gui.set_text(name, self.players[house_name]["name"])
 	local shield = gui.get_node("player" .. player_panel_num .. "/shield")
@@ -116,6 +118,17 @@ function _M:set_player_power_tokens(house, tokens_count)
 	gui.set_text(node, tokens_count)
 end
 
-_M.check_button_pressed = _M.check_pressed -- todo this function will open player details later
+function _M:check_button_pressed(x, y)
+	if self.panels then
+		for i, v in ipairs(self.panels) do
+			if gui.pick_node(v, x, y) then
+				local house = self.panel_num_to_house[i]
+				event_dispatcher.trigger('player_panel_click', house)
+				return true
+			end
+		end
+	end
+	return false
+end
 
 return _M

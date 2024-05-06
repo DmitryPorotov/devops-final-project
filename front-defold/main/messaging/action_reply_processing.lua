@@ -79,7 +79,7 @@ action_type_switch = {
 				}
 			})
 			msg.post('/map', 'reassign_labels')
-			power_tokens_logic.add(reply.player_action.houseType, -1)
+			power_tokens_logic.leave_power_token_on_map(reply.player_action.houseType)
 		end
 		leavePowerTokenAtTile:clean_up()
 		do_current_phase_switching(reply)

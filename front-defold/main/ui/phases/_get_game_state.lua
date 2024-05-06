@@ -12,11 +12,18 @@ local power_tokens_logic = require "main/ui/power_tokens_logic"
 
 local _M = {}
 
+---@param tile_num string
+---@param units MilitaryUnit[]
 local function set_tile_units(tile_num, units)
 	msg.post("/map", "set_units", {
 		tile_num = tile_num,
 		units = units
 	})
+	for _, unit in ipairs(units) do
+		if unit.type == 'powerToken' then
+			power_tokens_logic.leave_power_token_on_map(unit.house, true)
+		end
+	end
 end
 
 local function clean_up()

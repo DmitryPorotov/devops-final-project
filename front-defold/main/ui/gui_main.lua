@@ -13,6 +13,7 @@ local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
 local confirm = require "main/ui/dialogs/confirm"
 local partial_march_orders = require "main/ui/partial_march_orders"
+local player_screen = require "main/ui/player_screen"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -39,7 +40,7 @@ function _M:init()
 		login:dispose()
 	else
 		game_data.is_html5 = false
-	login:init()
+		login:init()
 	end
 
 	ws:init()
@@ -68,6 +69,7 @@ function _M:init()
 	march_select_army:init()
 	confirm:init()
 	partial_march_orders:init()
+	player_screen:init()
 
 	self.panels = {
 		tracks,
@@ -81,6 +83,7 @@ function _M:init()
 		confirm,
 		partial_march_orders,
 		leave_power_token,
+		player_screen,
 	}
 end
 

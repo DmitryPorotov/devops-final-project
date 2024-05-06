@@ -26,6 +26,14 @@ local _M = {
 		[hash("defend")] = "defend",
 		[hash("support")] = "support",
 	},
+	HOUSE_REAL_NAMES = {
+		lion = 'Lannister',
+		kraken = 'Greyjoy',
+		moose = 'Baratheon',
+		rose = 'Tyrell',
+		pufferfish = 'Martell',
+		wolf = 'Stark',
+	},
 	ANIMATION_TIME = .15,
 	---Returns index of item in a table, returns nil if not found
 	---@param table table
