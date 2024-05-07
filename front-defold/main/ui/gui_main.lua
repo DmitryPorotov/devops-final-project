@@ -72,8 +72,9 @@ function _M:init()
 	player_screen:init()
 
 	self.panels = {
-		tracks,
+		player_screen,
 		orders,
+		tracks,
 		hints,
 		raven_card_or_order,
 		misc_buttons,
@@ -83,7 +84,6 @@ function _M:init()
 		confirm,
 		partial_march_orders,
 		leave_power_token,
-		player_screen,
 	}
 end
 
@@ -98,6 +98,7 @@ end
 
 function _M:update(dt)
 	ws.on_update(dt)
+	local last_panel
 	if self.action then
 		local status, err = pcall(function ()
 			if login:on_input(self.action) then
@@ -105,14 +106,20 @@ function _M:update(dt)
 			elseif save_load_menu:check_button_pressed(self.action.x, self.action.y) then
 			else
 				for _, panel in ipairs(self.panels) do
+					last_panel = _
 					if panel:check_button_pressed(self.action.x, self.action.y) then
 						break
 					end
 				end
 			end
 		end)
-		self.action = nil
+		if status then self.action = nil end
 		if not status then
+			for key, v in pairs(self.action) do
+				print(key, v)
+			end
+			print('last panel idx ' .. last_panel)
+			self.action = nil
 			error(err)
 		end
 	end

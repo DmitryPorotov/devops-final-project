@@ -37,6 +37,7 @@ function _M:check_button_pressed(x, y)
 			event_dispatcher.trigger('leave_power_token_click')
 			return true
 		end
+		return gui.pick_node(self.panel, x, y)
 	end
 	return false
 end

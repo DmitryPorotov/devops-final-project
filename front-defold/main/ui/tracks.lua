@@ -10,16 +10,8 @@ function _M:init(player_panels)
 	self.player_panels = player_panels
 	self.logic_tracks = nil
 	self.is_open = false
-	self.is_init = false
 	self.panel = gui.get_node("tracks_full")
 end
-
---function _M:set_players(players)
---	self.players = players
---	if self.logic_tracks then
---		self.player_panels.set_players_panels(self)
---	end
---end
 
 function _M:set_me(me)
 	self.me = me
@@ -32,6 +24,7 @@ function _M:check_button_pressed(x, y)
 		else
 			self:open()
 		end
+		return true
 	end
 end
 
@@ -43,10 +36,16 @@ local function set_shields(tracks, track_name)
 	local prefix = string.sub(track_name, 1, 1)
 	for i = 1, 6 do
 		local tmp = gui.get_node("shield-" .. tracks[track_name][i])
-		local shield_clone = gui.clone_tree(tmp)
-		local shield = shield_clone["shield-" .. tracks[track_name][i]]
+		local shield = gui.clone(tmp)
+		local shield_id = prefix .. "_shield-" .. i
+		local success, old_shield = pcall(function()
+			return gui.get_node(shield_id)
+		end)
+		if success then
+			gui.delete_node(old_shield)
+		end
 		gui.set_enabled(shield, true)
-		gui.set_id(shield, prefix .. "_shield-" .. i)
+		gui.set_id(shield, shield_id)
 		gui.set_parent(shield, gui.get_node(prefix .. i))
 		gui.set_position(shield, vmath.vector3(0, -4, 0))
 	end
@@ -92,15 +91,12 @@ end
 
 function _M:set_tracks(tracks)
 	self.logic_tracks = tracks
-	if not self.is_init then
-		set_shields(tracks, "throne")
-		set_shields(tracks, "fiefdoms")
-		set_shields(tracks, "court")
-		self.my_t_idx = set_closed_locations(self, "throne")
-		self.my_f_idx = set_closed_locations(self, "fiefdoms")
-		self.my_c_idx = set_closed_locations(self, "court")
-		--self.player_panels.set_players_panels(self)
-	end
+	set_shields(tracks, "throne")
+	set_shields(tracks, "fiefdoms")
+	set_shields(tracks, "court")
+	self.my_t_idx = set_closed_locations(self, "throne")
+	self.my_f_idx = set_closed_locations(self, "fiefdoms")
+	self.my_c_idx = set_closed_locations(self, "court")
 end
 
 local function ani_open(prefix, i)

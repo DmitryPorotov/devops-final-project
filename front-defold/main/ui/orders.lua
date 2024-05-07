@@ -158,6 +158,7 @@ function _M:check_button_pressed(x, y)
 				return true
 			end
 		end
+		return gui.pick_node(self.panel, x, y)
 	end
 	return false
 end

@@ -14,18 +14,28 @@
 ---@field powerPoints number
 ---@field homeOf "'lion'" | "'kraken'" | "'moose'" | "'rose'" | "'pufferfish'" | "'wolf'"
 
+---@class HouseCard
+---@field house "'lion'" | "'kraken'" | "'moose'" | "'rose'" | "'pufferfish'" | "'wolf'"
+---@field code number
+---@field name string
+---@field strength number
+---@field text string
+---@field attack number
+---@field defense number
 
 ---@class GameRules
 ---@field board BoardTile[]
 ---@field supplyUsage number[][]
 ---@field kingsCourtStars number[]
 ---@field maxArmies table<string, number>
+---@field houseCards HouseCard[]
 
 ---@module game_data
 ---@field me string
 ---@field is_html5 boolean
 ---@field armies table<string, MilitaryUnit[]>
 ---@field gameRules GameRules
+---@field discardedHouseCards table<string, table<number>>
 local _M = {
 	players = {
 		moose = { id = -1, name = "Waiting for player..." },

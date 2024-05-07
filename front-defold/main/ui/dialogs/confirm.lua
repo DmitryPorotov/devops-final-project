@@ -46,6 +46,7 @@ function _M:check_button_pressed(x, y)
 			self:clean_up()
 			return true
 		end
+		return gui.pick_node(self.panel, x, y)
 	end
 	return false
 end
