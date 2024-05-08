@@ -9,6 +9,8 @@ local supply_panel = require "main/ui/supply_panel"
 local hints = require "main/ui/hints"
 local player_panels = require "main/ui/player_panel"
 local power_tokens_logic = require "main/ui/power_tokens_logic"
+local house_cards_logic = require "main/ui/house_cards_logic"
+local army_logic = require "main/ui/army_logic"
 
 local _M = {}
 
@@ -39,6 +41,8 @@ function _M:init(message)
 	supply_logic.set_usage_rules(game_data.gameRules.supplyUsage)
 
 	power_tokens_logic.init(message.gameState.powerTokens)
+	house_cards_logic.init(game_data.gameRules.houseCards, message.gameState.discardedHouseCards)
+	army_logic:init(message.gameState.armies, message.gameState.combat)
 
 	supply_panel:set_supply_usage_rules(message.gameRules.supplyUsage)
 	supply_panel:set_available(message.gameState.supplies[game_data.me])

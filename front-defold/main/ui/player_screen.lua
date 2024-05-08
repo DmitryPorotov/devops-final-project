@@ -2,11 +2,11 @@ local event_dispatcher = require "main/ui/event_dispatcher"
 local utils = require "main/utils"
 local power_tokens_logic = require "main/ui/power_tokens_logic"
 local house_card = require "main/ui/house_card"
-local game_data = require "main/ui/game_data"
+local house_cards_logic = require "main/ui/house_cards_logic"
 
-local card_start_pos_x = -420
 local card_pos_y = -90
 local card_position_step = 140
+local card_start_pos_x = -(200 - card_position_step) * 7
 
 local _M = {
 	---@type HouseCardWrapper[]
@@ -15,20 +15,10 @@ local _M = {
 
 function _M:make_cards(house)
 	---@type HouseCard[]
-	local my_cards = {}
-	for _, card in ipairs(game_data.gameRules.houseCards) do
-		if card.house == house then
-			my_cards[#my_cards + 1] = card
-			if #my_cards >= 7 then
-				break
-			end
-		end
-	end
-	table.sort(my_cards, function(a, b)
-		return a.strength < b.strength
-	end)
+	local my_cards = house_cards_logic.get_house_cards(house)
+	local discarded_cards = house_cards_logic.get_discarded_cards(house)
 	for _, v in ipairs(my_cards) do
-		local c = house_card:new(v)
+		local c = house_card:new(v, utils.index_of(discarded_cards, v.code))
 		c:set_parent(self.panel)
 		c:set_position(vmath.vector3(
 				card_start_pos_x + (card_position_step * #self.cards),

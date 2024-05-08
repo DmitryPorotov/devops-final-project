@@ -6,6 +6,7 @@ local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 
 local resolveMarchOrder = require "main/ui/phases/action/resolveMarchOrder"
 local leavePowerTokenAtTile = require "main/ui/phases/action/leavePowerTokenAtTile"
+local chooseHouseCard = require "main/ui/phases/action/chooseHouseCard"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
 local army_logic = require "main/ui/army_logic"
@@ -45,12 +46,17 @@ action_type_switch = {
 	end,
 	resolveMarchOrder = function(reply)
 		if reply.player_action.targets and next(reply.player_action.targets) then
-			local no_en, enemy = army_logic.separate_targets_with_no_enemies(reply.player_action.targets)
+			local no_en, enemy =
+				army_logic:separate_targets_with_no_enemies(reply.player_action.targets, reply.player_action.houseType)
 			if next(no_en) then
 				msg.post('/map', 'move_units', {
 					from_tile = reply.player_action.sourceTileNumber,
 					targets = no_en
 				})
+				army_logic:move_units_no_conflicts(
+						reply.player_action.sourceTileNumber,
+						no_en
+				)
 			end
 			if next(enemy) then
 				msg.post('/map', 'move_units_for_attack', {
@@ -83,6 +89,9 @@ action_type_switch = {
 		end
 		leavePowerTokenAtTile:clean_up()
 		do_current_phase_switching(reply)
+	end,
+	chooseHouseCard = function(reply)
+		local a =0
 	end
 }
 
@@ -106,7 +115,18 @@ current_phase_switch = {
 
 	end,
 	chooseHouseCard = function(reply)
-
+		local _, enemy =
+		army_logic:separate_targets_with_no_enemies(
+				reply.player_action.targets,
+				reply.player_action.houseType
+		)
+		local key = pairs(enemy)(enemy)
+		chooseHouseCard:init(
+				reply.current_phase.houseTypes[1],
+				reply.current_phase.houseTypes[2],
+				reply.player_action.sourceTileNumber,
+				key
+		)
 	end,
 	ravenChooseChangeOrderOrLookAtWildlingCard = function()
 		ravenChoose:init()
@@ -116,7 +136,7 @@ current_phase_switch = {
 	end,
 	ravenGetWildlingsCard = function(reply)
 
-	end
+	end,
 }
 
 function do_current_phase_switching(reply)

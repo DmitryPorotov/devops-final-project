@@ -36,12 +36,22 @@ local _M = {
 	},
 	ANIMATION_TIME = .15,
 	---Returns index of item in a table, returns nil if not found
-	---@param table table
-	---@param value any
-	index_of = function (table, value)
-		for i, v in ipairs(table) do
-			if v == value then
-				return i
+	---@generic T
+	---@param tab T[]
+	---@param value_or_comp T | fun(v:T):boolean
+	---@return number | nil
+	index_of = function (tab, value_or_comp)
+		if type(value_or_comp) == 'function' then
+			for i, v in ipairs(tab) do
+				if value_or_comp(v) then
+					return i
+				end
+			end
+		else
+			for i, v in ipairs(tab) do
+				if v == value_or_comp then
+					return i
+				end
 			end
 		end
 		return nil

@@ -1,6 +1,7 @@
 local army_logic = require "main/ui/army_logic"
 local travel_logic = require "main/ui/travel_logic"
 local supply_logic = require "main/ui/supply_logic"
+local game_data = require "main/ui/game_data"
 local utils = require "main/utils"
 
 
@@ -53,7 +54,7 @@ local function new_march_order(source_tile_num, my_armies)
 			if o.enemy_at_tile_num then
 				local updated_possible_targets = {}
 				for _, v in ipairs(o.possible_targets) do
-					if not army_logic.has_tile_enemy_army(tostring(v)) then
+					if not army_logic:has_tile_enemy_army(tostring(v), game_data.me) then
 						updated_possible_targets[#updated_possible_targets + 1] = v
 					end
 				end
@@ -92,10 +93,10 @@ local function new_march_order(source_tile_num, my_armies)
 	---@param to_tile_num string Tile number as string
 	---@param counts GUIArmyToSend Map of types and counts
 	local function add_partial_order(to_tile_num, counts)
-		if army_logic.has_tile_enemy_army(to_tile_num) then
+		if army_logic:has_tile_enemy_army(to_tile_num, game_data.me) then
 			o.enemy_at_tile_num = to_tile_num
 		end
-		o.to_send.targets[to_tile_num] = army_logic.to_server_format(counts)
+		o.to_send.targets[to_tile_num] = army_logic:to_server_format(counts)
 		o.to_send_targets_count_changed = true
 		update_my_armies(to_tile_num, counts, true)
 		o.sent[to_tile_num] = counts
@@ -110,7 +111,7 @@ local function new_march_order(source_tile_num, my_armies)
 		if o.enemy_at_tile_num == to_tile_num then
 			o.enemy_at_tile_num = false
 		end
-		update_my_armies(to_tile_num, army_logic.to_gui_format(o.to_send.targets[to_tile_num]), false)
+		update_my_armies(to_tile_num, army_logic:to_gui_format(o.to_send.targets[to_tile_num]), false)
 		o.to_send.targets[to_tile_num] = nil
 		o.to_send_targets_count_changed = true
 		o.sent[to_tile_num] = nil

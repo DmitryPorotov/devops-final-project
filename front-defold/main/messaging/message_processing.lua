@@ -67,6 +67,14 @@ function _M:process_message(message)
 			elseif message.gameState.subPhase.subPhase == 'leavePowerTokenAtTile' then
 				phase = require "main/ui/phases/action/leavePowerTokenAtTile"
 				phase:init(message.gameState.subPhase.houseType, message.gameState.subPhase.tileNumber)
+			elseif message.gameState.subPhase.subPhase == 'chooseHouseCard' then
+				phase = require "main/ui/phases/action/chooseHouseCard"
+				phase:init(
+						message.gameState.subPhase.houseTypes[1],
+						message.gameState.subPhase.houseTypes[2],
+						message.gameState.combat.attackerTileNum,
+						message.gameState.combat.defenderTileNum
+				)
 			else
 				error("Unknown or unimplemented phase " .. message.gameState.subPhase.subPhase)
 				--action_proc.player_panel__set_player_turn(message.gameState.subPhase.houseType)

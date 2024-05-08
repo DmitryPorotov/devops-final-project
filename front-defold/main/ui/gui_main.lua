@@ -14,6 +14,7 @@ local list_of_saves = require "main/ui/settings/list_of_saves"
 local confirm = require "main/ui/dialogs/confirm"
 local partial_march_orders = require "main/ui/partial_march_orders"
 local player_screen = require "main/ui/player_screen"
+local combat_screen = require "main/ui/combat_screen"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -70,15 +71,17 @@ function _M:init()
 	confirm:init()
 	partial_march_orders:init()
 	player_screen:init()
+	combat_screen:init()
 
 	self.panels = {
 		player_screen,
+		hints,
+		combat_screen,
+		player_panels,
 		orders,
 		tracks,
-		hints,
 		raven_card_or_order,
 		misc_buttons,
-		player_panels,
 		supply_panel,
 		march_select_army,
 		confirm,

@@ -6,11 +6,15 @@
 local _M = {}
 
 ---@param self HouseCardWrapper
-local function build_card_gui(self)
+local function build_card_gui(self, is_discarded)
 	local tmp = gui.get_node('house_card/bg')
 	self.gui = gui.clone_tree(tmp)
 
 	self.bg = self.gui[hash('house_card/bg')]
+	gui.set_enabled(self.gui[hash('house_card/lock')], is_discarded)
+	if is_discarded then
+		gui.set_enabled(self.gui[hash('house_card/discarded_screen')], true)
+	end
 	gui.set_text(self.gui[hash('house_card/power_text')], self.card.strength)
 	gui.set_text(self.gui[hash('house_card/name_text')], self.card.name)
 	if self.card.text ~= '' then
@@ -70,13 +74,14 @@ local function build_card_gui(self)
 end
 
 ---@param logic_card HouseCard
+---@param is_discarded boolean
 ---@return HouseCardWrapper
-function _M:new(logic_card)
+function _M:new(logic_card, is_discarded)
 	local o = {
 		house = house,
 		card = logic_card
 	}
-	build_card_gui(o)
+	build_card_gui(o, is_discarded)
 	setmetatable(o, self)
 	self.__index = self
 	return o

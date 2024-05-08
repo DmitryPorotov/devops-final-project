@@ -1,5 +1,6 @@
 local game_data = require "main/ui/game_data"
 local utils = require "main/utils"
+local army_logic = require "main/ui/army_logic"
 
 local _M = {}
 
@@ -16,9 +17,9 @@ local function traveling_on_land_and_by_ship(from_tile, candidates, visited_seas
 				candidates[#candidates + 1] = c.number
 			end
 		elseif c.tileType == 'sea'
-			and game_data.armies[tostring(c.number)]
-			and game_data.armies[tostring(c.number)][1]
-			and game_data.armies[tostring(c.number)][1].house == game_data.me
+			and army_logic.armies[tostring(c.number)]
+			and army_logic.armies[tostring(c.number)][1]
+			and army_logic.armies[tostring(c.number)][1].house == game_data.me
 			and not utils.index_of(visited_seas, c.number)
 		then
 			visited_seas[#visited_seas + 1] = c.number
@@ -29,7 +30,7 @@ local function traveling_on_land_and_by_ship(from_tile, candidates, visited_seas
 end
 
 function _M:is_my_port(port_num)
-	local army_on_land = game_data.armies[tostring(port_num - 1)]
+	local army_on_land = army_logic.armies[tostring(port_num - 1)]
 	if army_on_land and army_on_land[1] and army_on_land[1].house == game_data.me then
 		return true
 	end

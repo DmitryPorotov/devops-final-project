@@ -77,7 +77,7 @@ local function get_dot_color(flag)
 end
 
 function _M:update_usage(armies)
-	local counts = supply_logic.order_by_units_per_tile(army_logic.house_armies_to_gui_format(game_data.me, armies))
+	local counts = supply_logic.order_by_units_per_tile(army_logic:house_armies_to_gui_format(game_data.me, armies))
 	for i = 1, math.min(#self.cur_max_armies, #counts) do
 		for j = 1,  self.cur_max_armies[i] do
 			gui.set_color(gui.get_node("sup_dot" .. i .. j),

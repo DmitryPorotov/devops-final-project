@@ -16,7 +16,7 @@ end
 local function on_map_resolve_order(self, message)
 	self.march_order = new_march_order(
 		tostring(message.tile_num),
-		army_logic.house_armies_to_gui_format(game_data.me, game_data.armies)
+		army_logic:house_armies_to_gui_format(game_data.me, army_logic.armies)
 	)
 	march_select_army:set_from(message.name)
 	march_select_army:open_or_toggle(self.march_order.get_remaining_army(), message.label)

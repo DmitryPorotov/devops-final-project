@@ -31,7 +31,7 @@ function _M:to_send_changed()
 	local to_send = self:get_to_send()
 	if next(to_send) then
 		for k, v in pairs(to_send) do
-			text = text .. army_logic.build_unit_and_count_phrase(k ,v) .. ', '
+			text = text .. army_logic:build_unit_and_count_phrase(k ,v) .. ', '
 		end
 		text = text:sub(1, -3)
 		gui.set_color(self.ok_button, vmath.vector4(1,1,1,1))
