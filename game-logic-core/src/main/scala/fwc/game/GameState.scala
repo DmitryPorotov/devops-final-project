@@ -50,9 +50,33 @@ case class GameState(
             )
         ))
       else placedOrders
+    val combatP =
+      if combat != null then {
+        if combat.attackerHouse == myHouse then
+          combat.copy(
+            defenderTidesOfBattle = null,
+            defenderCard = null
+          )
+        else 
+          if combat.defenderHouse == myHouse then
+          combat.copy(
+            attackerCard = null,
+            attackerTidesOfBattle = null
+          )
+          else 
+            combat.copy(
+              defenderTidesOfBattle = null,
+              defenderCard = null,
+              attackerCard = null,
+              attackerTidesOfBattle = null
+            )
+      }
+      else null
+          
     ujson.Obj(
       toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
         "placedOrders" -> placedOrdersP.toJson,
+        "combat" -> (if combatP == null then ujson.Null else combatP.toJson)
       )
     )
   }
@@ -78,7 +102,6 @@ case class GameState(
       "powerTokens" -> powerTokens.toJson,
       "dominanceTokensUsage" -> dominanceTokensUsage.toJson,
       "usedMusteringPoints" -> usedMusteringPoints.toJson,
-      "combat" -> (if combat == null then ujson.Null else combat.toJson),
       "wildlingCounter" -> wildlingCounter,
       "wildlingsStartedFrom12Points" ->
         (if wildlingsStartedFrom12Points.isEmpty then ujson.Null else wildlingsStartedFrom12Points.head),
