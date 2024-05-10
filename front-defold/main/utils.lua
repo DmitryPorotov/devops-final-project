@@ -1,6 +1,13 @@
 --note: a mock for tests to work
 if not hash then
+	---@param v string
+	---@return hash
 	function hash(v) return v end
+end
+if not pprint then
+	---@type function Define pretty print function
+	---@param v any
+	function pprint(v) print(v) end
 end
 
 local _M = {
@@ -36,9 +43,9 @@ local _M = {
 	},
 	ANIMATION_TIME = .15,
 	---Returns index of item in a table, returns nil if not found
-	---@generic T
+	---@generic T: userdata
 	---@param tab T[]
-	---@param value_or_comp T | fun(v:T):boolean
+	---@param value_or_comp fun(v:T):boolean | T
 	---@return number | nil
 	index_of = function (tab, value_or_comp)
 		if type(value_or_comp) == 'function' then

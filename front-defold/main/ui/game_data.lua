@@ -14,7 +14,7 @@
 ---@field powerPoints number
 ---@field homeOf "'lion'" | "'kraken'" | "'moose'" | "'rose'" | "'pufferfish'" | "'wolf'"
 
----@class HouseCard
+---@class HouseCard : userdata
 ---@field house "'lion'" | "'kraken'" | "'moose'" | "'rose'" | "'pufferfish'" | "'wolf'"
 ---@field code number
 ---@field name string

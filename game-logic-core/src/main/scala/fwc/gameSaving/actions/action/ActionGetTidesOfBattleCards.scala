@@ -19,7 +19,7 @@ case class ActionGetTidesOfBattleCards(
     then
       try {
         val (card1, boardCards1) = gameState.boardCards.dequeueTidesOfBattleCard()
-        gameState.copy(
+        return gameState.copy(
           subPhase =
             if gameState.subPhase.isInstanceOf[SubPhaseGetTidesOfBattleCards]
             then SubPhaseSetTidesOfBattleCards(

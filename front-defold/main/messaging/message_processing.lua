@@ -45,7 +45,9 @@ function _M:process_message(message)
 			_get_game_state:init(message)
 
 			if phase then
-				phase:clean_up()
+				if not action_proc:last_phase_clean_up() then
+					phase:clean_up()
+				end
 			end
 
 			if message.gameState.subPhase.subPhase == "addOrder" then

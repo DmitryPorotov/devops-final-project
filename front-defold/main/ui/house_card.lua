@@ -2,7 +2,7 @@
 ---@field card HouseCard
 ---@field house string
 ---@field gui table
----@field bg userdata
+---@field bg node
 local _M = {}
 
 ---@param self HouseCardWrapper

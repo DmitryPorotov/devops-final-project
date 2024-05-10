@@ -19,8 +19,8 @@ case class SubPhaseSetTidesOfBattleCards(
     val json = super.toJson
     if attackerCard.nonEmpty
     then json.obj.addAll(Map(
-      "attackerCard" -> attackerCard.head,
-      "defenderCard" -> defenderCard.head
+      "attackerCard" -> (if attackerCard.nonEmpty then attackerCard.head else ujson.Null),
+      "defenderCard" -> (if defenderCard.nonEmpty then defenderCard.head else ujson.Null)
     ))
     json
 }

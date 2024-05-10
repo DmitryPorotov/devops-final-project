@@ -60,6 +60,12 @@ end
 
 function _M:connect(creds)
 	local function handle_response(self_, id, response)
+		if response.status == 0 then
+			local s = gui.get_node("debug")
+			gui.set_text(s, tostring("Could not connect to the server."))
+			return
+		end
+
 		local data = json.decode(response.response)
 		self.login_data = data
 

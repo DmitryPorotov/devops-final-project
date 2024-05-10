@@ -75,13 +75,13 @@ function _M:init()
 
 	self.panels = {
 		player_screen,
+		misc_buttons,
 		hints,
 		combat_screen,
 		player_panels,
 		orders,
 		tracks,
 		raven_card_or_order,
-		misc_buttons,
 		supply_panel,
 		march_select_army,
 		confirm,

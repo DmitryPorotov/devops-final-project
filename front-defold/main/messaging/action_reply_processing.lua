@@ -101,43 +101,56 @@ action_type_switch.ravenChangeOrder = function(reply)
 	do_current_phase_switching(reply)
 end
 
+local last_init_phase
+
 current_phase_switch = {
 	resolveMarchOrder = function()
 		resolveMarchOrder:init()
+		last_init_phase = resolveMarchOrder
 	end,
 	resolveRaidOrder = function(reply)
 
 	end,
 	leavePowerTokenAtTile = function(reply)
 		leavePowerTokenAtTile:init(reply.current_phase.houseType, reply.current_phase.tileNumber)
+		last_init_phase = leavePowerTokenAtTile
 	end,
 	resolveSupportOrder = function(reply)
 
 	end,
 	chooseHouseCard = function(reply)
-		local _, enemy =
-		army_logic:separate_targets_with_no_enemies(
-				reply.player_action.targets,
-				reply.player_action.houseType
-		)
-		local key = pairs(enemy)(enemy)
+		---@type Combat
+		local c = reply.combat
+		pprint(c)
+		army_logic:set_combat(c)
 		chooseHouseCard:init(
 				reply.current_phase.houseTypes[1],
 				reply.current_phase.houseTypes[2],
-				reply.player_action.sourceTileNumber,
-				key
+				c.attackerTileNum,
+				c.defenderTileNum
 		)
+		last_init_phase = chooseHouseCard
 	end,
 	ravenChooseChangeOrderOrLookAtWildlingCard = function()
 		ravenChoose:init()
+		last_init_phase = ravenChoose
 	end,
 	ravenChangeOrder = function()
 		ravenChangeOrder:init()
+		last_init_phase = ravenChangeOrder
 	end,
 	ravenGetWildlingsCard = function(reply)
 
 	end,
 }
+
+function _M:last_phase_clean_up()
+	if last_init_phase then
+		last_init_phase:clean_up()
+		return true
+	end
+	return false
+end
 
 function do_current_phase_switching(reply)
 	current_phase_switch[reply.current_phase.subPhase](reply)

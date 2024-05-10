@@ -13,6 +13,7 @@ local function set_to_next_state(cb)
 	to_next_state = cb
 end
 
+---@param self ResolveMarchOrder
 local function on_map_resolve_order(self, message)
 	self.march_order = new_march_order(
 		tostring(message.tile_num),
@@ -23,6 +24,7 @@ local function on_map_resolve_order(self, message)
 	self.from_name = message.name
 end
 
+---@param self ResolveMarchOrder
 local function on_hints_goto_button_click(self)
 	msg.post("/map", "move_camera_to_label", {tile_num = self.marches_arr[self.current_order]})
 	if self.current_order >= self.count then
@@ -32,6 +34,7 @@ local function on_hints_goto_button_click(self)
 	end
 end
 
+---@param self ResolveMarchOrder
 local function on_march_select_army_confirm_army(self, to_send)
 	if not next(to_send) then
 		confirm:open('Do you want to remove the March order\nfrom "'
@@ -53,6 +56,7 @@ local function on_march_select_army_confirm_army(self, to_send)
 	end
 end
 
+---@param self ResolveMarchOrder
 local function init(self)
 	self:set_up_hint()
 	march_select_army:close()

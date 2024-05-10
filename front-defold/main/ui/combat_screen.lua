@@ -6,11 +6,14 @@ local event_dispatcher = require "main/ui/event_dispatcher"
 
 local _M = {
 	a_card_position = vmath.vector3(-14, -102, 0),
-	a_card_rotation = vmath.vector3(-10.5, 30, -5),
+	a_card_rotation = vmath.vector3(0, 0, -5),
 	d_card_position = vmath.vector3(14, -102, 0),
-	d_card_rotation = vmath.vector3(10.5, 30, 5),
+	d_card_rotation = vmath.vector3(0, 0, 5),
+	---@private
 	---@type HouseCardWrapper[]
 	cards = {},
+	---@private
+	confirmed = false,
 }
 
 function _M:init()
@@ -50,7 +53,17 @@ end
 
 function _M:close()
 	gui.set_enabled(self.panel, false)
+	self:delete_cards()
+	self.confirmed = false
 end
+
+function _M:delete_cards()
+	for _, card in ipairs(self.cards) do
+		card:delete()
+	end
+	self.cards = {}
+end
+
 local card_pos_y = -100
 local card_position_step = 110
 ---@param cards HouseCard[]
@@ -78,7 +91,7 @@ end
 local last_clicked_card_idx
 
 function _M:check_button_pressed(x, y)
-	if not gui.is_enabled(self.panel) then
+	if not gui.is_enabled(self.panel) or self.confirmed then
 		return false
 	end
 	if last_clicked_card_idx then
@@ -112,6 +125,46 @@ end
 function _M:get_selected_card()
 	if last_clicked_card_idx then
 		return self.cards[last_clicked_card_idx].card
+	end
+end
+
+---@param card HouseCard
+---@param is_attacker boolean
+function _M:confirm_card(card, is_attacker)
+	if self.confirmed then
+		return
+	end
+	self.confirmed = true
+	for _, c in ipairs(self.cards) do
+		if c.card ~= card then
+			c:delete()
+		else
+			if is_attacker then
+				gui.set_parent(c.bg, gui.get_node('combat_screen/attacker_box'), true)
+				gui.animate(c.bg, gui.PROP_POSITION, self.a_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+				gui.animate(c.bg, gui.PROP_EULER, self.a_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+			else
+				gui.set_parent(c.bg, gui.get_node('combat_screen/defender_box'), true)
+				gui.animate(c.bg, gui.PROP_POSITION, self.d_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+				gui.animate(c.bg, gui.PROP_EULER, self.d_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+			end
+		end
+	end
+	self.cards = {}
+end
+
+---@param card HouseCard
+---@param is_attacker boolean
+function _M:set_card(card, is_attacker)
+	local c = house_card:new(card)
+	if is_attacker then
+		gui.set_parent(c.bg, gui.get_node('combat_screen/attacker_box'))
+		gui.set_euler(c.bg, self.a_card_rotation)
+		gui.set_position(c.bg, self.a_card_position)
+	else
+		gui.set_parent(c.bg, gui.get_node('combat_screen/defender_box'))
+		gui.set_euler(c.bg, self.d_card_rotation)
+		gui.set_position(c.bg, self.d_card_position)
 	end
 end
 

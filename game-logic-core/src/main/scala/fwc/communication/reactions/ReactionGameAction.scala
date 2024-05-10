@@ -47,6 +47,7 @@ object ReactionGameAction {
 
   @tailrec
   private def loop(action: Action, gameReplay: GameReplay, reply: ujson.Arr = ujson.Arr()): (GameReplay, ujson.Arr)= {
+    println(reply)
     val updatedGameState = action.doAction()
     val updatedGameReplay = gameReplay.copy(
       currentGameState = updatedGameState,
@@ -113,14 +114,14 @@ object ReactionGameAction {
     def findPlayerIdByHouse(houseType: HouseType): Int = {
       if gameSettings.players.nonEmpty
       then
-        val playerOpt = gameSettings.players.head.find(_.house == houseType)
+        val playerOpt = gameSettings.players.head.find(_.house.head.equals(houseType))
         if playerOpt.nonEmpty
-        then playerOpt.head.userId
+        then return playerOpt.head.userId
         else if gameSettings.playersInputting.nonEmpty
         then
           val playerOpt = gameSettings.playersInputting.head.find(pi => pi.forHouses.contains(houseType))
           if playerOpt.nonEmpty
-          then playerOpt.head.userId
+          then return playerOpt.head.userId
 
       throw new FWCException("House does not belong to a player. Game settings are corrupted.")
     }
@@ -143,14 +144,15 @@ object ReactionGameAction {
         case _: ActionCleanUpAfterRound => buildMessageToAll(ActionCleanUpAfterRound.buildMessage(updatedGameState))
         case _: ActionGetTidesOfBattleCards =>
           val sp = updatedGameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
+          println(sp)
           if sp.defenderCard.isEmpty
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-            "player_action" -> sp.attackerCard
+            "player_action" -> sp.attackerCard.head
           )
           else ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-            "player_action" -> sp.defenderCard
+            "player_action" -> sp.defenderCard.head
           )
         case a: ActionRavenGetWildlingsCard =>
           if a.isRandom
@@ -166,6 +168,15 @@ object ReactionGameAction {
             json.obj.addOne("orders" -> updatedGameState.placedOrders.toJson)
           buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
+    if updatedGameState.combat != null then
+      val updatedCombat =
+        if (updatedGameState.combat.attackerCard == null && updatedGameState.combat.defenderCard != null)
+          || (updatedGameState.combat.attackerCard != null && updatedGameState.combat.defenderCard == null)
+          then updatedGameState.combat.copy(attackerCard = null, defenderCard = null)
+        else updatedGameState.combat
+      reply.obj.addOne(
+        "combat" -> updatedGameState.combat.toJson
+      )
     reply.obj.addOne(
       "current_phase" -> updatedGameState.subPhase.toJson
     )

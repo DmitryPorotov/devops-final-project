@@ -11,7 +11,7 @@ local source_selected_no_targets = require "main/ui/phases/action/resolve_march_
 local source_selected_partial_targets = require "main/ui/phases/action/resolve_march_order/states/source_selected_partial_targets"
 local source_selected_all_targets = require "main/ui/phases/action/resolve_march_order/states/source_selected_all_targets"
 
-
+---@module ResolveMarchOrder
 local _M = {
 	state = nil,
 	current_order = 1,
@@ -27,10 +27,12 @@ local _M = {
 
 }
 
+---@private
 function _M:on_map_resolve_order(message)
 	self.state.on_map_resolve_order(self, message)
 end
 
+---@private
 function _M:on_march_select_army_ok_button_click(to_send)
 	if to_send then
 		self.state.on_march_select_army_confirm_army(self, to_send)
@@ -39,24 +41,28 @@ function _M:on_march_select_army_ok_button_click(to_send)
 	end
 end
 
+---@private
 function _M:on_hints_goto_button_click()
 	self.state.on_hints_goto_button_click(self)
 end
 
+---@private
 function _M:on_hints_goto_button_click_select_target()
 	self.state.on_hints_goto_button_click(self)
 end
 
-
+---@private
 function _M:on_map_target_selected(message)
 	march_select_army:set_to(message.name)
 	self.last_selected_target_id = message.tile_num
 end
 
+---@private
 function _M:on_partial_march_remove(tile_num)
 	self.state.on_partial_march_remove(self, tile_num)
 end
 
+---@private
 function _M:on_hints_next_button_click()
 	event_dispatcher.trigger('ws_send', self.march_order.get_message_to_server())
 	self:clean_up()

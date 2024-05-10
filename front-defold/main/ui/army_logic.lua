@@ -130,6 +130,10 @@ function _M:init(armies, combat)
 	self.armies = armies
 end
 
+function _M:set_combat(combat)
+	self.combat = combat
+end
+
 ---@param from_tile number
 ---@param targets table<number, MilitaryUnit[]>
 function _M:move_units_no_conflicts(from_tile, targets)

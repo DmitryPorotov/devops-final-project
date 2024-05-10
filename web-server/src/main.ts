@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { env } from 'process'
 import {BadRequestException, ValidationPipe} from '@nestjs/common';
 import {
   FastifyAdapter,
@@ -32,6 +33,6 @@ async function bootstrap() {
 
     )
   }));
-  await app.listen(80, "0.0.0.0");
+  await app.listen(env.SERVER_PORT, "0.0.0.0");
 }
 bootstrap();
