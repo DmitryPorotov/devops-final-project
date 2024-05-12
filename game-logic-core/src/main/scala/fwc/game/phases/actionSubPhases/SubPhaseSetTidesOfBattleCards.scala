@@ -15,6 +15,9 @@ case class SubPhaseSetTidesOfBattleCards(
 ) {
   def getSubPhaseName: String = "setTidesOfBattleCards"
 
+  def toCleanJson: Value =
+    super.toJson
+  
   override def toJson: Value =
     val json = super.toJson
     if attackerCard.nonEmpty

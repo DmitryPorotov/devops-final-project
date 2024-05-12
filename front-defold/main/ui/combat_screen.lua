@@ -14,6 +14,12 @@ local _M = {
 	cards = {},
 	---@private
 	confirmed = false,
+	---@private
+	---@type HouseCardWrapper
+	attacker_card = nil,
+	---@private
+	---@type HouseCardWrapper
+	defender_card = nil,
 }
 
 function _M:init()
@@ -23,14 +29,18 @@ function _M:init()
 	self.attacker_shield = gui.get_node('combat_screen/a_shield')
 	self.attacker_house_text = gui.get_node('combat_screen/a_house_name_text')
 	self.attacker_total_strength_text = gui.get_node('combat_screen/a_strength_shield_text')
+	self.attacker_tide_of_battle_box = gui.get_node('combat_screen/a_tides_of_battle_box')
 	self.attacker_tide_of_battle_text = gui.get_node('combat_screen/a_tob_strength_text')
 	self.attacker_tide_of_battle_icon = gui.get_node('combat_screen/a_tob_icon')
+	self.attacker_tide_of_battle_str_icon = gui.get_node('combat_screen/a_tob_strength')
 
 	self.defender_shield = gui.get_node('combat_screen/d_shield')
 	self.defender_house_text = gui.get_node('combat_screen/d_house_name_text')
 	self.defender_total_strength_text = gui.get_node('combat_screen/d_strength_shield_text')
+	self.defender_tide_of_battle_box = gui.get_node('combat_screen/d_tides_of_battle_box')
 	self.defender_tide_of_battle_text = gui.get_node('combat_screen/d_tob_strength_text')
 	self.defender_tide_of_battle_icon = gui.get_node('combat_screen/d_tob_icon')
+	self.defender_tide_of_battle_str_icon = gui.get_node('combat_screen/d_tob_strength')
 end
 
 function _M:open(attacker, defender, tile_num)
@@ -55,6 +65,16 @@ function _M:close()
 	gui.set_enabled(self.panel, false)
 	self:delete_cards()
 	self.confirmed = false
+	self.attacker_card:delete()
+	self.defender_card:delete()
+	self.attacker_card = nil
+	self.defender_card = nil
+	gui.set_enabled(self.attacker_tide_of_battle_box, false)
+	gui.set_enabled(self.defender_tide_of_battle_box, false)
+	gui.set_enabled(self.attacker_tide_of_battle_icon, true)
+	gui.set_enabled(self.defender_tide_of_battle_icon, true)
+	gui.set(self.attacker_tide_of_battle_str_icon, 'position.x', -30)
+	gui.set(self.defender_tide_of_battle_str_icon, 'position.x', -30)
 end
 
 function _M:delete_cards()
@@ -143,10 +163,12 @@ function _M:confirm_card(card, is_attacker)
 				gui.set_parent(c.bg, gui.get_node('combat_screen/attacker_box'), true)
 				gui.animate(c.bg, gui.PROP_POSITION, self.a_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				gui.animate(c.bg, gui.PROP_EULER, self.a_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+				self.attacker_card = c
 			else
 				gui.set_parent(c.bg, gui.get_node('combat_screen/defender_box'), true)
 				gui.animate(c.bg, gui.PROP_POSITION, self.d_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				gui.animate(c.bg, gui.PROP_EULER, self.d_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
+				self.defender_card = c
 			end
 		end
 	end
@@ -156,16 +178,53 @@ end
 ---@param card HouseCard
 ---@param is_attacker boolean
 function _M:set_card(card, is_attacker)
+	if is_attacker then
+		if self.attacker_card then
+			return
+		end
+	else
+		if self.defender_card then
+			return
+		end
+	end
 	local c = house_card:new(card)
 	if is_attacker then
 		gui.set_parent(c.bg, gui.get_node('combat_screen/attacker_box'))
 		gui.set_euler(c.bg, self.a_card_rotation)
 		gui.set_position(c.bg, self.a_card_position)
+		self.attacker_card = c
 	else
 		gui.set_parent(c.bg, gui.get_node('combat_screen/defender_box'))
 		gui.set_euler(c.bg, self.d_card_rotation)
 		gui.set_position(c.bg, self.d_card_position)
+		self.defender_card = c
 	end
+end
+
+---@param tob_card TidesOfBattleCard
+---@param is_attacker boolean
+function _M:set_TOB_card(tob_card, is_attacker)
+	local p
+	if is_attacker then
+		p = 'attacker'
+		gui.move_above(self.attacker_tide_of_battle_box, self.attacker_card.bg)
+	else
+		p = 'defender'
+		gui.move_above(self.defender_tide_of_battle_box, self.defender_card.bg)
+	end
+
+	gui.set_text(self[p..'_tide_of_battle_text'], '+'..tob_card.power)
+	if tob_card.defense then
+		gui.play_flipbook(self[p..'_tide_of_battle_icon'], 'card_tower_icon')
+	elseif tob_card.attack then
+		gui.play_flipbook(self[p..'_tide_of_battle_icon'], 'card_sword_icon')
+	elseif tob_card.death then
+		gui.play_flipbook(self[p..'_tide_of_battle_icon'], 'no') -- todo make a skull icon
+	else
+		gui.set_enabled(self[p..'_tide_of_battle_icon'], false)
+		gui.set(self[p..'_tide_of_battle_str_icon'], 'position.x', 0)
+	end
+	gui.set_enabled(self[p..'_tide_of_battle_box'], true)
 end
 
 return _M

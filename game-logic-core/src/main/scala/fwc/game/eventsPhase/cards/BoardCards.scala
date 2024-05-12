@@ -27,6 +27,17 @@ case class BoardCards(
       "tidesOfBattle" -> buildJsonArray(tidesOfBattle)
     )
   }
+  
+  def toRulesJson: ujson.Value = {
+    def buildJsonArray(cards: Seq[JsonSerializable]): ujson.Value = ujson.Value(cards.map(r => r.toJson))
+    ujson.Obj(
+      "deck1" -> buildJsonArray(roundEvents1),
+      "deck2" -> buildJsonArray(roundEvents2),
+      "deck3" -> buildJsonArray(roundEvents3),
+      "wildlings" -> buildJsonArray(wildlings),
+      "tidesOfBattle" -> buildJsonArray(tidesOfBattle)
+    )
+  }
 
   def dequeueTidesOfBattleCard(): (TidesOfBattleCard, BoardCards) =
     if tidesOfBattle.isEmpty

@@ -110,17 +110,17 @@ end
 ---@field attackerHouse string
 ---@field attackerArmy MilitaryUnit[]
 ---@field attackerOrder userdata
----@field attackerCard HouseCard | nil
+---@field attackerCard number | nil
 ---@field attackerCardResolved boolean
----@field attackerTidesOfBattle userdata | nil
+---@field attackerTidesOfBattle number | nil
 ---@field attackerSupport number[]
 ---@field defenderTileNum number
 ---@field defenderHouse string
 ---@field defenderArmy MilitaryUnit[]
 ---@field defenderOrder userdata | nil
----@field defenderCard HouseCard | nil
+---@field defenderCard number | nil
 ---@field defenderCardResolved boolean
----@field defenderTidesOfBattle userdata | nil
+---@field defenderTidesOfBattle number | nil
 ---@field defenderSupport number[]
 
 ---@param armies table<string, MilitaryUnit[]>
@@ -130,8 +130,27 @@ function _M:init(armies, combat)
 	self.armies = armies
 end
 
+---@param combat Combat
 function _M:set_combat(combat)
 	self.combat = combat
+end
+
+---@return TidesOfBattleCard | nil
+function _M:get_attacker_tob_card()
+	if self.combat.attackerTidesOfBattle then
+		return game_data.gameRules.boardCards.tidesOfBattle[self.combat.attackerTidesOfBattle + 1]
+	else
+		return nil
+	end
+end
+
+---@return TidesOfBattleCard | nil
+function _M:get_defender_tob_card()
+	if self.combat.defenderTidesOfBattle then
+		return game_data.gameRules.boardCards.tidesOfBattle[self.combat.defenderTidesOfBattle + 1]
+	else
+		return nil
+	end
 end
 
 ---@param from_tile number

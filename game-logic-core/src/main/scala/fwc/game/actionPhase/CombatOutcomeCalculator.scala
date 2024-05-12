@@ -54,7 +54,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
           case MilitaryUnitShips =>
             defenderShipStrength(gameState.combat.attackerCard, gameState.combat.defenderCard, mu)
               + acc
-          case MilitaryUnitFootmen => MilitaryUnitKnights.strength + acc
+          case MilitaryUnitFootmen => MilitaryUnitFootmen.strength + acc
           case MilitaryUnitKnights => MilitaryUnitKnights.strength + acc
           case MilitaryUnitSiegeEngines => acc
           case MilitaryUnitGarrison => mu.garrisonDefensePoints + acc
@@ -108,7 +108,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     countKills(outcome1, winner)
   }
 
-  def attackerShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
+  private def attackerShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
     if mu.unitType != MilitaryUnitShips
     then throw new RuntimeException("Only for ships")
 
@@ -145,7 +145,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     (attackerCard != null && attackerCard.isMoose6 && gameState.combat.attackerSupport.nonEmpty)
       || (defenderCard != null && defenderCard.isMoose6 && gameState.combat.defenderSupport.nonEmpty)
 
-  def defenderShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
+  private def defenderShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
     if mu.unitType != MilitaryUnitShips
     then throw new RuntimeException("Only for ships")
 
@@ -157,7 +157,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     else 1
   }
 
-  def getDefenderOrderStrength(houseCard: HouseCard, order: Order): Int = {
+  private def getDefenderOrderStrength(houseCard: HouseCard, order: Order): Int = {
     if order == null || order.orderType != OrderDefend
     then 0
     else
@@ -166,7 +166,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
       else order.modifier
   }
 
-  def countKills(combatOutcome: CombatOutcome, winner: HouseType): CombatOutcome = {
+  private def countKills(combatOutcome: CombatOutcome, winner: HouseType): CombatOutcome = {
     val combat = gameState.combat
     def countDeaths(winnerHC: HouseCard,
                     winnerTOBc: TidesOfBattleCard,
@@ -220,7 +220,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     )
   }
 
-  def getHouseCardAttack(houseCard: HouseCard): Int = {
+  private def getHouseCardAttack(houseCard: HouseCard): Int = {
     val bonus =
       houseCard match
         case HouseCard(HouseMoose, 5, _, _, _, _, _) =>
@@ -248,7 +248,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     bonus + houseCard.attack
   }
 
-  def getHouseCardDefence(houseCard: HouseCard): Int = {
+  private def getHouseCardDefence(houseCard: HouseCard): Int = {
     val bonus =
       houseCard match
         case HouseCard(HousePufferfish, 6, _, _, _, _, _) =>
@@ -267,14 +267,14 @@ class CombatOutcomeCalculator(gameState: GameState) {
     bonus + houseCard.defense
   }
 
-  def getCardStrength(houseCard: HouseCard, opponentHouseCard: HouseCard): Int = {
+  private def getCardStrength(houseCard: HouseCard, opponentHouseCard: HouseCard): Int = {
     val str = if opponentHouseCard.house == HouseKraken && opponentHouseCard.code == 3
       then 0
     else houseCard.strength
     str + getCardBonusStrength(houseCard)
   }
 
-  def getCardBonusStrength(houseCard: HouseCard): Int = {
+  private def getCardBonusStrength(houseCard: HouseCard): Int = {
     houseCard match
       case HouseCard(HouseWolf, 6, _, _, _, _, _) =>
         val order = gameState.placedOrders.getOrderByTileNumber(gameState.combat.defenderTileNum)

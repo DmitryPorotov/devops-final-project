@@ -6,7 +6,10 @@ local house_cards_logic = require "main/ui/house_cards_logic"
 local hints = require "main/ui/hints"
 local event_dispatcher = require "main/ui/event_dispatcher"
 
-local _M = {}
+local _M = {
+	att_str = 0,
+	def_str = 0,
+}
 
 local function on_card_selection_confirmed()
 	local card = combat_screen:get_selected_card()
@@ -25,13 +28,15 @@ local function on_house_card_selected(flag)
 end
 
 function _M:init(attacker, defender, a_tile_num, d_tile_num)
+	self.att_str = 0
+	self.def_str = 0
 	msg.post('/map', 'move_camera_to_label', {tile_num = d_tile_num})
 	combat_screen:open(attacker, defender, d_tile_num)
-	local def_str = army_logic:calc_army_strength(army_logic.combat.defenderArmy)
+	self.def_str = army_logic:calc_army_strength(army_logic.combat.defenderArmy)
 	local add_siege_engines = game_data.gameRules.board[d_tile_num + 1].musteringPoints > 0
-	local att_str = army_logic:calc_army_strength(army_logic.combat.attackerArmy, add_siege_engines)
-	combat_screen:set_defender_strength(def_str)
-	combat_screen:set_attacker_strength(att_str)
+	self.att_str = army_logic:calc_army_strength(army_logic.combat.attackerArmy, add_siege_engines)
+	combat_screen:set_defender_strength(self.def_str)
+	combat_screen:set_attacker_strength(self.att_str)
 	local function get_active_cards(house)
 		local cards = {}
 		local house_cards = house_cards_logic.get_house_cards(house)
@@ -49,24 +54,8 @@ function _M:init(attacker, defender, a_tile_num, d_tile_num)
 	elseif defender == game_data.me and not army_logic.combat.defenderCard then
 		active_cards = get_active_cards(defender)
 	end
-	if army_logic.combat.defenderCard then
-		combat_screen:set_card(
-				house_cards_logic.get_house_card(
-						army_logic.combat.defenderHouse,
-						army_logic.combat.defenderCard
-				),
-				false
-		)
-	end
-	if army_logic.combat.attackerCard then
-		combat_screen:set_card(
-				house_cards_logic.get_house_card(
-						army_logic.combat.attackerHouse,
-						army_logic.combat.attackerCard
-				),
-				true
-		)
-	end
+	self:update_house_cards()
+	self:update_TOB_cards()
 	if active_cards then
 		combat_screen:show_cards(active_cards)
 	end
@@ -79,11 +68,47 @@ function _M:init(attacker, defender, a_tile_num, d_tile_num)
 	end
 end
 
+function _M:update_house_cards()
+	if army_logic.combat.defenderCard then
+		local card = house_cards_logic.get_house_card(
+				army_logic.combat.defenderHouse,
+				army_logic.combat.defenderCard
+		)
+		self.def_str = self.def_str + card.strength
+		combat_screen:set_card(card,false)
+		combat_screen:set_defender_strength(self.def_str)
+	end
+	if army_logic.combat.attackerCard then
+		local card = house_cards_logic.get_house_card(
+				army_logic.combat.attackerHouse,
+				army_logic.combat.attackerCard
+		)
+		self.att_str = self.def_str + card.strength
+		combat_screen:set_card(card, true)
+		combat_screen:set_attacker_strength(self.att_str)
+	end
+end
+
+function _M:update_TOB_cards()
+	timer.delay(.2, false, function()
+		local tob_card = army_logic:get_attacker_tob_card()
+		if tob_card then
+			combat_screen:set_TOB_card(tob_card, true)
+		end
+		tob_card = army_logic:get_defender_tob_card()
+		if tob_card then
+			combat_screen:set_TOB_card(tob_card, false)
+		end
+	end)
+end
+
 function _M:clean_up()
 	event_dispatcher.off('hints_next_button_click', on_card_selection_confirmed)
 	event_dispatcher.off('house_card_selected', on_house_card_selected)
 	hints:set_enabled(false)
 	combat_screen:close()
+	self.att_str = 0
+	self.def_str = 0
 end
 
 

@@ -23,12 +23,40 @@
 ---@field attack number
 ---@field defense number
 
+---@class TidesOfBattleCard: userdata
+---@field code number
+---@field power number
+---@field death boolean
+---@field attack boolean
+---@field defense boolean
+
+---@class RoundEventCard: userdata
+---@field code number
+---@field title string
+---@field text string
+---@field wildlings number
+
+---@class WildlingCard: userdata
+---@field code number
+---@field title string
+---@field wildlingVictoryLowestBidderText string
+---@field wildlingVictoryEveryoneElseText string
+---@field playerVictoryText string
+
+---@class BoardCards: userdata
+---@field tidesOfBattle TidesOfBattleCard[]
+---@field deck1 RoundEventCard[]
+---@field deck2 RoundEventCard[]
+---@field deck3 RoundEventCard[]
+---@field wildlings WildlingCard[]
+
 ---@class GameRules
 ---@field board BoardTile[]
 ---@field supplyUsage number[][]
 ---@field kingsCourtStars number[]
 ---@field maxArmies table<string, number>
 ---@field houseCards HouseCard[]
+---@field boardCards BoardCards
 
 ---@module game_data
 ---@field me string

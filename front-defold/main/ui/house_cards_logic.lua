@@ -43,6 +43,7 @@ end
 
 ---@param house string
 ---@param code number
+---@return HouseCard
 local function get_house_card(house, code)
 	local idx = utils.index_of(cards_by_house[house], function(c)
 		return c.code == code

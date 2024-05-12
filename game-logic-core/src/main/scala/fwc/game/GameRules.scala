@@ -13,6 +13,7 @@ case class GameRules(
                     supplyUsage: Vector[Seq[Int]],
                     maxArmies: Map[MilitaryUnitType, Int],
                     boardCards: BoardCards,
+                    boardCardsForClient: BoardCards,
                     loadedOrders: Map[OrderType, Seq[Order]],
                     houseCards: Seq[HouseCard]
                     ) 
@@ -22,7 +23,7 @@ case class GameRules(
     "kingsCourtStars" -> kingsCourtStars,
     "supplyUsage" -> supplyUsage,
     "maxArmies" -> maxArmies.map((mut, n) => mut.toString -> n),
-    "boardCards" -> boardCards.toJson,
+    "boardCards" -> boardCardsForClient.toRulesJson,
     "loadedOrders" -> loadedOrders.map((ot, ods) => ot.toString -> ods.map(_.toJson)),
     "houseCards" -> houseCards.map(_.toJson),
     "militaryUnits" -> ujson.Obj(

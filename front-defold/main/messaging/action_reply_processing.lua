@@ -92,6 +92,14 @@ action_type_switch = {
 	end,
 	chooseHouseCard = function(reply)
 		local a =0
+	end,
+	getTidesOfBattleCards = function(reply)
+		army_logic:set_combat(reply.combat)
+		chooseHouseCard:update_house_cards()
+	end,
+	setTidesOfBattleCards = function(reply)
+		army_logic:set_combat(reply.combat)
+		chooseHouseCard:update_TOB_cards()
 	end
 }
 
@@ -121,7 +129,6 @@ current_phase_switch = {
 	chooseHouseCard = function(reply)
 		---@type Combat
 		local c = reply.combat
-		pprint(c)
 		army_logic:set_combat(c)
 		chooseHouseCard:init(
 				reply.current_phase.houseTypes[1],

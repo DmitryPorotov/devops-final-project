@@ -73,7 +73,8 @@ object ReactionGameAction {
       case phaseNoHouse: SubPhaseNoHouse => loop(
         matchSubPhaseToAction(
           phaseNoHouse,
-          updatedGameState
+          updatedGameState,
+          gameReplay.gameSettings.isRandomEventsServerSide
         ),
         updatedGameReplay,
         updatedReply
@@ -136,23 +137,22 @@ object ReactionGameAction {
   
           buildMessageToAll(json)
         case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)
-        case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)
+//        case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)
         case _: ActionCalculateGameWinner => buildMessageToAll(
           ujson.Obj("winner" -> updatedGameState.winner.head.toString)
         )
         case _: ActionCleanUpAfterCombat => buildMessageToAll(ActionCleanUpAfterCombat.buildMessage(updatedGameState))
         case _: ActionCleanUpAfterRound => buildMessageToAll(ActionCleanUpAfterRound.buildMessage(updatedGameState))
-        case _: ActionGetTidesOfBattleCards =>
+        case a: ActionGetTidesOfBattleCards =>
           val sp = updatedGameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
-          println(sp)
           if sp.defenderCard.isEmpty
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-            "player_action" -> sp.attackerCard.head
+            "player_action" -> a.toJson
           )
           else ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-            "player_action" -> sp.defenderCard.head
+            "player_action" -> a.toJson
           )
         case a: ActionRavenGetWildlingsCard =>
           if a.isRandom
@@ -178,7 +178,10 @@ object ReactionGameAction {
         "combat" -> updatedGameState.combat.toJson
       )
     reply.obj.addOne(
-      "current_phase" -> updatedGameState.subPhase.toJson
+      "current_phase" -> (updatedGameState.subPhase match {
+        case subPhase: SubPhaseSetTidesOfBattleCards => subPhase.toCleanJson
+        case s => s.toJson
+      })
     )
   }
   private def buildMessageToAll(a: ujson.Value): ujson.Obj =

@@ -54,11 +54,11 @@ package object gameLoading {
     cards
   }
 
-  def loadTideOfBattleCards(): Seq[TidesOfBattleCard] = {
-    val jsonData = readJson("textures/tides_of_battle_cards.json")
+  private val tideOfBattleCardsJson = readJson("textures/tides_of_battle_cards.json")
 
+  def loadTideOfBattleCards(): Seq[TidesOfBattleCard] = {
     val cards =
-      (for (card <- jsonData.arr)
+      (for (card <- tideOfBattleCardsJson.arr)
         yield List.fill(card("numOfCards").num.toInt)(TidesOfBattleCard(
           card("code").num.toInt,
           card("power").num.toInt,
@@ -69,6 +69,19 @@ package object gameLoading {
       )
         .flatten
         .toSeq
+
+    cards
+  }
+
+  def loadTideOfBattleCardsForClient(): Seq[TidesOfBattleCard] = {
+    val cards = tideOfBattleCardsJson.arr.map(card => TidesOfBattleCard(
+      card("code").num.toInt,
+      card("power").num.toInt,
+      Try[Boolean](card("death").bool).getOrElse(false),
+      Try[Boolean](card("attack").bool).getOrElse(false),
+      Try[Boolean](card("defense").bool).getOrElse(false)
+    ))
+      .toSeq
 
     cards
   }
@@ -97,12 +110,12 @@ package object gameLoading {
     cards
   }
 
-  def loadRoundEventCards(): Seq[Seq[RoundEventCard]] = {
-    val jsonData = readJson("textures/round_events_cards.json")
+  private val roundEventsCardsJson = readJson("textures/round_events_cards.json")
 
+  def loadRoundEventCards(): Seq[Seq[RoundEventCard]] = {
     val cards = (
       for (
-        deck <- jsonData.obj
+        deck <- roundEventsCardsJson.obj
       )
         yield deck._2.arr.flatMap(card => {
           List.fill(Try[Int](card("numOfCards").num.toInt).getOrElse(1))(RoundEventCard(
@@ -113,6 +126,25 @@ package object gameLoading {
           ))
         }).toSeq
     )
+      .toSeq
+
+    cards
+  }
+
+  def loadRoundEventCardsForClient(): Seq[Seq[RoundEventCard]] = {
+    val cards = (
+      for (
+        deck <- roundEventsCardsJson.obj
+      )
+      yield deck._2.arr.map(card => {
+        RoundEventCard(
+          card("code").num.toInt,
+          card("title").str,
+          card("text").str,
+          if Try(card("hasWildling").bool).getOrElse(false) then 2 else 0
+        )
+      }).toSeq
+      )
       .toSeq
 
     cards

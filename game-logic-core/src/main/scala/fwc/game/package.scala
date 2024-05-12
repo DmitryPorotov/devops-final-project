@@ -48,10 +48,17 @@ package object game {
     val courtStars = otherRules("kingsCourtStars").asInstanceOf[Vector[Int]]
     val supplyUsage = otherRules("supplyUsage").asInstanceOf[Vector[Seq[Int]]]
     val maxArmies = otherRules("maxArmies").asInstanceOf[Map[MilitaryUnitType, Int]]
+    
+    val wildlingCards = gameLoading.loadWildlingCards()
     val boardCards = BoardCards.initializeForRules(
       gameLoading.loadRoundEventCards(),
-      gameLoading.loadWildlingCards(),
+      wildlingCards,
       gameLoading.loadTideOfBattleCards()
+    )
+    val boardCardsForClient = BoardCards.initializeForRules(
+      gameLoading.loadRoundEventCardsForClient(),
+      wildlingCards,
+      gameLoading.loadTideOfBattleCardsForClient()
     )
     val orders = gameLoading.loadAvailableOrders()
     val houseCards = gameLoading.loadHouseCards()
@@ -62,6 +69,7 @@ package object game {
       supplyUsage,
       maxArmies,
       boardCards,
+      boardCardsForClient,
       orders,
       houseCards
     )
