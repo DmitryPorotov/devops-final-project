@@ -102,6 +102,13 @@ function _M:update_TOB_cards()
 	end)
 end
 
+function _M:update_outcome()
+	local oc = army_logic.combat.combatOutcome
+	combat_screen:set_attacker_strength(oc.attackerStrength)
+	combat_screen:set_defender_strength(oc.defenderStrength)
+	combat_screen:set_winner(army_logic.combat.attackerHouse == oc.winner)
+end
+
 function _M:clean_up()
 	event_dispatcher.off('hints_next_button_click', on_card_selection_confirmed)
 	event_dispatcher.off('house_card_selected', on_house_card_selected)

@@ -105,6 +105,13 @@ function _M:to_server_format(counts)
 	return army
 end
 
+---@class CombatOutcome
+---@field attackerStrength number
+---@field defenderStrength number
+---@field winner string HouseType
+---@field attackerUnitsToKill number
+---@field defenderUnitsToKill number
+
 ---@class Combat
 ---@field attackerTileNum number
 ---@field attackerHouse string
@@ -122,6 +129,7 @@ end
 ---@field defenderCardResolved boolean
 ---@field defenderTidesOfBattle number | nil
 ---@field defenderSupport number[]
+---@field combatOutcome CombatOutcome
 
 ---@param armies table<string, MilitaryUnit[]>
 ---@param combat Combat

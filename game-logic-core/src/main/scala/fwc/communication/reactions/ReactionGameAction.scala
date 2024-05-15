@@ -47,7 +47,6 @@ object ReactionGameAction {
 
   @tailrec
   private def loop(action: Action, gameReplay: GameReplay, reply: ujson.Arr = ujson.Arr()): (GameReplay, ujson.Arr)= {
-    println(reply)
     val updatedGameState = action.doAction()
     val updatedGameReplay = gameReplay.copy(
       currentGameState = updatedGameState,
@@ -140,21 +139,31 @@ object ReactionGameAction {
           buildMessageToAll(json)
         case a: ActionChooseHouseCard => buildMessageToAll(a.copy(cardCode = -1).toJson)
 //        case _: ActionCalculateCombatOutcome => buildMessageToAll(updatedGameState.combat.toJson)
-        case _: ActionCalculateGameWinner => buildMessageToAll(
-          ujson.Obj("winner" -> updatedGameState.winner.head.toString)
+        case a: ActionCalculateGameWinner => buildMessageToAll(
+          a.toJson.obj.addOne(
+            "winner" -> updatedGameState.winner.head.toString
+          )
         )
-        case _: ActionCleanUpAfterCombat => buildMessageToAll(ActionCleanUpAfterCombat.buildMessage(updatedGameState))
+        case a: ActionCleanUpAfterCombat => buildMessageToAll(
+          a.toJson.obj.addOne(
+            "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState)
+          )
+        )
         case _: ActionCleanUpAfterRound => buildMessageToAll(ActionCleanUpAfterRound.buildMessage(updatedGameState))
         case a: ActionGetTidesOfBattleCards =>
           val sp = updatedGameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
           if sp.defenderCard.isEmpty
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-            "player_action" -> a.toJson
+            "player_action" -> a.toJson.obj.addOne(
+              "code" -> sp.attackerCard.head
+            )
           )
           else ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-            "player_action" -> a.toJson
+            "player_action" -> a.toJson.obj.addOne(
+              "code" -> sp.defenderCard.head
+            )
           )
         case a: ActionRavenGetWildlingsCard =>
           if a.isRandom
@@ -179,7 +188,7 @@ object ReactionGameAction {
           then updatedGameState.combat.copy(attackerCard = null, defenderCard = null)
         else updatedGameState.combat
       reply.obj.addOne(
-        "combat" -> updatedGameState.combat.toJson
+        "combat" -> updatedCombat.toNonEmptyFieldsJson
       )
     reply.obj.addOne(
       "current_phase" -> (updatedGameState.subPhase match {

@@ -91,16 +91,25 @@ action_type_switch = {
 		do_current_phase_switching(reply)
 	end,
 	chooseHouseCard = function(reply)
-		local a =0
+		local a = 0
 	end,
 	getTidesOfBattleCards = function(reply)
 		army_logic:set_combat(reply.combat)
+		if army_logic.combat.defenderHouse == game_data.me then
+			army_logic.combat.defenderTidesOfBattle = reply.player_action.code
+		else
+			army_logic.combat.attackerTidesOfBattle = reply.player_action.code
+		end
 		chooseHouseCard:update_house_cards()
 	end,
 	setTidesOfBattleCards = function(reply)
 		army_logic:set_combat(reply.combat)
 		chooseHouseCard:update_TOB_cards()
-	end
+	end,
+	calculateCombatOutcome = function(reply)
+		army_logic:set_combat(reply.combat)
+		chooseHouseCard:update_outcome()
+	end,
 }
 
 action_type_switch.ravenChangeOrder = function(reply)

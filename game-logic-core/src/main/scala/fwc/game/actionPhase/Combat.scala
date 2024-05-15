@@ -32,6 +32,51 @@ case class Combat(
                    defenderSupport: Seq[TileNumber],
                    combatOutcome: CombatOutcome = null
                  ) extends JsonSerializable {
+  def toNonEmptyFieldsJson: Value =
+    val init = ujson.Obj(
+      "attackerTileNum" -> attackerTileNum,
+      "attackerHouse" -> attackerHouse.toString,
+      "attackerArmy" -> ujson.Value(attackerArmy.map(_.toJson)),
+      "attackerOrder" -> attackerOrder.toJson,
+      "defenderTileNum" -> defenderTileNum,
+      "defenderHouse" -> defenderHouse.toString,
+      "defenderArmy" -> ujson.Value(defenderArmy.map(_.toJson)),
+    )
+    if attackerCard != null then 
+      init.obj.addOne(
+        "attackerCard" -> attackerCard.code
+      )
+    if attackerTidesOfBattle != null then
+      init.obj.addOne(
+        "attackerTidesOfBattle" -> attackerTidesOfBattle.code
+      )
+    if attackerSupport.nonEmpty then
+      init.obj.addOne(
+        "attackerSupport" -> ujson.Arr.from(attackerSupport)
+      )
+    if defenderOrder != null then
+      init.obj.addOne(
+        "defenderOrder" -> defenderOrder.toJson
+      )
+    if defenderCard != null then
+      init.obj.addOne(
+        "defenderCard" -> defenderCard.code
+      )
+    if defenderTidesOfBattle != null then
+      init.obj.addOne(
+        "defenderTidesOfBattle" -> defenderTidesOfBattle.code
+      )
+    if defenderSupport.nonEmpty then
+      init.obj.addOne(
+        "defenderSupport" -> ujson.Arr.from(defenderSupport)
+      )
+    if combatOutcome != null then
+      init.obj.addOne(
+        "combatOutcome" -> combatOutcome.toJson
+      )
+    init
+      
+  
   override def toJson: Value = ujson.Obj(
     "attackerTileNum" -> attackerTileNum,
     "attackerHouse" -> attackerHouse.toString,

@@ -25,7 +25,9 @@ local _M = {
 function _M:init()
 	self.panel = gui.get_node('combat_screen/bg')
 	self.place_text = gui.get_node('combat_screen/place_text')
-	
+	self.red_x = gui.get_node('combat_screen/x')
+
+	self.attacker_box = gui.get_node('combat_screen/attacker_box')
 	self.attacker_shield = gui.get_node('combat_screen/a_shield')
 	self.attacker_house_text = gui.get_node('combat_screen/a_house_name_text')
 	self.attacker_total_strength_text = gui.get_node('combat_screen/a_strength_shield_text')
@@ -34,6 +36,7 @@ function _M:init()
 	self.attacker_tide_of_battle_icon = gui.get_node('combat_screen/a_tob_icon')
 	self.attacker_tide_of_battle_str_icon = gui.get_node('combat_screen/a_tob_strength')
 
+	self.defender_box = gui.get_node('combat_screen/defender_box')
 	self.defender_shield = gui.get_node('combat_screen/d_shield')
 	self.defender_house_text = gui.get_node('combat_screen/d_house_name_text')
 	self.defender_total_strength_text = gui.get_node('combat_screen/d_strength_shield_text')
@@ -75,6 +78,7 @@ function _M:close()
 	gui.set_enabled(self.defender_tide_of_battle_icon, true)
 	gui.set(self.attacker_tide_of_battle_str_icon, 'position.x', -30)
 	gui.set(self.defender_tide_of_battle_str_icon, 'position.x', -30)
+	gui.set_enabled(self.red_x, false)
 end
 
 function _M:delete_cards()
@@ -160,12 +164,12 @@ function _M:confirm_card(card, is_attacker)
 			c:delete()
 		else
 			if is_attacker then
-				gui.set_parent(c.bg, gui.get_node('combat_screen/attacker_box'), true)
+				gui.set_parent(c.bg, self.attacker_box, true)
 				gui.animate(c.bg, gui.PROP_POSITION, self.a_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				gui.animate(c.bg, gui.PROP_EULER, self.a_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				self.attacker_card = c
 			else
-				gui.set_parent(c.bg, gui.get_node('combat_screen/defender_box'), true)
+				gui.set_parent(c.bg, self.defender_box, true)
 				gui.animate(c.bg, gui.PROP_POSITION, self.d_card_position, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				gui.animate(c.bg, gui.PROP_EULER, self.d_card_rotation, gui.EASING_LINEAR, utils.ANIMATION_TIME)
 				self.defender_card = c
@@ -173,6 +177,29 @@ function _M:confirm_card(card, is_attacker)
 		end
 	end
 	self.cards = {}
+end
+
+---@param is_attacker boolean
+function _M:set_winner(is_attacker)
+	local above_node
+	if is_attacker then
+		gui.set_parent(self.red_x, self.defender_box)
+		above_node = self.defender_tide_of_battle_box
+	else
+		gui.set_parent(self.red_x, self.attacker_box)
+		above_node = self.attacker_tide_of_battle_box
+	end
+	timer.delay(.5, false, function()
+		gui.set_position(self.red_x, vmath.vector3(0,-30,0))
+		gui.set_enabled(self.red_x, true)
+		gui.move_above(self.red_x, above_node)
+		gui.set(self.red_x, 'euler.z', -3)
+		gui.animate(self.red_x, 'euler.z', 3, gui.EASING_INOUTSINE, .1, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+		timer.delay(.5, false, function()
+			gui.cancel_animation(self.red_x, 'euler.z')
+			gui.set(self.red_x, 'euler.z', 0)
+		end)
+	end)
 end
 
 ---@param card HouseCard
@@ -212,6 +239,10 @@ function _M:set_TOB_card(tob_card, is_attacker)
 		p = 'defender'
 		gui.move_above(self.defender_tide_of_battle_box, self.defender_card.bg)
 	end
+	if not tob_card then
+		gui.set_enabled(self[p..'_tide_of_battle_box'], false)
+		return
+	end
 
 	gui.set_text(self[p..'_tide_of_battle_text'], '+'..tob_card.power)
 	if tob_card.defense then
@@ -224,7 +255,9 @@ function _M:set_TOB_card(tob_card, is_attacker)
 		gui.set_enabled(self[p..'_tide_of_battle_icon'], false)
 		gui.set(self[p..'_tide_of_battle_str_icon'], 'position.x', 0)
 	end
+	gui.set_scale(self[p..'_tide_of_battle_box'], vmath.vector3(1.2,1.2,1))
 	gui.set_enabled(self[p..'_tide_of_battle_box'], true)
+	gui.animate(self[p..'_tide_of_battle_box'], 'scale', vmath.vector3(1,1,1), gui.EASING_LINEAR, 0.2)
 end
 
 return _M
