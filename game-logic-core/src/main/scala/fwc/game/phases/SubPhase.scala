@@ -180,6 +180,10 @@ object SubPhase extends JsonParsable {
         )
       case "awaitingStart" =>
         SubPhaseAwaitingStart()
+      case "autoKillUnitsAfterBattle" =>
+        SubPhaseAutoKillUnitsAfterBattle()
+      case "autoRetreatAfterBattle" =>
+        SubPhaseAutoRetreatAfterBattle()
   }
 
 

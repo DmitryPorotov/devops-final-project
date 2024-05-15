@@ -87,6 +87,8 @@ object ReactionGameAction {
   private def matchSubPhaseToAction(subPhase: SubPhase, gameState: GameState, isRandom: Boolean = false): Action =
     subPhase match
       case _: SubPhaseCalculateCombatOutcome => ActionCalculateCombatOutcome(gameState)
+      case _: SubPhaseAutoKillUnitsAfterBattle => ActionAutoKillUnitsAfterBattle(gameState)
+      case _: SubPhaseAutoRetreatAfterBattle => ActionAutoRetreatAfterBattle(gameState)
       case _: SubPhaseCalculateGameWinner => ActionCalculateGameWinner(gameState)
       case _: SubPhaseCleanUpAfterCombat => ActionCleanUpAfterCombat(gameState)
       case _: SubPhaseGetEventCards => ActionGetEventCards(gameState, isRandom)
@@ -158,7 +160,9 @@ object ReactionGameAction {
           if a.isRandom
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.tracks.ravenOwner),
-            "player_action" -> updatedGameState.boardCards.wildlings.head.toJson
+            "player_action" -> a.toJson.obj.addOne(
+              "code" -> updatedGameState.boardCards.wildlings.head.code
+            )
           )
           else buildMessageToAll(a.toJson)
         case a: ActionOpenOrders =>
