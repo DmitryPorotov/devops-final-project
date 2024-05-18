@@ -4,35 +4,27 @@ from lxml import etree
 
 from content_parser import ContentParser
 
-url = "https://defold.com/ref/stable/gui/"
+url = "https://defold.com/ref/stable/go/"
 page = urlopen(url)
 html = page.read().decode("utf-8")
 soup = BeautifulSoup(html, "html.parser")
 
 content = soup.find_all('div', attrs={'class': 'apicontent'})
-str_cont = str(content)
 cont = etree.HTML(str(content))
 h2s = cont.xpath('//h2')
 parts = []
 for idx, h2 in enumerate(h2s):
-    parent = h2.getparent()
-    p = {'name': h2.text, 's': parent.index(h2)}
+    p = {'name': h2.text, 's': h2.sourceline}
     try:
-        if h2s[idx + 1].getparent() == parent:
-            p['e'] = parent.index(h2s[idx + 1])
+        p['e'] = h2s[idx + 1].sourceline
     except IndexError:
         pass
 
-    p['parent'] = parent
-
     def is_in_range(h4_):
-        if h4_.getparent() != p['parent']:
-            return False
         if 'e' in p:
-            return p['s'] < p['parent'].index(h4_) < p['e']
+            return p['s'] < h4_.sourceline < p['e']
         else:
-            return p['s'] < p['parent'].index(h4_)
-
+            return p['s'] < h4_.sourceline
 
     p['h2'] = h2
 
@@ -52,7 +44,15 @@ for h4 in h4s:
                 p['content'].append(ContentParser.read_constant_data(h4))
 
 
-print('---@module {}'.format('gui'))
+def find_module_name(parts_):
+    for p in parts_:
+        if p['name'] == 'Functions':
+            for c in p['content']:
+                if '.' in c['function_name']:
+                    return c['function_name'].split('.')[0]
+
+
+print('---@module {}'.format(find_module_name(parts)))
 for p in parts:
     if p['name'] == 'Functions':
         for c in p['content']:
@@ -65,9 +65,13 @@ for p in parts:
                     out += name + ': ' + ' | '.join(pr['types'])
                     if i < len_pr - 1:
                         out += ', '
-                out += ') {}'.format(c['description_text'].replace('\n', ' ') if c['description_text'] is not None else '')
+                out += ')'
+                if 'returns' in c:
+                    out += ': ' + (' | '.join(c['returns'][0]['types']))
+                out += ' {}'.format(c['description_text']
+                                    .replace('\n', ' ') if c['description_text'] is not None else '')
+
                 print(out)
     if p['name'] == 'Constants':
         for c in p['content']:
-            print('---@field {} number {}'.format( c['const_name'].split('.')[1], c['description_text']))
-a = 0
+            print('---@field {} number {}'.format(c['const_name'].split('.')[1], c['description_text'].replace('\n', ' ')))

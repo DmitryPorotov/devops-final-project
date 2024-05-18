@@ -1,35 +1,60 @@
 ---@class hash: userdata
+
 ---@class node: userdata
 
----@module gui
----@field get_node fun(id: string | hash) Retrieves the node with the specified id.
----@field animate fun(node: node, property: string, to: number, easing: string)
+---@class constant: userdata
+
+---@class url: userdata
+
+---@class resource: userdata
+
+---@class vector: table
+
+---@class vector3
+---@field x number
+---@field y number
+---@field z number
+
+---@class vector4
+---@field x number
+---@field y number
+---@field z number
+---@field w number
+
+---@class matrix4
+---@field c0 vector4
+---@field c1 vector4
+---@field c2 vector4
+---@field c3 vector4
+
+---@class quat: vector4
+---@class quaternion: vector4
 
 ---@module go
 ---@field animate fun(url: string | hash | url, property: string | hash, playback: constant, to: number | vector3 | vector4 | quaternion, easing: constant | vector, duration: number, delay: number, complete_function: function(self | url | property)) This is only supported for numerical properties. If the node property is already being animated, that animation will be canceled and replaced by the new one. If a
 ---@field cancel_animations fun(url: string | hash | url, property: string | hash) By calling this function, all or specified stored property animations of the game object or component will be canceled. See the
 ---@field delete fun(id: string | hash | url | table, recursive: boolean) Delete one or more game objects identified by id. Deletion is asynchronous meaning that the game object(s) are scheduled for deletion which will happen at the end of the current frame. Note that game objects scheduled for deletion will be counted against
----@field exists fun(url: string | hash | url) check if the specified game object exists
----@field get fun(url: string | hash | url, property: string | hash, options: table) gets a named property of the specified game object or component
----@field get_id fun() Returns or constructs an instance identifier. The instance id is a hash of the absolute path to the instance.
----@field get_parent fun(id: string | hash | url) Get the parent for a game object instance.
----@field get_position fun(id: string | hash | url) The position is relative the parent (if any). Use
----@field get_rotation fun(id: string | hash | url) The rotation is relative to the parent (if any). Use
----@field get_scale fun(id: string | hash | url) The scale is relative the parent (if any). Use
----@field get_scale_uniform fun(id: string | hash | url) The uniform scale is relative the parent (if any). If the underlying scale vector is non-uniform the min element of the vector is returned as the uniform scale factor.
----@field get_world_position fun(id: string | hash | url) The function will return the world position calculated at the end of the previous frame. Use
----@field get_world_rotation fun(id: string | hash | url) The function will return the world rotation calculated at the end of the previous frame. Use
----@field get_world_scale fun(id: string | hash | url) The function will return the world 3D scale factor calculated at the end of the previous frame. Use
----@field get_world_scale_uniform fun(id: string | hash | url) The function will return the world scale factor calculated at the end of the previous frame. Use
----@field get_world_transform fun(id: string | hash | url) The function will return the world transform matrix calculated at the end of the previous frame.
+---@field exists fun(url: string | hash | url): boolean check if the specified game object exists
+---@field get fun(url: string | hash | url, property: string | hash, options: table): any gets a named property of the specified game object or component
+---@field get_id fun(path: string): hash Returns or constructs an instance identifier. The instance id is a hash of the absolute path to the instance.
+---@field get_parent fun(id: string | hash | url): hash | nil Get the parent for a game object instance.
+---@field get_position fun(id: string | hash | url): vector3 The position is relative the parent (if any). Use
+---@field get_rotation fun(id: string | hash | url): quaternion The rotation is relative to the parent (if any). Use
+---@field get_scale fun(id: string | hash | url): vector3 The scale is relative the parent (if any). Use
+---@field get_scale_uniform fun(id: string | hash | url): number The uniform scale is relative the parent (if any). If the underlying scale vector is non-uniform the min element of the vector is returned as the uniform scale factor.
+---@field get_world_position fun(id: string | hash | url): vector3 The function will return the world position calculated at the end of the previous frame. Use
+---@field get_world_rotation fun(id: string | hash | url): quaternion The function will return the world rotation calculated at the end of the previous frame. Use
+---@field get_world_scale fun(id: string | hash | url): vector3 The function will return the world 3D scale factor calculated at the end of the previous frame. Use
+---@field get_world_scale_uniform fun(id: string | hash | url): number The function will return the world scale factor calculated at the end of the previous frame. Use
+---@field get_world_transform fun(id: string | hash | url): matrix4 The function will return the world transform matrix calculated at the end of the previous frame.
 ---@field property fun(name: string, value: number | hash | url | vector3 | vector4 | quaternion | resource | boolean) This function defines a property which can then be used in the script through the self-reference. The properties defined this way are automatically exposed in the editor in game objects and collections which use the script. Note that you can only use this function outside any callback-functions like init and update.
 ---@field set fun(url: string | hash | url, property: string | hash, value: any | table, options: table) sets a named property of the specified game object or component, or a material constant
 ---@field set_parent fun(id: string | hash | url, parent_id: string | hash | url, keep_world_transform: boolean) Sets the parent for a game object instance. This means that the instance will exist in the geometrical space of its parent, like a basic transformation hierarchy or scene graph. If no parent is specified, the instance will be detached from any parent and exist in world space. This function will generate a
 ---@field set_position fun(position: vector3, id: string | hash | url) The position is relative to the parent (if any). The global world position cannot be manually set.
 ---@field set_rotation fun(rotation: quaternion, id: string | hash | url) The rotation is relative to the parent (if any). The global world rotation cannot be manually set.
 ---@field set_scale fun(scale: number | vector3, id: string | hash | url) The scale factor is relative to the parent (if any). The global world scale factor cannot be manually set.
----@field world_to_local_position fun(position: vector3, url: string | hash | url) The function uses world transformation calculated at the end of previous frame.
----@field world_to_local_transform fun(transformation: matrix4, url: string | hash | url) The function uses world transformation calculated at the end of previous frame.
+---@field world_to_local_position fun(position: vector3, url: string | hash | url): vector3 The function uses world transformation calculated at the end of previous frame.
+---@field world_to_local_transform fun(transformation: matrix4, url: string | hash | url): matrix4 The function uses world transformation calculated at the end of previous frame.
 ---@field EASING_INBACK number in-back
 ---@field EASING_INBOUNCE number in-bounce
 ---@field EASING_INCIRC number in-circlic
@@ -78,3 +103,215 @@
 ---@field PLAYBACK_ONCE_BACKWARD number once backward
 ---@field PLAYBACK_ONCE_FORWARD number once forward
 ---@field PLAYBACK_ONCE_PINGPONG number once ping pong
+
+
+---@module gui
+---@field animate fun(node: node, property: string | constant, to: number | vector3 | vector4 | quaternion, easing: constant | vector, duration: number, delay: number, complete_function: function(self | node), playback: constant) This starts an animation of a node property according to the specified parameters. If the node property is already being animated, that animation will be canceled and replaced by the new one. Note however that several different node properties can be animated simultaneously. Use
+---@field cancel_animation fun(node: node, property: string | constant) If an animation of the specified node is currently running (started by
+---@field cancel_flipbook fun(node: node) Cancels any running flipbook animation on the specified node.
+---@field clone fun(node: node): node Make a clone instance of a node. The cloned node will be identical to the original node, except the id which is generated as the string "node" plus a sequential unsigned integer value. This function does not clone the supplied node's children nodes. Use gui.clone_tree for that purpose.
+---@field clone_tree fun(node: node): table Make a clone instance of a node and all its children. Use gui.clone to clone a node excluding its children.
+---@field delete_node fun(node: node) Deletes the specified node. Any child nodes of the specified node will be recursively deleted.
+---@field delete_texture fun(texture: string | hash) Delete a dynamically created texture.
+---@field get fun(node: node, property: string | hash | constant) Instead of using specific getters such as gui.get_position or gui.get_scale, you can use gui.get instead and supply the property as a string or a hash. While this function is similar to go.get, there are a few more restrictions when operating in the gui namespace. Most notably, only these propertie identifiers are supported:
+---@field get_adjust_mode fun(node: node): constant Returns the adjust mode of a node. The adjust mode defines how the node will adjust itself to screen resolutions that differs from the one in the project settings.
+---@field get_alpha fun(node: node) gets the node alpha
+---@field get_blend_mode fun(node: node): constant Returns the blend mode of a node. Blend mode defines how the node will be blended with the background.
+---@field get_clipping_inverted fun(node: node): boolean If node is set as an inverted clipping node, it will clip anything inside as opposed to outside.
+---@field get_clipping_mode fun(node: node): constant Clipping mode defines how the node will clip it's children nodes
+---@field get_clipping_visible fun(node: node): boolean If node is set as visible clipping node, it will be shown as well as clipping. Otherwise, it will only clip but not show visually.
+---@field get_color fun(node: node): vector4 Returns the color of the supplied node. The components of the returned vector4 contains the color channel values:
+---@field get_euler fun(node: node): vector3 Returns the rotation of the supplied node. The rotation is expressed in degree Euler angles.
+---@field get_fill_angle fun(node: node): number Returns the sector angle of a pie node.
+---@field get_flipbook fun(node: node): hash Get node flipbook animation.
+---@field get_flipbook_cursor fun(node: node): number This is only useful nodes with flipbook animations. Gets the normalized cursor of the flipbook animation on a node.
+---@field get_flipbook_playback_rate fun(node: node): number This is only useful nodes with flipbook animations. Gets the playback rate of the flipbook animation on a node.
+---@field get_font fun(node: node): hash This is only useful for text nodes. The font must be mapped to the gui scene in the gui editor.
+---@field get_font_resource fun(font_name: hash | string): hash This is only useful for text nodes. The font must be mapped to the gui scene in the gui editor.
+---@field get_height fun(): number Returns the scene height.
+---@field get_id fun(node: node): hash Retrieves the id of the specified node.
+---@field get_index fun(node: node): number Retrieve the index of the specified node among its siblings. The index defines the order in which a node appear in a GUI scene. Higher index means the node is drawn on top of lower indexed nodes.
+---@field get_inherit_alpha fun(node: node) gets the node inherit alpha state
+---@field get_inner_radius fun(node: node): number Returns the inner radius of a pie node. The radius is defined along the x-axis.
+---@field get_layer fun(node: node): hash The layer must be mapped to the gui scene in the gui editor.
+---@field get_layout fun(): hash gets the scene current layout
+---@field get_leading fun(node: node): number Returns the leading value for a text node.
+---@field get_line_break fun(node: node): boolean Returns whether a text node is in line-break mode or not. This is only useful for text nodes.
+---@field get_material fun(node: node) Returns the material of a node. The material must be mapped to the gui scene in the gui editor.
+---@field get_node fun(id: string | hash): node Retrieves the node with the specified id.
+---@field get_outer_bounds fun(node: node): constant Returns the outer bounds mode for a pie node.
+---@field get_outline fun(node: node): vector4 Returns the outline color of the supplied node. See
+---@field get_parent fun(node: node): node | nil Returns the parent node of the specified node. If the supplied node does not have a parent,
+---@field get_particlefx fun(node: node): hash Get the paricle fx for a gui node
+---@field get_perimeter_vertices fun(node: node): number Returns the number of generated vertices around the perimeter of a pie node.
+---@field get_pivot fun(node: node): constant The pivot specifies how the node is drawn and rotated from its position.
+---@field get_position fun(node: node): vector3 Returns the position of the supplied node.
+---@field get_rotation fun(node: node): quat Returns the rotation of the supplied node. The rotation is expressed as a quaternion
+---@field get_scale fun(node: node): vector3 Returns the scale of the supplied node.
+---@field get_screen_position fun(node: node): vector3 Returns the screen position of the supplied node. This function returns the calculated transformed position of the node, taking into account any parent node transforms.
+---@field get_shadow fun(node: node): vector4 Returns the shadow color of the supplied node. See
+---@field get_size fun(node: node): vector3 Returns the size of the supplied node.
+---@field get_size_mode fun(node: node): constant Returns the size of a node. The size mode defines how the node will adjust itself in size. Automatic size mode alters the node size based on the node's content. Automatic size mode works for Box nodes and Pie nodes which will both adjust their size to match the assigned image. Particle fx and Text nodes will ignore any size mode setting.
+---@field get_slice9 fun(node: node): vector4 Returns the slice9 configuration values for the node.
+---@field get_text fun(node: node): string Returns the text value of a text node. This is only useful for text nodes.
+---@field get_texture fun(node: node): hash Returns the texture of a node. This is currently only useful for box or pie nodes. The texture must be mapped to the gui scene in the gui editor.
+---@field get_tracking fun(node: node): number Returns the tracking value of a text node.
+---@field get_tree fun(node: node): table Get a node and all its children as a Lua table.
+---@field get_visible fun(node: node): boolean Returns
+---@field get_width fun(): number Returns the scene width.
+---@field get_xanchor fun(node: node): constant The x-anchor specifies how the node is moved when the game is run in a different resolution.
+---@field get_yanchor fun(node: node): constant The y-anchor specifies how the node is moved when the game is run in a different resolution.
+---@field hide_keyboard fun() Hides the on-display touch keyboard on the device.
+---@field is_enabled fun(node: node, recursive: boolean): boolean Returns
+---@field move_above fun(node: node, reference: node | nil) Alters the ordering of the two supplied nodes by moving the first node above the second. If the second argument is
+---@field move_below fun(node: node, reference: node | nil) Alters the ordering of the two supplied nodes by moving the first node below the second. If the second argument is
+---@field new_box_node fun(pos: vector3 | vector4, size: vector3): node Dynamically create a new box node.
+---@field new_particlefx_node fun(pos: vector3 | vector4, particlefx: hash | string): node Dynamically create a particle fx node.
+---@field new_pie_node fun(pos: vector3 | vector4, size: vector3): node Dynamically create a new pie node.
+---@field new_text_node fun(pos: vector3 | vector4, text: string): node Dynamically create a new text node.
+---@field new_texture fun(texture_id: string | hash, width: number, height: number, type: string | constant, buffer: string, flip: boolean): boolean Dynamically create a new texture.
+---@field pick_node fun(node: node, x: number, y: number): boolean Tests whether a coordinate is within the bounding box of a node.
+---@field play_flipbook fun(node: node, animation: string | hash, complete_function: function(self | node), play_properties: table) Play flipbook animation on a box or pie node. The current node texture must contain the animation. Use this function to set one-frame still images on the node.
+---@field play_particlefx fun(node: node, emitter_state_function: function(self | node | emitter | state)) Plays the paricle fx for a gui node
+---@field reset_keyboard fun() Resets the input context of keyboard. This will clear marked text.
+---@field reset_material fun(node: node) Resets the node material to the material assigned in the gui scene.
+---@field reset_nodes fun() Resets all nodes in the current GUI scene to their initial state. The reset only applies to static node loaded from the scene. Nodes that are created dynamically from script are not affected.
+---@field screen_to_local fun(node: node, screen_position: vector3): vector3 Convert the screen position to the local position of supplied node
+---@field set fun(node: node, property: string | hash | constant, value: number | vector4 | vector3 | quat) Instead of using specific setteres such as gui.set_position or gui.set_scale, you can use gui.set instead and supply the property as a string or a hash. While this function is similar to go.get and go.set, there are a few more restrictions when operating in the gui namespace. Most notably, only these propertie identifiers are supported:
+---@field set_adjust_mode fun(node: node, adjust_mode: constant) Sets the adjust mode on a node. The adjust mode defines how the node will adjust itself to screen resolutions that differs from the one in the project settings.
+---@field set_alpha fun(node: node, alpha: number) sets the node alpha
+---@field set_blend_mode fun(node: node, blend_mode: constant) Set the blend mode of a node. Blend mode defines how the node will be blended with the background.
+---@field set_clipping_inverted fun(node: node, inverted: boolean) If node is set as an inverted clipping node, it will clip anything inside as opposed to outside.
+---@field set_clipping_mode fun(node: node, clipping_mode: constant) Clipping mode defines how the node will clip it's children nodes
+---@field set_clipping_visible fun(node: node, visible: boolean) If node is set as an visible clipping node, it will be shown as well as clipping. Otherwise, it will only clip but not show visually.
+---@field set_color fun(node: node, color: vector3 | vector4) Sets the color of the supplied node. The components of the supplied vector3 or vector4 should contain the color channel values:
+---@field set_enabled fun(node: node, enabled: boolean) Sets a node to the disabled or enabled state. Disabled nodes are not rendered and animations acting on them are not evaluated.
+---@field set_euler fun(node: node, rotation: vector3 | vector4) Sets the rotation of the supplied node. The rotation is expressed in degree Euler angles.
+---@field set_fill_angle fun(node: node, angle: number) Set the sector angle of a pie node.
+---@field set_flipbook_cursor fun(node: node, cursor: number) This is only useful nodes with flipbook animations. The cursor is normalized.
+---@field set_flipbook_playback_rate fun(node: node, playback_rate: number) This is only useful nodes with flipbook animations. Sets the playback rate of the flipbook animation on a node. Must be positive.
+---@field set_font fun(node: node, font: string | hash) This is only useful for text nodes. The font must be mapped to the gui scene in the gui editor.
+---@field set_id fun(node: node, id: string | hash) Set the id of the specicied node to a new value. Nodes created with the gui.new_*_node() functions get an empty id. This function allows you to give dynamically created nodes an id.
+---@field set_inherit_alpha fun(node: node, inherit_alpha: boolean) sets the node inherit alpha state
+---@field set_inner_radius fun(node: node, radius: number) Sets the inner radius of a pie node. The radius is defined along the x-axis.
+---@field set_layer fun(node: node, layer: string | hash) The layer must be mapped to the gui scene in the gui editor.
+---@field set_leading fun(node: node, leading: number) Sets the leading value for a text node. This value is used to scale the line spacing of text.
+---@field set_line_break fun(node: node, line_break: boolean) Sets the line-break mode on a text node. This is only useful for text nodes.
+---@field set_material fun(node: node, material: string | hash) Set the material on a node. The material must be mapped to the gui scene in the gui editor, and assigning a material is supported for all node types. To set the default material that is assigned to the gui scene node, use
+---@field set_outer_bounds fun(node: node, bounds_mode: constant) Sets the outer bounds mode for a pie node.
+---@field set_outline fun(node: node, color: vector3 | vector4) Sets the outline color of the supplied node. See
+---@field set_parent fun(node: node, parent: node, keep_scene_transform: boolean) Sets the parent node of the specified node.
+---@field set_particlefx fun(node: node, particlefx: hash | string) Set the paricle fx for a gui node
+---@field set_perimeter_vertices fun(node: node, vertices: number) Sets the number of generated vertices around the perimeter of a pie node.
+---@field set_pivot fun(node: node, pivot: constant) The pivot specifies how the node is drawn and rotated from its position.
+---@field set_position fun(node: node, position: vector3 | vector4) Sets the position of the supplied node.
+---@field set_render_order fun(order: number) Set the order number for the current GUI scene. The number dictates the sorting of the "gui" render predicate, in other words in which order the scene will be rendered in relation to other currently rendered GUI scenes. The number must be in the range 0 to 15.
+---@field set_rotation fun(node: node, rotation: quat | vector4) Sets the rotation of the supplied node. The rotation is expressed as a quaternion
+---@field set_scale fun(node: node, scale: vector3 | vector4) Sets the scaling of the supplied node.
+---@field set_screen_position fun(node: node, screen_position: vector3) Set the screen position to the supplied node
+---@field set_shadow fun(node: node, color: vector3 | vector4) Sets the shadow color of the supplied node. See
+---@field set_size fun(node: node, size: vector3 | vector4) Sets the size of the supplied node.
+---@field set_size_mode fun(node: node, size_mode: constant) Sets the size mode of a node. The size mode defines how the node will adjust itself in size. Automatic size mode alters the node size based on the node's content. Automatic size mode works for Box nodes and Pie nodes which will both adjust their size to match the assigned image. Particle fx and Text nodes will ignore any size mode setting.
+---@field set_slice9 fun(node: node, values: vector4) Set the slice9 configuration values for the node.
+---@field set_text fun(node: node, text: string) Set the text value of a text node. This is only useful for text nodes.
+---@field set_texture fun(node: node, texture: string | hash) Set the texture on a box or pie node. The texture must be mapped to the gui scene in the gui editor. The function points out which texture the node should render from. If the texture is an atlas, further information is needed to select which image/animation in the atlas to render. In such cases, use
+---@field set_texture_data fun(texture: string | hash, width: number, height: number, type: string | constant, buffer: string, flip: boolean): boolean Set the texture buffer data for a dynamically created texture.
+---@field set_tracking fun(node: node, tracking: number) Sets the tracking value of a text node. This value is used to adjust the vertical spacing of characters in the text.
+---@field set_visible fun(node: node, visible: boolean) Set if a node should be visible or not. Only visible nodes are rendered.
+---@field set_xanchor fun(node: node, anchor: constant) The x-anchor specifies how the node is moved when the game is run in a different resolution.
+---@field set_yanchor fun(node: node, anchor: constant) The y-anchor specifies how the node is moved when the game is run in a different resolution.
+---@field show_keyboard fun(type: constant, autoclose: boolean) Shows the on-display touch keyboard. The specified type of keyboard is displayed if it is available on the device. This function is only available on iOS and Android.
+---@field stop_particlefx fun(node: node, options: table) Stops the particle fx for a gui node
+---@field ADJUST_FIT number Adjust mode is used when the screen resolution differs from the project settings. The fit mode ensures that the entire node is visible in the adjusted gui scene.
+---@field ADJUST_STRETCH number Adjust mode is used when the screen resolution differs from the project settings. The stretch mode ensures that the node is displayed as is in the adjusted gui scene, which might scale it non-uniformally.
+---@field ADJUST_ZOOM number Adjust mode is used when the screen resolution differs from the project settings. The zoom mode ensures that the node fills its entire area and might make the node exceed it.
+---@field ANCHOR_BOTTOM number bottom y-anchor
+---@field ANCHOR_LEFT number left x-anchor
+---@field ANCHOR_NONE number no anchor
+---@field ANCHOR_RIGHT number right x-anchor
+---@field ANCHOR_TOP number top y-anchor
+---@field BLEND_ADD number additive blending
+---@field BLEND_ADD_ALPHA number additive alpha blending
+---@field BLEND_ALPHA number alpha blending
+---@field BLEND_MULT number multiply blending
+---@field BLEND_SCREEN number screen blending
+---@field CLIPPING_MODE_NONE number clipping mode none
+---@field CLIPPING_MODE_STENCIL number clipping mode stencil
+---@field EASING_INBACK number in-back
+---@field EASING_INBOUNCE number in-bounce
+---@field EASING_INCIRC number in-circlic
+---@field EASING_INCUBIC number in-cubic
+---@field EASING_INELASTIC number in-elastic
+---@field EASING_INEXPO number in-exponential
+---@field EASING_INOUTBACK number in-out-back
+---@field EASING_INOUTBOUNCE number in-out-bounce
+---@field EASING_INOUTCIRC number in-out-circlic
+---@field EASING_INOUTCUBIC number in-out-cubic
+---@field EASING_INOUTELASTIC number in-out-elastic
+---@field EASING_INOUTEXPO number in-out-exponential
+---@field EASING_INOUTQUAD number in-out-quadratic
+---@field EASING_INOUTQUART number in-out-quartic
+---@field EASING_INOUTQUINT number in-out-quintic
+---@field EASING_INOUTSINE number in-out-sine
+---@field EASING_INQUAD number in-quadratic
+---@field EASING_INQUART number in-quartic
+---@field EASING_INQUINT number in-quintic
+---@field EASING_INSINE number in-sine
+---@field EASING_LINEAR number linear interpolation
+---@field EASING_OUTBACK number out-back
+---@field EASING_OUTBOUNCE number out-bounce
+---@field EASING_OUTCIRC number out-circlic
+---@field EASING_OUTCUBIC number out-cubic
+---@field EASING_OUTELASTIC number out-elastic
+---@field EASING_OUTEXPO number out-exponential
+---@field EASING_OUTINBACK number out-in-back
+---@field EASING_OUTINBOUNCE number out-in-bounce
+---@field EASING_OUTINCIRC number out-in-circlic
+---@field EASING_OUTINCUBIC number out-in-cubic
+---@field EASING_OUTINELASTIC number out-in-elastic
+---@field EASING_OUTINEXPO number out-in-exponential
+---@field EASING_OUTINQUAD number out-in-quadratic
+---@field EASING_OUTINQUART number out-in-quartic
+---@field EASING_OUTINQUINT number out-in-quintic
+---@field EASING_OUTINSINE number out-in-sine
+---@field EASING_OUTQUAD number out-quadratic
+---@field EASING_OUTQUART number out-quartic
+---@field EASING_OUTQUINT number out-quintic
+---@field EASING_OUTSINE number out-sine
+---@field KEYBOARD_TYPE_DEFAULT number default keyboard
+---@field KEYBOARD_TYPE_EMAIL number email keyboard
+---@field KEYBOARD_TYPE_NUMBER_PAD number number input keyboard
+---@field KEYBOARD_TYPE_PASSWORD number password keyboard
+---@field PIEBOUNDS_ELLIPSE number elliptical pie node bounds
+---@field PIEBOUNDS_RECTANGLE number rectangular pie node bounds
+---@field PIVOT_CENTER number center pivot
+---@field PIVOT_E number east pivot
+---@field PIVOT_N number north pivot
+---@field PIVOT_NE number north-east pivot
+---@field PIVOT_NW number north-west pivot
+---@field PIVOT_S number south pivot
+---@field PIVOT_SE number south-east pivot
+---@field PIVOT_SW number south-west pivot
+---@field PIVOT_W number west pivot
+---@field PLAYBACK_LOOP_BACKWARD number loop backward
+---@field PLAYBACK_LOOP_FORWARD number loop forward
+---@field PLAYBACK_LOOP_PINGPONG number ping pong loop
+---@field PLAYBACK_ONCE_BACKWARD number once backward
+---@field PLAYBACK_ONCE_FORWARD number once forward
+---@field PLAYBACK_ONCE_PINGPONG number once forward and then backward
+---@field PROP_COLOR number color property
+---@field PROP_EULER number euler property
+---@field PROP_FILL_ANGLE number fill_angle property
+---@field PROP_INNER_RADIUS number inner_radius property
+---@field PROP_OUTLINE number outline color property
+---@field PROP_POSITION number position property
+---@field PROP_ROTATION number rotation property
+---@field PROP_SCALE number scale property
+---@field PROP_SHADOW number shadow color property
+---@field PROP_SIZE number size property
+---@field PROP_SLICE9 number slice9 property
+---@field RESULT_DATA_ERROR number The provided data is not in the expected format or is in some other way incorrect, for instance the image data provided to gui.new_texture().
+---@field RESULT_OUT_OF_RESOURCES number The system is out of resources, for instance when trying to create a new texture using gui.new_texture().
+---@field RESULT_TEXTURE_ALREADY_EXISTS number The texture id already exists when trying to use gui.new_texture().
+---@field SIZE_MODE_AUTO number The size of the node is determined by the currently assigned texture.
+---@field SIZE_MODE_MANUAL number The size of the node is determined by the size set in the editor, the constructor or by gui.set_size()

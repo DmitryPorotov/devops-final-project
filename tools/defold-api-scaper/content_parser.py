@@ -7,6 +7,9 @@ class ContentParser:
             else str(main_description_el.xpath('string()')).strip()
         params_el = ContentParser._get_params_el(main_description_el)
         retval['params'] = ContentParser._read_function_params(params_el)
+        returns_el = ContentParser._get_returns_el(params_el)
+        if returns_el is not None:
+            retval['returns'] = ContentParser._read_function_params(returns_el)
         return retval
 
     @staticmethod
@@ -17,14 +20,36 @@ class ContentParser:
             return ContentParser._get_params_el(el.getnext())
 
     @staticmethod
+    def _get_returns_el(el, _depth=1):
+        if _depth > 3:
+            return None
+        if el.xpath('string()').strip() == 'RETURNS':
+            return el.getnext()
+        else:
+            return ContentParser._get_returns_el(el.getnext(), _depth + 1)
+
+    # @staticmethod
+    # def _read_function_returns(table):
+    #     rows = table.xpath('tr')
+    #     l = []
+    #     for r in rows:
+    #         tds = r.xpath('td')
+    #         l.append({
+    #             'name': tds[0].xpath('code')[0].text.replace('[', '').replace(']', ''),
+    #             'type': tds[1].text.split(', '),
+    #             'descr': tds[2].text
+    #         })
+    #     return l
+
+    @staticmethod
     def _read_function_params(table):
         rows = table.xpath('tr')
         l = []
         for r in rows:
             tds = r.xpath('td')
             l.append({
-                'name': tds[0].xpath('code')[0].text.replace('[', '').replace(']', ''),
-                'types': tds[1].xpath('code')[0].text.split(', '),
+                'name': tds[0].xpath('string()').replace('[', '').replace(']', ''),
+                'types': tds[1].xpath('string()').split(', '),
                 'descr': tds[2].text
             })
         return l
