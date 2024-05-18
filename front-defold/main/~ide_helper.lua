@@ -4,3 +4,77 @@
 ---@module gui
 ---@field get_node fun(id: string | hash) Retrieves the node with the specified id.
 ---@field animate fun(node: node, property: string, to: number, easing: string)
+
+---@module go
+---@field animate fun(url: string | hash | url, property: string | hash, playback: constant, to: number | vector3 | vector4 | quaternion, easing: constant | vector, duration: number, delay: number, complete_function: function(self | url | property)) This is only supported for numerical properties. If the node property is already being animated, that animation will be canceled and replaced by the new one. If a
+---@field cancel_animations fun(url: string | hash | url, property: string | hash) By calling this function, all or specified stored property animations of the game object or component will be canceled. See the
+---@field delete fun(id: string | hash | url | table, recursive: boolean) Delete one or more game objects identified by id. Deletion is asynchronous meaning that the game object(s) are scheduled for deletion which will happen at the end of the current frame. Note that game objects scheduled for deletion will be counted against
+---@field exists fun(url: string | hash | url) check if the specified game object exists
+---@field get fun(url: string | hash | url, property: string | hash, options: table) gets a named property of the specified game object or component
+---@field get_id fun() Returns or constructs an instance identifier. The instance id is a hash of the absolute path to the instance.
+---@field get_parent fun(id: string | hash | url) Get the parent for a game object instance.
+---@field get_position fun(id: string | hash | url) The position is relative the parent (if any). Use
+---@field get_rotation fun(id: string | hash | url) The rotation is relative to the parent (if any). Use
+---@field get_scale fun(id: string | hash | url) The scale is relative the parent (if any). Use
+---@field get_scale_uniform fun(id: string | hash | url) The uniform scale is relative the parent (if any). If the underlying scale vector is non-uniform the min element of the vector is returned as the uniform scale factor.
+---@field get_world_position fun(id: string | hash | url) The function will return the world position calculated at the end of the previous frame. Use
+---@field get_world_rotation fun(id: string | hash | url) The function will return the world rotation calculated at the end of the previous frame. Use
+---@field get_world_scale fun(id: string | hash | url) The function will return the world 3D scale factor calculated at the end of the previous frame. Use
+---@field get_world_scale_uniform fun(id: string | hash | url) The function will return the world scale factor calculated at the end of the previous frame. Use
+---@field get_world_transform fun(id: string | hash | url) The function will return the world transform matrix calculated at the end of the previous frame.
+---@field property fun(name: string, value: number | hash | url | vector3 | vector4 | quaternion | resource | boolean) This function defines a property which can then be used in the script through the self-reference. The properties defined this way are automatically exposed in the editor in game objects and collections which use the script. Note that you can only use this function outside any callback-functions like init and update.
+---@field set fun(url: string | hash | url, property: string | hash, value: any | table, options: table) sets a named property of the specified game object or component, or a material constant
+---@field set_parent fun(id: string | hash | url, parent_id: string | hash | url, keep_world_transform: boolean) Sets the parent for a game object instance. This means that the instance will exist in the geometrical space of its parent, like a basic transformation hierarchy or scene graph. If no parent is specified, the instance will be detached from any parent and exist in world space. This function will generate a
+---@field set_position fun(position: vector3, id: string | hash | url) The position is relative to the parent (if any). The global world position cannot be manually set.
+---@field set_rotation fun(rotation: quaternion, id: string | hash | url) The rotation is relative to the parent (if any). The global world rotation cannot be manually set.
+---@field set_scale fun(scale: number | vector3, id: string | hash | url) The scale factor is relative to the parent (if any). The global world scale factor cannot be manually set.
+---@field world_to_local_position fun(position: vector3, url: string | hash | url) The function uses world transformation calculated at the end of previous frame.
+---@field world_to_local_transform fun(transformation: matrix4, url: string | hash | url) The function uses world transformation calculated at the end of previous frame.
+---@field EASING_INBACK number in-back
+---@field EASING_INBOUNCE number in-bounce
+---@field EASING_INCIRC number in-circlic
+---@field EASING_INCUBIC number in-cubic
+---@field EASING_INELASTIC number in-elastic
+---@field EASING_INEXPO number in-exponential
+---@field EASING_INOUTBACK number in-out-back
+---@field EASING_INOUTBOUNCE number in-out-bounce
+---@field EASING_INOUTCIRC number in-out-circlic
+---@field EASING_INOUTCUBIC number in-out-cubic
+---@field EASING_INOUTELASTIC number in-out-elastic
+---@field EASING_INOUTEXPO number in-out-exponential
+---@field EASING_INOUTQUAD number in-out-quadratic
+---@field EASING_INOUTQUART number in-out-quartic
+---@field EASING_INOUTQUINT number in-out-quintic
+---@field EASING_INOUTSINE number in-out-sine
+---@field EASING_INQUAD number in-quadratic
+---@field EASING_INQUART number in-quartic
+---@field EASING_INQUINT number in-quintic
+---@field EASING_INSINE number in-sine
+---@field EASING_LINEAR number linear interpolation
+---@field EASING_OUTBACK number out-back
+---@field EASING_OUTBOUNCE number out-bounce
+---@field EASING_OUTCIRC number out-circlic
+---@field EASING_OUTCUBIC number out-cubic
+---@field EASING_OUTELASTIC number out-elastic
+---@field EASING_OUTEXPO number out-exponential
+---@field EASING_OUTINBACK number out-in-back
+---@field EASING_OUTINBOUNCE number out-in-bounce
+---@field EASING_OUTINCIRC number out-in-circlic
+---@field EASING_OUTINCUBIC number out-in-cubic
+---@field EASING_OUTINELASTIC number out-in-elastic
+---@field EASING_OUTINEXPO number out-in-exponential
+---@field EASING_OUTINQUAD number out-in-quadratic
+---@field EASING_OUTINQUART number out-in-quartic
+---@field EASING_OUTINQUINT number out-in-quintic
+---@field EASING_OUTINSINE number out-in-sine
+---@field EASING_OUTQUAD number out-quadratic
+---@field EASING_OUTQUART number out-quartic
+---@field EASING_OUTQUINT number out-quintic
+---@field EASING_OUTSINE number out-sine
+---@field PLAYBACK_LOOP_BACKWARD number loop backward
+---@field PLAYBACK_LOOP_FORWARD number loop forward
+---@field PLAYBACK_LOOP_PINGPONG number ping pong loop
+---@field PLAYBACK_NONE number no playback
+---@field PLAYBACK_ONCE_BACKWARD number once backward
+---@field PLAYBACK_ONCE_FORWARD number once forward
+---@field PLAYBACK_ONCE_PINGPONG number once ping pong
