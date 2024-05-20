@@ -74,20 +74,24 @@ case class GameState(
       else null
           
     ujson.Obj(
-      toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
-        "placedOrders" -> placedOrdersP.toJson,
-        "combat" -> (if combatP == null then ujson.Null else combatP.toJson)
+      toCleanJson.value.addAll(
+        Map(
+          "placedOrders" -> placedOrdersP.toJson,
+          "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
+        )
       )
     )
   }
 
   def toJson: ujson.Value = {
     ujson.Obj(
-      toCleanJson.value ++ mutable.LinkedHashMap[String, ujson.Value](
-        "boardCards" -> boardCards.toJson,
-        "placedOrders" -> placedOrders.toJson,
-        "availableOrders" -> availableOrders.toJson,
-        "bids" -> bids.toJson,
+      toCleanJson.value.addAll(
+        Map(
+          "boardCards" -> boardCards.toJson,
+          "placedOrders" -> placedOrders.toJson,
+          "availableOrders" -> availableOrders.toJson,
+          "bids" -> bids.toJson,
+        )
       )
     )
   }

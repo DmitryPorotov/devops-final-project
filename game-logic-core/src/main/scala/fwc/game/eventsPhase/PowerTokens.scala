@@ -6,13 +6,12 @@ import fwc.game.houses.*
 import ujson.Value
 import fwc.game.{FWCException, gameRules}
 
-import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
+import scala.annotation.targetName
 
 case class PowerTokens(tokens: Map[HouseType, Int] = Map()) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         tokens.map((houseType, numOfTokens) => houseType.toString -> ujson.Num(numOfTokens))
       )
     )

@@ -8,13 +8,12 @@ import fwc.gameLoading.BoardStart
 import ujson.Value
 
 import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
 
 case class Supplies(supplies: Map[HouseType, Int]) extends JsonSerializable {
   
   export supplies.{apply, filter, get, getOrElse}
   def toJson: ujson.Value = {
-    ujson.Obj(mutable.LinkedHashMap.from{
+    ujson.Obj(upickle.core.LinkedHashMap{
       supplies.map((houseType, num) => houseType.toString -> ujson.Num(num))
     })
   }

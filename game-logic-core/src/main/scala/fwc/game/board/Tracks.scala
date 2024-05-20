@@ -6,11 +6,10 @@ import fwc.gameLoading.BoardStart
 import ujson.Value
 
 import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
 
 case class Tracks(private val tracks: Map[TrackType, Seq[HouseType]]) extends JsonSerializable {
   def toJson: ujson.Value = ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         tracks.map((trackType, housesSeq: Seq[HouseType]) => {
           trackType.toString -> ujson.Value(
             housesSeq.map((ht: HouseType) => ujson.Str(ht.toString))

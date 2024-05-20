@@ -4,8 +4,7 @@ import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.board.{DominanceTokenMessengerRaven, DominanceTokenType, DominanceTokenValyrianSword}
 import ujson.Value
 
-import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
+import scala.annotation.targetName
 
 case class DominanceTokensUsage(usage: Map[DominanceTokenType, Boolean] = Map(
   DominanceTokenValyrianSword->false,
@@ -13,7 +12,7 @@ case class DominanceTokensUsage(usage: Map[DominanceTokenType, Boolean] = Map(
 )) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         usage.map((dominanceTokenType, isUsed) => {
           dominanceTokenType.toString -> ujson.Bool(isUsed)
         })

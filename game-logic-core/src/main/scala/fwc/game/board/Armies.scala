@@ -9,14 +9,13 @@ import enrichment.ExtSeq
 import fwc.game.eventsPhase.Supplies
 
 import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
 
 case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()) extends JsonSerializable {
 
   export armies.{contains, count, exists, filter, flatMap, flatten, foldLeft, get, getOrElse, map}
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         armies.map((tileNum: TileNumber, units: Seq[MilitaryUnit]) => {
           tileNum.toString -> ujson.Value(units.map(_.toJson))
         })

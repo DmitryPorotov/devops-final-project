@@ -7,8 +7,6 @@ import fwc.game.houses.HouseType
 import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileType}
 import ujson.Value
 
-import scala.annotation.tailrec
-import scala.collection.mutable
 import scala.util.Try
 
 
@@ -18,10 +16,10 @@ case class PlacedOrders(placedOrders: Map[HouseType, Map[TileNumber, Order]] = M
 
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         placedOrders.map((houseType, orders: Map[TileNumber, Order]) => {
           houseType.toString -> ujson.Obj(
-            mutable.LinkedHashMap.from(
+            upickle.core.LinkedHashMap(
               orders.map((tileNum: TileNumber, order: Order) =>
                 tileNum.toString -> order.toJson
               )

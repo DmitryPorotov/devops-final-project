@@ -7,7 +7,6 @@ import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.{FWCException, gameRules}
 import ujson.Value
 
-import scala.collection.mutable
 import scala.util.Try
 
 case class AvailableOrders(
@@ -74,10 +73,10 @@ case class AvailableOrders(
 
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         orders.map((houseType, ordersByType: Map[OrderType, Seq[Order]]) => {
           houseType.toString -> ujson.Obj(
-            mutable.LinkedHashMap.from(
+            upickle.core.LinkedHashMap(
               ordersByType.map((orderType, ordersSeq: Seq[Order]) => {
                 orderType.toString -> ujson.Value(
                   ordersSeq.map(_.toJson)

@@ -4,8 +4,7 @@ import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.houses.HouseType
 import ujson.Value
 
-import scala.annotation.{tailrec, targetName}
-import scala.collection.mutable
+import scala.annotation.targetName
 
 type CardCode = Int
 
@@ -15,7 +14,7 @@ extension (t: CardCode)
 case class DiscardedHouseCards(cards: Map[HouseType, Seq[CardCode]] = Map()) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj(
-      mutable.LinkedHashMap.from(
+      upickle.core.LinkedHashMap(
         cards.map((houseType, cardCodeSeq: Seq[CardCode]) => {
           houseType.toString -> ujson.Value(
             cardCodeSeq.map(cc => ujson.Num(cc))
