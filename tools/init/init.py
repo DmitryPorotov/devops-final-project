@@ -3,7 +3,7 @@
 import argparse
 import os
 import subprocess
-from colors import print_error, print_success, print_header, print_info
+from colors import print_error, print_success, print_header, print_info, print_warning
 from check_deps import check_docker, check_docker_compose, check_docker_group
 import check_installs as ch_in
 from defold_bob import download_bob
@@ -171,6 +171,9 @@ def start():
             else:
                 ch_in.delete_db_seeded_flag_file_if_exists()
                 print_error('There was an error seeding the database.')
+                print_warning("For whatever reason seeding the DB may fail the first time you run the script.\n"
+                              + "It could be that it takes too much time for MySQL to start the 1s time or something.\n"
+                              + "Try rerunning the script and see if it works.")
                 is_error = True
             subprocess.run(['docker', 'stop',
                             'table-games-monorepo-mysql-1'])

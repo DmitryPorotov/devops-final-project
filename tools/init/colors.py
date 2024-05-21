@@ -48,5 +48,9 @@ def print_header(message):
     print(fg.green, '>', reset, bold, message, reset)
 
 
+def print_warning(message):
+    print(bg.orange, message, reset)
+
+
 def print_info(message):
     print(bg.blue, message, reset)
