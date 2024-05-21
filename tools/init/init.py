@@ -139,6 +139,7 @@ def start():
         result = subprocess.run(['docker', 'compose',
                                  '-f', 'docker-compose.test.yml',
                                  'up', '--no-start'])
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
         if result.returncode != 0:
             print_error('Could not pull docker images.')
             is_error = True
