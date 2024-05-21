@@ -7,7 +7,20 @@ from datetime import datetime
 def download_bob():
     page = urllib.request.urlopen('https://github.com/defold/defold/releases')  # type: http.client.HTTPResponse
     content = page.read()
-    bob_url = re.search("(defold/defold/releases/download/\d+\.\d+\.\d+/bob.jar)", str(content))  # type: re.Match
+    stable_release_version = re.search("defold/defold/releases/tag/(\d+\.\d+\.\d+)\"",
+                                   str(content))  # type: re.Match
+    stable_release_version_result = stable_release_version.groups()
+    if stable_release_version_result is not None:
+        stable_release_version_result = stable_release_version_result[0]
+        print('Found stable release varsion ' + stable_release_version_result)
+    else:
+        raise Exception('Could not find a stable release of Defold.')
+
+    stable_release_page = urllib.request.urlopen('https://github.com/defold/defold/releases/expanded_assets/'
+                                                 + stable_release_version_result)  # type: http.client.HTTPResponse
+    stable_release_page_content = str(stable_release_page.read())
+    bob_url = re.search("(defold/defold/releases/download/\d+\.\d+\.\d+/bob.jar)",
+                        str(stable_release_page_content))  # type: re.Match
     jar_url = bob_url.group()
 
     last_update = datetime(1970, 1, 1)

@@ -9,3 +9,8 @@ def check_docker():
 def check_docker_compose():
     result = subprocess.run(['docker', 'compose'], stdout=-3)
     return result.returncode == 0
+
+
+def check_docker_group():
+    result = subprocess.run(['groups'], capture_output=True)
+    return result.stdout.decode('utf8').find('docker') >= 0

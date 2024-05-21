@@ -4,7 +4,7 @@ import argparse
 import os
 import subprocess
 from colors import print_error, print_success
-from check_deps import check_docker, check_docker_compose
+from check_deps import check_docker, check_docker_compose, check_docker_group
 from check_installs import (is_web_sever_deps_installed,
                             is_front_login_deps_installed,
                             write_front_login_flag_file,
@@ -43,6 +43,10 @@ def start():
         exit(1)
     if not check_docker_compose():
         print_error('Docker compose is not installed')
+        exit(1)
+    if not check_docker_group():
+        print_error('You are not a part of the docker user group. Join the group by running \
+        "usermod -a -G docker <username>" and then re-login.')
         exit(1)
     if not os.path.exists('./.cache'):
         os.mkdir('./.cache')
