@@ -6,6 +6,7 @@ import ujson.Value
 
 import scala.annotation.targetName
 import scala.collection.mutable
+import scala.util.boundary
 
 case class Bids(private val bids: Map[HouseType, Int] = Map()) extends JsonSerializable {
   def toJson: ujson.Value = ujson.Obj.from(
@@ -22,7 +23,7 @@ case class Bids(private val bids: Map[HouseType, Int] = Map()) extends JsonSeria
   @targetName("removed")
   def -(key: HouseType): Bids = copy(bids - key)
 
-  def validateTieResolution(resolution: Seq[HouseType]): Boolean = {
+  def validateTieResolution(resolution: Seq[HouseType]): Boolean = boundary {
     val sortedBids = bids.toSeq.sortWith((a, b) => b._2 < a._2)
     val uniqueBids: Set[Int] = sortedBids.foldLeft(Set())((acc, cur) => acc + cur._2)
     val possiblePositions = uniqueBids.foldLeft(Map[HouseType, Seq[Int]]())(
@@ -38,7 +39,7 @@ case class Bids(private val bids: Map[HouseType, Int] = Map()) extends JsonSeria
     )
     resolution.foreach(houseType =>
       if !possiblePositions(houseType).contains(resolution.indexOf(houseType))
-      then return false
+      then boundary.break(false)
     )
     
     true

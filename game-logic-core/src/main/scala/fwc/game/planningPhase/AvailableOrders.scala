@@ -6,6 +6,7 @@ import fwc.game.board.{TrackCourt, Tracks}
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.{FWCException, gameRules}
 import ujson.Value
+import scala.util.boundary
 
 import scala.util.Try
 
@@ -89,13 +90,13 @@ case class AvailableOrders(
     )
   }
 
-  def hasAvailableOrders(houseType: HouseType, tracks: Tracks): Boolean = {
+  def hasAvailableOrders(houseType: HouseType, tracks: Tracks): Boolean = boundary {
     val availableStars = Try(gameRules.kingsCourtStars(tracks(TrackCourt).indexOf(houseType))).getOrElse(0)
     val starsShouldBeLeft = 5 - availableStars
     
     val ordersLeft = orders(houseType).view.flatten[Order](_._2).foldLeft(0)(
-      (acc, cur) => 
-        if cur.isStar then acc + 1 else return false
+      (acc, cur) =>
+        if cur.isStar then acc + 1 else boundary.break(false)
     )
     ordersLeft > starsShouldBeLeft
   }

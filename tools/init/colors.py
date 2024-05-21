@@ -43,3 +43,10 @@ def print_error(message):
 def print_success(message):
     print(bg.green, fg.black,  message, reset)
 
+
+def print_header(message):
+    print(fg.green, '>', reset, bold, message, reset)
+
+
+def print_info(message):
+    print(bg.blue, message, reset)

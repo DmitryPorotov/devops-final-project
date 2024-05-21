@@ -4,6 +4,7 @@ import datetime
 web_sever_deps_installed_flag_file_name = 'web_sever_deps_installed'
 front_login_deps_installed_flag_file_name = 'front_login_deps_installed'
 core_logic_deps_installed_flag_file_name = 'core_logic_deps_installed'
+docker_images_pulled_flag_file_name = 'docker_images_pulled'
 db_seeded_flag_file_name = 'db_seeded'
 bob_downloaded_flag_file_name = 'bob_downloaded'
 cache_dir_name = '.cache'
@@ -41,6 +42,18 @@ def is_bob_downloaded():
 
 def is_db_seeded():
     return os.path.exists('./' + cache_dir_name + '/' + db_seeded_flag_file_name)
+
+
+def are_docker_images_pulled():
+    return os.path.exists('./' + cache_dir_name + '/' + docker_images_pulled_flag_file_name)
+
+
+def write_docker_images_pulled_flag_file():
+    __write_timestamp_file(docker_images_pulled_flag_file_name)
+
+
+def delete_docker_images_pulled_flag_file_if_exists():
+    __delete_file_if_exists(docker_images_pulled_flag_file_name)
 
 
 def write_web_server_flag_file():
