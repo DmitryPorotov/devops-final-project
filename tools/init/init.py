@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-
-import argparse
 import os
+import argparse
+
 import subprocess
-from colors import print_error, print_success, print_header, print_info, print_warning
+import sys
+
 from check_deps import check_docker, check_docker_compose, check_docker_group
 import check_installs as ch_in
 from defold_bob import download_bob
@@ -14,17 +15,12 @@ parser.add_argument('-f', '--force', action='store_true')
 args = parser.parse_args()
 
 
-def get_project_dir_name() -> str:
-    return os.path.dirname(os.path.abspath(__file__)).split('/')[-3]
-
-
 def does_docker_image_sbt_xrandr_exists() -> bool:
     result = subprocess.run(["docker", "images", "sbt_xrandr", "--format", "{{.Repository}}"], capture_output=True)
     return result.stdout.decode('utf8').startswith('sbt_xrandr')
 
 
 def start():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     is_error = False
     if not check_docker():
         print_error('Docker is not installed')
@@ -39,7 +35,7 @@ def start():
     if not os.path.exists('.cache'):
         os.mkdir('.cache')
 
-    proj_root = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-2])
+    proj_root = get_project_path()
 
     def delete_dir(dir_, volume='/web-server:/web-server'):
         subprocess.run(['docker', 'run', '--rm',
@@ -200,9 +196,16 @@ def start():
 
     if is_error:
         exit(1)
-    else:
-        exit(0)
 
 
-if __name__ == '__main__':
+if __package__ is not None:
+    from ..common.colors import print_error, print_success, print_header, print_info, print_warning
+    from ..common.utils import get_project_dir_name
+
+if __name__ == '__main__' and __package__ is None:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append('../../')
+    __package__ = 'tools.init'
+    from ..common.colors import print_error, print_success, print_header, print_info, print_warning
+    from ..common.utils import get_project_dir_name, get_project_path
     start()

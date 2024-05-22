@@ -1,16 +1,54 @@
-version: "3"
-
 services:
-  rabbitmq:
-    image: "rabbitmq:3"
-    ports:
-      - "5672:5672"
+  redis:
+    image: redis:7.2.2
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - net1
   mysql:
     image: "mysql:8.0.34"
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "rootPassword"
       MYSQL_DATABASE: "fwc"
       MYSQL_USER: "bpuser"
       MYSQL_PASSWORD: "123456"
+    networks:
+      - net1
+    volumes:
+      - database_volume:/var/lib/mysql
+  web-server:
+    image: "node:18"
+    working_dir: "/web-server/src"
+    command: ["node", "main.js"]
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - REDIS_URL=redis://redis:6379
+      - SERVER_PORT=80
+      - SERVER_NAME=server1
+    networks:
+      - net1
+  worker:
+    restart: on-failure
+    image: worker_prod
+    working_dir: "/fwc"
+    environment:
+      - REDIS_HOST=redis
+      - WORKER_NAME=worker1
+    command: ["java", "-jar", 'worker.jar']
+    networks:
+      - net1
+    depends_on:
+      - redis
+  reverse_proxy:
+    image: "nginx_prod"
+    ports:
+      - "443:443"
+    networks:
+      - net1
+
+
+networks:
+  net1:
