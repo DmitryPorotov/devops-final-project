@@ -178,9 +178,13 @@ def start():
                     print_warning("For whatever reason seeding the DB may fail the first time you run the script.\n"
                                   + "It could be that it takes too much time for MySQL to start the 1st time"
                                   + " or something.\n")
-                    print_info('Retrying to seed the database...')
                     if not second_try:
+                        print_info('Retrying to seed the database...')
                         seed_db(second_try=True)
+
+                    nonlocal db_seeding_retry_failed
+                    if second_try:
+                        db_seeding_retry_failed = True
 
                     if second_try and db_seeding_retry_failed:
                         nonlocal is_error
