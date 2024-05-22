@@ -35,8 +35,8 @@ def start():
         print_error('You are not a part of the docker user group. Join the group by running \
         "usermod -a -G docker <username>" and then re-login.')
         exit(1)
-    if not os.path.exists('./.cache'):
-        os.mkdir('./.cache')
+    if not os.path.exists('.cache'):
+        os.mkdir('.cache')
 
     proj_root = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-2])
 
@@ -125,7 +125,7 @@ def start():
         print_header('Building docker image for Bob...')
         result = subprocess.run(['docker', 'build',
                                  '--tag', 'sbt_xrandr',
-                                 '../../game-logic-core/docker/'])
+                                 proj_root + '/game-logic-core/docker/'])
         if result.returncode == 0:
             print_success('Docker image for Bob the builder was successfully built.')
         else:
