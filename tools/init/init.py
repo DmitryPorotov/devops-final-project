@@ -23,6 +23,7 @@ def does_docker_image_sbt_xrandr_exists() -> bool:
 
 
 def start():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     is_error = False
     if not check_docker():
         print_error('Docker is not installed')
@@ -150,35 +151,46 @@ def start():
     else:
         print_info('Project\'s images were already pulled and containers were already built.')
 
-    if not ch_in.is_db_seeded() or args.force:
-        print_header('Seeding the database...')
-        result = subprocess.run(['docker', 'start',
-                                 get_project_dir_name() + '-mysql-1'])
-        if result.returncode != 0:
-            print_error('Could not start the database image.')
-            is_error = True
-        else:
-            result = subprocess.run(['docker', 'run', '--rm',
-                                     '-v', proj_root + '/web-server:/web-server',
-                                     '-w', '/web-server',
-                                     '--network', get_project_dir_name() + '_net1',
-                                     '-e', 'DB_HOST=mysql',
-                                     'node:18',
-                                     'npm', 'run', 'seed:refresh'])
-            if result.returncode == 0:
-                ch_in.write_db_seeded_flag_file()
-                print_success('The database was seeded successfully.')
-            else:
-                ch_in.delete_db_seeded_flag_file_if_exists()
-                print_error('There was an error seeding the database.')
-                print_warning("For whatever reason seeding the DB may fail the first time you run the script.\n"
-                              + "It could be that it takes too much time for MySQL to start the 1s time or something.\n"
-                              + "Try rerunning the script and see if it works.")
+    db_seeding_retry_failed = False
+
+    def seed_db(second_try=False):
+        if not ch_in.is_db_seeded() or args.force:
+            print_header('Seeding the database...')
+            result = subprocess.run(['docker', 'start',
+                                     get_project_dir_name() + '-mysql-1'])
+            if result.returncode != 0:
+                print_error('Could not start the database image.')
                 is_error = True
-            subprocess.run(['docker', 'stop',
-                            'table-games-monorepo-mysql-1'])
-    else:
-        print_info('Database was seeded already.')
+            else:
+                result = subprocess.run(['docker', 'run', '--rm',
+                                         '-v', proj_root + '/web-server:/web-server',
+                                         '-w', '/web-server',
+                                         '--network', get_project_dir_name() + '_net1',
+                                         '-e', 'DB_HOST=mysql',
+                                         'node:18',
+                                         'npm', 'run', 'seed:refresh'])
+                if result.returncode == 0:
+                    ch_in.write_db_seeded_flag_file()
+                    print_success('The database was seeded successfully.')
+                else:
+                    ch_in.delete_db_seeded_flag_file_if_exists()
+                    print_error('There was an error seeding the database.')
+                    print_warning("For whatever reason seeding the DB may fail the first time you run the script.\n"
+                                  + "It could be that it takes too much time for MySQL to start the 1st time"
+                                  + " or something.\n")
+                    print_info('Retrying to seed the database...')
+                    if not second_try:
+                        seed_db(second_try=True)
+
+                    if second_try and db_seeding_retry_failed:
+                        nonlocal is_error
+                        is_error = True
+                subprocess.run(['docker', 'stop',
+                                get_project_dir_name() + '-mysql-1'])
+        else:
+            print_info('Database was seeded already.')
+
+    seed_db()
 
     if is_error:
         exit(1)

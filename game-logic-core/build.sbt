@@ -1,35 +1,47 @@
+val scala3Version = "3.3.3"
+
 
 lazy val root = (project in file("."))
   .settings(
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := "3.3.3",
+    scalaVersion := scala3Version,
     name := "TableGames",
-//    Compile / packageBin / mainClass := Some("fwc.FunWithChairs"),
+    version := "0.1.0-SNAPSHOT",
+  ) aggregate(scala2Project, scala3mainProject) dependsOn(scala2Project, scala3mainProject)
+
+lazy val scala2Project = project
+  .in(file("scala2project"))
+  .settings(
+    name := "scala2project",
+    scalaVersion := "2.13.14",
+    version := "0.1.0-SNAPSHOT",
+    libraryDependencies ++= Seq()
+  )
+
+lazy val scala3mainProject = project
+  .in(file("scala3MainProject"))
+  .settings(
+    name := "scala3mainProject",
+    scalaVersion := scala3Version,
+    version := "0.1.0-SNAPSHOT",
     libraryDependencies ++=Seq(
-      "com.github.barkhorn" % "ScalaMock" % "5.2.0",
+      "org.scalamock" %% "scalamock" % "6.0.0" % "test",
       "org.scalactic" %% "scalactic" % "3.2.18",
       "org.scalatest" %% "scalatest" % "3.2.18" % "test",
       "com.lihaoyi" %% "upickle" % "3.3.0",
       "redis.clients" % "jedis" % "5.1.2"
     ),
-    Compile / packageBin / packageOptions += {
-      Package.ManifestAttributes(java.util.jar.Attributes.Name.CLASS_PATH -> (
-          "lib/geny_3-1.1.0.jar " +
-          "lib/jedis-5.1.2.jar" +
-          "lib/scala-library-2.13.12.jar " +
-          "lib/scala-reflect-2.11.12.jar " +
-          "lib/scala3-library_3-3.1.2.jar " +
-//          "lib/scalajs-library_2.11-1.8.0.jar " +
-          "lib/slf4j-api-1.7.36.jar " +
-          "lib/ujson_3-3.3.0.jar " +
-          "lib/upack_3-3.3.0.jar " +
-          "lib/upickle_3-3.3.0.jar " +
-          "lib/upickle-core_3-3.3.0.jar " +
-          "lib/upickle-implicits_3-3.3.0.jar"
-        ))
-    }
   )
 
-exportJars := true
+ThisBuild / assemblyMergeStrategy  := {
+  case PathList("module-info.class") => MergeStrategy.discard
+  case x if x.endsWith("/module-info.class") => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
 
-resolvers += "jitpack" at "https://jitpack.io"
+
+val jarName = "worker.jar"
+assembly/assemblyJarName := jarName
+
