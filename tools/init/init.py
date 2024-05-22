@@ -7,6 +7,7 @@ from colors import print_error, print_success, print_header, print_info, print_w
 from check_deps import check_docker, check_docker_compose, check_docker_group
 import check_installs as ch_in
 from defold_bob import download_bob
+import time
 
 parser = argparse.ArgumentParser('Table games initiator')
 parser.add_argument('-f', '--force', action='store_true')
@@ -40,10 +41,9 @@ def start():
 
     proj_root = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-2])
 
-    def delete_dir(dir_):
+    def delete_dir(dir_, volume='/web-server:/web-server'):
         subprocess.run(['docker', 'run', '--rm',
-                        '-v', proj_root + '/web-server:/web-server',
-                        '-w', '/web-server',
+                        '-v', proj_root + volume,
                         'node:18',
                         'rm', '-rf', dir_])
 
@@ -69,11 +69,12 @@ def start():
         print_info('Web-server dependencies are already installed.')
 
     if not ch_in.is_front_login_deps_installed() or args.force:
+        front_login_volume = '/front-login:/front-login'
         print_header('Installing front-login dependencies...')
         if args.force:
-            delete_dir('/front-login/node_modules')
+            delete_dir('/front-login/node_modules', volume=front_login_volume)
         result = subprocess.run(['docker', 'run', '--rm',
-                                 '-v', proj_root + '/front-login:/front-login',
+                                 '-v', proj_root + front_login_volume,
                                  '-w', '/front-login',
                                  'node:18',
                                  'npm', 'i'])
@@ -83,7 +84,7 @@ def start():
         else:
             print_error('Installation of front-login dependencies has failed.')
             print('Removing incomplete installation')
-            delete_dir('/front-login/node_modules')
+            delete_dir('/front-login/node_modules', volume=front_login_volume)
             ch_in.delete_front_login_flag_file_if_exists()
             is_error = True
     else:
@@ -180,7 +181,8 @@ def start():
                                   + "It could be that it takes too much time for MySQL to start the 1st time"
                                   + " or something.\n")
                     if not second_try:
-                        print_info('Retrying to seed the database...')
+                        print_info('Retrying to seed the database in 2 seconds...')
+                        time.sleep(2)
                         seed_db(second_try=True)
 
                     nonlocal db_seeding_retry_failed
