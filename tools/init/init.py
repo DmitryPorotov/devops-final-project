@@ -181,8 +181,8 @@ def start():
                                   + "It could be that it takes too much time for MySQL to start the 1st time"
                                   + " or something.\n")
                     if not second_try:
-                        print_info('Retrying to seed the database in 2 seconds...')
-                        time.sleep(2)
+                        print_info('Retrying to seed the database in 5 seconds...')
+                        time.sleep(5)
                         seed_db(second_try=True)
 
                     nonlocal db_seeding_retry_failed
