@@ -154,6 +154,7 @@ def start():
     db_seeding_retry_failed = False
 
     def seed_db(second_try=False):
+        nonlocal is_error
         if not ch_in.is_db_seeded() or args.force:
             print_header('Seeding the database...')
             result = subprocess.run(['docker', 'start',
@@ -187,7 +188,6 @@ def start():
                         db_seeding_retry_failed = True
 
                     if second_try and db_seeding_retry_failed:
-                        nonlocal is_error
                         is_error = True
                 subprocess.run(['docker', 'stop',
                                 get_project_dir_name() + '-mysql-1'])
