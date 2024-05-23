@@ -10,6 +10,36 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <script type="application/javascript">
+      const o = {};
+      Object.defineProperties(o, {
+        host: {
+          value: '%REACT_APP_SERVER_HOST%',
+          writable: !1,
+          configurable:!1
+        },
+        port: {
+          value: '%REACT_APP_SERVER_PORT%',
+          writable: !1,
+          configurable: !1
+        },
+        protocol: {
+          value: '%REACT_APP_SERVER_PROTOCOL%',
+          writable: !1,
+          configurable: !1
+        },
+        wsPort: {
+          value: '%REACT_APP_SERVER_WS_PORT%',
+          writable: !1,
+          configurable: !1
+        },
+      });
+      Object.defineProperty(window, 'envVars', {
+        value: o,
+        writable: !1,
+        configurable: !1
+      })
+    </script>
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/

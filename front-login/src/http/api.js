@@ -2,9 +2,9 @@ import Storage from "./storage";
 
 
 class Api {
-    static protocol = 'http:';
-    static baseUrl = '//localhost';
-    static port = ':8888';
+    static protocol = window.envVars.protocol + ':';
+    static baseUrl = '//' + (window.envVars.host ? window.envVars.host : window.location.hostname);
+    static port = ':' + window.envVars.port;
     static apiPrefix = '/api/v1';
 
     static async headers(isLoggedIn){

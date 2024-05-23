@@ -10,9 +10,9 @@ import Storage from "./storage";
 
 class Websocket {
     static isInit = false;
-    static protocol = 'ws:';
+    static protocol = window.envVars.protocol.endsWith('s') ? 'wss:' : 'ws:';
     static baseUrl = Api.baseUrl;
-    static port = ':3001';
+    static port = window.envVars.wsPort;
     static path = '/ws';
     static playerId;
     static worker;
