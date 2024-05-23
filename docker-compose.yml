@@ -59,3 +59,5 @@ services:
 
 networks:
   net1:
+volumes:
+    database_volume:
