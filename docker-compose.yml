@@ -19,6 +19,7 @@ services:
   web-server:
     image: "node:18"
     working_dir: "/web-server/src"
+    restart: always
     command: ["node", "main.js"]
     depends_on:
       - mysql
@@ -47,6 +48,7 @@ services:
       - redis
   reverse_proxy:
     image: "nginx_prod"
+    restart: on-failure
     build:
         context: ./
         dockerfile: ./nginx.conf.d/Dockerfile
