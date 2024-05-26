@@ -5,12 +5,15 @@ import subprocess
 import argparse
 
 parser = argparse.ArgumentParser('Table games production builder.')
-parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login', 'defold'], action='store')
+parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login', 'defold']
+                    , action='store', help='Build only selected projects; {worker} - game-logic-core - Scala project,'
+                                           + '{nest} - Nest.js http and WS server,'
+                                           + '{login} - front-login React front-end project,'
+                                           + '{defold} - front-defold - Defold game GUI.')
 args = parser.parse_args()
 
 
 def start():
-
     proj_root = get_project_path()
     is_error = False
 

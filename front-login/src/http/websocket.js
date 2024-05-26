@@ -12,7 +12,7 @@ class Websocket {
     static isInit = false;
     static protocol = window.envVars.protocol.endsWith('s') ? 'wss:' : 'ws:';
     static baseUrl = Api.baseUrl;
-    static port = window.envVars.wsPort;
+    static port = ':' + window.envVars.wsPort;
     static path = '/ws';
     static playerId;
     static worker;
@@ -38,6 +38,7 @@ class Websocket {
 
     static makeSocket() {
         return new Promise(async resolve => {
+            console.log(Websocket);
             Websocket.worker = new SharedWorker('/worker/worker.js');
             Websocket.worker.onerror = (e) => console.log(e);
             Websocket.worker.onmessageerror = (e) => {

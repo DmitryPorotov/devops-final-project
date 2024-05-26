@@ -17,10 +17,13 @@ services:
     volumes:
       - database_volume:/var/lib/mysql
   web-server:
-    image: "node:18"
-    working_dir: "/web-server/src"
+    image: "web_server_prod"
+    working_dir: "/web-server"
+    build:
+      context: ./web-server
+      dockerfile: ./Dockerfile
     restart: always
-    command: ["node", "main.js"]
+    command: ["node", "dist/src/main.js"]
     depends_on:
       - mysql
       - redis
