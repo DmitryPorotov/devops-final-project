@@ -13,6 +13,7 @@ import fwc.gameSaving.actions.action.*
 import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
 import fwc.gameSaving.actions.roundEvents.*
 import fwc.gameSaving.actions.{Action, ActionSetCard, PlayerAction}
+import fwc.DatabaseAccess
 
 import scala.annotation.tailrec
 import scala.util.Random
@@ -46,8 +47,9 @@ object ReactionGameAction {
   }
 
   @tailrec
-  private def loop(action: Action, gameReplay: GameReplay, reply: ujson.Arr = ujson.Arr()): (GameReplay, ujson.Arr)= {
+  private def loop(action: Action, gameReplay: GameReplay, reply: ujson.Arr = ujson.Arr()): (GameReplay, ujson.Arr) = {
     val updatedGameState = action.doAction()
+    DatabaseAccess.saveGameAction(gameReplay.gameSettings.gameId.toInt, gameReplay.gameSettings.gameUuid, action)
     val updatedGameReplay = gameReplay.copy(
       currentGameState = updatedGameState,
       actions = gameReplay.actions prepended action

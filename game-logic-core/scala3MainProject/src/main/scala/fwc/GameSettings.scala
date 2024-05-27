@@ -1,17 +1,22 @@
 package fwc
 import ujson.Value
 
+import java.util.UUID
+import scala.util.{Failure, Success, Try}
+
 case class GameSettings(
-                       gameId: String,
+                       gameId: String, //note: this is actually the lobby id
+                       gameUuid: UUID,
                        ownerId: Int,
                        isInputOnly: Boolean,
                        isRandomHouses: Boolean,
                        isRandomEventsServerSide: Boolean,
                        players: Option[Seq[Player]],
-                       playersInputting: Option[Seq[PlayerInputting]]
+                       playersInputting: Option[Seq[PlayerInputting]],
                        ) extends JsonSerializable {
   override def toJson: Value = ujson.Obj(
     "gameId" -> gameId,
+    "gameUuid" -> gameUuid.toString,
     "ownerId" -> ownerId,
     "isInputOnly" -> isInputOnly,
     "isRandomHouses" -> isRandomHouses,
@@ -29,6 +34,10 @@ object GameSettings extends JsonParsable {
   override def fromJson(json: Value): GameSettings =
     GameSettings(
       json("gameId").str,
+      Try[UUID](UUID.fromString(json("gameUuid").str)) match
+        case Success(value) => value
+        case Failure(exception) => UUID.randomUUID()
+      , 
       json("ownerId").num.toInt,
       json("isInputOnly").bool,
       json("isRandomHouses").bool,

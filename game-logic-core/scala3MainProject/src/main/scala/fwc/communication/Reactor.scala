@@ -1,16 +1,13 @@
 package fwc.communication
 
-import fwc.GameSettings
 import fwc.communication.messages.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.communication.reactions.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
-import fwc.gameSaving.actions.ActionException
 
 import scala.util.{Failure, Success, Try}
-//import org.zeromq.ZLoop
 
 object Reactor {
 
@@ -53,6 +50,7 @@ object Reactor {
         case MessageLoadGame(userId, gameId, saveName, messageId) =>
           //todo: what if game already exists?
           val replay = ReactionLoadGame(userId, saveName)
+          //todo: save to cassandra
           games = games + (gameId -> replay)
           ujson.Obj(
             "action" -> "load",

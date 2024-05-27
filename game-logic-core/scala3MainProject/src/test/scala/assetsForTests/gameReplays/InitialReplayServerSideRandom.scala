@@ -7,11 +7,13 @@ import fwc.gameSaving.GameReplay
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}
+import java.util.UUID
 
 object InitialReplayServerSideRandom extends App {
   val initialGameState = fwc.game.initializeGameState()
   val settings = GameSettings(
     "qwe",
+    UUID.randomUUID(),
     1,
     false,
     false,

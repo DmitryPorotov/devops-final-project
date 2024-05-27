@@ -28,8 +28,9 @@ lazy val scala3mainProject = project
       "org.scalamock" %% "scalamock" % "6.0.0" % "test",
       "org.scalactic" %% "scalactic" % "3.2.18",
       "org.scalatest" %% "scalatest" % "3.2.18" % "test",
-      "com.lihaoyi" %% "upickle" % "3.3.0",
-      "redis.clients" % "jedis" % "5.1.2"
+      "com.lihaoyi" %% "upickle" % "3.3.1",
+      "redis.clients" % "jedis" % "5.1.3",
+      "com.datastax.cassandra" % "cassandra-driver-core" % "3.11.5",
     ),
   )
 
@@ -41,6 +42,8 @@ ThisBuild / assemblyMergeStrategy  := {
     oldStrategy(x)
 }
 
+resolvers +=
+  "DataStax-Repo" at "https://repo.datastax.com/public-repos/"
 
 val jarName = "worker.jar"
 assembly/assemblyJarName := jarName
