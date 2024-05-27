@@ -1,5 +1,6 @@
 .idea/
 /project/*
 !/project/plugins.sbt
+!/project/build.properties
 target/
 #saves/[0-9]*/
