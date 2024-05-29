@@ -1,7 +1,6 @@
 package fwc.communication.reactions
 
-import fwc.{DatabaseAccess, GameSettings, Player}
-import fwc.communication.messages.MessageJoinGame
+import fwc.{GameSettings, Player}
 import fwc.game.FWCException
 import fwc.game.houses.HouseType
 
@@ -29,6 +28,5 @@ object ReactionJoinGame {
         throw new FWCException(s"You already joined as ${player.head.house.head}")
     }
     val updatedSettings = gameSettings.copy(players = Some((gameSettings.players getOrElse Seq[Player]()) appended Player(userId, name, houseType)))
-    DatabaseAccess.saveGameSettings(updatedSettings)
     updatedSettings
 }

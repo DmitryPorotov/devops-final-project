@@ -1,6 +1,6 @@
 package fwc.communication.reactions
 
-import fwc.{DatabaseAccess, GameSettings}
+import fwc.GameSettings
 import fwc.game.GameState
 
 import java.util.UUID
@@ -19,7 +19,6 @@ object ReactionCreateGame {
       None
     )
     val state = fwc.game.initializeGameState(randomEventsServerSide)
-    DatabaseAccess.saveGameSettings(settings, state.boardCards)
     (gameId, settings, state)
   }
 }

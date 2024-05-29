@@ -4,6 +4,11 @@ import fwc.communication.GameServer
 
 object FunWithChairs extends App {
 //  try {
+    Runtime.getRuntime.addShutdownHook(new Thread {
+        override def run(): Unit =
+            println("In shutdown hook.")
+            GameServer.shutdown()
+    })
     GameServer.start()
 //  }
 //  catch

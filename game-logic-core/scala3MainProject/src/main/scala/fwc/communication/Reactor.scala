@@ -7,11 +7,12 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
 
+import scala.collection.mutable.{Map => MutMap}
 import scala.util.{Failure, Success, Try}
 
 object Reactor {
 
-  private var games: Map[String, GameReplay] = Map[String, GameReplay]()
+  private val games: MutMap[String, GameReplay] = MutMap[String, GameReplay]()
 
   def apply(message: String): String = {
     val msg = Message.parse(message)
@@ -20,7 +21,7 @@ object Reactor {
         case MessageGameAction(userId, gameId, gameAction, messageId) =>
           val gameReplay = games(gameId)
           val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction(userId, gameReplay, gameAction)
-          games = games + (gameId -> replay)
+          games update (gameId, replay)
           ujson.Obj(
             "action" -> "game_action",
             "gameId" -> ujson.Str(gameId),
@@ -50,8 +51,7 @@ object Reactor {
         case MessageLoadGame(userId, gameId, saveName, messageId) =>
           //todo: what if game already exists?
           val replay = ReactionLoadGame(userId, saveName)
-          //todo: save to cassandra
-          games = games + (gameId -> replay)
+          games update (gameId, replay)
           ujson.Obj(
             "action" -> "load",
             "messageId" -> (if messageId != null then messageId else ujson.Null),
@@ -92,7 +92,7 @@ object Reactor {
         case MessageJoinGame(userId, gameId, joinAs, name, messageId) =>
           val settings = games(gameId).gameSettings
           val result = ReactionJoinGame(userId, joinAs, name, settings)
-          games = games + (gameId -> games(gameId).copy(gameSettings = result))
+          games update (gameId, games(gameId).copy(gameSettings = result))
           ujson.Obj(
             "action" -> "join_game",
             "gameId" -> ujson.Str(gameId),
@@ -118,7 +118,7 @@ object Reactor {
           ).render(fwc.jsonIndentation)
         case MessageCreateGame(userId, gameId, isRandomHouses, messageId) =>
           val result = ReactionCreateGame(userId, gameId, isRandomHouses)
-          games = games + (result._1 -> GameReplay(result._2, result._3.boardCards, result._3, Seq()))
+          games update (result._1, GameReplay(result._2, result._3.boardCards, result._3, Seq()))
           ujson.Obj(
             "action" -> "create_game",
             //          "userId" -> userId,
@@ -128,7 +128,7 @@ object Reactor {
         case MessageStartGame(userId, gameId, messageId) =>
           val result = ReactionStartGame(userId, games(gameId).gameSettings)
           val state = games(gameId).currentGameState
-          games = games + (gameId -> games(gameId).copy(
+          games update (gameId, games(gameId).copy(
             gameSettings = result,
             currentGameState = state.copy(subPhase = SubPhaseAddOrder(HouseType.getSeqOfAll))
           ))
@@ -153,4 +153,7 @@ object Reactor {
         ).render(fwc.jsonIndentation)
       case Failure(e) => throw e
   }
+  
+  def prepareShutdown: MutMap[String, GameReplay] =
+    games
 }

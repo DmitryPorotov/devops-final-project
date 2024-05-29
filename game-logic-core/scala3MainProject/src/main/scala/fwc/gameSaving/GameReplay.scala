@@ -19,6 +19,8 @@ case class GameReplay(
       actions.map(_.toJson)
     )
   )
+  def toFullJson: Value =
+    toJson.asInstanceOf[ujson.Obj].value.addOne("currentGameState" -> currentGameState.toJson)
 }
 
 object GameReplay extends JsonParsable {
