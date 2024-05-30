@@ -12,6 +12,7 @@ import {KickFromLobby} from "./actions/kick-from-lobby";
 import {EditLobby} from "./actions/edit-lobby";
 import {MessageLobby} from "./actions/message-lobby";
 import SystemMessageService from "../system-message.service";
+import RedisRouterService from "../../redis-rx/redis.router.service";
 
 @Injectable()
 class LobbyManagerService {
@@ -23,7 +24,8 @@ class LobbyManagerService {
         private lobbyService: LobbyService,
         private messagingService: ChatService,
         private lobbies: LobbiesClientsMapService,
-        private systemMessageService: SystemMessageService
+        private systemMessageService: SystemMessageService,
+        private redisRouterService: RedisRouterService,
     ) {
         this.instId = String(Math.random()) + Math.random();
     }
@@ -63,6 +65,12 @@ class LobbyManagerService {
 
     public async processMessage(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.init();
+        // if (!client.messageObs) {
+        //     client.messageObs = await this.redisRouterService.getPlayerMessagesObservable(client.user.id, message.lobbyId);
+        //     client.messageObs.subscribe(msg => {
+        //         this.logger.warn("Redis RX message:", msg)
+        //     })
+        // }
         let handler: BaseLobbyAction;
         switch (message.body.type) {
             case "create": {

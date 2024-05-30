@@ -36,6 +36,7 @@ export class EditLobby extends BaseLobbyAction {
         if (message.body.lobbyName) {
             body.lobbyName = message.body.lobbyName;
         }
+        //note: the actual editing is done through http api
         super.relayToChat(client, message, body, lobbyEntity)
     }
 

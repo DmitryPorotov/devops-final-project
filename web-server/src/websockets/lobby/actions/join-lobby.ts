@@ -26,7 +26,6 @@ export class JoinLobby extends BaseLobbyAction {
     async doAction(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity: Lobby = null): Promise<void> {
         await this.chatService.getAllChatMessages(lobbyEntity.id, (msg: MessageInterface) => {
             if (msg.body.type === 'message') {
-                this.logger.debug(msg);
                 client.send(
                     JSON.stringify(msg)
                 )

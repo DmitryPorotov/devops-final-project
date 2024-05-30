@@ -6,7 +6,7 @@ import constants from "../constants";
 
 @Injectable()
 export default class ChatService implements MessagingProviderInterface {
-    private logger = new Logger(ChatService.name);
+    private readonly logger = new Logger(ChatService.name);
     private isInit = false;
 
     private chatCallback: (msg:Object) => void;

@@ -12,9 +12,10 @@ import { RedisModule } from "../redis/redis.module";
 import LobbiesClientsMapService from "./lobbies-clients-map.service"
 import GameMessagingService from "./game/game-messaging.service"
 import SystemMessageService from "./system-message.service";
+import {RedisRxModule} from "../redis-rx/redis-rx.module";
 
 @Module({
-    imports:[JwtModule, DatabaseModule, RedisModule],
+    imports:[JwtModule, DatabaseModule, RedisModule, RedisRxModule],
     providers: [
         EventsGateway,
         AuthGuard,
