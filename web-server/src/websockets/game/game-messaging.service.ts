@@ -48,12 +48,9 @@ class GameMessagingService {
         }
     }
 
-
-
     private workerCallback = (msg: WorkerMessageInterface) => {
         const lobby = this.lobbies.get(Number(msg.gameId));
         if (!lobby) return;
-        msg.type = "action";
         if (msg.userId) {
             const client = lobby.clients.find(c => c.user.id === msg.userId);
             client?.send(JSON.stringify(msg));

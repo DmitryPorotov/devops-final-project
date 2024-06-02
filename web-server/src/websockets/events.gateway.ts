@@ -12,6 +12,7 @@ import WebsocketWithUserInterface from "./websocket-with-user.interface";
 import constants from "../constants";
 import {sleep} from "../common/utilities";
 import SystemMessageService from "./system-message.service";
+import {env} from 'process'
 
 
 
@@ -24,12 +25,14 @@ import SystemMessageService from "./system-message.service";
 
 export class EventsGateway implements OnGatewayConnection{
     private readonly logger = new Logger(EventsGateway.name);
+    private readonly doPingPong: boolean;
 
     constructor(
         private authGuard: AuthGuard,
         private websocketService: WebsocketService,
         private systemMessageService: SystemMessageService
     ) {
+        this.doPingPong = env.DO_PING_PONG === 'true'
     }
     @WebSocketServer()
     server: Server;
@@ -89,12 +92,14 @@ export class EventsGateway implements OnGatewayConnection{
         client.addListener('error', (err) => {
             this.logger.debug(`User ${user.id} - ${user.email} had a connection error on the websocket. ${err.name}: ${err.message}`);
         });
-        const pingPongHandler = () => client.lastPong = new Date().getTime();
-        client.addListener('pong', pingPongHandler);
-        client.addListener('ping', pingPongHandler);
-        const pingFunc = this.makePingFunc(client);
-        pingFunc().then();
-        client.pingInterval = setInterval(pingFunc, constants.WS_PING_INTERVAL) as unknown as number;
+        if (this.doPingPong) {
+            const pingPongHandler = () => client.lastPong = new Date().getTime();
+            client.addListener('pong', pingPongHandler);
+            client.addListener('ping', pingPongHandler);
+            const pingFunc = this.makePingFunc(client);
+            pingFunc().then();
+            client.pingInterval = setInterval(pingFunc, constants.WS_PING_INTERVAL) as unknown as number;
+        }
     }
 
     private makePingFunc(client: WebsocketWithUserInterface): () => Promise<void> {

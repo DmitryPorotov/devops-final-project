@@ -4,6 +4,7 @@ export interface WorkerMessageInterface {
     type: "action"
     action: string
     time?: string
+    message?: string
     status?: {created: boolean, details: unknown}
     reply?: Array<{
         to: '*' | number,

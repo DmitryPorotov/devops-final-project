@@ -3,7 +3,7 @@ import { WebSocket } from "ws"
 import {LoginUserDto, send, sleep, WebSocketWrap} from "./utility";
 import settings from './settings'
 
-describe('basic_game', function () {
+describe('single_server_basic_game', function () {
     let user: LoginUserDto;
 
     beforeAll(function () {

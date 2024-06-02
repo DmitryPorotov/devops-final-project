@@ -11,16 +11,16 @@ object Message {
   def parse(str: String): Message = {
     val json = ujson.read(str)
 
-    val userId = Try[Int](json.obj("userId").num.toInt) getOrElse (throw new FWCException("Message has no userId"))
-
     val gameId = Try[String](json.obj("gameId").str) getOrElse null
 
-    val action = Try[String](json.obj("action").str) getOrElse (throw new FWCException("Message has no action"))
+    val userId = Try[Int](json.obj("userId").num.toInt) getOrElse (throw new FWCException("Message has no userId", gameId))
+
+    val action = Try[String](json.obj("action").str) getOrElse (throw new FWCException("Message has no action", gameId, userId))
 
     val messageId = Try[String](json.obj("messageId").str) getOrElse null
 
     if (action != "create_game" && action != "new_game" && action != "hello" && gameId == null)
-      throw new FWCException("Message has no gameId")
+      throw new FWCException("Message has no gameId", null, userId)
 
     action match
       case "game_action" =>
@@ -42,7 +42,7 @@ object Message {
       case "join_game" =>
         val name = Try(json.obj("name").str) match
           case Success(value) => value
-          case Failure(_) => throw new FWCException("Message has no player's name")
+          case Failure(_) => throw new FWCException("Message has no player's name", gameId, userId)
         val houseType = Try[HouseType](HouseType.fromString(json.obj("joinAs").str)) match
           case Success(s) => Some(s)
           case Failure(_) => None

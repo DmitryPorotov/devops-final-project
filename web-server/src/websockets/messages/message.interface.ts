@@ -10,5 +10,5 @@ export interface MessageInterface {
     time?: string;
     type: 'chat' | 'action' | 'test' | 'error' | 'system';
     lobbyId?: number;
-    body: ChatMessageInterface;
+    body?: ChatMessageInterface;
 }

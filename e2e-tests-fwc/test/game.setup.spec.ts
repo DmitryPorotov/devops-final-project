@@ -2,7 +2,7 @@ import { login} from "./login";
 import {sleep, WebSocketWrap} from "./utility";
 import settings from './settings'
 
-describe('game_setup', function () {
+describe('single_server_game_setup', function () {
     let user;
 
     beforeAll(function () {

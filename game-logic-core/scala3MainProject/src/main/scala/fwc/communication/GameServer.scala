@@ -21,34 +21,53 @@ object GameServer {
   private val jedisCache = new Jedis(redisHost, 6379)
   private val subscriber = new JedisPubSub {
     override def onPMessage(pattern: String, channel: String, message: String): Unit = {
+      if isShuttingDown then return 
       val replyTo = channel.split('.')(1)
       println(" [x] Received '" + message + "'")
       val reply = Try[String](Reactor.apply(message)) match
         case Success(s) => s
-        case Failure(e: FWCException) => ujson.Obj(
+        case Failure(e: FWCException) => 
+          val errJson = ujson.Obj(
             "action" -> "error",
-            "message" -> e.getMessage
+            "message" -> e.getMessage,
+            "type" -> "action",
           )
-          .render(fwc.jsonIndentation)
+          if e.gameId != null then 
+            errJson.value.addOne("gameId" -> e.gameId)
+          if e.userId != -1 then 
+            errJson.value.addOne("userId" -> e.userId)
+          errJson.render(fwc.jsonIndentation)
         case Failure(e) => ujson.Obj(
             "action" -> "error",
             "message" -> e.getMessage,
-            "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString))
+            "type" -> "action",
+            "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
           )
           .render(fwc.jsonIndentation)
       println(" [x] Sent '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
-      jedisPub.publish(replyTo + "." + workerName, reply)
+      if !isShuttingDown then 
+        jedisPub.publish(replyTo + "." + workerName, reply)
     }
   }
+  
+  @volatile 
+  private var isShuttingDown: Boolean = false
+  
   def start(): Unit = {
     jedisSub.psubscribe(subscriber, workerName + ".*", "new_game.*")
   }
+  
   def shutdown(): Unit =
+    isShuttingDown = true
     subscriber.unsubscribe()
     val ids = Reactor.prepareShutdown.foldLeft(Map[String, ujson.Str]())((map, kv) => {
-      jedisCache.set("game_" + kv._2.gameSettings.gameUuid.toString, kv._2.toFullJson.render())
+      jedisCache.set("game_save_" + kv._2.gameSettings.gameUuid.toString, kv._2.toFullJson.render())
       map + (kv._1 -> kv._2.gameSettings.gameUuid.toString)
     })
-    jedisCache.set(s"${workerName}_games", ujson.Obj.from(ids).render())
-    jedisPub.publish(s"servers.$workerName", "shutting-down")
+    jedisCache.lpush(s"${workerName}_games", ujson.Obj.from(ids).render())
+    jedisPub.publish(s"servers.$workerName", "{\"action\":\"shutdown\"}")
+    jedisPub.close()
+    jedisSub.close()
+    jedisCache.close()
+    
 }

@@ -2,6 +2,8 @@ import RedisPubSub from "./redis.pub-sub"
 import { Injectable, Logger } from "@nestjs/common"
 import RedisCacheStorage from "./redis.cache-storage"
 import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
+import {WorkerMessageInterface} from "../websockets/messages/worker-message.interface";
+import GameTransferService from "./game-transfer.service";
 
 @Injectable()
 class WorkerRelayService {
@@ -12,19 +14,21 @@ class WorkerRelayService {
 
     private redisCacheStorage: RedisCacheStorage;
 
-    private workerCallback: (msg:Object) => void;
+    private workerCallback: (msg:WorkerMessageInterface) => void;
 
     private pendingNewGames: Map<number, Array<{worker: string, gamesCount: number}>> = new Map();
 
     private gameSubscriptions: Map<number, true> = new Map<number, true>();
 
-    async init(workerCallback: (message: Object) => void): Promise<void> {
+    constructor(private gameTransferService: GameTransferService) {
+    }
+
+    async init(workerCallback: (message: WorkerMessageInterface) => void): Promise<void> {
         if (!this.isInit) {
             this.workerCallback = workerCallback;
 
-
             this.redisPubSub = new RedisPubSub();
-            await this.redisPubSub.init(this.workerCallback, this.onNewGameMessageCallback);
+            await this.redisPubSub.init(this.workerCallback, this.onNewGameMessageCallback, this.onShutdownMessage);
 
             this.redisCacheStorage = new RedisCacheStorage();
             await this.redisCacheStorage.init();
@@ -32,9 +36,35 @@ class WorkerRelayService {
             this.isInit = true;
         }
     }
+    private onShutdownMessage(workerName: string) {
+        if (this.gameTransferService.isTransferInProgress) {
+            setTimeout(() => this.onShutdownMessage(workerName), 2000)
+        }
+        else {
+            this.transferGames(workerName).then();
+        }
+    }
+
+    private fakeGameIdForTransfer?: number;
+
+    private async transferGames(workerName: string) {
+        const listKey = `${workerName}_games`;
+        const workerGamesStr = await this.redisCacheStorage.lPop(listKey);
+        await this.redisCacheStorage.del(listKey);
+        const workerGames = JSON.parse(workerGamesStr);
+        this.fakeGameIdForTransfer = -Math.round(Math.random() * 1e+14);
+        await this.gameTransferService.transferGames(this.redisPubSub, workerGames)
+    }
+
     private onNewGameMessageCallback = (gameId: string, workerName: string, gamesCount: number) => {
         this.logger.debug('in worker new game message');
         const intId = parseInt(gameId);
+        if (intId === this.fakeGameIdForTransfer) {
+            this.gameTransferService.addWorkerReply({
+                worker: workerName,
+                gamesCount: gamesCount
+            })
+        }
         if (this.pendingNewGames.has(intId)) {
             this.pendingNewGames.get(intId).push({
                 worker: workerName,
@@ -94,8 +124,10 @@ class WorkerRelayService {
             }
             else {
                 this.workerCallback({
-                    gameId,
-                    error: "Workers are busy or are dead."
+                    gameId: "" + gameId,
+                    type: "action",
+                    action: "error",
+                    message: "Workers are busy or are dead."
                 })
             }
             this.pendingNewGames.delete(gameId);

@@ -13,6 +13,10 @@ export interface LoginUserDto {
     token: string;
 }
 
+export function makeMessageId() {
+    return "" + Math.random() + Math.random();
+}
+
 export async function send(path: string, message: string, token?: string, method = 'POST', port = null) {
     return new Promise((resolve, reject) => {
         const headers = {

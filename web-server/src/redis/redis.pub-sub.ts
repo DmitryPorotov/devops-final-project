@@ -13,16 +13,23 @@ class RedisPubSub {
 
     private onNewGameMessage: (gameId: string, workerName: string, gamesCount: number) => void;
 
-    async init(callback: (msg: Object) => void, onNewGameMessage: (gameId: string, workerName: string, gamesCount: number) => void) {
+    private onShutdownMessage: (workerName: string) => void;
+
+    async init(
+        callback: (msg: Object) => void,
+        onNewGameMessage: (gameId: string, workerName: string, gamesCount: number) => void,
+        onShutdownMessage: (workerName: string) => void
+    ) {
         this.workerCallback = callback;
         this.onNewGameMessage = onNewGameMessage;
+        this.onShutdownMessage = onShutdownMessage;
         this.redisPublisher = createClient({url: env.REDIS_URL});
         this.redisPublisher.on('error', (err) => this.logger.error('Redis Client Error', err));
         await this.redisPublisher.connect();
         this.redisSubscriber = createClient({url: env.REDIS_URL});
         this.redisSubscriber.on('error', (err) => this.logger.error('Redis Client Error', err));
         await this.redisSubscriber.connect();
-        await this.redisSubscriber.pSubscribe(`${this.SERVER_NAME}.*`, this.onMessageFromWorker);
+        await this.redisSubscriber.pSubscribe([`${this.SERVER_NAME}.*`, 'servers.*'], this.onMessageFromWorker);
         this.logger.debug('pub sub init end')
     }
 
@@ -31,7 +38,11 @@ class RedisPubSub {
         const workerName = channel.split('.')[1];
         if (data.action === 'new_game') {
             this.onNewGameMessage(data.gameId, workerName, data.gamesCount)
-        } else {
+        }
+        else if (data.action === 'shutdown') {
+            this.onShutdownMessage(workerName);
+        }
+        else {
             this.workerCallback(data);
         }
     };

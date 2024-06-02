@@ -4,15 +4,17 @@ import LobbyManagerService from "./lobby/lobby-manager.service";
 import WebsocketWithUserInterface from "./websocket-with-user.interface";
 import ConnectivityTestService from "./connectivity-test.service";
 import GameMessagingService from "./game/game-messaging.service"
-
+import {env} from 'process'
 
 @Injectable()
 class WebsocketService {
-    private logger = new Logger(WebsocketService.name);
+    private readonly logger = new Logger(WebsocketService.name);
+    private readonly allowClientSideMessageId: boolean;
 
     constructor(private lobbyManagerService: LobbyManagerService,
                 private connectivityTestService: ConnectivityTestService,
                 private gameMessagingService: GameMessagingService) {
+        this.allowClientSideMessageId = env.CLIENT_SIDE_MESSAGE_ID === 'true';
     }
 
     async handleMessage(client: WebsocketWithUserInterface, message: MessageInterface) {
@@ -28,6 +30,9 @@ class WebsocketService {
             };
             client.send(JSON.stringify(error));
             return
+        }
+        if (!this.allowClientSideMessageId) {
+            delete message.messageId;
         }
         if (message.type === "chat") {
             await this.lobbyManagerService.processMessage(client, message)

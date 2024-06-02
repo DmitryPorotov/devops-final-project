@@ -5,7 +5,7 @@ import settings from './settings'
 
 const wsUrl = `${settings.host}:${settings.port}${settings.wsPath}`;
 
-describe('lobby', function () {
+describe('single_server_lobby', function () {
     let user;
 
     beforeAll(function () {

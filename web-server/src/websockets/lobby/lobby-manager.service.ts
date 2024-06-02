@@ -71,6 +71,9 @@ class LobbyManagerService {
         //         this.logger.warn("Redis RX message:", msg)
         //     })
         // }
+        if ("object" !== typeof message.body) {
+            throw new Error('The "body" field of the message is not an object.')
+        }
         let handler: BaseLobbyAction;
         switch (message.body.type) {
             case "create": {
