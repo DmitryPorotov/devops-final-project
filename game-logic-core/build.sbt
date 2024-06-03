@@ -30,7 +30,6 @@ lazy val scala3mainProject = project
       "org.scalatest" %% "scalatest" % "3.2.18" % "test",
       "com.lihaoyi" %% "upickle" % "3.3.1",
       "redis.clients" % "jedis" % "5.1.3",
-      "com.datastax.cassandra" % "cassandra-driver-core" % "3.11.5",
     ),
   )
 

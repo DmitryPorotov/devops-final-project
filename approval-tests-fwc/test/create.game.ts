@@ -1,20 +1,18 @@
-import { login } from "../login"
-import { makeMessageId } from "../utility";
+import { login } from "./login"
+import { LoginUserDto, makeMessageId } from "./utility";
 import { RxWebsocketWrapper } from "./rx-websocket.wrapper";
-import settings from "../settings"
-import { ChatMessageInterface, ErrorMessageInterface, WorkerMessageInterface } from "../message.interface";
+import settings from "./settings"
+import { SendableMessage, ReceivableMessage, WorkerMessageInterface } from "./message.interface";
 import { filter, tap } from "rxjs";
 
-type SendableMessage = ChatMessageInterface | WorkerMessageInterface
-
-type ReceivableMessage = SendableMessage | ErrorMessageInterface
 
 export interface RxWsWrapperAndStepAdder{
     wsWrapper: RxWebsocketWrapper<ReceivableMessage>
-    addStep: (prevMsgId: string, onMessage: (msg: ReceivableMessage) => void) => void
+    addStep: (prevMsgId: string, onMessage: (msg: ReceivableMessage) => void) => void,
+    user: LoginUserDto
 }
 
-export default async function createGameAndJoin() {
+export default async function createGame() {
     return new Promise<RxWsWrapperAndStepAdder>(async (resolve, reject) => {
         const user = await login({email : "a@b.com", password: '12345678'});
         const wrap = new RxWebsocketWrapper<ReceivableMessage>(`ws://${settings.host}:${settings.port}${settings.wsPath}?_token=${user.token}`);
@@ -25,7 +23,7 @@ export default async function createGameAndJoin() {
             error: (e) => reject(e)
         })
         const err$ = subj$$.pipe(
-            filter((m: ErrorMessageInterface) => {
+            filter((m: ReceivableMessage) => {
                 return m.action === 'error'
             }),
             tap(m => reject(m))
@@ -37,6 +35,7 @@ export default async function createGameAndJoin() {
         const createChat$ = subj$$.pipe(
             filter(m => m.messageId === chatCreateMsgId),
             tap(m => {
+                createChatUnsub()
                 wrap.send({
                     type: 'action',
                     userId: user.id,
@@ -47,8 +46,10 @@ export default async function createGameAndJoin() {
                 })
             })
         )
-        createChat$.subscribe();
-
+        const createChatSub = createChat$.subscribe();
+        function createChatUnsub() {
+            createChatSub.unsubscribe()
+        }
         wrap.send({
             type: 'chat',
             userId: user.id,
@@ -59,48 +60,31 @@ export default async function createGameAndJoin() {
             }
         });
         
-        const joinGameMsgId = makeMessageId();
         const createGame$ = subj$$.pipe(
-            filter((m: WorkerMessageInterface) => 
+            filter((m: any) => 
                 m.messageId === gameCreateMsgId
             ),
             tap((m: WorkerMessageInterface) => {
-                wrap.send({
-                    type:"action",
-                    userId: user.id,
-                    lobbyId: 2,
-                    action: "join_game",
-                    messageId: joinGameMsgId,
-                    joinAs: 'wolf',
-                    name: user.name
+                createGameUnsub()
+                resolve({
+                    wsWrapper: wrap,
+                    addStep: adder,
+                    user
                 })
             })
         )
-        createGame$.subscribe();
-
+        const createGameSub = createGame$.subscribe();
+        function createGameUnsub() {
+            createGameSub.unsubscribe()
+        }
         function adder(prevMsgId: string, onMessage: (msg: SendableMessage) => void): void {
-            console.log('adder called')
             const addedFunc$ = subj$$.pipe(
-                filter((m:WorkerMessageInterface) => m.messageId === prevMsgId),
+                filter((m:any) => m.messageId === prevMsgId),
                 tap((m: WorkerMessageInterface) => {
-                    console.log('in added function')
                     onMessage(m)
                 })
             )
             addedFunc$.subscribe();
         }
-
-        const joinGame$ = subj$$.pipe(
-            filter((m: WorkerMessageInterface) => m.messageId === joinGameMsgId),
-            tap((m: WorkerMessageInterface) => {
-                resolve({
-                    wsWrapper: wrap,
-                    addStep: adder
-                })
-            })
-        )
-        joinGame$.subscribe();
-
-
     })
 }

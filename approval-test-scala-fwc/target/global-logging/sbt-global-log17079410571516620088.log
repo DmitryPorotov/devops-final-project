@@ -1,0 +1,14 @@
+[0m[[0m[0mdebug[0m] [0m[0m> Exec(packageBin, None, None)[0m
+[0m[[0m[0mdebug[0m] [0m[0mEvaluating tasks: Compile / packageBin[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning task... Cancel: Signal, check cycles: false, forcegc: true[0m
+[0m[[0m[0minfo[0m] [0m[0mcompiling 1 Scala source to /home/dmitry/PhpstormProjects/table-games-monorepo/approval-test-scala-fwc/target/scala-3.3.3/classes ...[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /home/dmitry/PhpstormProjects/table-games-monorepo/approval-test-scala-fwc/src/main/scala/main.scala:1:7 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m1 |[0m[33mimport[0m sttp.client4.*[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m       ^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m       Not found: sttp[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mcompileIncremental[0m) Compilation failed[0m
+[0m[[0m[31merror[0m] [0m[0mTotal time: 0 s, completed 3 Jun 2024, 18:58:25[0m
+[0m[[0m[0mdebug[0m] [0m[0m> Exec(idea-shell, None, None)[0m
