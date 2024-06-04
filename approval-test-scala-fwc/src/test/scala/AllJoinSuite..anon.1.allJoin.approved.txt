@@ -1,0 +1,47 @@
+{
+  "action": "join_game",
+  "gameId": "2",
+  "gameSettings": {
+    "gameId": "2",
+    "gameUuid": "uuid",
+    "ownerId": 1,
+    "isInputOnly": false,
+    "isRandomHouses": false,
+    "isRandomEventsServerSide": true,
+    "players": [
+      {
+        "userId": 1,
+        "house": "wolf",
+        "name": "user1"
+      },
+      {
+        "userId": 2,
+        "house": "lion",
+        "name": "user2"
+      },
+      {
+        "userId": 3,
+        "house": "kraken",
+        "name": "admin1"
+      },
+      {
+        "userId": 4,
+        "house": "moose",
+        "name": "user3"
+      },
+      {
+        "userId": 5,
+        "house": "rose",
+        "name": "user4"
+      },
+      {
+        "userId": 6,
+        "house": "pufferfish",
+        "name": "user5"
+      }
+    ],
+    "playersInputting": null
+  },
+  "messageId": "uuid",
+  "type": "action"
+}

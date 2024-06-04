@@ -14,5 +14,7 @@ lazy val root = (project in file("."))
         "com.lihaoyi" %% "upickle" % "3.3.1",
         "com.approvaltests" % "approvaltests" % "24.2.0",
         "org.scala-lang" %% "toolkit" % "0.4.0",
+        "jakarta.websocket" % "jakarta.websocket-client-api" % "2.2.0" % "provided",
+        "org.java-websocket" % "Java-WebSocket" % "1.5.6",
     )
   )

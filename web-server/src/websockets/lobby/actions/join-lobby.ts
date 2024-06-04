@@ -24,6 +24,7 @@ export class JoinLobby extends BaseLobbyAction {
     }
     @AuthToLobby()
     async doAction(client: WebsocketWithUserInterface, message: MessageInterface, lobbyEntity: Lobby = null): Promise<void> {
+        //todo force player name from database
         await this.chatService.getAllChatMessages(lobbyEntity.id, (msg: MessageInterface) => {
             if (msg.body.type === 'message') {
                 client.send(
