@@ -28,7 +28,7 @@ class AllJoinSuite {
       @Test
       def allJoin(j: ujson.Obj): Unit =
         val p = j.obj("gameSettings").obj("players").arr
-        if p.length == 6 then
+        if p.length >= 6 then
           println("exiting")
           j.obj("gameSettings").obj("gameUuid") = "uuid"
           j.obj("messageId") = "uuid"
@@ -45,12 +45,12 @@ class AllJoinSuite {
     val u5Bp = new PlayerBehavior(user5, u5Mb.getMap)
     val u6Bp = new PlayerBehavior(user6, u6Mb.getMap)
     o1Pb.connect()
-    Thread.sleep(1000L)
+    Thread.sleep(2000L)
     u2Bp.connect()
     u3Bp.connect()
     u4Bp.connect()
     u5Bp.connect()
     u6Bp.connect()
-    Thread.sleep(1000_0000L)
+    Thread.sleep(10_0000L)
   }
 }

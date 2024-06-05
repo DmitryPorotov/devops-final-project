@@ -6,7 +6,7 @@ object FunWithChairs extends App {
 //  try {
     Runtime.getRuntime.addShutdownHook(new Thread {
         override def run(): Unit =
-            println("In shutdown hook.")
+            println("In the shutdown hook.")
             GameServer.shutdown()
     })
     GameServer.start()

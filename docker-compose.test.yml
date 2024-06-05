@@ -61,7 +61,7 @@ services:
       - RABBIT_HOST=rabbitmq
       - REDIS_HOST=redis
       - WORKER_NAME=worker1
-    command: ["sbt", "run"]
+    command: ["sbt", "run", "--", "-Xrs"]
     networks:
       - net1
     depends_on:
