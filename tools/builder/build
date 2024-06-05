@@ -10,6 +10,7 @@ parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login
                                            + '{nest} - Nest.js http and WS server,'
                                            + '{login} - front-login React front-end project,'
                                            + '{defold} - front-defold - Defold game GUI.')
+parser.add_argument('-nd', '--no-docker-build', action='store_true', help='Don\'t run "docker compose build".')
 args = parser.parse_args()
 
 
@@ -74,23 +75,14 @@ def start():
         else:
             print_success('Building Defold front-end was successful.')
 
-    # # here or with docker compose?
-    # print_header("Building Nginx static content server image...")
-    # result = subprocess.run(['docker', 'run', '--rm',
-    #                          '-v', proj_root + "/front-defold:/fd_fwc",
-    #                          '-v', proj_root + '/tools/init/.cache:/bob',
-    #                          '-w', '/fd_fwc',
-    #                          'sbt_xrandr',
-    #                          'java', '-jar', '/bob/bob.jar',
-    #                          '--settings=web.properties',
-    #                          '-bo', '/fd_fwc/build/prod/htmlLaunchDir',
-    #                          'build', 'bundle', '-p', 'js-web', '-a'])
-    #
-    # if result.returncode != 0:
-    #     print_error('Building Nginx static content server failed.')
-    #     is_error = True
-    # else:
-    #     print_success('Building Nginx static content server was successful.')
+    if not args.no_docker_build:
+        print_header("Building docker images...")
+        result = subprocess.run(['docker', 'compose', 'build'])
+        if result.returncode != 0:
+            print_error('Building docker images failed.')
+            is_error = True
+        else:
+            print_success('Building docker images was successful.')
 
     if is_error:
         exit(1)

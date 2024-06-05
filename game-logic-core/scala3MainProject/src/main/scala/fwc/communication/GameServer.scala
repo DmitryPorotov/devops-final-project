@@ -64,8 +64,9 @@ object GameServer {
       jedisCache.set("game_save_" + kv._2.gameSettings.gameUuid.toString, kv._2.toFullJson.render())
       map + (kv._1 -> kv._2.gameSettings.gameUuid.toString)
     })
-    jedisCache.lpush(s"${workerName}_games", ujson.Obj.from(ids).render())
-    jedisPub.publish(s"servers.$workerName", "{\"action\":\"shutdown\"}")
+    if ids.nonEmpty then
+      jedisCache.lpush(s"${workerName}_games", ujson.Obj.from(ids).render())
+      jedisPub.publish(s"servers.$workerName", "{\"action\":\"shutdown\"}")
     jedisPub.close()
     jedisSub.close()
     jedisCache.close()

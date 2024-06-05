@@ -29,13 +29,15 @@ class AllJoinSuite {
       def allJoin(j: ujson.Obj): Unit =
         val p = j.obj("gameSettings").obj("players").arr
         if p.length >= 6 then
-          println("exiting")
+          Assertions.assertTrue(!j.obj("gameSettings").obj("gameUuid").isNull)
           j.obj("gameSettings").obj("gameUuid") = "uuid"
+          Assertions.assertTrue(!j.obj("messageId").isNull)
           j.obj("messageId") = "uuid"
           j.obj("gameSettings").obj("players") = p.sortWith((a ,b) => a.obj("userId").num < b.obj("userId").num)
           try
             Approvals.verify(j.render(2))
           finally
+            println("exiting")
             Thread.sleep(500L)
             System.exit(0)
     }

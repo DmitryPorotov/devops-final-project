@@ -20,7 +20,7 @@ class WorkerRelayService {
 
     private gameSubscriptions: Map<number, true> = new Map<number, true>();
 
-    constructor(private gameTransferService: GameTransferService) {
+    constructor(private readonly gameTransferService: GameTransferService) {
     }
 
     async init(workerCallback: (message: WorkerMessageInterface) => void): Promise<void> {
@@ -36,7 +36,7 @@ class WorkerRelayService {
             this.isInit = true;
         }
     }
-    private onShutdownMessage(workerName: string) {
+    private onShutdownMessage = (workerName: string) => {
         if (this.gameTransferService.isTransferInProgress) {
             setTimeout(() => this.onShutdownMessage(workerName), 2000)
         }
