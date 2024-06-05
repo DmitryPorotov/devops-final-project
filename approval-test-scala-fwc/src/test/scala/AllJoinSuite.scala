@@ -1,24 +1,12 @@
 import org.approvaltests.Approvals
 import org.junit.jupiter.api.{Assertions, Test}
-import utils.{CreateGame, HttpUtils, JoinGame, PlayerBehavior}
+import utils.{JoinGame, PlayerBehavior}
 
 class AllJoinSuite {
   @Test
   def allJoin(): Unit = {
-    val owner1 = HttpUtils.login("a@b.com")
-    val user2 = HttpUtils.login("b@b.com")
-    val user3 = HttpUtils.login("admin@b.com")
-    val user4 = HttpUtils.login("c@b.com")
-    val user5 = HttpUtils.login("d@b.com")
-    val user6 = HttpUtils.login("e@b.com")
-    val o1Mb = CreateGame.getCreateGameOwnerMessagesBuilder(owner1)
-    JoinGame.getPlayerJoinMessageBuilder(owner1, "wolf", Some(o1Mb))
-    val u2Mb = JoinGame.getPlayerJoinMessageBuilder(user2, "lion")
-    val u3Mb = JoinGame.getPlayerJoinMessageBuilder(user3, "kraken")
-    val u4Mb = JoinGame.getPlayerJoinMessageBuilder(user4, "moose")
-    val u5Mb = JoinGame.getPlayerJoinMessageBuilder(user5, "rose")
-    val u6Mb = JoinGame.getPlayerJoinMessageBuilder(user6, "pufferfish")
-    val o1Pb: PlayerBehavior = new PlayerBehavior(owner1, o1Mb.getMap) {
+    val (users, mesBuilders) = JoinGame.getAllUsersAndMessageBuilders
+    val o1Pb: PlayerBehavior = new PlayerBehavior(users(1), mesBuilders(1).getMap) {
       override def onMessage(message: String): ujson.Obj =
         val j = super.onMessage(message)
           if j.obj.getOrElse("gameSettings", null) != null then
@@ -41,11 +29,11 @@ class AllJoinSuite {
             Thread.sleep(500L)
             System.exit(0)
     }
-    val u2Bp = new PlayerBehavior(user2, u2Mb.getMap)
-    val u3Bp = new PlayerBehavior(user3, u3Mb.getMap)
-    val u4Bp = new PlayerBehavior(user4, u4Mb.getMap)
-    val u5Bp = new PlayerBehavior(user5, u5Mb.getMap)
-    val u6Bp = new PlayerBehavior(user6, u6Mb.getMap)
+    val u2Bp = new PlayerBehavior(users(2), mesBuilders(2).getMap)
+    val u3Bp = new PlayerBehavior(users(3), mesBuilders(3).getMap)
+    val u4Bp = new PlayerBehavior(users(4), mesBuilders(4).getMap)
+    val u5Bp = new PlayerBehavior(users(5), mesBuilders(5).getMap)
+    val u6Bp = new PlayerBehavior(users(6), mesBuilders(6).getMap)
     o1Pb.connect()
     Thread.sleep(2000L)
     u2Bp.connect()
