@@ -1,5 +1,4 @@
 import { Injectable, Logger } from "@nestjs/common";
-import RedisPubSub from "./redis.pub-sub";
 
 @Injectable()
 class GameTransferService {
@@ -16,22 +15,20 @@ class GameTransferService {
         return this._isTransferInProgress
     }
 
-    public async transferGames(redisPubSub: RedisPubSub, games: {[key: string]: string}) {
+    public async transferGames(games: {[key: string]: string}): Promise<Map<string, {id: string, uuid: string}[]>> {
         this._isTransferInProgress = true;
-        redisPubSub.publishToWorker( 'new_game', JSON.stringify({
-            userId: -1,
-            gameId: -1,
-            action: 'new_game',
-            messageId: "" + Math.random()
-        }));
-        return new Promise<void>((resolve, reject)=> {
-            setTimeout(()=> {
+
+        return new Promise<Map<string, {id: string, uuid: string}[]>>((resolve, reject) => {
+            setTimeout(() => {
+                if (!this.workerReplies.length) {
+                    reject("Error. No workers to transfer games to.")
+                }
                 const numberOfGamesToTransfer = Object.keys(games).length;
                 const numberOfGamesAtWorkers =
                     this.workerReplies.reduce<number>((acc, cur) => acc += cur.gamesCount, 0);
                 const totalNumberOfGames = numberOfGamesToTransfer + numberOfGamesAtWorkers;
                 const desiredNumberGamesPerWorker = Math.ceil(totalNumberOfGames / this.workerReplies.length);
-                const numberOfGamesToTransferToWorkers: {worker: string, num: number}[] = [];
+                const numberOfGamesToTransferToWorkers: { worker: string, num: number }[] = [];
                 for (const reply of this.workerReplies) {
                     if (reply.gamesCount < desiredNumberGamesPerWorker) {
                         numberOfGamesToTransferToWorkers.push({
@@ -40,16 +37,28 @@ class GameTransferService {
                         })
                     }
                 }
-                const gamesArray = [];
+                const gamesArray: {id: string, uuid: string}[] = [];
                 for (let gameId in games) {
                     gamesArray.push({
                         id: gameId,
                         uuid: games[gameId]
                     })
                 }
-                for (const worker of numberOfGamesToTransferToWorkers) {
-                    //todo
-                }
+                let toSendToWorkers: Map<string, {id: string, uuid: string}[]> = new Map();
+                outer:
+                    for (const worker of numberOfGamesToTransferToWorkers) {
+                        for (let i = 0; i < worker.num; i++) {
+                            let g = gamesArray.pop();
+                            if (!g) break outer;
+                            if (!toSendToWorkers.has(worker.worker)) {
+                                toSendToWorkers.set(worker.worker, []);
+                            }
+                            toSendToWorkers.get(worker.worker).push(g)
+                        }
+                    }
+                this.workerReplies = [];
+                this._isTransferInProgress = false;
+                resolve(toSendToWorkers);
             }, 1000);
         });
     }

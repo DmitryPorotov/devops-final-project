@@ -37,6 +37,16 @@ object GameServer {
           if e.userId != -1 then 
             errJson.value.addOne("userId" -> e.userId)
           errJson.render(fwc.jsonIndentation)
+        case Failure(e: RestoreGamesException) =>
+          e.games.foreach(gId => {
+            val gameReplayStr = jedisCache.get("game_save_" + gId)
+            jedisCache.del("game_save_" + gId)
+            Reactor.restoreGame(gameReplayStr)
+          })
+          ujson.Obj(
+            "action" -> "restore_games",
+            "messageId" -> e.messageId
+          ).render(fwc.jsonIndentation)
         case Failure(e) => ujson.Obj(
             "action" -> "error",
             "message" -> e.getMessage,
@@ -61,7 +71,7 @@ object GameServer {
     isShuttingDown = true
     subscriber.unsubscribe()
     val ids = Reactor.prepareShutdown.foldLeft(Map[String, ujson.Str]())((map, kv) => {
-      jedisCache.set("game_save_" + kv._2.gameSettings.gameUuid.toString, kv._2.toFullJson.render())
+      jedisCache.set("game_save_" + kv._2.gameSettings.gameUuid.toString, kv._2.toJson.render())
       map + (kv._1 -> kv._2.gameSettings.gameUuid.toString)
     })
     if ids.nonEmpty then

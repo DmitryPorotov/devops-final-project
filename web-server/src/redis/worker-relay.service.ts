@@ -4,6 +4,8 @@ import RedisCacheStorage from "./redis.cache-storage"
 import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
 import {WorkerMessageInterface} from "../websockets/messages/worker-message.interface";
 import GameTransferService from "./game-transfer.service";
+import {v4 as uuid} from 'uuid'
+import MessageResendService from "./message-resend.service";
 
 @Injectable()
 class WorkerRelayService {
@@ -20,7 +22,10 @@ class WorkerRelayService {
 
     private gameSubscriptions: Map<number, true> = new Map<number, true>();
 
-    constructor(private readonly gameTransferService: GameTransferService) {
+    constructor(
+        private readonly gameTransferService: GameTransferService,
+        private readonly messageResendService: MessageResendService,
+    ) {
     }
 
     async init(workerCallback: (message: WorkerMessageInterface) => void): Promise<void> {
@@ -28,7 +33,7 @@ class WorkerRelayService {
             this.workerCallback = workerCallback;
 
             this.redisPubSub = new RedisPubSub();
-            await this.redisPubSub.init(this.workerCallback, this.onNewGameMessageCallback, this.onShutdownMessage);
+            await this.redisPubSub.init(this.onNewGameMessageCallback, this.onShutdownMessage);
 
             this.redisCacheStorage = new RedisCacheStorage();
             await this.redisCacheStorage.init();
@@ -36,24 +41,43 @@ class WorkerRelayService {
             this.isInit = true;
         }
     }
+
     private onShutdownMessage = (workerName: string) => {
         if (this.gameTransferService.isTransferInProgress) {
-            setTimeout(() => this.onShutdownMessage(workerName), 2000)
+            setTimeout(() => this.onShutdownMessage(workerName), 100)
         }
         else {
             this.transferGames(workerName).then();
         }
-    }
+    };
 
     private fakeGameIdForTransfer?: number;
 
     private async transferGames(workerName: string) {
         const listKey = `${workerName}_games`;
         const workerGamesStr = await this.redisCacheStorage.lPop(listKey);
+        if (!workerGamesStr) return ;
         await this.redisCacheStorage.del(listKey);
         const workerGames = JSON.parse(workerGamesStr);
         this.fakeGameIdForTransfer = -Math.round(Math.random() * 1e+14);
-        await this.gameTransferService.transferGames(this.redisPubSub, workerGames)
+        this.redisPubSub.publishToWorker('new_game', JSON.stringify({
+            userId: -1,
+            gameId: this.fakeGameIdForTransfer + "",
+            action: 'new_game',
+            messageId: uuid()
+        }));
+        const toSendToWorkers = await this.gameTransferService.transferGames(workerGames);
+        toSendToWorkers.forEach((val, workerName) => {
+            this.redisPubSub.publishToWorker(workerName, JSON.stringify({
+                userId: -1,
+                action: "restore_games",
+                messageId: uuid(),
+                games: val.map(g => g.uuid)
+            }));
+            val.forEach(g => {
+                this.redisCacheStorage.set(`game:${g.id}`, workerName)
+            })
+        });
     }
 
     private onNewGameMessageCallback = (gameId: string, workerName: string, gamesCount: number) => {
@@ -78,7 +102,8 @@ class WorkerRelayService {
     }
 
     private gameCb = (message: string, channel: string) => {
-        const data = JSON.parse(message);
+        const data: WorkerMessageInterface = JSON.parse(message);
+        this.messageResendService.confirmDelivery(data.messageId);
         this.workerCallback(data);
     };
 
@@ -112,8 +137,9 @@ class WorkerRelayService {
         setTimeout(() => {
             const workers = this.pendingNewGames.get(gameId);
             if (workers.length) {
+                this.subscribeToGame(gameId);
                 const worker = workers.sort((a, b) => b.gamesCount - a.gamesCount)[0];
-                this.redisPubSub.publishToWorker(worker.worker, JSON.stringify({
+                this.redisPubSub.publishToGame(worker.worker, `game${gameId}`, JSON.stringify({
                     action: 'create_game',
                     userId,
                     gameId: String(gameId),

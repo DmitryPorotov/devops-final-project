@@ -5,7 +5,7 @@ export interface MessageInterface {
     action?: string;
     joinAs?: string;
     isRandomHouses?: boolean;
-    messageId: string;
+    messageId?: string;
     name?: string;
     time?: string;
     type: 'chat' | 'action' | 'test' | 'error' | 'system';

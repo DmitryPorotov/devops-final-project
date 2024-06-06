@@ -9,14 +9,21 @@ import {CreateGame} from "./actions/create-game";
 import {RelayMessageToGame} from "./actions/relay-message-to-game";
 import NoGameInRedisCacheError from "../../redis/NoGameInRedisCacheError";
 import {LobbyClients} from "../lobby-clients.interface";
+import {v4 as uuid} from 'uuid'
+import MessageResendService from "../../redis/message-resend.service";
 
 @Injectable()
 class GameMessagingService {
     protected logger = new Logger(GameMessagingService.name);
-    constructor(private lobbies: LobbiesClientsMapService, private workerRelayService: WorkerRelayService) {
+    constructor(
+        private lobbies: LobbiesClientsMapService,
+        private workerRelayService: WorkerRelayService,
+        private messageResendService: MessageResendService,
+    ) {
     }
 
     protected async init() {
+        this.messageResendService.init(this.workerRelayService);
         await this.workerRelayService.init(this.workerCallback);
     }
 
@@ -27,6 +34,10 @@ class GameMessagingService {
             handler = new CreateGame(this.lobbies, this.workerRelayService);
         }
         else {
+            if (!message.messageId) {
+                message.messageId = uuid();
+            }
+            this.messageResendService.registerMessageToResend(message);
             handler = new RelayMessageToGame(this.lobbies, this.workerRelayService);
         }
         try {

@@ -16,10 +16,15 @@ export class RelayMessageToGame extends BaseGameAction{
     @AuthToGame()
     public async doAction(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
-        await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
-            ...message,
-            gameId: String(message.lobbyId)
-        }))
+        try {
+            await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
+                ...message,
+                gameId: String(message.lobbyId)
+            }));
+        }
+        catch (e) {
+            this.logger.error(e)
+        }
     }
 
 }

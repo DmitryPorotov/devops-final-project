@@ -54,6 +54,9 @@ object Message {
           messageId,
         )
       case "get_game_state" => MessageGetGameState(userId, gameId, messageId)
+      case "restore_games" => 
+        val games = Try[List[String]](json.obj("games").arr.map(_.str).toList) getOrElse null
+        MessageRestoreGames(userId, gameId, messageId, games)
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
   }

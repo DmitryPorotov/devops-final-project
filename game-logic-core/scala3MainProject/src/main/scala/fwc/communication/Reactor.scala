@@ -7,7 +7,6 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
 
-//import scala.collection.mutable.{Map => MutMap}
 import scala.util.{Failure, Success, Try}
 
 object Reactor {
@@ -130,6 +129,8 @@ object Reactor {
             "gameSettings" -> games(gameId).gameSettings.toJson,
             "gameRules" -> gameRules.toJson,
           )
+        case MessageRestoreGames(userId, gameId, messageId, games) =>
+          throw new RestoreGamesException(games, messageId)
     } match
       case Success(response: ujson.Obj) => 
         response
@@ -149,6 +150,12 @@ object Reactor {
           "originalMessageString" -> message,
         ).render(fwc.jsonIndentation)
       case Failure(e) => throw e
+  }
+  
+  def restoreGame(jsonStr: String): Unit = {
+    val json = ujson.read(jsonStr)
+    val replay = GameReplay.fromJson(json)
+    games = games updated (replay.gameSettings.gameId, replay)
   }
   
   def prepareShutdown: Map[String, GameReplay] =
