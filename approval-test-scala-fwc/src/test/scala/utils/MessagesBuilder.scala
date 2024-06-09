@@ -11,23 +11,39 @@ case class MessagesBuilder(
                           ) {
 
 
-  private var messages: MutMap[String, ujson.Obj] = MutMap()
+  private var messages: MutMap[String, (Option[ujson.Obj], Option[TestRunner])] = MutMap()
 
-  private var _lastId: Option[String] = None
+  private var _lastId: String = "0"
 
-  def lastId: Option[String] = _lastId
+  private var _joinedAs: String = ""
 
-  def addOne(message: ujson.Obj, key: String = "0"): String =
-    _lastId = Some(message("messageId").str)
-    message.value.addOne("userId" -> userId)
-    message.value.addOne("lobbyId" -> lobbyId)
-    message.value.addOne("type" -> messageType)
-    if action.nonEmpty then
-      message.value.addOne("action" -> action.head)
-    messages.addOne(key -> message)
-    makeId
+  private var _isHouseTypeSet: Boolean = false
 
-  def getMap: Map[String, ujson.Obj] =
+  private var _prevTestRunner: Option[TestRunner] = None
+
+  def lastId: String = _lastId
+
+  def addOne(message: Option[ujson.Obj] = None, testRunner: Option[TestRunner] = None, key: String = _lastId): Unit =
+    val testRunnerToAdd = _prevTestRunner
+    _prevTestRunner = testRunner
+    _lastId = makeId
+    message.foreach(m => {
+      m.value.addOne("messageId" -> _lastId)
+      m.value.addOne("userId" -> userId)
+      m.value.addOne("lobbyId" -> lobbyId)
+      m.value.addOne("type" -> messageType)
+      if action.nonEmpty then
+        m.value.addOne("action" -> action.head)
+        if !_isHouseTypeSet && action.head == "join_game" then
+          _isHouseTypeSet = true
+          _joinedAs = m.obj("joinAs").str
+        else if action.head == "game_action" then
+          m.obj("player_action").obj.addOne("houseType" -> _joinedAs)
+    })
+
+    messages.addOne(key -> (message, testRunnerToAdd))
+
+  def getMap: Map[String, (Option[ujson.Obj], Option[TestRunner])] =
     messages.toMap
 
   def makeId: String = UUID.randomUUID().toString
@@ -36,5 +52,8 @@ case class MessagesBuilder(
     val newMb = MessagesBuilder(userId, lobbyId, action, messageType)
     newMb.messages = messages
     newMb._lastId = lastId
+    newMb._joinedAs = _joinedAs
+    newMb._isHouseTypeSet = _isHouseTypeSet
+    newMb._prevTestRunner = _prevTestRunner
     newMb
 }

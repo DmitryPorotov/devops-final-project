@@ -29,15 +29,12 @@ class RedisStreamListener {
                 };
             }
             const xread = async ({ stream, id } : {stream: string, id: string}) => {
-                // this.logger.debug('in xread id ' + id);
                 const response = await this.redisClient.xRead({id, key: stream});
 
                 if (response) {
-                    this.logger.debug(response);
                     response.forEach(r => {
                         r.messages.forEach(message => {
                             id = message.id;
-                            this.logger.debug(message.message);
                             if (once) {
                                 callback(message.message.json)
                             } else {

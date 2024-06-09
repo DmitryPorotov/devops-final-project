@@ -36,7 +36,7 @@ case class DiscardedHouseCards(cards: Map[HouseType, Seq[CardCode]] = Map()) ext
             then htc._1 -> Seq(combat.winnerCard.head.code)
             else if combat.loserCard.exists(_.house == htc._1)
             then htc._1 -> Seq(combat.loserCard.head.code)
-            else htc._1 -> Seq(htc._2.last)
+            else htc._1 -> Seq(htc._2.last) //note: this is an impossible option
           else htc
       )
     )
@@ -47,6 +47,8 @@ case class DiscardedHouseCards(cards: Map[HouseType, Seq[CardCode]] = Map()) ext
   
   @targetName("removed")
   def -(houseType: HouseType): DiscardedHouseCards = copy(cards - houseType)
+  
+  def concat(that: collection.IterableOnce[(HouseType, Seq[CardCode])]): DiscardedHouseCards = copy(cards.concat(that))
 
   def apply(houseType: HouseType): Seq[CardCode] = cards.getOrElse(houseType, Seq())
 }

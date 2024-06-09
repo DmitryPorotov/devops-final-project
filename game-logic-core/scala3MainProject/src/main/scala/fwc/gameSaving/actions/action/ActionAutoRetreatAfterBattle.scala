@@ -29,7 +29,7 @@ case class ActionAutoRetreatAfterBattle(
   )
 
   private def autoRetreatAttacker(gameState: GameState): (GameState, Boolean) =
-    if gameState.combat.winner.contains(gameState.combat.defenderArmy) then
+    if gameState.combat.winner.contains(gameState.combat.defenderHouse) then
       (gameState.copy(
        armies = gameState.armies + (
          gameState.combat.attackerTileNum ->

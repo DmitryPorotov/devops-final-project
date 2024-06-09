@@ -13,8 +13,7 @@ object Reactor {
 
   private var games: Map[String, GameReplay] = Map[String, GameReplay]()
 
-  def apply(message: String): String = {
-    val msg = Message.parse(message)
+  def apply(msg: Message): String = {
     Try[ujson.Obj] {
       msg match
         case MessageGameAction(userId, gameId, gameAction, messageId) =>
@@ -47,7 +46,8 @@ object Reactor {
         case MessageLoadGame(userId, gameId, saveName, messageId) =>
           //todo: what if game already exists?
           val replay = ReactionLoadGame(userId, saveName)
-          games = games updated (gameId, replay)
+          val settings = games(gameId).gameSettings
+          games = games updated (gameId, replay.copy(gameSettings = settings))
           ujson.Obj(
             "action" -> "load",
             "gameId" -> gameId,
@@ -147,7 +147,7 @@ object Reactor {
           "userId" -> msg.userId,
           "messageId" -> (if msg.messageId != null then msg.messageId else ujson.Null),
           "message" -> e.getMessage,
-          "originalMessageString" -> message,
+//          "originalMessageString" -> message,
         ).render(fwc.jsonIndentation)
       case Failure(e) => throw e
   }

@@ -42,10 +42,7 @@ object NextOrderFinder {
       if lastHouseWhoResolvedOrder == null
       then tracks(TrackThrone)
       else reorderThroneTrack(tracks(TrackThrone))
-
-    println("tmp throne track")
-    println(tempThroneTrack)
-
+    
     val flatOrders = (
       for (
         poh <- placedOrders.placedOrders;

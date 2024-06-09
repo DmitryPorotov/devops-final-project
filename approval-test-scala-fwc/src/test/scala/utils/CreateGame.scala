@@ -61,18 +61,15 @@ object CreateGame {
 
   def getCreateGameOwnerMessagesBuilder(userDTO: UserDTO): MessagesBuilder =
     val mb = MessagesBuilder(userDTO.id, 2, None)
-    val chatCreateMsgId = mb.makeId
-    val gameCreateMsgId = mb.addOne(ujson.Obj(
-      "messageId" -> chatCreateMsgId,
+    mb.addOne(Some(ujson.Obj(
       "body" -> ujson.Obj(
         "type" -> "create"
       ))
-    )
+    ))
     val mb2 = mb.copy(action = Some("create_game"), messageType = "action")
-    mb2.addOne(ujson.Obj(
-      "messageId" -> gameCreateMsgId,
+    mb2.addOne(Some(ujson.Obj(
       "isRandomHouses" -> false
-    ), chatCreateMsgId)
+    )))
     mb2
 
 }

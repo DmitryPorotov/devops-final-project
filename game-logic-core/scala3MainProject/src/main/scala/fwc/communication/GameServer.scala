@@ -1,4 +1,5 @@
 package fwc.communication
+import fwc.communication.messages.Message
 import fwc.game.FWCException
 
 import scala.util.{Failure, Success, Try}
@@ -24,36 +25,55 @@ object GameServer {
       if isShuttingDown then return 
       val replyTo = channel.split('.')(1)
       println(" [x] Received '" + message + "'")
-      val reply = Try[String](Reactor.apply(message)) match
-        case Success(s) => s
-        case Failure(e: FWCException) => 
-          val errJson = ujson.Obj(
-            "action" -> "error",
-            "message" -> e.getMessage,
-            "type" -> "action",
-          )
-          if e.gameId != null then 
-            errJson.value.addOne("gameId" -> e.gameId)
-          if e.userId != -1 then 
-            errJson.value.addOne("userId" -> e.userId)
-          errJson.render(fwc.jsonIndentation)
-        case Failure(e: RestoreGamesException) =>
-          e.games.foreach(gId => {
-            val gameReplayStr = jedisCache.get("game_save_" + gId)
-            jedisCache.del("game_save_" + gId)
-            Reactor.restoreGame(gameReplayStr)
-          })
-          ujson.Obj(
-            "action" -> "restore_games",
-            "messageId" -> e.messageId
-          ).render(fwc.jsonIndentation)
-        case Failure(e) => ujson.Obj(
-            "action" -> "error",
-            "message" -> e.getMessage,
-            "type" -> "action",
-            "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
-          )
-          .render(fwc.jsonIndentation)
+      val reply = 
+        try {
+          Try[Message](Message.parse(message)) match
+            case Failure(e: FWCException) =>
+              ujson.Obj(
+                "action" -> "error",
+                "message" -> e.getMessage,
+                "type" -> "action",
+                "gameId" -> e.gameId,
+                "userId" -> e.userId,
+                "messageId" -> e.messageId,
+              ).render(fwc.jsonIndentation)
+            case Failure(e) => throw e
+            case Success(msg: Message) =>
+              Try[String](Reactor.apply(msg)) match
+                case Success(s) => s
+                case Failure(e: FWCException) =>
+                  val errJson = ujson.Obj(
+                    "action" -> "error",
+                    "message" -> e.getMessage,
+                    "type" -> "action",
+                    "messageId" -> e.messageId,
+                  )
+                  if e.gameId != null then
+                    errJson.value.addOne("gameId" -> e.gameId)
+                  if e.userId != -1 then
+                    errJson.value.addOne("userId" -> e.userId)
+                  errJson.render(fwc.jsonIndentation)
+                case Failure(e: RestoreGamesException) =>
+                  e.games.foreach(gId => {
+                    val gameReplayStr = jedisCache.get("game_save_" + gId)
+                    jedisCache.del("game_save_" + gId)
+                    Reactor.restoreGame(gameReplayStr)
+                  })
+                  ujson.Obj(
+                    "action" -> "restore_games",
+                    "messageId" -> e.messageId
+                  ).render(fwc.jsonIndentation)
+                case Failure(e) => throw e
+        }
+        catch
+          case e: Exception =>
+            ujson.Obj(
+                "action" -> "error",
+                "message" -> e.getMessage,
+                "type" -> "action",
+                "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
+              )
+              .render(fwc.jsonIndentation)
       println(" [x] Sent '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
       if !isShuttingDown then 
         jedisPub.publish(replyTo + "." + workerName, reply)

@@ -31,9 +31,21 @@ case class ActionCleanUpAfterCombat(
         )
 
     val updatedDiscardedCards =
+      gameState.discardedHouseCards.concat(Map(
+        combat.attackerHouse -> (
+          if combat.attackerCard == null then gameState.discardedHouseCards(combat.attackerHouse)
+          else gameState.discardedHouseCards(combat.attackerHouse) :+ combat.attackerCard.code
+          ),
+        combat.defenderHouse -> (
+          if combat.defenderCard == null then gameState.discardedHouseCards(combat.defenderHouse)
+          else gameState.discardedHouseCards(combat.defenderHouse) :+ combat.defenderCard.code
+          )
+      ))
+
+    val updatedDiscardedCards2 =
       if combat.loserCard.exists(_.isWolf2)
-      then gameState.discardedHouseCards - HouseWolf
-      else gameState.discardedHouseCards
+      then updatedDiscardedCards - HouseWolf
+      else updatedDiscardedCards
 
     val updatedPlacedOrders =
       if combat.winnerCard.exists(_.isRose0) && combat.winner.contains(combat.attackerHouse)
@@ -119,8 +131,8 @@ case class ActionCleanUpAfterCombat(
       combat = if newPhase.isInstanceOf[SubPhaseResolveHouseCard] then combat else null,
       discardedHouseCards = 
         if newPhase.isInstanceOf[SubPhaseResolveHouseCard] 
-        then updatedDiscardedCards 
-        else updatedDiscardedCards.resetDecksAfterCombat(combat),
+        then updatedDiscardedCards2
+        else updatedDiscardedCards2.resetDecksAfterCombat(combat),
       placedOrders = updatedPlacedOrders2,
       powerTokens = updatedTokens
     )

@@ -22,7 +22,10 @@ class MessageResendService {
                     gameId: String(message.lobbyId)
                 })).then()
             }, 2000) as unknown as number
-        )
+        );
+        setTimeout(() => {
+            this.confirmDelivery(message.messageId)
+        }, 10000)
     }
 
     confirmDelivery(messageId: string): void {

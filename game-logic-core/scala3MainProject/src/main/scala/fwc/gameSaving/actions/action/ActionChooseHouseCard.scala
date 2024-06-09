@@ -36,8 +36,6 @@ case class ActionChooseHouseCard(
 
     val updatedCombat = gameState.combat.addHouseCard(houseCard)
 
-    val updatedDiscardedForHouse = discardedCardsForHouse :+ cardCode
-
     val newPhase =
       if updatedCombat.attackerCard == null || updatedCombat.defenderCard == null
       then gameState.subPhase
@@ -45,7 +43,6 @@ case class ActionChooseHouseCard(
 
     gameState.copy(
       subPhase = newPhase,
-      discardedHouseCards = gameState.discardedHouseCards + (houseType -> updatedDiscardedForHouse),
       combat = updatedCombat
     )
   }
