@@ -11,6 +11,9 @@ parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login
                                            + '{login} - front-login React front-end project,'
                                            + '{defold} - front-defold - Defold game GUI.')
 parser.add_argument('-nd', '--no-docker-build', action='store_true', help='Don\'t run "docker compose build".')
+parser.add_argument('-s', '--save', action='store_true', help='Save docker images to the \'build\' directory.')
+parser.add_argument('-so', '--save-only', action='store_true', help='Do not build anything, only save previously '
+                                                                    'built images.')
 args = parser.parse_args()
 
 
@@ -18,7 +21,9 @@ def start():
     proj_root = get_project_path()
     is_error = False
 
-    if not args.only or 'worker' in args.only:
+    # todo add a check that the .cache in the init directory exists
+
+    if not args.save_only and (not args.only or 'worker' in args.only):
         print_header('Building the worker...')
         result = subprocess.run(['docker', 'run', '--rm',
                                  '-v', proj_root + '/game-logic-core:/fwc',
@@ -31,7 +36,7 @@ def start():
         else:
             print_success('The worker jar was built successfully.')
 
-    if not args.only or 'nest' in args.only:
+    if not args.save_only and (not args.only or 'nest' in args.only):
         print_header("Transpiling the web server...")
         result = subprocess.run(['docker', 'run', '--rm',
                                  '-v', proj_root + "/web-server:/web-server",
@@ -44,7 +49,7 @@ def start():
         else:
             print_success('Web server transpiling was successful.')
 
-    if not args.only or 'login' in args.only:
+    if not args.save_only and (not args.only or 'login' in args.only):
         print_header("Building React front-end...")
         result = subprocess.run(['docker', 'run', '--rm',
                                  '-v', proj_root + "/front-login:/front-login",
@@ -57,7 +62,7 @@ def start():
         else:
             print_success('Building React front-end successful.')
 
-    if not args.only or 'defold' in args.only:
+    if not args.save_only and (not args.only or 'defold' in args.only):
         print_header("Building Defold front-end...")
         result = subprocess.run(['docker', 'run', '--rm',
                                  '-v', proj_root + "/front-defold:/fd_fwc",
@@ -75,7 +80,7 @@ def start():
         else:
             print_success('Building Defold front-end was successful.')
 
-    if not args.no_docker_build:
+    if not args.save_only and not args.no_docker_build:
         print_header("Building docker images...")
         result = subprocess.run(['docker', 'compose', 'build'])
         if result.returncode != 0:
@@ -83,6 +88,41 @@ def start():
             is_error = True
         else:
             print_success('Building docker images was successful.')
+
+    if args.save or args.save_only:
+        if not os.path.exists("../../build"):
+            os.mkdir("../../build")
+        print_header("Zipping and saving the docker images to the 'build' directory...")
+
+        print_header("Saving Web Server...")
+        with open('../../build/web_server.tar.gz', 'w') as outfile:
+            save = subprocess.run(['docker', 'save', 'web_server_prod'], check=True, capture_output=True)
+            result = subprocess.run(["gzip"], input=save.stdout, stdout=outfile)
+            if result.returncode != 0:
+                print_error('Saving Web Server docker image failed.')
+                is_error = True
+            else:
+                print_success('Saving Web Server docker image was successful.')
+
+        print_header("Saving Worker...")
+        with open('../../build/worker.tar.gz', 'w') as outfile:
+            save = subprocess.run(['docker', 'save', 'worker_prod'], check=True, capture_output=True)
+            result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
+            if result.returncode != 0:
+                print_error('Saving Worker docker image failed.')
+                is_error = True
+            else:
+                print_success('Saving Worker docker image was successful.')
+
+        print_header("Saving Nginx...")
+        with open('../../build/nginx.tar.gz', 'w') as outfile:
+            save = subprocess.run(['docker', 'save', 'nginx_prod'], check=True, capture_output=True)
+            result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
+            if result.returncode != 0:
+                print_error('Saving Nginx docker image failed.')
+                is_error = True
+            else:
+                print_success('Saving Nginx docker image was successful.')
 
     if is_error:
         exit(1)
