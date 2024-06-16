@@ -38,7 +38,8 @@ object Message {
       case "new_game" => MessageNewGame(userId, gameId, messageId)
       case "create_game" =>
         val isRandomHouses = Try[Boolean](json.obj("isRandomHouses").bool) getOrElse true
-        MessageCreateGame(userId, gameId, isRandomHouses, messageId)
+        val isInputOnly = Try[Boolean](json.obj("isInputOnly").bool) getOrElse false
+        MessageCreateGame(userId, gameId, isRandomHouses, isInputOnly ,messageId)
       case "join_game" =>
         val name = Try(json.obj("name").str) match
           case Success(value) => value

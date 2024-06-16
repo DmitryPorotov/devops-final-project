@@ -1,0 +1,2006 @@
+{
+  "action": "get_game_state",
+  "gameId": "2",
+  "userId": 3,
+  "gameRules": {
+    "board": [
+      {
+        "number": 0,
+        "tileType": "sea",
+        "name": "Bay of Ice",
+        "neighbourTiles": [
+          1,
+          3,
+          4,
+          6,
+          10,
+          11,
+          12
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 1,
+        "tileType": "land",
+        "name": "Castle Black",
+        "neighbourTiles": [
+          0,
+          2,
+          3,
+          5
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 2,
+        "tileType": "sea",
+        "name": "The Shivering Sea",
+        "neighbourTiles": [
+          1,
+          3,
+          5,
+          7,
+          9,
+          14
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 3,
+        "tileType": "land",
+        "name": "Winterfell",
+        "neighbourTiles": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          13
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": "wolf"
+      },
+      {
+        "number": 4,
+        "tileType": "port",
+        "name": "Winterfell port",
+        "neighbourTiles": [
+          0,
+          3
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 5,
+        "tileType": "land",
+        "name": "Karhold",
+        "neighbourTiles": [
+          1,
+          2,
+          3
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 6,
+        "tileType": "land",
+        "name": "The Stony Store",
+        "neighbourTiles": [
+          0,
+          3
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 7,
+        "tileType": "land",
+        "name": "White Harbor",
+        "neighbourTiles": [
+          2,
+          3,
+          8,
+          13,
+          14
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 8,
+        "tileType": "port",
+        "name": "White Harbor port",
+        "neighbourTiles": [
+          7,
+          14
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 9,
+        "tileType": "land",
+        "name": "Widow's Watch",
+        "neighbourTiles": [
+          2,
+          7,
+          14
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 10,
+        "tileType": "sea",
+        "name": "Sunset Sea",
+        "neighbourTiles": [
+          0,
+          11,
+          15,
+          21,
+          33,
+          37
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 11,
+        "tileType": "land",
+        "name": "Flint's Finger",
+        "neighbourTiles": [
+          0,
+          10,
+          12,
+          15
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 12,
+        "tileType": "land",
+        "name": "Greywater Watch",
+        "neighbourTiles": [
+          0,
+          11,
+          13,
+          15,
+          18
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 13,
+        "tileType": "land",
+        "name": "Moat Calin",
+        "neighbourTiles": [
+          3,
+          7,
+          12,
+          14,
+          18,
+          19
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 14,
+        "tileType": "sea",
+        "name": "The Narrow Sea",
+        "neighbourTiles": [
+          2,
+          7,
+          8,
+          9,
+          13,
+          19,
+          25,
+          26,
+          29,
+          30
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 15,
+        "tileType": "sea",
+        "name": "Ironman's Bay",
+        "neighbourTiles": [
+          10,
+          11,
+          12,
+          16,
+          17,
+          18,
+          21,
+          24
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 16,
+        "tileType": "land",
+        "name": "Pyke",
+        "neighbourTiles": [
+          15,
+          17
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": "kraken"
+      },
+      {
+        "number": 17,
+        "tileType": "port",
+        "name": "Pyke port",
+        "neighbourTiles": [
+          15,
+          16
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 18,
+        "tileType": "land",
+        "name": "Seaguard",
+        "neighbourTiles": [
+          12,
+          13,
+          15,
+          19,
+          24
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 19,
+        "tileType": "land",
+        "name": "The Twins",
+        "neighbourTiles": [
+          13,
+          14,
+          18,
+          20,
+          25
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 20,
+        "tileType": "land",
+        "name": "The Fingers",
+        "neighbourTiles": [
+          14,
+          19,
+          25
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 21,
+        "tileType": "sea",
+        "name": "The Golden Sound",
+        "neighbourTiles": [
+          10,
+          15,
+          22,
+          23,
+          24,
+          33
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 22,
+        "tileType": "land",
+        "name": "Lannisport",
+        "neighbourTiles": [
+          21,
+          23,
+          24,
+          27,
+          33
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 2,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 23,
+        "tileType": "port",
+        "name": "Lannisport port",
+        "neighbourTiles": [
+          21,
+          22
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 24,
+        "tileType": "land",
+        "name": "Riverrun",
+        "neighbourTiles": [
+          15,
+          18,
+          21,
+          22,
+          27,
+          28
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 25,
+        "tileType": "land",
+        "name": "The Mountains of the Moon",
+        "neighbourTiles": [
+          14,
+          19,
+          20,
+          26,
+          29
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 26,
+        "tileType": "land",
+        "name": "The Eyrie",
+        "neighbourTiles": [
+          14,
+          25
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 27,
+        "tileType": "land",
+        "name": "Stoney Sept",
+        "neighbourTiles": [
+          22,
+          24,
+          28,
+          33,
+          34
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 28,
+        "tileType": "land",
+        "name": "Harrenhal",
+        "neighbourTiles": [
+          24,
+          27,
+          29,
+          34
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 29,
+        "tileType": "land",
+        "name": "Crackclaw Point",
+        "neighbourTiles": [
+          14,
+          25,
+          28,
+          30,
+          34,
+          35,
+          36
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 30,
+        "tileType": "sea",
+        "name": "Shipbreaker Bay",
+        "neighbourTiles": [
+          14,
+          29,
+          31,
+          32,
+          36,
+          40,
+          46,
+          47,
+          57
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 31,
+        "tileType": "land",
+        "name": "Dragonstone",
+        "neighbourTiles": [
+          30,
+          32
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": "moose"
+      },
+      {
+        "number": 32,
+        "tileType": "port",
+        "name": "Dragonstone port",
+        "neighbourTiles": [
+          30,
+          31
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 33,
+        "tileType": "land",
+        "name": "Searoad Marches",
+        "neighbourTiles": [
+          10,
+          21,
+          22,
+          27,
+          34,
+          37,
+          38,
+          39
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 34,
+        "tileType": "land",
+        "name": "Blackwater",
+        "neighbourTiles": [
+          27,
+          28,
+          29,
+          33,
+          35,
+          39
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 2,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 35,
+        "tileType": "land",
+        "name": "King's Landing",
+        "neighbourTiles": [
+          29,
+          34,
+          36,
+          39,
+          40
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 0,
+        "powerPoints": 2,
+        "homeOf": null
+      },
+      {
+        "number": 36,
+        "tileType": "sea",
+        "name": "Blackwater bay",
+        "neighbourTiles": [
+          29,
+          30,
+          35,
+          40
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 37,
+        "tileType": "sea",
+        "name": "West Summer Sea",
+        "neighbourTiles": [
+          10,
+          33,
+          38,
+          41,
+          48,
+          51,
+          52,
+          57
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 38,
+        "tileType": "land",
+        "name": "Highgarden",
+        "neighbourTiles": [
+          33,
+          37,
+          39,
+          41,
+          42,
+          44
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 2,
+        "powerPoints": 0,
+        "homeOf": "rose"
+      },
+      {
+        "number": 39,
+        "tileType": "land",
+        "name": "The Reach",
+        "neighbourTiles": [
+          33,
+          34,
+          35,
+          38,
+          40,
+          44,
+          45
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 40,
+        "tileType": "land",
+        "name": "Kingswood",
+        "neighbourTiles": [
+          30,
+          35,
+          36,
+          39,
+          45,
+          46
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 41,
+        "tileType": "sea",
+        "name": "Redwyne Straights",
+        "neighbourTiles": [
+          37,
+          38,
+          42,
+          43,
+          48,
+          51
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 42,
+        "tileType": "land",
+        "name": "Oldtown",
+        "neighbourTiles": [
+          38,
+          41,
+          43,
+          44,
+          48
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 43,
+        "tileType": "port",
+        "name": "Oldtown port",
+        "neighbourTiles": [
+          41,
+          42
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 44,
+        "tileType": "land",
+        "name": "Dornish Marches",
+        "neighbourTiles": [
+          38,
+          39,
+          42,
+          45,
+          48,
+          49
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 45,
+        "tileType": "land",
+        "name": "The Boneway",
+        "neighbourTiles": [
+          39,
+          40,
+          44,
+          46,
+          49,
+          50,
+          53
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 46,
+        "tileType": "land",
+        "name": "Storms End",
+        "neighbourTiles": [
+          30,
+          40,
+          45,
+          47,
+          50,
+          57
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 47,
+        "tileType": "port",
+        "name": "Storms End port",
+        "neighbourTiles": [
+          30,
+          46
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 48,
+        "tileType": "land",
+        "name": "Three Towers",
+        "neighbourTiles": [
+          37,
+          41,
+          42,
+          44,
+          49
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 49,
+        "tileType": "land",
+        "name": "Prince's Pass",
+        "neighbourTiles": [
+          44,
+          45,
+          48,
+          52,
+          53
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 50,
+        "tileType": "sea",
+        "name": "Sea of Dorne",
+        "neighbourTiles": [
+          45,
+          46,
+          53,
+          55,
+          57
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 51,
+        "tileType": "land",
+        "name": "The Arbor",
+        "neighbourTiles": [
+          37,
+          41
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 1,
+        "homeOf": null
+      },
+      {
+        "number": 52,
+        "tileType": "land",
+        "name": "Starfall",
+        "neighbourTiles": [
+          37,
+          49,
+          53,
+          54,
+          57
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 53,
+        "tileType": "land",
+        "name": "Yronwood",
+        "neighbourTiles": [
+          45,
+          49,
+          50,
+          52,
+          54,
+          55
+        ],
+        "musteringPoints": 1,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 54,
+        "tileType": "land",
+        "name": "Salt Shore",
+        "neighbourTiles": [
+          52,
+          53,
+          55,
+          57
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 1,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 55,
+        "tileType": "land",
+        "name": "Sunspear",
+        "neighbourTiles": [
+          50,
+          53,
+          54,
+          56,
+          57
+        ],
+        "musteringPoints": 2,
+        "supplyPoints": 1,
+        "powerPoints": 1,
+        "homeOf": "pufferfish"
+      },
+      {
+        "number": 56,
+        "tileType": "port",
+        "name": "Sunspear port",
+        "neighbourTiles": [
+          55,
+          57
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      },
+      {
+        "number": 57,
+        "tileType": "sea",
+        "name": "East Summer Sea",
+        "neighbourTiles": [
+          30,
+          37,
+          46,
+          50,
+          54,
+          55,
+          56
+        ],
+        "musteringPoints": 0,
+        "supplyPoints": 0,
+        "powerPoints": 0,
+        "homeOf": null
+      }
+    ],
+    "kingsCourtStars": [
+      3,
+      3,
+      2,
+      1
+    ],
+    "supplyUsage": [
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        2,
+        2
+      ],
+      [
+        3,
+        2,
+        2,
+        2
+      ],
+      [
+        3,
+        3,
+        2,
+        2
+      ],
+      [
+        4,
+        3,
+        2,
+        2
+      ],
+      [
+        4,
+        3,
+        2,
+        2,
+        2
+      ]
+    ],
+    "maxArmies": {
+      "powerToken": 20,
+      "ships": 6,
+      "siegeEngines": 2,
+      "knights": 5,
+      "footmen": 10
+    },
+    "boardCards": {
+      "deck1": [
+        {
+          "code": 0,
+          "title": "Supply",
+          "text": "Adjust supply track. Reconcile armies",
+          "wildlings": 0
+        },
+        {
+          "code": 1,
+          "title": "Mustering",
+          "text": "Recruit new units in Strongholds and Castles",
+          "wildlings": 0
+        },
+        {
+          "code": 2,
+          "title": "A Throne of Blades",
+          "text": "The holder of the Iron Throne token chooses whether; a) everyone updates their Supply then reconciles armies, b) everyone musters units, or c) this card has no effect",
+          "wildlings": 2
+        },
+        {
+          "code": 3,
+          "title": "Winter is coming",
+          "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+          "wildlings": 0
+        },
+        {
+          "code": 4,
+          "title": "Last Days of Summer",
+          "text": "Nothing happens.",
+          "wildlings": 2
+        }
+      ],
+      "deck2": [
+        {
+          "code": 0,
+          "title": "Game of Thrones",
+          "text": "Each player collects one Power token for each power icon printed of areas he controls.",
+          "wildlings": 0
+        },
+        {
+          "code": 1,
+          "title": "Clash of Kings",
+          "text": "Bid on the three Influence tracks.",
+          "wildlings": 0
+        },
+        {
+          "code": 2,
+          "title": "Draw Wings, Draw Words",
+          "text": "The holder of the Messenger Raven token chooses whether a) everyone bids on the three Influence tracks b) everyone collects one Power token for every power icon present in areas they control, or c) this card has no effect.",
+          "wildlings": 2
+        },
+        {
+          "code": 3,
+          "title": "Winter is coming",
+          "text": "Immediately shuffle this deck. Then draw and resolve a new card.",
+          "wildlings": 0
+        },
+        {
+          "code": 4,
+          "title": "Last Days of Summer",
+          "text": "Nothing happens.",
+          "wildlings": 2
+        }
+      ],
+      "deck3": [
+        {
+          "code": 0,
+          "title": "Wildlings Attack",
+          "text": "The wildlings attack Westeros.",
+          "wildlings": 0
+        },
+        {
+          "code": 1,
+          "title": "Put to the Sword",
+          "text": "The holder of the Valyrian Steel Sword chooses one of the following conditions for this Planning Phase: a) Defense Orders cannot be played b) March +1 Orders cannot be played, or c) no restrictions.",
+          "wildlings": 0
+        },
+        {
+          "code": 2,
+          "title": "Rain of Autumn",
+          "text": "March +1 Orders cannot be played this Planning Phase.",
+          "wildlings": 2
+        },
+        {
+          "code": 3,
+          "title": "Web of Lies",
+          "text": "Support Orders cannot be played during this Planning Phase",
+          "wildlings": 2
+        },
+        {
+          "code": 4,
+          "title": "Storm of Swords",
+          "text": "Defense Orders cannot be played during theis Planning Phase.",
+          "wildlings": 2
+        },
+        {
+          "code": 5,
+          "title": "Feast for Crows",
+          "text": "Consolidate Power Orders cannot be played during this Planning Phase",
+          "wildlings": 2
+        },
+        {
+          "code": 6,
+          "title": "Sea of Storms",
+          "text": "Raid Orders cannot be played during this Planning Phase.",
+          "wildlings": 2
+        }
+      ],
+      "wildlings": [
+        {
+          "code": 0,
+          "title": "Silence at the Wall",
+          "wildlingVictoryLowestBidderText": "Nothing happens.",
+          "wildlingVictoryEveryoneElseText": "Nothing happens.",
+          "playerVictoryText": "Nothing happens."
+        },
+        {
+          "code": 1,
+          "title": "Rattleshirt's Raiders",
+          "wildlingVictoryLowestBidderText": "Is reduced 2 positions on the Supply track (to no lower than 0).",
+          "wildlingVictoryEveryoneElseText": "Is reduced 1 positions on the Supply track (to no lower than 0).",
+          "playerVictoryText": "Is increased 1 position on the Supply track (to no higher than 6)."
+        },
+        {
+          "code": 2,
+          "title": "Massing on the Milkwater",
+          "wildlingVictoryLowestBidderText": "If he has more than one House card in his hand, he discards all cards with the highest combat strength.",
+          "wildlingVictoryEveryoneElseText": "If they have more than one House card in their hand, they must choose and discard one of those cards.",
+          "playerVictoryText": "Returns his entire House card discard pile into his hand."
+        },
+        {
+          "code": 3,
+          "title": "Mammoth Riders",
+          "wildlingVictoryLowestBidderText": "Destroys 3 of his units anywhere.",
+          "wildlingVictoryEveryoneElseText": "Destroys 2 of his units anywhere.",
+          "playerVictoryText": "May retrieve 1 House card of his choice from his House card discard pile."
+        },
+        {
+          "code": 4,
+          "title": "Skinchanger Scout",
+          "wildlingVictoryLowestBidderText": "Discard all available Power tokens.",
+          "wildlingVictoryEveryoneElseText": "Discard 2 available Power tokens, or as many as they are able.",
+          "playerVictoryText": "All Power tokens he bid on this attack are immediately returned to his available Power."
+        },
+        {
+          "code": 5,
+          "title": "Preemptive Raid",
+          "wildlingVictoryLowestBidderText": "Chooses one of the following: A. Destroy 2 of his units anywhere. B. Is reduced 2 positions on his highest Influence track.",
+          "wildlingVictoryEveryoneElseText": "Nothing happens.",
+          "playerVictoryText": "The wildlings immediately attack again with a strength of 6. You do not participate in the bidding against this attack (nor do you receive any rewards or penalties)."
+        },
+        {
+          "code": 6,
+          "title": "The Horde Descends",
+          "wildlingVictoryLowestBidderText": "Destroys 2 of his units at one of his Castles or Strongholds. If unable, he destroys 2 of his units anywhere.",
+          "wildlingVictoryEveryoneElseText": "Destroys 1 of their units anywhere.",
+          "playerVictoryText": "May muster forces (following normal mustering rules) in any one Castle or Stronghold area he controls."
+        },
+        {
+          "code": 7,
+          "title": "Crow Killers",
+          "wildlingVictoryLowestBidderText": "Replaces all of his Knights with available Footmen. Any Knight unable to be replaced is destroyed.",
+          "wildlingVictoryEveryoneElseText": "Replaces 2 of his Knights with available Footmen. Any Knight unable to be replaced is destroyed.",
+          "playerVictoryText": "May immediately replace up to 2 of his Footmen, anywhere, with available Knights."
+        },
+        {
+          "code": 8,
+          "title": "A King Beyond the wall",
+          "wildlingVictoryLowestBidderText": "Moves his tokens to the lowest position of every Influence track.",
+          "wildlingVictoryEveryoneElseText": "In turn order, each player chooses either the Fiefdoms or King's Court Influence track and moves his token to the lowest position of that track.",
+          "playerVictoryText": "Moves his token to the top of one Influence track of his choice, then takes the appropriate Dominance token."
+        }
+      ],
+      "tidesOfBattle": [
+        {
+          "code": 0,
+          "power": 0
+        },
+        {
+          "code": 1,
+          "power": 0,
+          "death": true
+        },
+        {
+          "code": 2,
+          "power": 1,
+          "defense": true
+        },
+        {
+          "code": 3,
+          "power": 1,
+          "attack": true
+        },
+        {
+          "code": 4,
+          "power": 2
+        },
+        {
+          "code": 5,
+          "power": 3
+        }
+      ]
+    },
+    "loadedOrders": {
+      "march": [
+        {
+          "type": "march",
+          "isStar": true,
+          "modifier": 1
+        },
+        {
+          "type": "march"
+        },
+        {
+          "type": "march",
+          "modifier": -1
+        }
+      ],
+      "consolidatePower": [
+        {
+          "type": "consolidatePower",
+          "isStar": true
+        },
+        {
+          "type": "consolidatePower"
+        },
+        {
+          "type": "consolidatePower"
+        }
+      ],
+      "defend": [
+        {
+          "type": "defend",
+          "isStar": true,
+          "modifier": 2
+        },
+        {
+          "type": "defend",
+          "modifier": 1
+        },
+        {
+          "type": "defend",
+          "modifier": 1
+        }
+      ],
+      "support": [
+        {
+          "type": "support",
+          "isStar": true,
+          "modifier": 1
+        },
+        {
+          "type": "support"
+        },
+        {
+          "type": "support"
+        }
+      ],
+      "raid": [
+        {
+          "type": "raid",
+          "isStar": true
+        },
+        {
+          "type": "raid"
+        },
+        {
+          "type": "raid"
+        }
+      ]
+    },
+    "houseCards": [
+      {
+        "house": "wolf",
+        "code": 0,
+        "name": "Robb Stark",
+        "strength": 3,
+        "text": "If you win this combat, you may choose the area to which your opponent retreats. You must choose a legal area where your opponent loses the fewest units.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "wolf",
+        "code": 1,
+        "name": "Eddard Stark",
+        "strength": 4,
+        "text": "",
+        "attack": 2,
+        "defense": 0
+      },
+      {
+        "house": "wolf",
+        "code": 2,
+        "name": "Rose Bolton",
+        "strength": 2,
+        "text": "If you lose this combat, return your entire House card discard pile into your hand (including this card)",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "wolf",
+        "code": 3,
+        "name": "Ser Rodrick Cassel",
+        "strength": 1,
+        "text": "",
+        "attack": 0,
+        "defense": 2
+      },
+      {
+        "house": "wolf",
+        "code": 4,
+        "name": "Greatjon Umber",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "wolf",
+        "code": 5,
+        "name": "The Blackfish",
+        "strength": 1,
+        "text": "You do not take casualties in this combat from House card abilities, Combat icons, or Tide of Battle cards.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "wolf",
+        "code": 6,
+        "name": "Catelyn Stark",
+        "strength": 0,
+        "text": "If you have a defense Order token in the embattled area, its value is doubled.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 0,
+        "name": "Stannis Baratheon",
+        "strength": 4,
+        "text": "If your opponent has a higher position on the Iron Throne Influence track than you, this card gains +1 strength.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 1,
+        "name": "Brienne of Tarth",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 1
+      },
+      {
+        "house": "moose",
+        "code": 2,
+        "name": "Renly Baratheon",
+        "strength": 3,
+        "text": "If you win this combat, you may upgrade one of your participating Footmen (or one supporting Baratheon Footmen) to a Knight.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 3,
+        "name": "Patchface",
+        "strength": 0,
+        "text": "At the end of combat, you may look at your opponent's hand and discard one card of your choice.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 4,
+        "name": "Melisandre",
+        "strength": 1,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 5,
+        "name": "Ser Davos Seaworth",
+        "strength": 2,
+        "text": "If your \"Stannis Baratheon\" House card is in your discard pile, this card gains +1 combat strength and a sword icon.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "moose",
+        "code": 6,
+        "name": "Salladohr Saan",
+        "strength": 1,
+        "text": "If you are being supported in this combat, the combat strength of all non-Baratheon Ships is reduced to 0",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "pufferfish",
+        "code": 0,
+        "name": "Doran Martell",
+        "strength": 0,
+        "text": "Immediately move your opponent to the bottom of one influence track of your choice",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "pufferfish",
+        "code": 1,
+        "name": "Darkstar",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "pufferfish",
+        "code": 2,
+        "name": "Arianne Martell",
+        "strength": 1,
+        "text": "If you are defending and lose this combat, your opponent may not move his units into the embattled area. They return to the area from which they marched. Your own units must still retreat.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "pufferfish",
+        "code": 3,
+        "name": "The Red Viper",
+        "strength": 4,
+        "text": "",
+        "attack": 2,
+        "defense": 1
+      },
+      {
+        "house": "pufferfish",
+        "code": 4,
+        "name": "Obara Sand",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "pufferfish",
+        "code": 5,
+        "name": "Areo Hotah",
+        "strength": 3,
+        "text": "",
+        "attack": 0,
+        "defense": 1
+      },
+      {
+        "house": "pufferfish",
+        "code": 6,
+        "name": "Nymeria Sand",
+        "strength": 1,
+        "text": "If you are defending, this card gains a fortification icon/ If you are attacking, this card gains a sword icon.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 0,
+        "name": "Dagmer Cleftjaw",
+        "strength": 1,
+        "text": "",
+        "attack": 1,
+        "defense": 1
+      },
+      {
+        "house": "kraken",
+        "code": 1,
+        "name": "Theon Greyjoy",
+        "strength": 2,
+        "text": "If you are defending an area that contains either a Stronghold or a Castle, this card gains +1 combat strength and a sword icon.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 2,
+        "name": "Euron Crow's Eye",
+        "strength": 4,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 3,
+        "name": "Balon Greyjoy",
+        "strength": 2,
+        "text": "The printed combat strength of your opponent's House card is reduced to 0.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 4,
+        "name": "Victarion Greyjoy",
+        "strength": 3,
+        "text": "If you are attacking, all of your participating Ships (including supporting Greyjoy Ships) add +2 to combat strength instead of +1.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 5,
+        "name": "Asha Greyjoy",
+        "strength": 1,
+        "text": "If you are not being supported in this combat, this card gains two sword icons and one fortification icon.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "kraken",
+        "code": 6,
+        "name": "Aeron Damphair",
+        "strength": 0,
+        "text": "You may immediately discard two of your available Power tokens to discard Aeron Damphair and choose a different House Card from your hand (if able).",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 0,
+        "name": "Ser Loras Tyrell",
+        "strength": 3,
+        "text": "If you are attacking and win this combat, move the March Order token into the conquered area (instead of discarding it). The marching order may be resolved again later this round.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 1,
+        "name": "Margaery Tyrell",
+        "strength": 1,
+        "text": "",
+        "attack": 0,
+        "defense": 1
+      },
+      {
+        "house": "rose",
+        "code": 2,
+        "name": "Mace Tyrell",
+        "strength": 4,
+        "text": "Immediately destroy one of your opponent's attacking or defending Footmen units.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 3,
+        "name": "Randyll Tarly",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 4,
+        "name": "Queen of Thorns",
+        "strength": 0,
+        "text": "Immediately remove one of your opponent's Order tokens in any one area adjacent to the embattled area. You may not remove the March Order token used to start this combat.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 5,
+        "name": "Ser Garlan Tyrell",
+        "strength": 2,
+        "text": "",
+        "attack": 2,
+        "defense": 0
+      },
+      {
+        "house": "rose",
+        "code": 6,
+        "name": "Alester Florent",
+        "strength": 1,
+        "text": "",
+        "attack": 0,
+        "defense": 1
+      },
+      {
+        "house": "lion",
+        "code": 0,
+        "name": "Ser Gregor Clegane",
+        "strength": 3,
+        "text": "",
+        "attack": 3,
+        "defense": 0
+      },
+      {
+        "house": "lion",
+        "code": 1,
+        "name": "Cersei Lannister",
+        "strength": 0,
+        "text": "If you win this combat, you may remove one of the losing opponent's Order tokens from anywhere on the board.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "lion",
+        "code": 2,
+        "name": "Tywin Lannister",
+        "strength": 4,
+        "text": "If you win this combat, gain two Power tokens.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "lion",
+        "code": 3,
+        "name": "The Hound",
+        "strength": 2,
+        "text": "",
+        "attack": 0,
+        "defense": 2
+      },
+      {
+        "house": "lion",
+        "code": 4,
+        "name": "Ser Kevan Lannister",
+        "strength": 1,
+        "text": "If you are attacking, all of your participating Footmen (including supporting Lannister Footmen) add +2 combat strength instead of +1",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "lion",
+        "code": 5,
+        "name": "Tyrion Linnester",
+        "strength": 1,
+        "text": "You may cancel your opponent's chosen House card and return it to his hand. He must then choose a different House card to reveal. If he has no other House cards in hand, he cannot use a House card this combat.",
+        "attack": 0,
+        "defense": 0
+      },
+      {
+        "house": "lion",
+        "code": 6,
+        "name": "Ser Jaime Lannister",
+        "strength": 2,
+        "text": "",
+        "attack": 1,
+        "defense": 0
+      }
+    ],
+    "militaryUnits": {
+      "footmen": {
+        "musteringPoints": 1,
+        "strength": 1,
+        "canRetreat": true
+      },
+      "knights": {
+        "musteringPoints": 2,
+        "strength": 2,
+        "canRetreat": true
+      },
+      "ships": {
+        "musteringPoints": 1,
+        "strength": 1,
+        "canRetreat": true
+      },
+      "siegeEngines": {
+        "musteringPoints": 2,
+        "strength": 4,
+        "canRetreat": false
+      }
+    }
+  },
+  "gameState": {
+    "subPhase": {
+      "mainPhase": "phaseAction",
+      "subPhase": "chooseHouseCard",
+      "houseTypes": [
+        "pufferfish",
+        "moose"
+      ]
+    },
+    "armies": {
+      "2": [
+        {
+          "house": "wolf",
+          "type": "ships"
+        }
+      ],
+      "3": [
+        {
+          "house": "wolf",
+          "type": "knights"
+        },
+        {
+          "house": "wolf",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ],
+      "6": [
+        {
+          "house": "wolf",
+          "type": "footmen"
+        }
+      ],
+      "7": [
+        {
+          "house": "wolf",
+          "type": "footmen"
+        }
+      ],
+      "12": [
+        {
+          "house": "kraken",
+          "type": "footmen"
+        }
+      ],
+      "15": [
+        {
+          "house": "kraken",
+          "type": "ships"
+        }
+      ],
+      "16": [
+        {
+          "house": "kraken",
+          "type": "footmen"
+        },
+        {
+          "house": "kraken",
+          "type": "knights"
+        },
+        {
+          "house": "kraken",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ],
+      "17": [
+        {
+          "house": "kraken",
+          "type": "ships"
+        }
+      ],
+      "21": [
+        {
+          "house": "lion",
+          "type": "ships"
+        }
+      ],
+      "22": [
+        {
+          "house": "lion",
+          "type": "knights"
+        },
+        {
+          "house": "lion",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ],
+      "24": [
+        {
+          "house": "lion",
+          "type": "footmen"
+        }
+      ],
+      "26": [
+        {
+          "house": "neutral",
+          "type": "garrison",
+          "defPoints": 6
+        }
+      ],
+      "27": [
+        {
+          "house": "lion",
+          "type": "footmen"
+        }
+      ],
+      "30": [
+        {
+          "house": "moose",
+          "type": "ships"
+        },
+        {
+          "house": "moose",
+          "type": "ships"
+        }
+      ],
+      "31": [
+        {
+          "house": "moose",
+          "type": "knights"
+        },
+        {
+          "house": "moose",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ],
+      "35": [
+        {
+          "house": "neutral",
+          "type": "garrison",
+          "defPoints": 5
+        }
+      ],
+      "38": [
+        {
+          "house": "rose",
+          "type": "footmen"
+        },
+        {
+          "house": "rose",
+          "type": "knights"
+        },
+        {
+          "house": "rose",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ],
+      "40": [
+        {
+          "house": "moose",
+          "type": "footmen"
+        }
+      ],
+      "41": [
+        {
+          "house": "rose",
+          "type": "ships"
+        }
+      ],
+      "44": [
+        {
+          "house": "rose",
+          "type": "footmen"
+        }
+      ],
+      "50": [
+        {
+          "house": "pufferfish",
+          "type": "ships"
+        }
+      ],
+      "54": [
+        {
+          "house": "pufferfish",
+          "type": "footmen"
+        }
+      ],
+      "55": [
+        {
+          "house": "pufferfish",
+          "type": "footmen"
+        },
+        {
+          "house": "pufferfish",
+          "type": "garrison",
+          "defPoints": 2
+        }
+      ]
+    },
+    "tracks": {
+      "throne": [
+        "moose",
+        "lion",
+        "wolf",
+        "pufferfish",
+        "kraken",
+        "rose"
+      ],
+      "fiefdoms": [
+        "kraken",
+        "rose",
+        "pufferfish",
+        "wolf",
+        "moose",
+        "lion"
+      ],
+      "court": [
+        "lion",
+        "wolf",
+        "pufferfish",
+        "moose",
+        "rose",
+        "kraken"
+      ]
+    },
+    "supplies": {
+      "lion": 2,
+      "kraken": 2,
+      "wolf": 1,
+      "pufferfish": 2,
+      "moose": 2,
+      "rose": 2
+    },
+    "discardedHouseCards": {},
+    "powerTokens": {
+      "lion": 5,
+      "kraken": 5,
+      "wolf": 5,
+      "pufferfish": 5,
+      "moose": 5,
+      "rose": 5
+    },
+    "dominanceTokensUsage": {
+      "valyrianSword": false,
+      "messengerRaven": true
+    },
+    "usedMusteringPoints": {},
+    "wildlingCounter": 6,
+    "wildlingsStartedFrom12Points": null,
+    "roundCounter": 1,
+    "placedOrders": {
+      "lion": {
+        "21": {
+          "type": "consolidatePower",
+          "isStar": true
+        },
+        "27": {
+          "type": "march",
+          "isStar": true,
+          "modifier": 1
+        }
+      },
+      "kraken": {
+        "12": {
+          "type": "march"
+        },
+        "15": {
+          "type": "defend",
+          "modifier": 1
+        },
+        "16": {
+          "type": "support"
+        },
+        "17": {
+          "type": "consolidatePower"
+        }
+      },
+      "wolf": {
+        "2": {
+          "type": "march",
+          "isStar": true,
+          "modifier": 1
+        },
+        "7": {
+          "type": "march"
+        }
+      },
+      "pufferfish": {
+        "50": {
+          "type": "march",
+          "isStar": true,
+          "modifier": 1
+        },
+        "54": {
+          "type": "march",
+          "modifier": -1
+        }
+      },
+      "moose": {
+        "30": {
+          "type": "march",
+          "isStar": true,
+          "modifier": 1
+        },
+        "40": {
+          "type": "march"
+        }
+      },
+      "rose": {
+        "38": {
+          "type": "march",
+          "modifier": -1
+        },
+        "41": {
+          "type": "consolidatePower"
+        },
+        "44": {
+          "type": "march"
+        }
+      }
+    },
+    "combat": {
+      "attackerTileNum": 55,
+      "attackerHouse": "pufferfish",
+      "attackerArmy": [
+        {
+          "house": "pufferfish",
+          "type": "knights"
+        }
+      ],
+      "attackerOrder": {
+        "type": "march"
+      },
+      "attackerCard": null,
+      "attackerCardResolved": false,
+      "attackerTidesOfBattle": null,
+      "attackerSupport": [],
+      "defenderTileNum": 46,
+      "defenderHouse": "moose",
+      "defenderArmy": [
+        {
+          "house": "moose",
+          "type": "footmen"
+        }
+      ],
+      "defenderOrder": null,
+      "defenderCard": null,
+      "defenderCardResolved": false,
+      "defenderTidesOfBattle": null,
+      "defenderSupport": [],
+      "combatOutcome": null
+    }
+  },
+  "messageId": "uuid",
+  "type": "action"
+}

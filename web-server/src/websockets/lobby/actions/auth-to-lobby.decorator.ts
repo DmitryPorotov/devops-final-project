@@ -2,7 +2,7 @@ import WebsocketWithUserInterface from "../../websocket-with-user.interface"
 import { MessageInterface } from "../../messages/message.interface"
 import { ConflictException } from "@nestjs/common"
 import {BaseLobbyAction} from "./base-lobby-action";
-
+import doesUserIdMatch from '../../does-user-id-match.function'
 
 export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
     return function <T2 = (this: BaseLobbyAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
@@ -13,18 +13,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
             try {
                 const lobbyEntity = await this.getLobbyIfIsParticipant(message, client.user);
                 this.logger.debug('has lobbyEntity', lobbyEntity != null);
-                if (client.user.id !== message.userId) {
-                    this.logger.debug('corrupt message, messageId ' + message.messageId);
-                    const error: MessageInterface = {
-                        type: 'error',
-                        messageId: message.messageId,
-                        lobbyId: message.lobbyId,
-                        body: {
-                            type: 'error',
-                            body: 'message is corrupt'
-                        }
-                    };
-                    client.send(JSON.stringify(error));
+                if (!doesUserIdMatch(client, message, this.logger)) {
                     return
                 }
                 if (lobbyEntity &&
@@ -75,7 +64,8 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                             client.send(JSON.stringify(error))
                         } else throw e;
                     }
-                } else {
+                }
+                else {
                     this.logger.debug('in decorator else');
                     const error: MessageInterface = {
                         type: 'error',

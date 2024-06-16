@@ -7,6 +7,7 @@ class MessageResendService {
     private readonly logger = new Logger(MessageResendService.name);
 
     private intervals: Map<string, number> = new Map();
+    private timeouts: Map<string, number> = new Map();
 
     private workerRelayService: WorkerRelayService;
 
@@ -23,16 +24,19 @@ class MessageResendService {
                 })).then()
             }, 2000) as unknown as number
         );
-        setTimeout(() => {
-            this.confirmDelivery(message.messageId)
-        }, 10000)
+        this.timeouts.set(message.messageId, setTimeout(() => {
+            this.confirmDelivery(message.messageId, true)
+        }, 10000) as unknown as number);
     }
 
-    confirmDelivery(messageId: string): void {
-        this.logger.debug('in confirm ' + messageId);
+    confirmDelivery(messageId: string, timedOut = false): void {
+        this.logger.debug('in confirm ' + messageId + (timedOut ? " timed out" : ""));
+        if (this.timeouts.has(messageId)) {
+            clearTimeout(this.timeouts.get(messageId));
+            this.timeouts.delete(messageId);
+        }
         if (!this.intervals.has(messageId)) return;
-        const interval = this.intervals.get(messageId);
-        clearInterval(interval);
+        clearInterval(this.intervals.get(messageId));
         this.intervals.delete(messageId);
     }
 }

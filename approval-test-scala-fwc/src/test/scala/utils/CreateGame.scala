@@ -59,8 +59,8 @@ object CreateGame {
     con2.connect()
     Thread.sleep(1000_000_000L)
 
-  def getCreateGameOwnerMessagesBuilder(userDTO: UserDTO): MessagesBuilder =
-    val mb = MessagesBuilder(userDTO.id, 2, None)
+  def getCreateGameOwnerMessagesBuilder(userDTO: UserDTO, messagesBuilder: Option[BaseMessagesBuilder] = None): BaseMessagesBuilder =
+    val mb = messagesBuilder.getOrElse(MessagesBuilder(userDTO.id, 2))
     mb.addOne(Some(ujson.Obj(
       "body" -> ujson.Obj(
         "type" -> "create"

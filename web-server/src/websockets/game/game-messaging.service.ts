@@ -11,6 +11,7 @@ import NoGameInRedisCacheError from "../../redis/NoGameInRedisCacheError";
 import {LobbyClients} from "../lobby-clients.interface";
 import {v4 as uuid} from 'uuid'
 import MessageResendService from "../../redis/message-resend.service";
+import constants from '../../constants'
 
 @Injectable()
 class GameMessagingService {
@@ -89,8 +90,9 @@ class GameMessagingService {
     };
 
     private sendToAll(lobby: LobbyClients, msg: WorkerMessageInterface) {
+        const str = JSON.stringify(msg);
         lobby.clients.forEach(c => {
-            c.send(JSON.stringify(msg));
+            c.send(str);
         });
     }
 }

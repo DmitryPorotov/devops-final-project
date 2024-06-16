@@ -36,13 +36,18 @@ class WebsocketService {
         }
         if (message.type === "chat") {
             await this.lobbyManagerService.processMessage(client, message)
-        } else if (message.type === 'test') {
+        }
+        else if (message.type === 'action') {
+            await this.gameMessagingService.processMessage(client, message)
+        }
+        else if (message.type === 'test') {
             await this.connectivityTestService.sendToWorker(JSON.stringify(message), (msg) => {
                 this.logger.debug("from worker: " + JSON.stringify(msg));
                 client.send(JSON.stringify(msg))
-            }) 
-        } else if (message.type === 'action') {
-            await this.gameMessagingService.processMessage(client, message)
+            })
+        }
+        else {
+            this.logger.warn(`Unknown message.type "${message.type}"`)
         }
 
     }

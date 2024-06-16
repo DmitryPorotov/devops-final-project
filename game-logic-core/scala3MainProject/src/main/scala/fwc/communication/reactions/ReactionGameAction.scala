@@ -1,6 +1,6 @@
 package fwc.communication.reactions
 
-import fwc.{GameSettings, JsonSerializable}
+import fwc.{GameSettings, JsonSerializable, PlayerInputting}
 import fwc.game.phases.*
 import fwc.game.phases.actionSubPhases.*
 import fwc.game.actionPhase.*
@@ -13,6 +13,7 @@ import fwc.gameSaving.actions.action.*
 import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
 import fwc.gameSaving.actions.roundEvents.*
 import fwc.gameSaving.actions.{Action, ActionSetCard, PlayerAction}
+import scala.util.boundary
 
 import scala.annotation.tailrec
 import scala.util.Random
@@ -20,6 +21,20 @@ import scala.util.Random
 object ReactionGameAction {
   def apply(userId: Int, gameReplay: GameReplay, gameAction: ujson.Value): (GameReplay, ujson.Value) = {
     val player = gameReplay.gameSettings.players.head.find(_.userId == userId)
+    def findInputtingPlayer(players: Seq[PlayerInputting]): Option[PlayerInputting] = boundary {
+      players.foldLeft(None: Option[PlayerInputting])(
+        (acc, cur) =>
+          if cur.userId == userId
+          then boundary.break(Some(cur))
+          else acc
+      )
+    }
+    val inputtingPlayer =
+      if gameReplay.gameSettings.isInputOnly then
+        gameReplay.gameSettings.playersInputting.foldLeft(None: Option[PlayerInputting])(
+          (acc, cur: Seq[PlayerInputting]) => findInputtingPlayer(cur)
+        )
+      else None
     val action = Action.fromJson(gameReplay.currentGameState, gameAction)
 
     //todo: handle set cards
@@ -27,8 +42,12 @@ object ReactionGameAction {
     action match
       case a: PlayerAction =>
 
-        if player.isEmpty || player.head.house.head != a.getHouseType
-        then throw new FWCException("House does not belong to player")
+        if !gameReplay.gameSettings.isInputOnly then
+          if player.isEmpty || player.head.house.head != a.getHouseType
+          then throw new FWCException("House does not belong to player")
+        else
+          if inputtingPlayer.isEmpty || !inputtingPlayer.head.forHouses.contains(a.getHouseType)
+            then throw new FWCException("The player does not input for this house")
 
         loop(a, gameReplay)
 
@@ -155,15 +174,17 @@ object ReactionGameAction {
           if sp.defenderCard.isEmpty
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-            "player_action" -> a.toJson.obj.addOne(
-              "code" -> sp.attackerCard.head
-            )
+            "player_action" -> a.toJson.obj.addAll(Map(
+              "code" -> sp.attackerCard.head,
+              "houseType" -> a.gameState.combat.attackerHouse.toString
+            ))
           )
           else ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-            "player_action" -> a.toJson.obj.addOne(
-              "code" -> sp.defenderCard.head
-            )
+            "player_action" -> a.toJson.obj.addAll(Map(
+              "code" -> sp.defenderCard.head,
+              "houseType" -> a.gameState.combat.defenderHouse.toString
+            ))
           )
         case a: ActionRavenGetWildlingsCard =>
           if a.isRandom

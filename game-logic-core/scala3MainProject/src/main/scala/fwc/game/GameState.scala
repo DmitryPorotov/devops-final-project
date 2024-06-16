@@ -83,6 +83,53 @@ case class GameState(
     )
   }
 
+  def toJsonForInputtingPlayer(houses: Seq[HouseType]): ujson.Obj =
+    val placedOrdersP =
+      if subPhase.isInstanceOf[SubPhaseAddOrder] then
+        placedOrders.copy(placedOrders = placedOrders.placedOrders.map(
+          (houseType: HouseType, orders: Map[TileNumber, Order]) =>
+            if houses.contains(houseType) then
+              houseType -> orders
+            else
+              houseType -> orders.map(
+                (tileNum: TileNumber, order: Order) =>
+                  tileNum -> Order(OrderConsolidatePower)
+              )
+        ))
+      else placedOrders
+    val combatP =
+      if combat != null then {
+        if houses.contains(combat.attackerHouse) && houses.contains(combat.defenderHouse) then
+          combat
+        else if houses.contains(combat.defenderHouse) then
+          combat.copy(
+            attackerCard = null,
+            attackerTidesOfBattle = null
+          )
+        else if houses.contains(combat.attackerHouse) then
+          combat.copy(
+            defenderCard = null,
+            defenderTidesOfBattle = null
+          )
+        else
+          combat.copy(
+            defenderTidesOfBattle = null,
+            defenderCard = null,
+            attackerCard = null,
+            attackerTidesOfBattle = null
+          )
+      }
+      else null
+
+    ujson.Obj(
+      toCleanJson.value.addAll(
+        Map(
+          "placedOrders" -> placedOrdersP.toJson,
+          "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
+        )
+      )
+    )
+  
   def toJson: ujson.Value = {
     ujson.Obj(
       toCleanJson.value.addAll(

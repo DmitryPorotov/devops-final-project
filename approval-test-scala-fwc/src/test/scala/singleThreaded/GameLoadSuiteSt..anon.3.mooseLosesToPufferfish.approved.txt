@@ -1,0 +1,614 @@
+[
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "chooseHouseCard",
+          "houseType": "moose",
+          "cardCode": -1
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [
+            {
+              "house": "moose",
+              "type": "footmen"
+            }
+          ],
+          "attackerCard": 3,
+          "defenderCard": 0
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "getTidesOfBattleCards"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": 4,
+        "player_action": {
+          "actionType": "getTidesOfBattleCards",
+          "isRandom": true,
+          "code": 5
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [
+            {
+              "house": "moose",
+              "type": "footmen"
+            }
+          ],
+          "attackerCard": 3,
+          "defenderCard": 0
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "setTidesOfBattleCards"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": 3,
+        "player_action": {
+          "actionType": "getTidesOfBattleCards",
+          "isRandom": true,
+          "code": 0
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [
+            {
+              "house": "moose",
+              "type": "footmen"
+            }
+          ],
+          "attackerCard": 3,
+          "defenderCard": 0
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "setTidesOfBattleCards"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "setTidesOfBattleCards",
+          "attackerCardCode": 5,
+          "defenderCardCode": 0
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [
+            {
+              "house": "moose",
+              "type": "footmen"
+            }
+          ],
+          "attackerCard": 3,
+          "attackerTidesOfBattle": 5,
+          "defenderCard": 0,
+          "defenderTidesOfBattle": 0
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "calculateCombatOutcome"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "calculateCombatOutcome"
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [
+            {
+              "house": "moose",
+              "type": "footmen"
+            }
+          ],
+          "attackerCard": 3,
+          "attackerTidesOfBattle": 5,
+          "defenderCard": 0,
+          "defenderTidesOfBattle": 0,
+          "combatOutcome": {
+            "attackerStrength": 9,
+            "defenderStrength": 5,
+            "winner": "pufferfish",
+            "attackerUnitsToKill": 0,
+            "defenderUnitsToKill": 2
+          }
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "autoKillUnitsAfterBattle"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "autoKillUnitsAfterBattle"
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [],
+          "attackerCard": 3,
+          "attackerTidesOfBattle": 5,
+          "defenderCard": 0,
+          "defenderTidesOfBattle": 0,
+          "combatOutcome": {
+            "attackerStrength": 9,
+            "defenderStrength": 5,
+            "winner": "pufferfish",
+            "attackerUnitsToKill": 0,
+            "defenderUnitsToKill": 0
+          }
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "autoRetreatAfterBattle"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "autoRetreatAfterBattle"
+        },
+        "combat": {
+          "attackerTileNum": 55,
+          "attackerHouse": "pufferfish",
+          "attackerArmy": [
+            {
+              "house": "pufferfish",
+              "type": "knights"
+            }
+          ],
+          "attackerOrder": {
+            "type": "march"
+          },
+          "defenderTileNum": 46,
+          "defenderHouse": "moose",
+          "defenderArmy": [],
+          "attackerCard": 3,
+          "attackerTidesOfBattle": 5,
+          "defenderCard": 0,
+          "defenderTidesOfBattle": 0,
+          "combatOutcome": {
+            "attackerStrength": 9,
+            "defenderStrength": 5,
+            "winner": "pufferfish",
+            "attackerUnitsToKill": 0,
+            "defenderUnitsToKill": 0
+          }
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "cleanUpAfterCombat"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  },
+  {
+    "action": "game_action",
+    "gameId": "2",
+    "reply": [
+      {
+        "to": "*",
+        "player_action": {
+          "actionType": "cleanUpAfterCombat",
+          "state": {
+            "armies": {
+              "2": [
+                {
+                  "house": "wolf",
+                  "type": "ships"
+                }
+              ],
+              "3": [
+                {
+                  "house": "wolf",
+                  "type": "knights"
+                },
+                {
+                  "house": "wolf",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ],
+              "6": [
+                {
+                  "house": "wolf",
+                  "type": "footmen"
+                }
+              ],
+              "7": [
+                {
+                  "house": "wolf",
+                  "type": "footmen"
+                }
+              ],
+              "12": [
+                {
+                  "house": "kraken",
+                  "type": "footmen"
+                }
+              ],
+              "15": [
+                {
+                  "house": "kraken",
+                  "type": "ships"
+                }
+              ],
+              "16": [
+                {
+                  "house": "kraken",
+                  "type": "footmen"
+                },
+                {
+                  "house": "kraken",
+                  "type": "knights"
+                },
+                {
+                  "house": "kraken",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ],
+              "17": [
+                {
+                  "house": "kraken",
+                  "type": "ships"
+                }
+              ],
+              "21": [
+                {
+                  "house": "lion",
+                  "type": "ships"
+                }
+              ],
+              "22": [
+                {
+                  "house": "lion",
+                  "type": "knights"
+                },
+                {
+                  "house": "lion",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ],
+              "24": [
+                {
+                  "house": "lion",
+                  "type": "footmen"
+                }
+              ],
+              "26": [
+                {
+                  "house": "neutral",
+                  "type": "garrison",
+                  "defPoints": 6
+                }
+              ],
+              "27": [
+                {
+                  "house": "lion",
+                  "type": "footmen"
+                }
+              ],
+              "30": [
+                {
+                  "house": "moose",
+                  "type": "ships"
+                },
+                {
+                  "house": "moose",
+                  "type": "ships"
+                }
+              ],
+              "31": [
+                {
+                  "house": "moose",
+                  "type": "knights"
+                },
+                {
+                  "house": "moose",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ],
+              "35": [
+                {
+                  "house": "neutral",
+                  "type": "garrison",
+                  "defPoints": 5
+                }
+              ],
+              "38": [
+                {
+                  "house": "rose",
+                  "type": "footmen"
+                },
+                {
+                  "house": "rose",
+                  "type": "knights"
+                },
+                {
+                  "house": "rose",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ],
+              "40": [
+                {
+                  "house": "moose",
+                  "type": "footmen"
+                }
+              ],
+              "41": [
+                {
+                  "house": "rose",
+                  "type": "ships"
+                }
+              ],
+              "44": [
+                {
+                  "house": "rose",
+                  "type": "footmen"
+                }
+              ],
+              "46": [
+                {
+                  "house": "pufferfish",
+                  "type": "knights"
+                }
+              ],
+              "50": [
+                {
+                  "house": "pufferfish",
+                  "type": "ships"
+                }
+              ],
+              "54": [
+                {
+                  "house": "pufferfish",
+                  "type": "footmen"
+                }
+              ],
+              "55": [
+                {
+                  "house": "pufferfish",
+                  "type": "footmen"
+                },
+                {
+                  "house": "pufferfish",
+                  "type": "garrison",
+                  "defPoints": 2
+                }
+              ]
+            },
+            "discardedHouseCards": {
+              "pufferfish": [
+                3
+              ],
+              "moose": [
+                0
+              ]
+            },
+            "placedOrders": {
+              "lion": {
+                "21": {
+                  "type": "consolidatePower",
+                  "isStar": true
+                },
+                "27": {
+                  "type": "march",
+                  "isStar": true,
+                  "modifier": 1
+                }
+              },
+              "kraken": {
+                "12": {
+                  "type": "march"
+                },
+                "15": {
+                  "type": "defend",
+                  "modifier": 1
+                },
+                "16": {
+                  "type": "support"
+                },
+                "17": {
+                  "type": "consolidatePower"
+                }
+              },
+              "wolf": {
+                "2": {
+                  "type": "march",
+                  "isStar": true,
+                  "modifier": 1
+                },
+                "7": {
+                  "type": "march"
+                }
+              },
+              "pufferfish": {
+                "50": {
+                  "type": "march",
+                  "isStar": true,
+                  "modifier": 1
+                },
+                "54": {
+                  "type": "march",
+                  "modifier": -1
+                }
+              },
+              "moose": {
+                "30": {
+                  "type": "march",
+                  "isStar": true,
+                  "modifier": 1
+                },
+                "40": {
+                  "type": "march"
+                }
+              },
+              "rose": {
+                "38": {
+                  "type": "march",
+                  "modifier": -1
+                },
+                "41": {
+                  "type": "consolidatePower"
+                },
+                "44": {
+                  "type": "march"
+                }
+              }
+            },
+            "powerTokens": {
+              "lion": 5,
+              "kraken": 5,
+              "wolf": 5,
+              "pufferfish": 5,
+              "moose": 5,
+              "rose": 5
+            }
+          }
+        },
+        "current_phase": {
+          "mainPhase": "phaseAction",
+          "subPhase": "resolveMarchOrder",
+          "houseType": "kraken"
+        }
+      }
+    ],
+    "messageId": "uuid",
+    "type": "action"
+  }
+]

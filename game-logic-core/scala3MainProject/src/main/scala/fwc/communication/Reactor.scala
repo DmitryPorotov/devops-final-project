@@ -44,10 +44,11 @@ object Reactor {
             "saves" -> ReactionListSavedGames(userId)
           )
         case MessageLoadGame(userId, gameId, saveName, messageId) =>
-          //todo: what if game already exists?
+          //todo: how do I handle setting change? Not the same players and in the saved file? Different houses?
+          // need to support changing settings after load
           val replay = ReactionLoadGame(userId, saveName)
-          val settings = games(gameId).gameSettings
-          games = games updated (gameId, replay.copy(gameSettings = settings))
+          //val settings = games(gameId).gameSettings
+          games = games updated (gameId, replay)
           ujson.Obj(
             "action" -> "load",
             "gameId" -> gameId,
@@ -92,9 +93,14 @@ object Reactor {
             "gameSettings" -> result.toJson,
           )
         case MessageGetGameState(userId, gameId, messageId) =>
+          val game = games(gameId)
           val player =
-            if games(gameId).gameSettings.players.nonEmpty then
-              games(gameId).gameSettings.players.head.find(_.userId == userId)
+            if game.gameSettings.players.nonEmpty then
+              game.gameSettings.players.head.find(_.userId == userId)
+            else None
+          val inputtingPlayer =
+            if game.gameSettings.isInputOnly && game.gameSettings.playersInputting.nonEmpty
+            then game.gameSettings.playersInputting.head.find(_.userId == userId)
             else None
           ujson.Obj(
             "action" -> "get_game_state",
@@ -102,13 +108,16 @@ object Reactor {
             "userId" -> userId,
             "gameRules" -> gameRules.toJson,
             "gameState" -> (
-              if player.nonEmpty && player.head.house.nonEmpty
-              then games(gameId).currentGameState.toPersonalJson(player.head.house.head)
-              else games(gameId).currentGameState.toCleanJson
+              if game.gameSettings.isInputOnly && inputtingPlayer.nonEmpty then
+                game.currentGameState.toJsonForInputtingPlayer(inputtingPlayer.head.forHouses)
+              else
+                if player.nonEmpty && player.head.house.nonEmpty
+                then game.currentGameState.toPersonalJson(player.head.house.head)
+                else game.currentGameState.toCleanJson
               ),
           )
-        case MessageCreateGame(userId, gameId, isRandomHouses, messageId) =>
-          val result = ReactionCreateGame(userId, gameId, isRandomHouses)
+        case MessageCreateGame(userId, gameId, isRandomHouses, isInputOnly, messageId) =>
+          val result = ReactionCreateGame(userId, gameId, isRandomHouses, isInputOnly)
           games = games updated (result._1, GameReplay(result._2, result._3.boardCards, result._3, Seq()))
           ujson.Obj(
             "action" -> "create_game",

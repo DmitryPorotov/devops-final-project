@@ -2,6 +2,7 @@ import WebsocketWithUserInterface from "../../websocket-with-user.interface"
 import { MessageInterface } from "../../messages/message.interface"
 import { ConflictException } from "@nestjs/common"
 import {BaseGameAction} from "./base-game-action";
+import doesUserIdMatch from '../../does-user-id-match.function'
 
 export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
     return function <T2 = (this: BaseGameAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
@@ -11,18 +12,7 @@ export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
         descriptor.value = async function (this: BaseGameAction, client: WebsocketWithUserInterface, message: MessageInterface) {
             try {
                 const lobby = this.lobbies.get(message.lobbyId);
-                if (client.user.id !== message.userId) {
-                    this.logger.debug('corrupt message, messageId ' + message.messageId);
-                    const error: MessageInterface = {
-                        type: 'error',
-                        messageId: message.messageId,
-                        lobbyId: message.lobbyId,
-                        body: {
-                            type: 'error',
-                            body: 'message is corrupt'
-                        }
-                    };
-                    client.send(JSON.stringify(error));
+                if (!doesUserIdMatch(client, message, this.logger)) {
                     return
                 }
                 if (lobby &&

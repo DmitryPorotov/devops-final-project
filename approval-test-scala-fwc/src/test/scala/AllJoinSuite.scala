@@ -6,7 +6,7 @@ import utils.{JoinGame, PlayerBehavior, TestRunner}
 class AllJoinSuite {
   @Test
   def allJoin(): Unit = {
-    val (users, mesBuilders) = JoinGame.getAllUsersAndMessageBuilders
+    val (users, mesBuilders) = JoinGame.getAllUsersAndMessageBuilders()
     mesBuilders(1).addOne(key = "default", testRunner = Some(new TestRunner {
       override def onMessage(jsonMessage: Obj): Unit =
         if jsonMessage.obj.getOrElse("gameSettings", null) != null then

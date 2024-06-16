@@ -1,6 +1,6 @@
 package fwc.communication.reactions
 
-import fwc.{GameSettings, Player}
+import fwc.{GameSettings, Player, PlayerInputting}
 import fwc.game.FWCException
 import fwc.game.houses.HouseType
 
@@ -8,7 +8,11 @@ object ReactionJoinGame {
   def apply(userId: Int, houseType: Option[HouseType], name: String, gameSettings: GameSettings): GameSettings =
     if !gameSettings.isRandomHouses then
       if houseType.isEmpty then throw new FWCException("Must choose a house")
-
+    
+    if gameSettings.isInputOnly then 
+      return gameSettings.copy(playersInputting = Some((gameSettings.playersInputting getOrElse Seq[PlayerInputting]()) 
+        appended PlayerInputting(userId, forHouses = HouseType.getSeqOfAll)))
+    
     if houseType.isDefined
       && gameSettings.players.isDefined
       && gameSettings.players.head.nonEmpty

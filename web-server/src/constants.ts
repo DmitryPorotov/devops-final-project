@@ -8,5 +8,6 @@ export default {
     JWT_SECRET: env.JWT_SECRET || 'bottom-secret',
     WS_PING_INTERVAL: 20000,
     CHAT_PREFIX: 'chat',
+    isTesting: env.TESTING === 'true',
 };
 

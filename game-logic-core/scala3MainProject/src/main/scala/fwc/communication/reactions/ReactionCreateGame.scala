@@ -6,13 +6,13 @@ import fwc.game.GameState
 import java.util.UUID
 
 object ReactionCreateGame {
-  def apply(userId: Int, gameId: String, isRandomHouses: Boolean): (String, GameSettings, GameState) = {
+  def apply(userId: Int, gameId: String, isRandomHouses: Boolean, isInputOnly: Boolean): (String, GameSettings, GameState) = {
     val randomEventsServerSide = true
     val settings = GameSettings(
       gameId,
       UUID.randomUUID(),
       userId,
-      false,
+      isInputOnly,
       isRandomHouses,
       randomEventsServerSide,
       None,

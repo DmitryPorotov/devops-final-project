@@ -1,14 +1,14 @@
+package singleThreaded
+
 import org.approvaltests.Approvals
 import org.junit.jupiter.api.{Assertions, Test}
 import ujson.Obj
-import utils.{JoinGame, PlayerBehavior, TestRunner}
+import utils.{SingleThreadedMessagesBuilder, TestRunner}
 
-import scala.collection.mutable.Map as MutMap
-
-class GameLoadSuite {
+class GameLoadSuiteSt {
   @Test
   def loadGame(): Unit = {
-    val (users, messageBuilders) = JoinGame.getAllUsersAndMessageBuilders()
+    val messageBuilders = SingleThreadedMessagesBuilder.init()
     messageBuilders(3) = messageBuilders(3).copy(action = Some("load"))
     messageBuilders(3).addOne(Some(ujson.Obj(
       "lobbyId" -> 2,
@@ -33,7 +33,12 @@ class GameLoadSuite {
       @Test
       def loadGameMooseAttackedByPufferFish(j: Obj): Unit =
         j.obj("messageId") = "uuid"
-        Approvals.verify(j.render(2))
+        try
+         Approvals.verify(j.render(2))
+        catch
+          case e =>
+            SingleThreadedMessagesBuilder.endTest()
+            throw e
     }))
 
 
@@ -56,25 +61,20 @@ class GameLoadSuite {
         replies = replies :+ j
         replyNumber += 1
         if replyNumber >= 8 then
-          Approvals.verify(ujson.Arr.from(replies).render(2))
+          try
+            Approvals.verify(ujson.Arr.from(replies).render(2))
+          catch
+            case e =>
+              SingleThreadedMessagesBuilder.endTest()
+              throw e
+          finally
+            SingleThreadedMessagesBuilder.endTest()
     }))
 
     messageBuilders(3).addOne()
 
-    val u1Pb = new PlayerBehavior(users(1), messageBuilders(1).getMap)
-    val u2Pb = new PlayerBehavior(users(2), messageBuilders(2).getMap)
-    val u3Pb = new PlayerBehavior(users(3), messageBuilders(3).getMap)
-    val u4Pb = new PlayerBehavior(users(4), messageBuilders(4).getMap)
-    val u5Pb = new PlayerBehavior(users(5), messageBuilders(5).getMap)
-    val u6Pb = new PlayerBehavior(users(6), messageBuilders(6).getMap)
+    Assertions.assertTrue(SingleThreadedMessagesBuilder.testMessages())
 
-    u1Pb.connect()
-    Thread.sleep(2000L)
-    u2Pb.connect()
-    u3Pb.connect()
-    u4Pb.connect()
-    u5Pb.connect()
-    u6Pb.connect()
-    Thread.sleep(1000L)
+    SingleThreadedMessagesBuilder.startTest()
   }
 }
