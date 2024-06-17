@@ -10,6 +10,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import websocket from "./http/websocket";
 import Storage from "./http/storage";
+import HeaderBar from "./components/HeaderBar";
 
 const RoutesWrapper = () => {
     const auth = useContext(AuthContext);
@@ -34,6 +35,7 @@ const RoutesWrapper = () => {
 
     return (
         <>
+            <HeaderBar sx={{marginBottom:"1rem"}}/>
             <Outlet />
             <div className={'login-container'}>
                 {
@@ -81,14 +83,19 @@ export const WsContext = createContext({});
 const App = () => {
     const [isLoginShown, setIsLoginShown] = useState(false);
     const [lobbyData, setLobbyData] = useState();
+    const [loggedUser, setLoggedUser] = useState(() => Storage.getUser());
     const storeUser = useCallback( async result => {
-        await Storage.setUser(result)
+        Storage.setUser(result);
+        setLoggedUser(result)
     },[]);
+
+
 
     const authContextValue = useMemo(() => ({
         storeUser,
         setIsLoginShown,
         isLoginShown,
+        loggedUser,
         loginCallback: null,
         globalError: null,
     }), [storeUser, setIsLoginShown, isLoginShown]);
@@ -103,9 +110,6 @@ const App = () => {
         <>
             <AuthContext.Provider value={authContextValue}>
                 <WsContext.Provider value={wsContextValue}>
-                    <h1 >
-                        Hello! Welcome to Table Games!
-                    </h1>
                     <RouterProvider router={router}/>
                 </WsContext.Provider>
             </AuthContext.Provider>

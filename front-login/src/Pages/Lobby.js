@@ -19,7 +19,7 @@ import PlayersList from "../components/PlayersList";
  * @param {{participants: Array.<{id:number,name:string,ping:string,connected:boolean}>}} data
  */
 const amParticipating = async ({participants}) => {
-    const myId = (await Storage_.getUser()).id;
+    const myId = Storage_.getUser().id;
     return participants.reduce((acc, cur) => {
         if (cur.id === myId) acc = true;
         return acc;
@@ -127,7 +127,7 @@ const Lobby = () => {
 
     const setHouseIfMe = (player) => {
         if ((player.userId === ws.websocket.playerId) && player.house) {
-            Storage_.setHouseForLobby(id, player.house).then();
+            Storage_.setHouseForLobby(id, player.house);
             return true;
         }
     };
@@ -270,7 +270,7 @@ const Lobby = () => {
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
-            const storedUser = await Storage_.getUser();
+            const storedUser = Storage_.getUser();
             if (!storedUser) {
                 navigate('/');
                 return ;
@@ -327,7 +327,7 @@ const Lobby = () => {
         ws.websocket.send({
             type: 'action',
             action: 'join_game',
-            name: (await Storage_.getUser()).name,
+            name: Storage_.getUser().name,
             joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
         });
         setAlreadyJoined(true);

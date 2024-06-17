@@ -13,7 +13,7 @@ class Storage {
      *
      * @returns {Promise<User|any>}
      */
-    static async getUser() {
+    static getUser() {
         const userStr = window.localStorage.getItem('_user');
         if (userStr) {
             return JSON.parse(userStr);
@@ -25,7 +25,7 @@ class Storage {
      * @param {User} user
      * @returns {Promise<void>}
      */
-    static async setUser(user) {
+    static setUser(user) {
         window.localStorage.setItem('_user', JSON.stringify(user));
     }
 
@@ -34,8 +34,12 @@ class Storage {
      * @param {string} house
      * @returns {Promise<void>}
      */
-    static async setHouseForLobby(lobbyId, house) {
+    static setHouseForLobby(lobbyId, house) {
         window.localStorage.setItem(`_lobby${lobbyId}house`, house);
+    }
+
+    static deleteUser() {
+        window.localStorage.removeItem("_user");
     }
 }
 

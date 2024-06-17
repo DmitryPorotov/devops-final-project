@@ -57,7 +57,8 @@ export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
                     client.send(JSON.stringify(error))
                 }
             } catch (e) {
-                this.logger.warn('decorator exception ' + e)
+                this.logger.warn('decorator exception ' + e, e.stack);
+                throw e;
             }
         } as any
     }

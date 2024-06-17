@@ -44,7 +44,7 @@ class Websocket {
             Websocket.worker.onmessageerror = (e) => {
                 console.log(e)
             };
-            const user = await Storage.getUser();
+            const user = Storage.getUser();
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [

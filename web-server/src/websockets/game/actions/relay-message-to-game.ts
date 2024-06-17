@@ -5,6 +5,7 @@ import {MessageInterface} from "../../messages/message.interface";
 import LobbiesClientsMapService from "../../lobbies-clients-map.service";
 import WorkerRelayService from "../../../redis/worker-relay.service";
 import AuthToGame from "./auth-to-game.decorator";
+import NoGameInRedisCacheError from "../../../redis/NoGameInRedisCacheError";
 
 export class RelayMessageToGame extends BaseGameAction{
     protected logger: Logger = new Logger(RelayMessageToGame.name);
@@ -16,15 +17,10 @@ export class RelayMessageToGame extends BaseGameAction{
     @AuthToGame()
     public async doAction(client: WebsocketWithUserInterface, message: MessageInterface) {
         await this.workerRelayService.subscribeToGame(message.lobbyId);
-        try {
-            await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
-                ...message,
-                gameId: String(message.lobbyId)
-            }));
-        }
-        catch (e) {
-            this.logger.error(e)
-        }
+        await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
+            ...message,
+            gameId: String(message.lobbyId)
+        }));
     }
 
 }

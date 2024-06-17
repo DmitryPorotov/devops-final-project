@@ -1,6 +1,7 @@
 import {Injectable, Logger} from "@nestjs/common";
 import {MessageInterface} from "../websockets/messages/message.interface";
 import WorkerRelayService from "./worker-relay.service";
+import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
 
 @Injectable()
 class MessageResendService {
@@ -17,11 +18,18 @@ class MessageResendService {
 
     registerMessageToResend(message: MessageInterface): void {
         this.logger.debug('in register ' + message.messageId);
-        this.intervals.set(message.messageId, setInterval(() => {
-                this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
-                    ...message,
-                    gameId: String(message.lobbyId)
-                })).then()
+        this.intervals.set(message.messageId, setInterval(async () => {
+                try {
+                    await this.workerRelayService.sendToGame(message.lobbyId, JSON.stringify({
+                        ...message,
+                        gameId: String(message.lobbyId)
+                    }))
+                }
+                catch (e) {
+                    if (e instanceof NoGameInRedisCacheError && message.action === 'get_status') {
+                        this.confirmDelivery(message.messageId);
+                    } else throw e;
+                }
             }, 2000) as unknown as number
         );
         this.timeouts.set(message.messageId, setTimeout(() => {

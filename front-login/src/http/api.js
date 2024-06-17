@@ -9,7 +9,7 @@ class Api {
 
     static async headers(isLoggedIn){
         const headers = {"Content-Type": "application/json"};
-        const user = await Storage.getUser();
+        const user = Storage.getUser();
         if (isLoggedIn && user) {
             headers['Authorization'] = 'Bearer ' + user.token;
         }

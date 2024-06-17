@@ -19,13 +19,11 @@ const SignupForm = () => {
             });
         },
         onSuccess(result) {
-            Storage.getUser().then(u => {
-                u = u || {};
-                Storage.setUser({
-                    ...u,
-                    token: result.token
-                }).then()
-            });
+            const user = Storage.getUser() || {};
+            Storage.setUser({
+                ...user,
+                token: result.token
+            })
         },
         onFailure(messages) {
             setNameErrors(messages.n);
