@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import {serverIsDeadHandler} from "../Pages/common/GlobalErrorHandlers";
 import {AuthContext, WsContext} from "../App";
 
-const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
+const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const scrollToRef = useRef();
@@ -99,36 +99,40 @@ const Chat = ({lobbyId, afterInitGetMissedMessages}) => {
 
 
     return (
-        <Paper variant={"outlined"}>
+        <Paper variant={"outlined"} style={style}>
+            <Card>
+            <CardContent>
             <Card sx={{minWidth: 100, flexGrow:5, maxHeight: '12rem', overflowY: 'auto'}}>
                 {!!chatMessages.length
                  &&
                     chatMessages.map((msg,i) => {
                             if (i !== chatMessages.length - 1) {
-                               return <CardContent key={`msg-${i}`} sx={{maxHeight: "30rem", overflowY: "auto"}}>
+                               return <CardContent key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"8px", overflowY: "auto"}}>
                                    {buildMessageBody(msg)}
                                 </CardContent>
                             } else {
-                                return <CardContent ref={scrollToRef} key={`msg-${i}`} sx={{maxHeight: "30rem", overflowY: "auto"}}>
+                                return <CardContent ref={scrollToRef} key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"8px", overflowY: "auto"}}>
                                     {buildMessageBody(msg)}
                                 </CardContent>
                             }
                         }
                     )
-
                 }
             </Card>
             <Card sx={{margin: '.8rem .2rem .3rem .2rem', paddingTop: '.4rem'}}>
-                <form style={{display: 'flex'}} onSubmit={handleSubmit} autoComplete={'off'}>
-                    <TextField
-                        sx={{flexGrow:4}}
-                        label="message"
-                        variant="outlined"
-                        onChange={e => setMessage(e.target.value)}
-                        value={message}
-                    />
-                    <Button sx={{flexGrow:1}} type={'submit'}>Send</Button>
-                </form>
+                    <form style={{display: 'flex'}} onSubmit={handleSubmit} autoComplete={'off'}>
+                        <TextField
+                            sx={{flexGrow:4}}
+                            label="message"
+                            variant="outlined"
+                            onChange={e => setMessage(e.target.value)}
+                            value={message}
+                        />
+                        <Button sx={{flexGrow:1}} type={'submit'}>Send</Button>
+                    </form>
+
+            </Card>
+            </CardContent>
             </Card>
         </Paper>
     );

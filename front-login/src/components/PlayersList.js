@@ -11,7 +11,7 @@ import React, {useContext, useEffect} from "react";
 import {WsContext} from "../App";
 import {useParams} from "react-router-dom";
 
-const PlayersList = () => {
+const PlayersList = ({hasJoinedGame}) => {
     const ws = useContext(WsContext);
 
     let {id} = useParams();
@@ -58,7 +58,7 @@ const PlayersList = () => {
     };
 
     return (
-        <Card sx={{minWidth: 100}}>
+        <Card sx={{minWidth: 90, height:"calc(98vh - 224px)"}}>
             <CardContent>
                 <List>
                     {
@@ -82,7 +82,7 @@ const PlayersList = () => {
                                             <FormControlLabel control={
                                                 <Checkbox aria-label={'private message'}
                                                           onChange={(e) => handlePMChange(e, cur.id)}/>
-                                            } label="Private message"/>
+                                            } label={hasJoinedGame ? "PM":"Private message"}/>
 
                                         }
                                         {
