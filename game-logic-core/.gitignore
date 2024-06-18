@@ -4,3 +4,4 @@
 !/project/build.properties
 target/
 #saves/[0-9]*/
+.bsp/
