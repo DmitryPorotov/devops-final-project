@@ -213,7 +213,7 @@ const Lobby = () => {
                                 if (joined) {
                                     setCanSelectHouse(false);
                                     setAlreadyJoined(true);
-                                    !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
+                                    // !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
                                 } else {
                                     setCanSelectHouse(true);
                                     setAlreadyJoined(false);
@@ -331,7 +331,7 @@ const Lobby = () => {
             joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
         });
         setAlreadyJoined(true);
-        !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
+        // !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
     };
 
 
@@ -355,8 +355,11 @@ const Lobby = () => {
                 }
             </LobbyHeader>
             <div style={{display: "flex"}}>
-                <div style={{flexFlow: "row", flexGrow: 2}}>
-                    {!isLoginModalOpen && <Chat lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
+                <div style={{flexFlow: "row", flexGrow: alreadyJoined ? 10: 2}}>
+                    <div style={{flexFlow:"column", display:"flex"}}>
+                    {alreadyJoined && <iframe style={{width:"100%", border:"none", flexGrow:3, minHeight:"50vh", height:"calc(98vh - 430px)"}} src={`/lobby/${id}/game/index.html`}/>}
+                    {!isLoginModalOpen && <Chat style={{flexGrow:1}} lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
+                    </div>
                 </div>
                 <div style={{flexFlow: "row", flexGrow: 1, padding:".2rem"}}> 
                     <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
@@ -387,7 +390,7 @@ const Lobby = () => {
                             }
                         </CardContent>
                     </Card>
-                    <PlayersList id={id}/>
+                    <PlayersList id={id} hasJoinedGame={alreadyJoined}/>
                 </div>
             </div>
             {isLoginModalOpen &&

@@ -16,7 +16,7 @@ const InputField = ({
     if (!value) value = '';
 
     return (
-        <div className={'form-field'}>
+        <div style={{margin:".5rem 0"}}>
             <TextField
                 label={labelText}
                 variant='filled'
@@ -28,7 +28,7 @@ const InputField = ({
             />
             {errorMessages && errorMessages.length > 0 &&
                 errorMessages.map((e, i) =>
-                    <Alert severity="error" key={i}>{e}</Alert>
+                    <Alert style={{margin:".2rem 0"}} severity="error" key={i}>{e}</Alert>
                 )
             }
         </div>

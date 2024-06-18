@@ -62,7 +62,12 @@ const BaseLoginSignupForm = ({
 
     return (
         <Card variant="outlined" style={{maxWidth: "25rem",padding:"3%"}}>
-            <form className={'the-form'} onSubmit={handleSubmit}>
+            <form className={'the-form'} style={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "15rem",
+                margin: "auto"
+            }} onSubmit={handleSubmit}>
                 <h2>{formTitle}</h2>
                 <InputField
                     labelText={'E-mail'}

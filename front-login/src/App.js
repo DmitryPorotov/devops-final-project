@@ -1,6 +1,5 @@
 import React, {createContext, useCallback, useContext, useMemo, useState} from "react";
 import LoginForm from "./Pages/LoginForm";
-import './main.css';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import SignupForm from "./Pages/SignupForm";
 import Lobbies from "./Pages/Lobbies";
@@ -98,7 +97,7 @@ const App = () => {
         loggedUser,
         loginCallback: null,
         globalError: null,
-    }), [storeUser, setIsLoginShown, isLoginShown]);
+    }), [storeUser, setIsLoginShown, isLoginShown, loggedUser]);
 
     const wsContextValue = {
         websocket,
