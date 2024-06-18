@@ -20,8 +20,13 @@ args = parser.parse_args()
 def start():
     proj_root = get_project_path()
     is_error = False
+    is_nest_error = False
+    is_worker_error = False
+    is_static_content_error = False
 
-    # todo add a check that the .cache in the init directory exists
+    if not os.path.exists("../init/.cache") or not os.path.exists("../init/.cache/bob.jar"):
+        print_error("Run the init script before running this script.")
+        exit(1)
 
     if not args.save_only and (not args.only or 'worker' in args.only):
         print_header('Building the worker...')
@@ -32,7 +37,7 @@ def start():
                                  'sbt', 'assembly'])
         if result.returncode != 0:
             print_error('Worker build failed.')
-            is_error = True
+            is_worker_error = True
         else:
             print_success('The worker jar was built successfully.')
 
@@ -45,7 +50,7 @@ def start():
                                  'npx', 'nest', 'build'])
         if result.returncode != 0:
             print_error('Web server transpiling failed.')
-            is_error = True
+            is_nest_error = True
         else:
             print_success('Web server transpiling was successful.')
 
@@ -58,7 +63,7 @@ def start():
                                  'npx', 'react-scripts', 'build'])
         if result.returncode != 0:
             print_error('Building React front-end failed.')
-            is_error = True
+            is_static_content_error = True
         else:
             print_success('Building React front-end successful.')
 
@@ -76,7 +81,7 @@ def start():
 
         if result.returncode != 0:
             print_error('Building Defold front-end failed.')
-            is_error = True
+            is_static_content_error = True
         else:
             print_success('Building Defold front-end was successful.')
 
@@ -92,39 +97,49 @@ def start():
     if args.save or args.save_only:
         if not os.path.exists("../../build"):
             os.mkdir("../../build")
-        print_header("Zipping and saving the docker images to the 'build' directory...")
+        print_header("Zipping and saving the docker images to the 'build' directory...\n")
 
         print_header("Saving Web Server...")
-        with open('../../build/web_server.tar.gz', 'w') as outfile:
-            save = subprocess.run(['docker', 'save', 'web_server_prod'], check=True, capture_output=True)
-            result = subprocess.run(["gzip"], input=save.stdout, stdout=outfile)
-            if result.returncode != 0:
-                print_error('Saving Web Server docker image failed.')
-                is_error = True
-            else:
-                print_success('Saving Web Server docker image was successful.')
+        if is_nest_error:
+            print_warning("There was an error building the Nest.js server, skipping...")
+        else:
+            with open('../../build/web_server.tar.gz', 'w') as outfile:
+                save = subprocess.run(['docker', 'save', 'web_server_prod'], check=True, capture_output=True)
+                result = subprocess.run(["gzip"], input=save.stdout, stdout=outfile)
+                if result.returncode != 0:
+                    print_error('Saving Web Server docker image failed.')
+                    is_error = True
+                else:
+                    print_success('Saving Web Server docker image was successful.')
 
         print_header("Saving Worker...")
-        with open('../../build/worker.tar.gz', 'w') as outfile:
-            save = subprocess.run(['docker', 'save', 'worker_prod'], check=True, capture_output=True)
-            result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
-            if result.returncode != 0:
-                print_error('Saving Worker docker image failed.')
-                is_error = True
-            else:
-                print_success('Saving Worker docker image was successful.')
+        if is_worker_error:
+            print_warning("There was an error building the worker, skipping...")
+        else:
+            with open('../../build/worker.tar.gz', 'w') as outfile:
+                save = subprocess.run(['docker', 'save', 'worker_prod'], check=True, capture_output=True)
+                result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
+                if result.returncode != 0:
+                    print_error('Saving Worker docker image failed.')
+                    is_error = True
+                else:
+                    print_success('Saving Worker docker image was successful.')
 
         print_header("Saving Nginx...")
-        with open('../../build/nginx.tar.gz', 'w') as outfile:
-            save = subprocess.run(['docker', 'save', 'nginx_prod'], check=True, capture_output=True)
-            result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
-            if result.returncode != 0:
-                print_error('Saving Nginx docker image failed.')
-                is_error = True
-            else:
-                print_success('Saving Nginx docker image was successful.')
+        if is_static_content_error:
+            print_warning("There was an error building the static web content, skipping...")
+        else:
+            with open('../../build/nginx.tar.gz', 'w') as outfile:
+                save = subprocess.run(['docker', 'save', 'nginx_prod'], check=True, capture_output=True)
+                result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
+                if result.returncode != 0:
+                    print_error('Saving Nginx docker image failed.')
+                    is_error = True
+                else:
+                    print_success('Saving Nginx docker image was successful.')
 
-    if is_error:
+    if is_error or is_worker_error or is_static_content_error or is_nest_error:
+        print_error("There was an error in the process! Check what went wrong and rerun.")
         exit(1)
 
 

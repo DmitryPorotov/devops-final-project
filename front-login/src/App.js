@@ -98,7 +98,7 @@ const App = () => {
         loggedUser,
         loginCallback: null,
         globalError: null,
-    }), [storeUser, setIsLoginShown, isLoginShown]);
+    }), [storeUser, setIsLoginShown, isLoginShown, loggedUser]);
 
     const wsContextValue = {
         websocket,

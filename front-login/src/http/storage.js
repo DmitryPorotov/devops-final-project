@@ -11,7 +11,7 @@
 class Storage {
     /**
      *
-     * @returns {Promise<User|any>}
+     * @returns {User|null}
      */
     static getUser() {
         const userStr = window.localStorage.getItem('_user');
@@ -23,7 +23,7 @@ class Storage {
 
     /**
      * @param {User} user
-     * @returns {Promise<void>}
+     * @returns {void}
      */
     static setUser(user) {
         window.localStorage.setItem('_user', JSON.stringify(user));
@@ -32,7 +32,7 @@ class Storage {
     /**
      * @param {number} lobbyId
      * @param {string} house
-     * @returns {Promise<void>}
+     * @returns {void}
      */
     static setHouseForLobby(lobbyId, house) {
         window.localStorage.setItem(`_lobby${lobbyId}house`, house);
