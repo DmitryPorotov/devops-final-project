@@ -4,7 +4,7 @@ import { ConflictException } from "@nestjs/common"
 import {BaseLobbyAction} from "./base-lobby-action";
 import doesUserIdMatch from '../../does-user-id-match.function'
 
-export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
+export default function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
     return function <T2 = (this: BaseLobbyAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
     (target: BaseLobbyAction, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
         const original = descriptor.value as (WebsocketWithUserInterface, MessageInterface, Lobby) => Promise<void>;
@@ -30,7 +30,6 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                         let lobby;
                         if (!this.lobbies.has(message.lobbyId)) {
                             lobby = {
-                                id: lobbyEntity.id,
                                 owner: lobbyEntity.owner.id,
                                 clients: [client],
                                 participants: lobbyEntity.participants.map(u => u.id)
@@ -45,6 +44,7 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                             else {
                                 lobby.clients.push(client)
                             }
+                            lobby.owner = lobbyEntity.owner.id;
                             lobby.participants = lobbyEntity.participants.map(u => u.id);
                         }
                         this.logger.debug('trying to process in decorator');
@@ -79,7 +79,8 @@ export function AuthToLobby(ownerOnly: boolean = false): MethodDecorator {
                     client.send(JSON.stringify(error))
                 }
             } catch (e) {
-                this.logger.warn('decorator exception ' + e)
+                this.logger.warn('decorator exception ' + e, e.stack);
+                throw e;
             }
         } as any
     }

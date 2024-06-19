@@ -4,7 +4,7 @@ import { ConflictException } from "@nestjs/common"
 import {BaseGameAction} from "./base-game-action";
 import doesUserIdMatch from '../../does-user-id-match.function'
 
-export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
+export default function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
     return function <T2 = (this: BaseGameAction, client: WebsocketWithUserInterface, message: MessageInterface) => Promise<void>>
     (target: BaseGameAction, propertyKey: string, descriptor:TypedPropertyDescriptor<T2>) {
         const original = descriptor.value as (WebsocketWithUserInterface, MessageInterface) => Promise<void>;
@@ -36,14 +36,15 @@ export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
                                     body: e.message
                                 },
                                 userId: client.user.id,
-                                lobbyId: lobby.id,
+                                lobbyId: message.lobbyId,
                                 messageId: message.messageId,
                                 type: 'error'
                             };
                             client.send(JSON.stringify(error))
                         } else throw e;
                     }
-                } else {
+                }
+                else {
                     this.logger.debug('in decorator else');
                     const error: MessageInterface = {
                         type: 'error',
@@ -64,5 +65,3 @@ export function AuthToGame(ownerOnly: boolean = false): MethodDecorator {
     }
 }
 
-
-export default AuthToGame;
