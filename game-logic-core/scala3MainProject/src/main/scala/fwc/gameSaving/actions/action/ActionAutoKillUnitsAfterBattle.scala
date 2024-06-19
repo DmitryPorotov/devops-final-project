@@ -4,8 +4,8 @@ import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.Combat
 import fwc.game.board.TrackThrone
-import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseKillUnitsAfterBattle}
+import fwc.game.houses.{HouseType, HouseWolf}
+import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import fwc.gameSaving.actions.{Action, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -38,7 +38,12 @@ case class ActionAutoKillUnitsAfterBattle(
     else
       gameState.copy(
         combat = updatedCombat2,
-        subPhase = SubPhaseAutoRetreatAfterBattle()
+        subPhase =
+          if updatedCombat2.winner.contains(updatedCombat2.defenderHouse)
+          then SubPhaseAutoRetreatAfterBattle()
+          else if updatedCombat2.winnerCard.exists(_.isWolf0) 
+          then SubPhaseResolveHouseCard(HouseWolf, 0)
+            else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
       )
 
   }

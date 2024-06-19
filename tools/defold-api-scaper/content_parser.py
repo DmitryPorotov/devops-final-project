@@ -63,10 +63,11 @@ class ContentParser:
                 .replace(']', '')
                 .replace('-', '_')
                 .replace('repeat', 'repeat_'),
-                'types':  ContentParser._read_function_as_param(types_str) if 'function(' in types_str else
+                'types': ContentParser._read_function_as_param(types_str) if 'function(' in types_str else
                 (ContentParser._type_substitute(t) for t in types_str.split(', ')),
                 'descr': ('[optional]' if ('[' in tds[0].xpath('string()')) else '') +
-                         (tds[2].text if tds[2].text is not None else '').strip()
+                         (tds[2].xpath('string()') if tds[2].text is not None else '').strip()
+                .replace('\n\n', '\n')
             })
         return l
 

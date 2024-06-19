@@ -6,10 +6,9 @@ import fwc.game.board.TileNumber
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
 import fwc.game.phases.PhaseAction
-import fwc.game.phases.actionSubPhases.SubPhaseRetreatUnitsAfterBattle
+import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterCombat, SubPhaseRetreatUnitsAfterBattle}
 import fwc.game.phases.roundEventsSubPhases.SubPhaseDisbandUnit
-import fwc.game.planningPhase.OrderMarch
-import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepMarchOrders
+import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepCombatCleanUp
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -60,8 +59,8 @@ case class ActionRetreatUnitsAfterBattle(
     val toConsolidate = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies, houseType)
     val newPhase =
       if toConsolidate(houseType).nonEmpty
-      then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepMarchOrders, PhaseAction)
-      else NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.winner.head)
+      then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepCombatCleanUp, PhaseAction)
+      else SubPhaseCleanUpAfterCombat()
 
     gameState.copy(
       subPhase = newPhase,

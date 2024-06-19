@@ -134,13 +134,66 @@ def get_api(api_url: str):
                 ))
             for pr_ in last['params']:
                 print('---@param {} {} {}'.format(pr_["name"], ' | '.join(pr_["types"]),
-                                                  pr_["descr"].replace('\n', ' ')))
+                                                  pr_["descr"].replace('\n', '\n--- ')))
             if 'returns' in last:
                 print('---@return {} {}'.format(' | '.join(last['returns'][0]['types']),
-                                                last['returns'][0]['descr']))
+                                                last['returns'][0]['descr']).replace('\n', '\n--- '))
             print('function {}({}) end'.format(last['function_name'], ', '
                                                .join(pr_['name'] for pr_ in last['params'])))
 
+
+print(
+    '''
+---@class hash: userdata
+
+---@class node: userdata
+
+---@class constant: userdata
+
+---@class url: userdata
+
+---@class b2Body: userdata
+
+---@class b2World: userdata
+
+---@class b2BodyType: number
+
+---@class predicate: userdata
+
+---@class bufferstream: userdata
+
+---@class constant_buffer: userdata
+
+---@class render_target: userdata
+
+---@class handle: userdata
+
+---@class texture: userdata
+
+---@class vector: table
+
+---@class vector3
+---@field x number
+---@field y number
+---@field z number
+
+---@class vector4
+---@field x number
+---@field y number
+---@field z number
+---@field w number
+
+---@class matrix4
+---@field c0 vector4
+---@field c1 vector4
+---@field c2 vector4
+---@field c3 vector4
+
+---@class quat: vector4
+---@class quaternion: vector4
+
+'''
+)
 
 urls = get_api_urls()
 

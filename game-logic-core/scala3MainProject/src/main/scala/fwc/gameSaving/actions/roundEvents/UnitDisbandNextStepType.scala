@@ -16,8 +16,8 @@ case object UnitDisbandNextStepPlanningPhase extends UnitDisbandNextStepType {
   override def toString: String = "planningPhase"
 }
 
-case object UnitDisbandNextStepMarchOrders extends UnitDisbandNextStepType {
-  override def toString: String = "marchOrders"
+case object UnitDisbandNextStepCombatCleanUp extends UnitDisbandNextStepType {
+  override def toString: String = "combatCleanUp"
 }
 
 object UnitDisbandNextStepType {
@@ -26,6 +26,6 @@ object UnitDisbandNextStepType {
       case "deck1" => UnitDisbandNextStepDeck1
       case "deck2" => UnitDisbandNextStepDeck2
       case "planningPhase" => UnitDisbandNextStepPlanningPhase
-      case "marchOrders" => UnitDisbandNextStepMarchOrders
+      case "combatCleanUp" => UnitDisbandNextStepCombatCleanUp
       case s => throw new FWCException(s"Unknown UnitDisbandNextStepType $s")
 }

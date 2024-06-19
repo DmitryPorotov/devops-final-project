@@ -1,6 +1,5 @@
 package fwc.game.phases.roundEventsSubPhases
 
-import fwc.JsonSerializable
 import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseSingleHouse}
 import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepType

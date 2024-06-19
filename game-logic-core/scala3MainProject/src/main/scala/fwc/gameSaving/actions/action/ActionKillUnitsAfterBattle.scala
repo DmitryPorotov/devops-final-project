@@ -5,7 +5,7 @@ import fwc.game.GameState
 import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitGarrison, MilitaryUnitPowerToken}
 import fwc.game.houses.{HouseType, HouseWolf}
 import fwc.game.phases.SubPhase
-import fwc.game.phases.actionSubPhases.{SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
+import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterCombat, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import fwc.game.planningPhase.OrderMarch
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -48,14 +48,7 @@ case class ActionKillUnitsAfterBattle(
 
     val loserHouse = gameState.combat.loser.head
 
-    val winnerHasWolf0 =
-        (gameState.combat.winner.head == gameState.combat.attackerHouse
-        && gameState.combat.attackerCard != null
-        && gameState.combat.attackerCard.isWolf0)
-        ||
-        (gameState.combat.winner.head == gameState.combat.defenderHouse
-          && gameState.combat.defenderCard != null
-          && gameState.combat.defenderCard.isWolf0)
+    val winnerHasWolf0 = gameState.combat.winnerCard.exists(_.isWolf0)
 
     val possibleRetreatFunc =
         if armiesLeft.exists(
@@ -67,7 +60,7 @@ case class ActionKillUnitsAfterBattle(
           if winnerHasWolf0
           then SubPhaseResolveHouseCard(HouseWolf, 0)
           else SubPhaseRetreatUnitsAfterBattle(loserHouse)
-        else NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.winner.head)
+        else SubPhaseCleanUpAfterCombat()
 
     val newPhase: SubPhase =
       if isAttackerAction

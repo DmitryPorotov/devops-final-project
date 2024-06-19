@@ -24,7 +24,7 @@ case class ActionDisbandUnitDueToSupplies(
 
     val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseDisbandUnit]
 
-    if currentPhase.nextStep == UnitDisbandNextStepMarchOrders || currentPhase.mainPhase != PhaseRoundEvents
+    if currentPhase.nextStep == UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != PhaseRoundEvents
     then throw new ActionException("Wrong phase")
 
     if currentPhase.houseType != houseType

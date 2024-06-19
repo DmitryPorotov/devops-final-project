@@ -1,3 +1,4 @@
+
 ---@class hash: userdata
 
 ---@class node: userdata
@@ -46,17 +47,18 @@
 ---@class quat: vector4
 ---@class quaternion: vector4
 
+
 ---@module b2d
 
 ---
 --- Get the Box2D body from a collision object
 ---@param url string | hash | url the url to the game object collision component
----@return b2Body the body if successful. Otherwise
+---@return b2Body the body if successful. Otherwise nil.
 function b2d.get_body(url) end
 
 ---
 --- Get the Box2D world from the current collection
----@return b2World the world if successful. Otherwise
+---@return b2World the world if successful. Otherwise nil.
 function b2d.get_world() end
 
 ---@module b2d.body
@@ -68,7 +70,7 @@ function b2d.get_world() end
 ---
 --- Apply an angular impulse.
 ---@param body b2Body body
----@param impulse number impulse the angular impulse in units of kg
+---@param impulse number impulse the angular impulse in units of kgmm/s
 function b2d.body.apply_angular_impulse(body, impulse) end
 
 ---
@@ -147,9 +149,15 @@ function b2d.body.get_linear_velocity(body) end
 
 ---
 --- Get the world velocity of a local point.
----@overload fun(body: b2Body, world_point: vector3): vector3 Get the world linear velocity of a world point attached to this body.
 ---@param body b2Body body
----@param world_point vector3 a point in local coordinates.
+---@param local_point vector3 a point in local coordinates.
+---@return vector3 the world velocity of a point.
+function b2d.body.get_linear_velocity_from_local_point(body, local_point) end
+
+---
+--- Get the world linear velocity of a world point attached to this body.
+---@param body b2Body body
+---@param world_point vector3 a point in world coordinates.
 ---@return vector3 the world velocity of a point.
 function b2d.body.get_linear_velocity_from_world_point(body, world_point) end
 
@@ -200,7 +208,7 @@ function b2d.body.get_type(body) end
 ---
 --- Get the parent world of this body.
 ---@param body b2Body body
----@return b2World
+---@return b2World 
 function b2d.body.get_world(body) end
 
 ---
@@ -383,6 +391,9 @@ function buffer.copy_stream(dst, dstoffset, src, srcoffset, count) end
 --- vertex position, color, normal etc.
 ---@param element_count number The number of elements the buffer should hold
 ---@param declaration table A table where each entry (table) describes a stream
+--- hash | string name: The name of the stream
+--- constant type: The data type of the stream
+--- number count: The number of values each element should hold
 ---@return buffer the new buffer
 function buffer.create(element_count, declaration) end
 
@@ -397,7 +408,7 @@ function buffer.get_bytes(buffer, stream_name) end
 --- Get a named metadata entry from a buffer along with its type.
 ---@param buf buffer the buffer to get the metadata from
 ---@param metadata_name hash | string name of the metadata entry
----@return table | nil table of metadata values or
+---@return table | nil table of metadata values or nil if the entry does not exist
 function buffer.get_metadata(buf, metadata_name) end
 
 ---
@@ -417,17 +428,6 @@ function buffer.get_stream(buffer, stream_name) end
 function buffer.set_metadata(buf, metadata_name, values, value_type) end
 
 
----@module camera
-
----
---- makes camera active
----@param url string | hash | url url of camera component
-function camera.acquire_focus(url) end
-
----
---- deactivate camera
----@param url string | hash | url url of camera component
-function camera.release_focus(url) end
 
 ---@module collectionfactory
 ---@field STATUS_LOADED number loaded
@@ -463,6 +463,9 @@ function collectionfactory.create(url, position, rotation, properties, scale) en
 --- Calling this function when the factory is not marked as dynamic loading always returns COMP_COLLECTION_FACTORY_STATUS_LOADED.
 ---@param url string | hash | url [optional]the collection factory component to get status from
 ---@return constant status of the collection factory component
+--- collectionfactory.STATUS_UNLOADED
+--- collectionfactory.STATUS_LOADING
+--- collectionfactory.STATUS_LOADED
 function collectionfactory.get_status(url) end
 
 ---
@@ -470,13 +473,19 @@ function collectionfactory.get_status(url) end
 --- Calling this function when the factory is not marked as dynamic loading does nothing.
 ---@param url string | hash | url [optional]the collection factory component to load
 ---@param complete_function function(self, url, result) [optional]function to call when resources are loaded.
+--- self
+--- object The current object.
+--- url
+--- url url of the collection factory component
+--- result
+--- boolean True if resource were loaded successfully
 function collectionfactory.load(url, complete_function) end
 
 ---
 --- Changes the prototype for the collection factory.
 --- Setting the prototype to "nil" will revert back to the original prototype.
 ---@param url string | hash | url [optional]the collection factory component
----@param prototype string | nil [optional]the path to the new prototype, or
+---@param prototype string | nil [optional]the path to the new prototype, or nil
 function collectionfactory.set_prototype(url, prototype) end
 
 ---
@@ -505,7 +514,8 @@ function collectionproxy.get_resources(collectionproxy) end
 --- LiveUpdate functionality. It should be considered good practise to always
 --- check whether or not there are any missing resources in a collection proxy
 --- before attempting to load the collection proxy.
----@param collectionproxy url the collectionproxy to check for missing resources.
+---@param collectionproxy url the collectionproxy to check for missing
+--- resources.
 ---@return table the missing resources
 function collectionproxy.missing_resources(collectionproxy) end
 
@@ -555,8 +565,8 @@ function crash.get_signum(handle) end
 ---
 --- reads a system field from a loaded crash dump
 ---@param handle number crash dump handle
----@param index number system field enum. Must be less than
----@return string | nil value recorded in the crash dump, or
+---@param index number system field enum. Must be less than crash.SYSFIELD_MAX
+---@return string | nil value recorded in the crash dump, or nil if it didn't exist
 function crash.get_sys_field(handle, index) end
 
 ---
@@ -569,7 +579,7 @@ function crash.get_user_field(handle, index) end
 ---
 --- The crash dump will be removed from disk upon a successful
 --- load, so loading is one-shot.
----@return number | nil handle to the loaded dump, or
+---@return number | nil handle to the loaded dump, or nil if no dump was found
 function crash.load_previous() end
 
 ---
@@ -611,10 +621,10 @@ function crash.write_dump() end
 ---  Calling factory.create on a factory that is marked as dynamic without having loaded resources
 --- using factory.load will synchronously load and create resources which may affect application performance.
 ---@param url string | hash | url the factory that should create a game object.
----@param position vector3 [optional]the position of the new game object, the position of the game object calling
----@param rotation quaternion [optional]the rotation of the new game object, the rotation of the game object calling
+---@param position vector3 [optional]the position of the new game object, the position of the game object calling factory.create() is used by default, or if the value is nil.
+---@param rotation quaternion [optional]the rotation of the new game object, the rotation of the game object calling factory.create() is used by default, or if the value is nil.
 ---@param properties table [optional]the properties defined in a script attached to the new game object.
----@param scale number | vector3 [optional]the scale of the new game object (must be greater than 0), the scale of the game object containing the factory is used by default, or if the value is
+---@param scale number | vector3 [optional]the scale of the new game object (must be greater than 0), the scale of the game object containing the factory is used by default, or if the value is nil
 ---@return hash the global id of the spawned game object
 function factory.create(url, position, rotation, properties, scale) end
 
@@ -624,6 +634,9 @@ function factory.create(url, position, rotation, properties, scale) end
 --- factory.STATUS_LOADED.
 ---@param url string | hash | url [optional]the factory component to get status from
 ---@return constant status of the factory component
+--- factory.STATUS_UNLOADED
+--- factory.STATUS_LOADING
+--- factory.STATUS_LOADED
 function factory.get_status(url) end
 
 ---
@@ -631,12 +644,18 @@ function factory.get_status(url) end
 --- Calling this function when the factory is not marked as dynamic loading does nothing.
 ---@param url string | hash | url [optional]the factory component to load
 ---@param complete_function function(self, url, result) [optional]function to call when resources are loaded.
+--- self
+--- object The current object.
+--- url
+--- url url of the factory component
+--- result
+--- boolean True if resources were loaded successfully
 function factory.load(url, complete_function) end
 
 ---
 --- Changes the prototype for the factory.
 ---@param url string | hash | url [optional]the factory component
----@param prototype string | nil [optional]the path to the new prototype, or
+---@param prototype string | nil [optional]the path to the new prototype, or nil
 function factory.set_prototype(url, prototype) end
 
 ---
@@ -708,11 +727,23 @@ function factory.unload(url) end
 ---@param url string | hash | url url of the game object or component having the property
 ---@param property string | hash id of the property to animate
 ---@param playback constant playback mode of the animation
+--- go.PLAYBACK_ONCE_FORWARD
+--- go.PLAYBACK_ONCE_BACKWARD
+--- go.PLAYBACK_ONCE_PINGPONG
+--- go.PLAYBACK_LOOP_FORWARD
+--- go.PLAYBACK_LOOP_BACKWARD
+--- go.PLAYBACK_LOOP_PINGPONG
 ---@param to number | vector3 | vector4 | quaternion target property value
----@param easing constant | vector easing to use during animation. Either specify a constant, see the
+---@param easing constant | vector easing to use during animation. Either specify a constant, see the animation guide for a complete list, or a vmath.vector with a curve
 ---@param duration number duration of the animation in seconds
 ---@param delay number [optional]delay before the animation starts in seconds
 ---@param complete_function function(self, url, property) [optional]optional function to call when the animation has completed
+--- self
+--- object The current object.
+--- url
+--- url The game object or component instance for which the property is animated.
+--- property
+--- hash The id of the animated property.
 function go.animate(url, property, playback, to, easing, duration, delay, complete_function) end
 
 ---
@@ -743,7 +774,9 @@ function go.exists(url) end
 --- gets a named property of the specified game object or component
 ---@param url string | hash | url url of the game object or component having the property
 ---@param property string | hash id of the property to retrieve
----@param options table [optional]optional options table - index
+---@param options table [optional]optional options table
+--- - index integer index into array property (1 based)
+--- - key hash name of internal property
 ---@return any the value of the specified property
 function go.get(url, property, options) end
 
@@ -757,7 +790,7 @@ function go.get_id(path) end
 ---
 --- Get the parent for a game object instance.
 ---@param id string | hash | url [optional]optional id of the game object instance to get parent for, defaults to the instance containing the calling script
----@return hash | nil parent instance or
+---@return hash | nil parent instance or nil
 function go.get_parent(id) end
 
 ---
@@ -833,7 +866,9 @@ function go.property(name, value) end
 ---@param url string | hash | url url of the game object or component having the property
 ---@param property string | hash id of the property to set
 ---@param value any | table the value to set
----@param options table [optional]optional options table - index
+---@param options table [optional]optional options table
+--- - index integer index into array property (1 based)
+--- - key hash name of internal property
 function go.set(url, property, value, options) end
 
 ---
@@ -995,18 +1030,61 @@ function go.world_to_local_transform(transformation, url) end
 --- together. See the examples below for more information.
 ---@param node node node to animate
 ---@param property string | constant property to animate
+--- "position"
+--- "rotation"
+--- "euler"
+--- "scale"
+--- "color"
+--- "outline"
+--- "shadow"
+--- "size"
+--- "fill_angle" (pie)
+--- "inner_radius" (pie)
+--- "slice9" (slice9)
+--- The following property constants are defined equaling the corresponding property string names.
+--- gui.PROP_POSITION
+--- gui.PROP_ROTATION
+--- gui.PROP_EULER
+--- gui.PROP_SCALE
+--- gui.PROP_COLOR
+--- gui.PROP_OUTLINE
+--- gui.PROP_SHADOW
+--- gui.PROP_SIZE
+--- gui.PROP_FILL_ANGLE
+--- gui.PROP_INNER_RADIUS
+--- gui.PROP_SLICE9
 ---@param to number | vector3 | vector4 | quaternion target property value
----@param easing constant | vector easing to use during animation.      Either specify one of the
+---@param easing constant | vector easing to use during animation.
+---      Either specify one of the gui.EASING_* constants or provide a
+---      vector with a custom curve. See the animation guide for more information.
 ---@param duration number duration of the animation in seconds.
 ---@param delay number [optional]delay before the animation starts in seconds.
----@param complete_function function(self, node) [optional]function to call when the      animation has completed
+---@param complete_function function(self, node) [optional]function to call when the
+---      animation has completed
 ---@param playback constant [optional]playback mode
+--- gui.PLAYBACK_ONCE_FORWARD
+--- gui.PLAYBACK_ONCE_BACKWARD
+--- gui.PLAYBACK_ONCE_PINGPONG
+--- gui.PLAYBACK_LOOP_FORWARD
+--- gui.PLAYBACK_LOOP_BACKWARD
+--- gui.PLAYBACK_LOOP_PINGPONG
 function gui.animate(node, property, to, easing, duration, delay, complete_function, playback) end
 
 ---
 --- If an animation of the specified node is currently running (started by gui.animate), it will immediately be canceled.
 ---@param node node node that should have its animation canceled
 ---@param property string | constant property for which the animation should be canceled
+--- "position"
+--- "rotation"
+--- "euler"
+--- "scale"
+--- "color"
+--- "outline"
+--- "shadow"
+--- "size"
+--- "fill_angle" (pie)
+--- "inner_radius" (pie)
+--- "slice9" (slice9)
 function gui.cancel_animation(node, property) end
 
 ---
@@ -1057,6 +1135,9 @@ function gui.get(node, property) end
 --- resolutions that differs from the one in the project settings.
 ---@param node node node from which to get the adjust mode (node)
 ---@return constant the current adjust mode
+--- gui.ADJUST_FIT
+--- gui.ADJUST_ZOOM
+--- gui.ADJUST_STRETCH
 function gui.get_adjust_mode(node) end
 
 ---
@@ -1069,6 +1150,11 @@ function gui.get_alpha(node) end
 --- Blend mode defines how the node will be blended with the background.
 ---@param node node node from which to get the blend mode
 ---@return constant blend mode
+--- gui.BLEND_ALPHA
+--- gui.BLEND_ADD
+--- gui.BLEND_ADD_ALPHA
+--- gui.BLEND_MULT
+--- gui.BLEND_SCREEN
 function gui.get_blend_mode(node) end
 
 ---
@@ -1081,6 +1167,8 @@ function gui.get_clipping_inverted(node) end
 --- Clipping mode defines how the node will clip it's children nodes
 ---@param node node node from which to get the clipping mode
 ---@return constant clipping mode
+--- gui.CLIPPING_MODE_NONE
+--- gui.CLIPPING_MODE_STENCIL
 function gui.get_clipping_mode(node) end
 
 ---
@@ -1191,7 +1279,7 @@ function gui.get_leading(node) end
 --- Returns whether a text node is in line-break mode or not.
 --- This is only useful for text nodes.
 ---@param node node node from which to get the line-break for
----@return boolean
+---@return boolean 
 function gui.get_line_break(node) end
 
 ---
@@ -1210,6 +1298,8 @@ function gui.get_node(id) end
 --- Returns the outer bounds mode for a pie node.
 ---@param node node node from where to get the outer bounds mode
 ---@return constant the outer bounds mode of the pie node:
+--- gui.PIEBOUNDS_RECTANGLE
+--- gui.PIEBOUNDS_ELLIPSE
 function gui.get_outer_bounds(node) end
 
 ---
@@ -1223,7 +1313,7 @@ function gui.get_outline(node) end
 --- Returns the parent node of the specified node.
 --- If the supplied node does not have a parent, nil is returned.
 ---@param node node the node from which to retrieve its parent
----@return node | nil parent instance or
+---@return node | nil parent instance or nil
 function gui.get_parent(node) end
 
 ---
@@ -1243,6 +1333,15 @@ function gui.get_perimeter_vertices(node) end
 --- The pivot specifies how the node is drawn and rotated from its position.
 ---@param node node node to get pivot from
 ---@return constant pivot constant
+--- gui.PIVOT_CENTER
+--- gui.PIVOT_N
+--- gui.PIVOT_NE
+--- gui.PIVOT_E
+--- gui.PIVOT_SE
+--- gui.PIVOT_S
+--- gui.PIVOT_SW
+--- gui.PIVOT_W
+--- gui.PIVOT_NW
 function gui.get_pivot(node) end
 
 ---
@@ -1294,6 +1393,8 @@ function gui.get_size(node) end
 --- any size mode setting.
 ---@param node node node from which to get the size mode (node)
 ---@return constant the current size mode
+--- gui.SIZE_MODE_MANUAL
+--- gui.SIZE_MODE_AUTO
 function gui.get_size_mode(node) end
 
 ---
@@ -1344,12 +1445,18 @@ function gui.get_width() end
 --- The x-anchor specifies how the node is moved when the game is run in a different resolution.
 ---@param node node node to get x-anchor from
 ---@return constant anchor constant
+--- gui.ANCHOR_NONE
+--- gui.ANCHOR_LEFT
+--- gui.ANCHOR_RIGHT
 function gui.get_xanchor(node) end
 
 ---
 --- The y-anchor specifies how the node is moved when the game is run in a different resolution.
 ---@param node node node to get y-anchor from
 ---@return constant anchor constant
+--- gui.ANCHOR_NONE
+--- gui.ANCHOR_TOP
+--- gui.ANCHOR_BOTTOM
 function gui.get_yanchor(node) end
 
 ---
@@ -1360,7 +1467,7 @@ function gui.hide_keyboard() end
 --- Returns true if a node is enabled and false if it's not.
 --- Disabled nodes are not rendered and animations acting on them are not evaluated.
 ---@param node node node to query
----@param recursive boolean check hierarchy recursively
+---@param recursive boolean [optional]check hierarchy recursively
 ---@return boolean whether the node is enabled or not
 function gui.is_enabled(node, recursive) end
 
@@ -1414,6 +1521,9 @@ function gui.new_text_node(pos, text) end
 ---@param width number texture width
 ---@param height number texture height
 ---@param type string | constant texture type
+--- "rgb" - RGB
+--- "rgba" - RGBA
+--- "l" - LUMINANCE
 ---@param buffer string texture data
 ---@param flip boolean flip texture vertically
 ---@return boolean texture creation was successful
@@ -1423,8 +1533,8 @@ function gui.new_texture(texture_id, width, height, type, buffer, flip) end
 --- Tests whether a coordinate is within the bounding box of a
 --- node.
 ---@param node node node to be tested for picking
----@param x number x-coordinate (see
----@param y number y-coordinate (see
+---@param x number x-coordinate (see on_input )
+---@param y number y-coordinate (see on_input )
 ---@return boolean pick result
 function gui.pick_node(node, x, y) end
 
@@ -1435,13 +1545,34 @@ function gui.pick_node(node, x, y) end
 ---@param node node node to set animation for
 ---@param animation string | hash animation id
 ---@param complete_function function(self, node) [optional]optional function to call when the animation has completed
+--- self
+--- object The current object.
+--- node
+--- node The node that is animated.
 ---@param play_properties table [optional]optional table with properties
+--- offset
+--- number The normalized initial value of the animation cursor when the animation starts playing
+--- playback_rate
+--- number The rate with which the animation will be played. Must be positive
 function gui.play_flipbook(node, animation, complete_function, play_properties) end
 
 ---
 --- Plays the paricle fx for a gui node
 ---@param node node node to play particle fx for
 ---@param emitter_state_function function(self, node, emitter, state) [optional]optional callback function that will be called when an emitter attached to this particlefx changes state.
+--- self
+--- object The current object
+--- node
+--- hash The particle fx node, or nil if the node was deleted
+--- emitter
+--- hash The id of the emitter
+--- state
+--- constant the new state of the emitter:
+--- 
+--- particlefx.EMITTER_STATE_SLEEPING
+--- particlefx.EMITTER_STATE_PRESPAWN
+--- particlefx.EMITTER_STATE_SPAWNING
+--- particlefx.EMITTER_STATE_POSTSPAWN
 function gui.play_particlefx(node, emitter_state_function) end
 
 ---
@@ -1482,6 +1613,9 @@ function gui.set(node, property, value) end
 --- resolutions that differs from the one in the project settings.
 ---@param node node node to set adjust mode for
 ---@param adjust_mode constant adjust mode to set
+--- gui.ADJUST_FIT
+--- gui.ADJUST_ZOOM
+--- gui.ADJUST_STRETCH
 function gui.set_adjust_mode(node, adjust_mode) end
 
 ---
@@ -1495,6 +1629,11 @@ function gui.set_alpha(node, alpha) end
 --- Blend mode defines how the node will be blended with the background.
 ---@param node node node to set blend mode for
 ---@param blend_mode constant blend mode to set
+--- gui.BLEND_ALPHA
+--- gui.BLEND_ADD
+--- gui.BLEND_ADD_ALPHA
+--- gui.BLEND_MULT
+--- gui.BLEND_SCREEN
 function gui.set_blend_mode(node, blend_mode) end
 
 ---
@@ -1507,6 +1646,8 @@ function gui.set_clipping_inverted(node, inverted) end
 --- Clipping mode defines how the node will clip it's children nodes
 ---@param node node node to set clipping mode for
 ---@param clipping_mode constant clipping mode to set
+--- gui.CLIPPING_MODE_NONE
+--- gui.CLIPPING_MODE_STENCIL
 function gui.set_clipping_mode(node, clipping_mode) end
 
 ---
@@ -1617,6 +1758,8 @@ function gui.set_material(node, material) end
 --- Sets the outer bounds mode for a pie node.
 ---@param node node node for which to set the outer bounds mode
 ---@param bounds_mode constant the outer bounds mode of the pie node:
+--- gui.PIEBOUNDS_RECTANGLE
+--- gui.PIEBOUNDS_ELLIPSE
 function gui.set_outer_bounds(node, bounds_mode) end
 
 ---
@@ -1629,8 +1772,8 @@ function gui.set_outline(node, color) end
 ---
 --- Sets the parent node of the specified node.
 ---@param node node node for which to set its parent
----@param parent node parent node to set
----@param keep_scene_transform boolean optional flag to make the scene position being perserved
+---@param parent node [optional]parent node to set, pass nil to remove parent
+---@param keep_scene_transform boolean [optional]optional flag to make the scene position being perserved
 function gui.set_parent(node, parent, keep_scene_transform) end
 
 ---
@@ -1649,6 +1792,15 @@ function gui.set_perimeter_vertices(node, vertices) end
 --- The pivot specifies how the node is drawn and rotated from its position.
 ---@param node node node to set pivot for
 ---@param pivot constant pivot constant
+--- gui.PIVOT_CENTER
+--- gui.PIVOT_N
+--- gui.PIVOT_NE
+--- gui.PIVOT_E
+--- gui.PIVOT_SE
+--- gui.PIVOT_S
+--- gui.PIVOT_SW
+--- gui.PIVOT_W
+--- gui.PIVOT_NW
 function gui.set_pivot(node, pivot) end
 
 ---
@@ -1708,6 +1860,8 @@ function gui.set_size(node, size) end
 --- any size mode setting.
 ---@param node node node to set size mode for
 ---@param size_mode constant size mode to set
+--- gui.SIZE_MODE_MANUAL
+--- gui.SIZE_MODE_AUTO
 function gui.set_size_mode(node, size_mode) end
 
 ---
@@ -1719,7 +1873,7 @@ function gui.set_slice9(node, values) end
 ---
 --- Set the text value of a text node. This is only useful for text nodes.
 ---@param node node node to set text for
----@param text string text to set
+---@param text string | number text to set
 function gui.set_text(node, text) end
 
 ---
@@ -1739,6 +1893,9 @@ function gui.set_texture(node, texture) end
 ---@param width number texture width
 ---@param height number texture height
 ---@param type string | constant texture type
+--- "rgb" - RGB
+--- "rgba" - RGBA
+--- "l" - LUMINANCE
 ---@param buffer string texture data
 ---@param flip boolean flip texture vertically
 ---@return boolean setting the data was successful
@@ -1761,12 +1918,18 @@ function gui.set_visible(node, visible) end
 --- The x-anchor specifies how the node is moved when the game is run in a different resolution.
 ---@param node node node to set x-anchor for
 ---@param anchor constant anchor constant
+--- gui.ANCHOR_NONE
+--- gui.ANCHOR_LEFT
+--- gui.ANCHOR_RIGHT
 function gui.set_xanchor(node, anchor) end
 
 ---
 --- The y-anchor specifies how the node is moved when the game is run in a different resolution.
 ---@param node node node to set y-anchor for
 ---@param anchor constant anchor constant
+--- gui.ANCHOR_NONE
+--- gui.ANCHOR_TOP
+--- gui.ANCHOR_BOTTOM
 function gui.set_yanchor(node, anchor) end
 
 ---
@@ -1775,13 +1938,18 @@ function gui.set_yanchor(node, anchor) end
 --- the device.
 --- This function is only available on iOS and Android.  .
 ---@param type constant keyboard type
+--- gui.KEYBOARD_TYPE_DEFAULT
+--- gui.KEYBOARD_TYPE_EMAIL
+--- gui.KEYBOARD_TYPE_NUMBER_PAD
+--- gui.KEYBOARD_TYPE_PASSWORD
 ---@param autoclose boolean if the keyboard should automatically close when clicking outside
 function gui.show_keyboard(type, autoclose) end
 
 ---
 --- Stops the particle fx for a gui node
 ---@param node node node to stop particle fx for
----@param options table options when stopping the particle fx. Supported options:
+---@param options table [optional]options when stopping the particle fx. Supported options:
+--- boolean clear: instantly clear spawned particles
 function gui.stop_particlefx(node, options) end
 
 ---@module html5
@@ -1799,7 +1967,9 @@ function html5.run(code) end
 --- invoked when a user interacts with the web page by clicking, touching or typing.
 --- The callback can then call DOM restricted actions like requesting a pointer lock,
 --- or start playing sounds the first time the callback is invoked.
----@param callback function(self) | nil The interaction callback. Pass an empty function or
+---@param callback function(self) | nil The interaction callback. Pass an empty function or nil if you no longer wish to receive callbacks.
+--- self
+--- object The calling script
 function html5.set_interaction_listener(callback) end
 
 ---@module http
@@ -1810,9 +1980,25 @@ function html5.set_interaction_listener(callback) end
 ---@param url string target url
 ---@param method string HTTP/HTTPS method, e.g. "GET", "PUT", "POST" etc.
 ---@param callback function(self, id, response) response callback function
+--- self
+--- object The script instance
+--- id
+--- hash Internal message identifier. Do not use!
+--- response
+--- table The response data. Contains the fields:
+--- 
+--- number status: the status of the response
+--- string response: the response data (if not saved on disc)
+--- table headers: all the returned headers
+--- string path: the stored path (if saved to disc)
+--- string error: if any unforeseen errors occurred (e.g. file I/O)
 ---@param headers table [optional]optional table with custom headers
 ---@param post_data string [optional]optional data to send
 ---@param options table [optional]optional table with request parameters. Supported entries:
+--- number timeout: timeout in seconds
+--- string path: path on disc where to download the file. Only overwrites the path if status is 200.  Path should be absolute
+--- boolean ignore_cache: don't return cached data if we get a 304.  Not available in HTML5 build
+--- boolean chunked_transfer: use chunked transfer encoding for https requests larger than 16kb. Defaults to true.  Not available in HTML5 build
 function http.request(url, method, callback, headers, post_data, options) end
 
 ---@module image
@@ -1826,14 +2012,40 @@ function http.request(url, method, callback, headers, post_data, options) end
 --- Load image (PNG or JPEG) from buffer.
 ---@param buffer string image data buffer
 ---@param options table [optional]An optional table containing parameters for loading the image. Supported entries:
----@return table | nil object or
+--- premultiply_alpha
+--- boolean True if alpha should be premultiplied into the color components. Defaults to false.
+--- flip_vertically
+--- boolean True if the image contents should be flipped vertically. Defaults to false.
+---@return table | nil object or nil if loading fails. The object is a table with the following fields:
+--- number width: image width
+--- number height: image height
+--- constant type: image type
+--- image.TYPE_RGB
+--- image.TYPE_RGBA
+--- image.TYPE_LUMINANCE
+--- image.TYPE_LUMINANCE_ALPHA
+--- 
+--- string buffer: the raw image data
 function image.load(buffer, options) end
 
 ---
 --- Load image (PNG or JPEG) from a string buffer.
 ---@param buffer string image data buffer
 ---@param options table [optional]An optional table containing parameters for loading the image. Supported entries:
----@return table | nil object or
+--- premultiply_alpha
+--- boolean True if alpha should be premultiplied into the color components. Defaults to false.
+--- flip_vertically
+--- boolean True if the image contents should be flipped vertically. Defaults to false.
+---@return table | nil object or nil if loading fails. The object is a table with the following fields:
+--- number width: image width
+--- number height: image height
+--- constant type: image type
+--- image.TYPE_RGB
+--- image.TYPE_RGBA
+--- image.TYPE_LUMINANCE
+--- image.TYPE_LUMINANCE_ALPHA
+--- 
+--- buffer buffer: the script buffer that holds the decompressed image data. See buffer.create how to use the buffer.
 function image.load_buffer(buffer, options) end
 
 ---@module json
@@ -1844,7 +2056,8 @@ function image.load_buffer(buffer, options) end
 --- Decode a string of JSON data into a Lua table.
 --- A Lua error is raised for syntax errors.
 ---@param json string json data
----@param options table table with decode options
+---@param options table [optional]table with decode options
+--- bool decode_null_as_userdata: wether to decode a JSON null value as json.null or nil (default is nil)
 ---@return table decoded json
 function json.decode(json, options) end
 
@@ -1852,7 +2065,8 @@ function json.decode(json, options) end
 --- Encode a lua table to a JSON string.
 --- A Lua error is raised for syntax errors.
 ---@param tbl table lua table to encode
----@param options table table with encode options
+---@param options table [optional]table with encode options
+--- string encode_empty_table_as_object: wether to encode an empty table as an JSON object or array (default is object)
 ---@return string encoded json
 function json.encode(tbl, options) end
 
@@ -1931,8 +2145,14 @@ function liveupdate.remove_mount(name) end
 --- to this function.
 --- The path is stored in the (internal) live update location.
 ---@param path string the path to the original file on disc
----@param callback function(self, status) the callback function executed after the storage has completed
+---@param callback function(self, status) the callback function
+--- executed after the storage has completed
+--- self
+--- object The current object.
+--- status
+--- constant the status of the store operation (See liveupdate.store_manifest)
 ---@param options table [optional]optional table with extra parameters. Supported entries:
+--- boolean verify: if archive should be verified as well as stored (defaults to true)
 function liveupdate.store_archive(path, callback, options) end
 
 ---
@@ -1945,7 +2165,20 @@ function liveupdate.store_archive(path, callback, options) end
 --- developer to update the game, modify existing resources, or add new
 --- resources to the game through LiveUpdate.
 ---@param manifest_buffer string the binary data that represents the manifest
----@param callback function(self, status) the callback function executed once the engine has attempted to store the manifest.
+---@param callback function(self, status) the callback function
+--- executed once the engine has attempted to store the manifest.
+--- self
+--- object The current object.
+--- status
+--- constant the status of the store operation:
+--- 
+--- liveupdate.LIVEUPDATE_OK
+--- liveupdate.LIVEUPDATE_INVALID_RESOURCE
+--- liveupdate.LIVEUPDATE_VERSION_MISMATCH
+--- liveupdate.LIVEUPDATE_ENGINE_VERSION_MISMATCH
+--- liveupdate.LIVEUPDATE_SIGNATURE_MISMATCH
+--- liveupdate.LIVEUPDATE_BUNDLED_RESOURCE_MISMATCH
+--- liveupdate.LIVEUPDATE_FORMAT_ERROR
 function liveupdate.store_manifest(manifest_buffer, callback) end
 
 ---
@@ -1953,8 +2186,17 @@ function liveupdate.store_manifest(manifest_buffer, callback) end
 --- internally before being added to the data archive.
 ---@param manifest_reference number The manifest to check against.
 ---@param data string The resource data that should be stored.
----@param hexdigest string The expected hash for the resource, retrieved through collectionproxy.missing_resources.
----@param callback function(self, hexdigest, status) The callback function that is executed once the engine has been attempted to store the resource.
+---@param hexdigest string The expected hash for the resource,
+--- retrieved through collectionproxy.missing_resources.
+---@param callback function(self, hexdigest, status) The callback
+--- function that is executed once the engine has been attempted to store
+--- the resource.
+--- self
+--- object The current object.
+--- hexdigest
+--- string The hexdigest of the resource.
+--- status
+--- boolean Whether or not the resource was successfully stored.
 function liveupdate.store_resource(manifest_reference, data, hexdigest, callback) end
 
 ---@module model
@@ -1993,8 +2235,33 @@ function model.get_mesh_enabled(url, mesh_id) end
 ---@param url string | hash | url the model for which to play the animation
 ---@param anim_id string | hash id of the animation to play
 ---@param playback constant playback mode of the animation
----@param play_properties table [optional]optional table with properties Play properties table:
+--- go.PLAYBACK_ONCE_FORWARD
+--- go.PLAYBACK_ONCE_BACKWARD
+--- go.PLAYBACK_ONCE_PINGPONG
+--- go.PLAYBACK_LOOP_FORWARD
+--- go.PLAYBACK_LOOP_BACKWARD
+--- go.PLAYBACK_LOOP_PINGPONG
+---@param play_properties table [optional]optional table with properties
+--- Play properties table:
+--- blend_duration
+--- number Duration of a linear blend between the current and new animation.
+--- offset
+--- number The normalized initial value of the animation cursor when the animation starts playing.
+--- playback_rate
+--- number The rate with which the animation will be played. Must be positive.
 ---@param complete_function function(self, message_id, message, sender) [optional]function to call when the animation has completed.
+--- self
+--- object The current object.
+--- message_id
+--- hash The name of the completion message, "model_animation_done".
+--- message
+--- table Information about the completion:
+--- 
+--- hash animation_id - the animation that was completed.
+--- constant playback - the playback mode for the animation.
+--- 
+--- sender
+--- url The invoker of the callback: the model component.
 function model.play_anim(url, anim_id, playback, play_properties, complete_function) end
 
 ---
@@ -2040,6 +2307,19 @@ function msg.url(socket, path, fragment) end
 ---  A particle FX will continue to emit particles even if the game object the particle FX component belonged to is deleted. You can call particlefx.stop() to stop it from emitting more particles.
 ---@param url string | hash | url the particle fx that should start playing.
 ---@param emitter_state_function function(self, id, emitter, state) [optional]optional callback function that will be called when an emitter attached to this particlefx changes state.
+--- self
+--- object The current object
+--- id
+--- hash The id of the particle fx component
+--- emitter
+--- hash The id of the emitter
+--- state
+--- constant the new state of the emitter:
+--- 
+--- particlefx.EMITTER_STATE_SLEEPING
+--- particlefx.EMITTER_STATE_PRESPAWN
+--- particlefx.EMITTER_STATE_SPAWNING
+--- particlefx.EMITTER_STATE_POSTSPAWN
 function particlefx.play(url, emitter_state_function) end
 
 ---
@@ -2069,16 +2349,21 @@ function particlefx.set_constant(url, emitter, constant, value) end
 --- Stopping a particle FX does not remove already spawned particles.
 --- Which particle FX to stop is identified by the URL.
 ---@param url string | hash | url the particle fx that should stop playing
----@param options table Options when stopping the particle fx. Supported options:
+---@param options table [optional]Options when stopping the particle fx. Supported options:
+--- boolean clear: instantly clear spawned particles
 function particlefx.stop(url, options) end
 
 ---@module physics
----@field JOINT_TYPE_FIXED number The following properties are available when connecting a joint of
----@field JOINT_TYPE_HINGE number The following properties are available when connecting a joint of
----@field JOINT_TYPE_SLIDER number The following properties are available when connecting a joint of
----@field JOINT_TYPE_SPRING number The following properties are available when connecting a joint of
----@field JOINT_TYPE_WELD number The following properties are available when connecting a joint of
----@field JOINT_TYPE_WHEEL number The following properties are available when connecting a joint of
+---@field JOINT_TYPE_FIXED number The following properties are available when connecting a joint of 
+---@field JOINT_TYPE_HINGE number The following properties are available when connecting a joint of 
+---@field JOINT_TYPE_SLIDER number The following properties are available when connecting a joint of 
+---@field JOINT_TYPE_SPRING number The following properties are available when connecting a joint of 
+---@field JOINT_TYPE_WELD number The following properties are available when connecting a joint of 
+---@field JOINT_TYPE_WHEEL number The following properties are available when connecting a joint of 
+---@field SHAPE_TYPE_BOX number 
+---@field SHAPE_TYPE_CAPSULE number 
+---@field SHAPE_TYPE_HULL number 
+---@field SHAPE_TYPE_SPHERE number 
 
 
 ---
@@ -2090,7 +2375,9 @@ function particlefx.stop(url, options) end
 ---@param position_a vector3 local position where to attach the joint on the first collision object
 ---@param collisionobject_b string | hash | url second collision object
 ---@param position_b vector3 local position where to attach the joint on the second collision object
----@param properties table [optional]optional joint specific properties table See each joint type for possible properties field. The one field that is accepted for all joint types is: -
+---@param properties table [optional]optional joint specific properties table
+--- See each joint type for possible properties field. The one field that is accepted for all joint types is:
+--- - boolean collide_connected: Set this flag to true if the attached bodies should collide.
 function physics.create_joint(joint_type, collisionobject_a, joint_id, position_a, collisionobject_b, position_b, properties) end
 
 ---
@@ -2112,6 +2399,10 @@ function physics.get_gravity() end
 --- Returns the group name of a collision object as a hash.
 ---@param url string | hash | url the collision object to return the group of.
 ---@return hash hash value of the group.
+--- local function check_is_enemy()
+---     local group = physics.get_group("#collisionobject")
+---     return group == hash("enemy")
+--- end
 function physics.get_group(url) end
 
 ---
@@ -2121,6 +2412,7 @@ function physics.get_group(url) end
 ---@param collisionobject string | hash | url collision object where the joint exist
 ---@param joint_id string | hash id of the joint
 ---@return table properties table. See the joint types for what fields are available, the only field available for all types is:
+--- boolean collide_connected: Set this flag to true if the attached bodies should collide.
 function physics.get_joint_properties(collisionobject, joint_id) end
 
 ---
@@ -2147,6 +2439,11 @@ function physics.get_joint_reaction_torque(collisionobject, joint_id) end
 ---@param url string | hash | url the collision object to check the mask of.
 ---@param group string the name of the group to check for.
 ---@return boolean boolean value of the maskbit. 'true' if present, 'false' otherwise.
+--- local function is_invincible()
+---     -- check if the collisionobject would collide with the "bullet" group
+---     local invincible = physics.get_maskbit("#collisionobject", "bullet")
+---     return invincible
+--- end
 function physics.get_maskbit(url, group) end
 
 ---
@@ -2154,6 +2451,30 @@ function physics.get_maskbit(url, group) end
 ---@param url string | hash | url the collision object.
 ---@param shape string | hash the name of the shape to get data for.
 ---@return table A table containing meta data about the physics shape
+--- type
+--- number The shape type. Supported values:
+--- 
+--- physics.SHAPE_TYPE_SPHERE
+--- physics.SHAPE_TYPE_BOX
+--- physics.SHAPE_TYPE_CAPSULE Only supported for 3D physics
+--- physics.SHAPE_TYPE_HULL
+--- The returned table contains different fields depending on which type the shape is.
+--- If the shape is a sphere:
+--- diameter
+--- number the diameter of the sphere shape
+--- If the shape is a box:
+--- dimensions
+--- vector3 a vmath.vector3 of the box dimensions
+--- If the shape is a capsule:
+--- diameter
+--- number the diameter of the capsule poles
+--- height
+--- number the height of the capsule
+--- local function get_shape_meta()
+---     local sphere = physics.get_shape("#collisionobject", "my_sphere_shape")
+---     -- returns a table with sphere.diameter
+---     return sphere
+--- end
 function physics.get_shape(url, shape) end
 
 ---
@@ -2165,8 +2486,10 @@ function physics.get_shape(url, shape) end
 ---@param from vector3 the world position of the start of the ray
 ---@param to vector3 the world position of the end of the ray
 ---@param groups table a lua table containing the hashed groups for which to test collisions against
----@param options table a lua table containing options for the raycast.
----@return table | nil It returns a list. If missed it returns
+---@param options table [optional]a lua table containing options for the raycast.
+--- all
+--- boolean Set to true to return all ray cast hits. If false, it will only return the closest hit.
+---@return table | nil It returns a list. If missed it returns nil. See ray_cast_response for details on the returned values.
 function physics.raycast(from, to, groups, options) end
 
 ---
@@ -2195,12 +2518,15 @@ function physics.set_gravity(gravity) end
 --- a collision object in the editor.
 ---@param url string | hash | url the collision object affected.
 ---@param group string the new group name to be assigned.
+--- local function change_collision_group()
+---      physics.set_group("#collisionobject", "enemy")
+--- end
 function physics.set_group(url, group) end
 
 ---
 --- Flips the collision shapes horizontally for a collision object
 ---@param url string | hash | url the collision object that should flip its shapes
----@param flip boolean
+---@param flip boolean 
 function physics.set_hflip(url, flip) end
 
 ---
@@ -2209,12 +2535,26 @@ function physics.set_hflip(url, flip) end
 --- Note: Currently only supported in 2D physics.
 ---@param collisionobject string | hash | url collision object where the joint exist
 ---@param joint_id string | hash id of the joint
----@param properties table joint specific properties table Note: The
+---@param properties table joint specific properties table
+--- Note: The collide_connected field cannot be updated/changed after a connection has been made.
 function physics.set_joint_properties(collisionobject, joint_id, properties) end
 
 ---
 --- sets a physics world event listener. If a function is set, physics messages will no longer be sent.
 ---@param callback function(self, event, data) | nil A callback that receives information about all the physics interactions in this physics world.
+--- self
+--- object The calling script
+--- event
+--- constant The type of event. Can be one of these messages:
+--- 
+--- contact_point_event
+--- collision_event
+--- trigger_event
+--- ray_cast_response
+--- ray_cast_missed
+--- 
+--- data
+--- table The callback value data is a table that contains event-related data. See the documentation for details on the messages.
 function physics.set_listener(callback) end
 
 ---
@@ -2222,6 +2562,10 @@ function physics.set_listener(callback) end
 ---@param url string | hash | url the collision object to change the mask of.
 ---@param group string the name of the group (maskbit) to modify in the mask.
 ---@param maskbit boolean boolean value of the new maskbit. 'true' to enable, 'false' to disable.
+--- local function make_invincible()
+---     -- no longer collide with the "bullet" group
+---     physics.set_maskbit("#collisionobject", "bullet", false)
+--- end
 function physics.set_maskbit(url, group, maskbit) end
 
 ---
@@ -2230,13 +2574,32 @@ function physics.set_maskbit(url, group, maskbit) end
 --- comes from having to recreate the shape objects when certain shapes needs to be updated.
 ---@param url string | hash | url the collision object.
 ---@param shape string | hash the name of the shape to get data for.
----@param table table the shape data to update the shape with. See
+---@param table table the shape data to update the shape with.
+--- See physics.get_shape for a detailed description of each field in the data table.
+--- local function set_shape_data()
+---     -- set capsule shape data
+---     local data = {}
+---     data.type = physics.SHAPE_TYPE_CAPSULE
+---     data.diameter = 10
+---     data.height = 20
+---     physics.set_shape("#collisionobject", "my_capsule_shape", data)
+---     -- set sphere shape data
+---     data = {}
+---     data.type = physics.SHAPE_TYPE_SPHERE
+---     data.diameter = 10
+---     physics.set_shape("#collisionobject", "my_sphere_shape", data)
+---     -- set box shape data
+---     data = {}
+---     data.type = physics.SHAPE_TYPE_BOX
+---     data.dimensions = vmath.vector3(10, 10, 5)
+---     physics.set_shape("#collisionobject", "my_box_shape", data)
+--- end
 function physics.set_shape(url, shape, table) end
 
 ---
 --- Flips the collision shapes vertically for a collision object
 ---@param url string | hash | url the collision object that should flip its shapes
----@param flip boolean
+---@param flip boolean 
 function physics.set_vflip(url, flip) end
 
 ---
@@ -2250,6 +2613,11 @@ function physics.update_mass(collisionobject, mass) end
 --- Collision objects tend to fall asleep when inactive for a small period of time for
 --- efficiency reasons. This function wakes them up.
 ---@param url string | hash | url the collision object to wake.
+--- function on_input(self, action_id, action)
+---     if action_id == hash("test") and action.pressed then
+---         physics.wakeup("#collisionobject")
+---     end
+--- end
 function physics.wakeup(url) end
 
 ---@module profiler
@@ -2308,11 +2676,21 @@ function profiler.scope_end() end
 ---
 --- Set the on-screen profile mode - run, pause, record or show peak frame
 ---@param mode constant the mode to set the ui profiler in
+--- profiler.MODE_RUN This is default mode that continously shows the last frame
+--- profiler.MODE_PAUSE Pauses on the currently displayed frame
+--- profiler.MODE_SHOW_PEAK_FRAME Pauses on the currently displayed frame but shows a new frame if that frame is slower
+--- profiler.MODE_RECORD Records all incoming frames to the recording buffer
+--- To stop recording, switch to a different mode such as MODE_PAUSE or MODE_RUN.
+--- You can also use the view_recorded_frame function to display a recorded frame. Doing so stops the recording as well.
+--- Every time you switch to recording mode the recording buffer is cleared.
+--- The recording buffer is also cleared when setting the MODE_SHOW_PEAK_FRAME mode.
 function profiler.set_ui_mode(mode) end
 
 ---
 --- Set the on-screen profile view mode - minimized or expanded
 ---@param mode constant the view mode to set the ui profiler in
+--- profiler.VIEW_MODE_FULL The default mode which displays all the ui profiler details
+--- profiler.VIEW_MODE_MINIMIZED Minimized mode which only shows the top header (fps counters and ui profiler mode)
 function profiler.set_ui_view_mode(mode) end
 
 ---
@@ -2333,83 +2711,88 @@ function profiler.set_ui_vsync_wait_visible(visible) end
 --- Pauses and displays a frame from the recording buffer in the on-screen profiler ui
 --- The frame to show can either be an absolute frame or a relative frame to the current frame.
 ---@param frame_index table a table where you specify one of the following parameters:
+--- distance The offset from the currently displayed frame (this is truncated between zero and the number of recorded frames)
+--- frame The frame index in the recording buffer (1 is first recorded frame)
 function profiler.view_recorded_frame(frame_index) end
 
 ---@module render
----@field BLEND_CONSTANT_ALPHA number
----@field BLEND_CONSTANT_COLOR number
----@field BLEND_DST_ALPHA number
----@field BLEND_DST_COLOR number
----@field BLEND_ONE number
----@field BLEND_ONE_MINUS_CONSTANT_ALPHA number
----@field BLEND_ONE_MINUS_CONSTANT_COLOR number
----@field BLEND_ONE_MINUS_DST_ALPHA number
----@field BLEND_ONE_MINUS_DST_COLOR number
----@field BLEND_ONE_MINUS_SRC_ALPHA number
----@field BLEND_ONE_MINUS_SRC_COLOR number
----@field BLEND_SRC_ALPHA number
----@field BLEND_SRC_ALPHA_SATURATE number
----@field BLEND_SRC_COLOR number
----@field BLEND_ZERO number
----@field BUFFER_COLOR0_BIT number
----@field BUFFER_COLOR1_BIT number
----@field BUFFER_COLOR2_BIT number
----@field BUFFER_COLOR3_BIT number
----@field BUFFER_COLOR_BIT number
----@field BUFFER_DEPTH_BIT number
----@field BUFFER_STENCIL_BIT number
----@field COMPARE_FUNC_ALWAYS number
----@field COMPARE_FUNC_EQUAL number
----@field COMPARE_FUNC_GEQUAL number
----@field COMPARE_FUNC_GREATER number
----@field COMPARE_FUNC_LEQUAL number
----@field COMPARE_FUNC_LESS number
----@field COMPARE_FUNC_NEVER number
----@field COMPARE_FUNC_NOTEQUAL number
----@field FACE_BACK number
----@field FACE_FRONT number
----@field FACE_FRONT_AND_BACK number
----@field FILTER_LINEAR number
----@field FILTER_NEAREST number
----@field FORMAT_DEPTH number
----@field FORMAT_LUMINANCE number
+---@field BLEND_CONSTANT_ALPHA number 
+---@field BLEND_CONSTANT_COLOR number 
+---@field BLEND_DST_ALPHA number 
+---@field BLEND_DST_COLOR number 
+---@field BLEND_ONE number 
+---@field BLEND_ONE_MINUS_CONSTANT_ALPHA number 
+---@field BLEND_ONE_MINUS_CONSTANT_COLOR number 
+---@field BLEND_ONE_MINUS_DST_ALPHA number 
+---@field BLEND_ONE_MINUS_DST_COLOR number 
+---@field BLEND_ONE_MINUS_SRC_ALPHA number 
+---@field BLEND_ONE_MINUS_SRC_COLOR number 
+---@field BLEND_SRC_ALPHA number 
+---@field BLEND_SRC_ALPHA_SATURATE number 
+---@field BLEND_SRC_COLOR number 
+---@field BLEND_ZERO number 
+---@field BUFFER_COLOR0_BIT number 
+---@field BUFFER_COLOR1_BIT number 
+---@field BUFFER_COLOR2_BIT number 
+---@field BUFFER_COLOR3_BIT number 
+---@field BUFFER_COLOR_BIT number 
+---@field BUFFER_DEPTH_BIT number 
+---@field BUFFER_STENCIL_BIT number 
+---@field COMPARE_FUNC_ALWAYS number 
+---@field COMPARE_FUNC_EQUAL number 
+---@field COMPARE_FUNC_GEQUAL number 
+---@field COMPARE_FUNC_GREATER number 
+---@field COMPARE_FUNC_LEQUAL number 
+---@field COMPARE_FUNC_LESS number 
+---@field COMPARE_FUNC_NEVER number 
+---@field COMPARE_FUNC_NOTEQUAL number 
+---@field FACE_BACK number 
+---@field FACE_FRONT number 
+---@field FACE_FRONT_AND_BACK number 
+---@field FILTER_LINEAR number 
+---@field FILTER_NEAREST number 
+---@field FORMAT_DEPTH number 
+---@field FORMAT_LUMINANCE number 
 ---@field FORMAT_R16F number May be nil if the format isn't supported
 ---@field FORMAT_R32F number May be nil if the format isn't supported
 ---@field FORMAT_RG16F number May be nil if the format isn't supported
 ---@field FORMAT_RG32F number May be nil if the format isn't supported
----@field FORMAT_RGB number
+---@field FORMAT_RGB number 
 ---@field FORMAT_RGB16F number May be nil if the format isn't supported
 ---@field FORMAT_RGB32F number May be nil if the format isn't supported
----@field FORMAT_RGBA number
+---@field FORMAT_RGBA number 
 ---@field FORMAT_RGBA16F number May be nil if the format isn't supported
 ---@field FORMAT_RGBA32F number May be nil if the format isn't supported
----@field FORMAT_STENCIL number
----@field FRUSTUM_PLANES_ALL number
----@field FRUSTUM_PLANES_SIDES number
----@field RENDER_TARGET_DEFAULT number
----@field STATE_BLEND number
----@field STATE_CULL_FACE number
----@field STATE_DEPTH_TEST number
----@field STATE_POLYGON_OFFSET_FILL number
----@field STATE_STENCIL_TEST number
----@field STENCIL_OP_DECR number
----@field STENCIL_OP_DECR_WRAP number
----@field STENCIL_OP_INCR number
----@field STENCIL_OP_INCR_WRAP number
----@field STENCIL_OP_INVERT number
----@field STENCIL_OP_KEEP number
----@field STENCIL_OP_REPLACE number
----@field STENCIL_OP_ZERO number
----@field WRAP_CLAMP_TO_BORDER number
----@field WRAP_CLAMP_TO_EDGE number
----@field WRAP_MIRRORED_REPEAT number
----@field WRAP_REPEAT number
+---@field FORMAT_STENCIL number 
+---@field FRUSTUM_PLANES_ALL number 
+---@field FRUSTUM_PLANES_SIDES number 
+---@field RENDER_TARGET_DEFAULT number 
+---@field STATE_BLEND number 
+---@field STATE_CULL_FACE number 
+---@field STATE_DEPTH_TEST number 
+---@field STATE_POLYGON_OFFSET_FILL number 
+---@field STATE_STENCIL_TEST number 
+---@field STENCIL_OP_DECR number 
+---@field STENCIL_OP_DECR_WRAP number 
+---@field STENCIL_OP_INCR number 
+---@field STENCIL_OP_INCR_WRAP number 
+---@field STENCIL_OP_INVERT number 
+---@field STENCIL_OP_KEEP number 
+---@field STENCIL_OP_REPLACE number 
+---@field STENCIL_OP_ZERO number 
+---@field WRAP_CLAMP_TO_BORDER number 
+---@field WRAP_CLAMP_TO_EDGE number 
+---@field WRAP_MIRRORED_REPEAT number 
+---@field WRAP_REPEAT number 
 
 
 ---
 --- Clear buffers in the currently enabled render target with specified value. If the render target has been created with multiple
 --- color attachments, all buffers will be cleared with the same value.
 ---@param buffers table table with keys specifying which buffers to clear and values set to clear values. Available keys are:
+--- render.BUFFER_COLOR_BIT
+--- render.BUFFER_DEPTH_BIT
+--- render.BUFFER_STENCIL_BIT
 function render.clear(buffers) end
 
 ---
@@ -2433,6 +2816,12 @@ function render.disable_material() end
 ---
 --- Disables a render state.
 ---@param state constant state to disable
+--- render.STATE_DEPTH_TEST
+--- render.STATE_STENCIL_TEST
+--- render.STATE_BLEND
+--- render.STATE_ALPHA_TEST ( not available on iOS and Android)
+--- render.STATE_CULL_FACE
+--- render.STATE_POLYGON_OFFSET_FILL
 function render.disable_state(state) end
 
 ---
@@ -2447,11 +2836,28 @@ function render.disable_texture(binding) end
 --- go.set (or particlefx.set_constant) on visual components.
 ---@param predicate predicate predicate to draw for
 ---@param options table [optional]optional table with properties:
+--- frustum
+--- vmath.matrix4 A frustum matrix used to cull renderable items. (E.g. local frustum = proj * view). default=nil
+--- frustum_planes
+--- int Determines which sides of the frustum will be used. Default is render.FRUSTUM_PLANES_SIDES.
+--- 
+--- render.FRUSTUM_PLANES_SIDES : The left, right, top and bottom sides of the frustum.
+--- render.FRUSTUM_PLANES_ALL : All 6 sides of the frustum.
+--- 
+--- constants
+--- constant_buffer optional constants to use while rendering
 function render.draw(predicate, options) end
 
 ---
 --- Draws all 3d debug graphics such as lines drawn with "draw_line" messages and physics visualization.
 ---@param options table [optional]optional table with properties:
+--- frustum
+--- vmath.matrix4 A frustum matrix used to cull renderable items. (E.g. local frustum = proj * view). May be nil.
+--- frustum_planes
+--- int Determines which sides of the frustum will be used. Default is render.FRUSTUM_PLANES_SIDES.
+--- 
+--- render.FRUSTUM_PLANES_SIDES : The left, right, top and bottom sides of the frustum.
+--- render.FRUSTUM_PLANES_ALL : All sides of the frustum.
 function render.draw_debug3d(options) end
 
 ---
@@ -2465,6 +2871,12 @@ function render.enable_material(material_id) end
 ---
 --- Enables a particular render state. The state will be enabled until disabled.
 ---@param state constant state to enable
+--- render.STATE_DEPTH_TEST
+--- render.STATE_STENCIL_TEST
+--- render.STATE_BLEND
+--- render.STATE_ALPHA_TEST ( not available on iOS and Android)
+--- render.STATE_CULL_FACE
+--- render.STATE_POLYGON_OFFSET_FILL
 function render.enable_state(state) end
 
 ---
@@ -2481,7 +2893,17 @@ function render.enable_state(state) end
 --- everywhere for the textures that should be shared across different materials.
 ---@param binding number | string | hash texture binding, either by texture unit, string or hash for the sampler name that the texture should be bound to
 ---@param handle_or_name texture | string | hash render target or texture handle that should be bound, or a named resource in the "Render Resource" table in the currently assigned .render file
----@param buffer_type constant [optional]optional buffer type from which to enable the texture. Note that this argument only applies to render targets. Defaults to
+---@param buffer_type constant [optional]optional buffer type from which to enable the texture. Note that this argument only applies to render targets. Defaults to render.BUFFER_COLOR_BIT. These values are supported:
+--- render.BUFFER_COLOR_BIT
+--- If The render target has been created as depth and/or stencil textures, these buffer types can be used:
+--- render.BUFFER_DEPTH_BIT
+--- render.BUFFER_STENCIL_BIT
+--- If the render target has been created with multiple color attachments, these buffer types can be used
+--- to enable those textures as well. Currently 4 color attachments are supported:
+--- render.BUFFER_COLOR0_BIT
+--- render.BUFFER_COLOR1_BIT
+--- render.BUFFER_COLOR2_BIT
+--- render.BUFFER_COLOR3_BIT
 function render.enable_texture(binding, handle_or_name, buffer_type) end
 
 ---
@@ -2495,6 +2917,9 @@ function render.get_height() end
 --- Returns the specified buffer height from a render target.
 ---@param render_target render_target render target from which to retrieve the buffer height
 ---@param buffer_type constant which type of buffer to retrieve the height from
+--- render.BUFFER_COLOR_BIT
+--- render.BUFFER_DEPTH_BIT
+--- render.BUFFER_STENCIL_BIT
 ---@return number the height of the render target buffer texture
 function render.get_render_target_height(render_target, buffer_type) end
 
@@ -2502,6 +2927,10 @@ function render.get_render_target_height(render_target, buffer_type) end
 --- Returns the specified buffer width from a render target.
 ---@param render_target render_target render target from which to retrieve the buffer width
 ---@param buffer_type constant which type of buffer to retrieve the width from
+--- render.BUFFER_COLOR_BIT
+--- render.BUFFER_COLOR[x]_BIT (x: [0..3], if supported!)
+--- render.BUFFER_DEPTH_BIT
+--- render.BUFFER_STENCIL_BIT
 ---@return number the width of the render target buffer texture
 function render.get_render_target_width(render_target, buffer_type) end
 
@@ -2567,6 +2996,20 @@ function render.render_target(name, parameters) end
 function render.set_blend_func(source_factor, destination_factor) end
 
 ---
+--- Sets the current render camera to be used for rendering. If a render camera
+--- has been set by the render script, the renderer will be using its projection and view matrix
+--- during rendering. If a projection and/or view matrix has been set by the render script,
+--- they will not be used until the current render camera has been reset by calling render.set_camera().
+--- If the 'use_frustum' flag in the options table has been set to true, the renderer will automatically use the
+--- camera frustum for frustum culling regardless of what frustum is being passed into the render.draw() function.
+--- Note that the frustum plane option in render.draw can still be used together with the camera.
+---@param camera url | handle | nil camera id to use, or nil to reset
+---@param options table [optional]optional table with properties:
+--- use_frustum
+--- boolean If true, the renderer will use the cameras view-projection matrix for frustum culling (default: false)
+function render.set_camera(camera, options) end
+
+---
 --- Specifies whether the individual color components in the frame buffer is enabled for writing (true) or disabled (false). For example, if blue is false, nothing is written to the blue component of any pixel in any of the color buffers, regardless of the drawing operation attempted. Note that writing are either enabled or disabled for entire color components, not the individual bits of a component.
 --- The component masks are all initially true.
 ---@param red boolean red mask
@@ -2582,6 +3025,9 @@ function render.set_color_mask(red, green, blue, alpha) end
 --- primitives such as points and lines are drawn. The initial value for
 --- face_type is render.FACE_BACK.
 ---@param face_type constant face type
+--- render.FACE_FRONT
+--- render.FACE_BACK
+--- render.FACE_FRONT_AND_BACK
 function render.set_cull_face(face_type) end
 
 ---
@@ -2633,6 +3079,14 @@ function render.set_projection(matrix) end
 --- This function supports render targets created by a render script, or a render target resource.
 ---@param render_target render_target render target to set. render.RENDER_TARGET_DEFAULT to set the default render target
 ---@param options table [optional]optional table with behaviour parameters
+--- transient
+--- table Transient frame buffer types are only valid while the render target is active, i.e becomes undefined when a new target is set by a subsequent call to set_render_target.
+---  Default is all non-transient. Be aware that some hardware uses a combined depth stencil buffer and when this is the case both are considered non-transient if exclusively selected!
+---  A buffer type defined that doesn't exist in the render target is silently ignored.
+--- 
+--- render.BUFFER_COLOR_BIT
+--- render.BUFFER_DEPTH_BIT
+--- render.BUFFER_STENCIL_BIT
 function render.set_render_target(render_target, options) end
 
 ---
@@ -2757,6 +3211,69 @@ function resource.buffer(path) end
 --- and not necessarily that it will be deleted.
 ---@param path string The path to the resource.
 ---@param table table A table containing info about how to create the atlas. Supported entries:
+--- 
+--- texture
+--- string | hash the path to the texture resource, e.g "/main/my_texture.texturec"
+--- 
+--- 
+--- animations
+--- table a list of the animations in the atlas. Supports the following fields:
+--- 
+--- 
+--- id
+--- string the id of the animation, used in e.g sprite.play_animation
+--- 
+--- 
+--- width
+--- integer the width of the animation
+--- 
+--- 
+--- height
+--- integer the height of the animation
+--- 
+--- 
+--- frame_start
+--- integer index to the first geometry of the animation. Indices are lua based and must be in the range of 1 ..  in atlas.
+--- 
+--- 
+--- frame_end
+--- integer index to the last geometry of the animation (non-inclusive). Indices are lua based and must be in the range of 1 ..  in atlas.
+--- 
+--- 
+--- playback
+--- constant optional playback mode of the animation, the default value is go.PLAYBACK_ONCE_FORWARD
+--- 
+--- 
+--- fps
+--- integer optional fps of the animation, the default value is 30
+--- 
+--- 
+--- flip_vertical
+--- boolean optional flip the animation vertically, the default value is false
+--- 
+--- 
+--- flip_horizontal
+--- boolean optional flip the animation horizontally, the default value is false
+--- 
+--- 
+--- geometries
+--- table A list of the geometries that should map to the texture data. Supports the following fields:
+--- 
+--- 
+--- id
+--- string The name of the geometry. Used when matching animations between multiple atlases
+--- 
+--- 
+--- vertices
+--- table a list of the vertices in texture space of the geometry in the form {px0, py0, px1, py1, ..., pxn, pyn}
+--- 
+--- 
+--- uvs
+--- table a list of the uv coordinates in texture space of the geometry in the form of {u0, v0, u1, v1, ..., un, vn}
+--- 
+--- 
+--- indices
+--- table a list of the indices of the geometry in the form {i0, i1, i2, ..., in}. Each tripe in the list represents a triangle.
 ---@return hash Returns the atlas resource path
 function resource.create_atlas(path, table) end
 
@@ -2770,7 +3287,14 @@ function resource.create_atlas(path, table) end
 --- Note that the path to the new resource must have the '.bufferc' extension, "/path/my_buffer" is not a valid path but "/path/my_buffer.bufferc" is.
 --- The path must also be unique, attempting to create a buffer with the same name as an existing resource will raise an error.
 ---@param path string The path to the resource.
----@param table table A table containing info about how to create the buffer. Supported entries:
+---@param table table [optional]A table containing info about how to create the buffer. Supported entries:
+--- 
+--- buffer
+--- buffer the buffer to bind to this resource
+--- 
+--- 
+--- transfer_ownership
+--- boolean optional flag to determine wether or not the resource should take over ownership of the buffer object (default true)
 ---@return hash Returns the buffer resource path
 function resource.create_buffer(path, table) end
 
@@ -2783,6 +3307,56 @@ function resource.create_buffer(path, table) end
 --- If the texture is created without a buffer, the pixel data will be blank.
 ---@param path string The path to the resource.
 ---@param table table A table containing info about how to create the texture. Supported entries:
+--- type
+--- number The texture type. Supported values:
+--- 
+--- resource.TEXTURE_TYPE_2D
+--- resource.TEXTURE_TYPE_CUBE_MAP
+--- 
+--- width
+--- number The width of the texture (in pixels). Must be larger than 0.
+--- height
+--- number The width of the texture (in pixels). Must be larger than 0.
+--- format
+--- number The texture format, note that some of these formats might not be supported by the running device. Supported values:
+--- 
+--- resource.TEXTURE_FORMAT_LUMINANCE
+--- resource.TEXTURE_FORMAT_RGB
+--- resource.TEXTURE_FORMAT_RGBA
+--- These constants might not be available on the device:
+--- resource.TEXTURE_FORMAT_RGB_PVRTC_2BPPV1
+--- resource.TEXTURE_FORMAT_RGB_PVRTC_4BPPV1
+--- resource.TEXTURE_FORMAT_RGBA_PVRTC_2BPPV1
+--- resource.TEXTURE_FORMAT_RGBA_PVRTC_4BPPV1
+--- resource.TEXTURE_FORMAT_RGB_ETC1
+--- resource.TEXTURE_FORMAT_RGBA_ETC2
+--- resource.TEXTURE_FORMAT_RGBA_ASTC_4x4
+--- resource.TEXTURE_FORMAT_RGB_BC1
+--- resource.TEXTURE_FORMAT_RGBA_BC3
+--- resource.TEXTURE_FORMAT_R_BC4
+--- resource.TEXTURE_FORMAT_RG_BC5
+--- resource.TEXTURE_FORMAT_RGBA_BC7
+--- resource.TEXTURE_FORMAT_RGB16F
+--- resource.TEXTURE_FORMAT_RGB32F
+--- resource.TEXTURE_FORMAT_RGBA16F
+--- resource.TEXTURE_FORMAT_RGBA32F
+--- resource.TEXTURE_FORMAT_R16F
+--- resource.TEXTURE_FORMAT_RG16F
+--- resource.TEXTURE_FORMAT_R32F
+--- resource.TEXTURE_FORMAT_RG32F
+--- You can test if the device supports these values by checking if a specific enum is nil or not:
+--- if resource.TEXTURE_FORMAT_RGBA16F ~= nil then
+---     -- it is safe to use this format
+--- end
+--- 
+--- max_mipmaps
+--- number optional max number of mipmaps. Defaults to zero, i.e no mipmap support
+--- compression_type
+--- number optional specify the compression type for the data in the buffer object that holds the texture data. Will only be used when a compressed buffer has been passed into the function.
+--- Creating an empty texture with no buffer data is not supported as a core feature. Defaults to resource.COMPRESSION_TYPE_DEFAULT, i.e no compression. Supported values:
+--- 
+--- COMPRESSION_TYPE_DEFAULT
+--- COMPRESSION_TYPE_BASIS_UASTC
 ---@param buffer buffer optional buffer of precreated pixel data
 ---@return hash The path to the resource.
 function resource.create_texture(path, table, buffer) end
@@ -2799,7 +3373,7 @@ function resource.create_texture(path, table, buffer) end
 --- immediately after the function call. When the new texture has been uploaded, the initial blank texture will be deleted and replaced with the
 --- new texture. Be careful when using the initial texture handle handle as it will not be valid after the upload has finished.
 ---@param path string The path to the resource.
----@param table table
+---@param table table 
 ---@param buffer buffer optional buffer of precreated pixel data
 ---@return hash The path to the resource.
 function resource.create_texture_async(path, table, buffer) end
@@ -2814,6 +3388,10 @@ function resource.font(path) end
 --- Returns the atlas data for an atlas
 ---@param path hash | string The path to the atlas resource
 ---@return table A table with the following entries:
+--- texture
+--- geometries
+--- animations
+--- See resource.set_atlas for a detailed description of each field
 function resource.get_atlas(path) end
 
 ---
@@ -2826,6 +3404,36 @@ function resource.get_buffer(path) end
 --- Gets render target info from a render target resource path or a render target handle
 ---@param path hash | string | handle The path to the resource or a render target handle
 ---@return table A table containing info about the render target:
+--- handle
+--- handle the opaque handle to the texture resource
+--- 'attachments'
+--- table a table of attachments, where each attachment contains the following entries:
+--- handle
+--- handle the opaque handle to the texture resource
+--- width
+--- integer width of the texture
+--- height
+--- integer height of the texture
+--- depth
+--- integer depth of the texture (i.e 1 for a 2D texture and 6 for a cube map)
+--- mipmaps
+--- integer number of mipmaps of the texture
+--- type
+--- number The texture type. Supported values:
+--- 
+--- resource.TEXTURE_TYPE_2D
+--- resource.TEXTURE_TYPE_CUBE_MAP
+--- resource.TEXTURE_TYPE_2D_ARRAY
+--- 
+--- buffer_type
+--- number The attachment buffer type. Supported values:
+--- 
+--- resource.BUFFER_TYPE_COLOR0
+--- resource.BUFFER_TYPE_COLOR1
+--- resource.BUFFER_TYPE_COLOR2
+--- resource.BUFFER_TYPE_COLOR3
+--- resource.BUFFER_TYPE_DEPTH
+--- resource.BUFFER_TYPE_STENCIL
 function resource.get_render_target_info(path) end
 
 ---
@@ -2833,13 +3441,41 @@ function resource.get_render_target_info(path) end
 ---@param url hash the font to get the (unscaled) metrics from
 ---@param text string text to measure
 ---@param options table [optional]A table containing parameters for the text. Supported entries:
+--- width
+--- integer The width of the text field. Not used if line_break is false.
+--- leading
+--- number The leading (default 1.0)
+--- tracking
+--- number The tracking (default 0.0)
+--- line_break
+--- boolean If the calculation should consider line breaks (default false)
 ---@return table a table with the following fields:
+--- width
+--- height
+--- max_ascent
+--- max_descent
 function resource.get_text_metrics(url, text, options) end
 
 ---
 --- Gets texture info from a texture resource path or a texture handle
 ---@param path hash | string | handle The path to the resource or a texture handle
 ---@return table A table containing info about the texture:
+--- handle
+--- handle the opaque handle to the texture resource
+--- width
+--- integer width of the texture
+--- height
+--- integer height of the texture
+--- depth
+--- integer depth of the texture (i.e 1 for a 2D texture and 6 for a cube map)
+--- mipmaps
+--- integer number of mipmaps of the texture
+--- type
+--- number The texture type. Supported values:
+--- 
+--- resource.TEXTURE_TYPE_2D
+--- resource.TEXTURE_TYPE_CUBE_MAP
+--- resource.TEXTURE_TYPE_2D_ARRAY
 function resource.get_texture_info(path) end
 
 ---
@@ -2880,6 +3516,65 @@ function resource.set(path, buffer) end
 --- this function.
 ---@param path hash | string The path to the atlas resource
 ---@param table table A table containing info about the atlas. Supported entries:
+--- 
+--- texture
+--- string | hash the path to the texture resource, e.g "/main/my_texture.texturec"
+--- 
+--- 
+--- animations
+--- table a list of the animations in the atlas. Supports the following fields:
+--- 
+--- 
+--- id
+--- string the id of the animation, used in e.g sprite.play_animation
+--- 
+--- 
+--- width
+--- integer the width of the animation
+--- 
+--- 
+--- height
+--- integer the height of the animation
+--- 
+--- 
+--- frame_start
+--- integer index to the first geometry of the animation. Indices are lua based and must be in the range of 1 ..  in atlas.
+--- 
+--- 
+--- frame_end
+--- integer index to the last geometry of the animation (non-inclusive). Indices are lua based and must be in the range of 1 ..  in atlas.
+--- 
+--- 
+--- playback
+--- constant optional playback mode of the animation, the default value is go.PLAYBACK_ONCE_FORWARD
+--- 
+--- 
+--- fps
+--- integer optional fps of the animation, the default value is 30
+--- 
+--- 
+--- flip_vertical
+--- boolean optional flip the animation vertically, the default value is false
+--- 
+--- 
+--- flip_horizontal
+--- boolean optional flip the animation horizontally, the default value is false
+--- 
+--- 
+--- geometries
+--- table A list of the geometries that should map to the texture data. Supports the following fields:
+--- 
+--- 
+--- vertices
+--- table a list of the vertices in texture space of the geometry in the form {px0, py0, px1, py1, ..., pxn, pyn}
+--- 
+--- 
+--- uvs
+--- table a list of the uv coordinates in texture space of the geometry in the form of {u0, v0, u1, v1, ..., un, vn}
+--- 
+--- 
+--- indices
+--- table a list of the indices of the geometry in the form {i0, i1, i2, ..., in}. Each tripe in the list represents a triangle.
 function resource.set_atlas(path, table) end
 
 ---
@@ -2892,7 +3587,10 @@ function resource.set_atlas(path, table) end
 --- Note: When setting a buffer with transfer_ownership = true, the currently bound buffer in the resource will be destroyed.
 ---@param path hash | string The path to the resource
 ---@param buffer buffer The resource buffer
----@param table table A table containing info about how to set the buffer. Supported entries:
+---@param table table [optional]A table containing info about how to set the buffer. Supported entries:
+--- 
+--- transfer_ownership
+--- boolean optional flag to determine wether or not the resource should take over ownership of the buffer object (default false)
 function resource.set_buffer(path, buffer, table) end
 
 ---
@@ -2905,7 +3603,61 @@ function resource.set_sound(path, buffer) end
 --- Sets the pixel data for a specific texture.
 ---@param path hash | string The path to the resource
 ---@param table table A table containing info about the texture. Supported entries:
+--- type
+--- number The texture type. Supported values:
+--- 
+--- resource.TEXTURE_TYPE_2D
+--- resource.TEXTURE_TYPE_CUBE_MAP
+--- 
+--- width
+--- number The width of the texture (in pixels)
+--- height
+--- number The width of the texture (in pixels)
+--- format
+--- number The texture format, note that some of these formats are platform specific. Supported values:
+--- 
+--- resource.TEXTURE_FORMAT_LUMINANCE
+--- resource.TEXTURE_FORMAT_RGB
+--- resource.TEXTURE_FORMAT_RGBA
+--- These constants might not be available on the device:
+--- - resource.TEXTURE_FORMAT_RGB_PVRTC_2BPPV1
+--- - resource.TEXTURE_FORMAT_RGB_PVRTC_4BPPV1
+--- - resource.TEXTURE_FORMAT_RGBA_PVRTC_2BPPV1
+--- - resource.TEXTURE_FORMAT_RGBA_PVRTC_4BPPV1
+--- - resource.TEXTURE_FORMAT_RGB_ETC1
+--- - resource.TEXTURE_FORMAT_RGBA_ETC2
+--- - resource.TEXTURE_FORMAT_RGBA_ASTC_4x4
+--- - resource.TEXTURE_FORMAT_RGB_BC1
+--- - resource.TEXTURE_FORMAT_RGBA_BC3
+--- - resource.TEXTURE_FORMAT_R_BC4
+--- - resource.TEXTURE_FORMAT_RG_BC5
+--- - resource.TEXTURE_FORMAT_RGBA_BC7
+--- - resource.TEXTURE_FORMAT_RGB16F
+--- - resource.TEXTURE_FORMAT_RGB32F
+--- - resource.TEXTURE_FORMAT_RGBA16F
+--- - resource.TEXTURE_FORMAT_RGBA32F
+--- - resource.TEXTURE_FORMAT_R16F
+--- - resource.TEXTURE_FORMAT_RG16F
+--- - resource.TEXTURE_FORMAT_R32F
+--- - resource.TEXTURE_FORMAT_RG32F
+--- You can test if the device supports these values by checking if a specific enum is nil or not:
+--- if resource.TEXTURE_FORMAT_RGBA16F ~= nil then
+---     -- it is safe to use this format
+--- end
+--- 
+--- x
+--- number optional x offset of the texture (in pixels)
+--- y
+--- number optional y offset of the texture (in pixels)
+--- mipmap
+--- number optional mipmap to upload the data to
+--- compression_type
+--- number optional specify the compression type for the data in the buffer object that holds the texture data. Defaults to resource.COMPRESSION_TYPE_DEFAULT, i.e no compression. Supported values:
+--- 
+--- COMPRESSION_TYPE_DEFAULT
+--- COMPRESSION_TYPE_BASIS_UASTC
 ---@param buffer buffer The buffer of precreated pixel data
+---  To update a cube map texture you need to pass in six times the amount of data via the buffer, since a cube map has six sides!
 function resource.set_texture(path, table, buffer) end
 
 ---
@@ -2981,7 +3733,7 @@ function sound.get_rms(group, window) end
 --- in the Android SDK. If your game is playing any sounds, even with a gain of zero, this
 --- function will return false.
 --- The best time to call this function is:
----@return boolean
+---@return boolean 
 function sound.is_music_playing() end
 
 ---
@@ -2989,7 +3741,7 @@ function sound.is_music_playing() end
 --- other sounds will be muted until the phone call is finished.
 ---  On non mobile platforms,
 --- this function always return false.
----@return boolean
+---@return boolean 
 function sound.is_phone_call_active() end
 
 ---
@@ -3007,7 +3759,18 @@ function sound.pause(url, pause) end
 ---  A sound will continue to play even if the game object the sound component belonged to is deleted. You can call sound.stop() to stop the sound.
 ---@param url string | hash | url the sound that should play
 ---@param play_properties table [optional]
----@param complete_function function(self, message_id, message, sender) [optional]function to call when the sound has finished playing or stopped manually via
+---@param complete_function function(self, message_id, message, sender) [optional]function to call when the sound has finished playing or stopped manually via sound.stop.
+--- self
+--- object The current object.
+--- message_id
+--- hash The name of the completion message, which can be either "sound_done" if the sound has finished playing, or "sound_stopped" if it was stopped manually.
+--- message
+--- table Information about the completion:
+--- 
+--- number play_id - the sequential play identifier that was given by the sound.play function.
+--- 
+--- sender
+--- url The invoker of the callback: the sound component.
 ---@return number The identifier for the sound voice
 function sound.play(url, play_properties, complete_function) end
 
@@ -3054,7 +3817,23 @@ function sound.stop(url, stop_properties) end
 ---@param url string | hash | url the sprite that should play the animation
 ---@param id string | hash hashed id of the animation to play
 ---@param complete_function function(self, message_id, message, sender) [optional]function to call when the animation has completed.
+--- self
+--- object The current object.
+--- message_id
+--- hash The name of the completion message, "animation_done".
+--- message
+--- table Information about the completion:
+--- 
+--- number current_tile - the current tile of the sprite.
+--- hash id - id of the animation that was completed.
+--- 
+--- sender
+--- url The invoker of the callback: the sprite component.
 ---@param play_properties table [optional]optional table with properties:
+--- offset
+--- number the normalized initial value of the animation cursor when the animation starts playing.
+--- playback_rate
+--- number the rate with which the animation will be played. Must be positive.
 function sprite.play_flipbook(url, id, complete_function, play_properties) end
 
 ---
@@ -3062,7 +3841,7 @@ function sprite.play_flipbook(url, id, complete_function, play_properties) end
 --- The sprite is identified by its URL.
 --- If the currently playing animation is flipped by default, flipping it again will make it appear like the original texture.
 ---@param url string | hash | url the sprite that should flip its animations
----@param flip boolean
+---@param flip boolean 
 function sprite.set_hflip(url, flip) end
 
 ---
@@ -3070,7 +3849,7 @@ function sprite.set_hflip(url, flip) end
 --- The sprite is identified by its URL.
 --- If the currently playing animation is flipped by default, flipping it again will make it appear like the original texture.
 ---@param url string | hash | url the sprite that should flip its animations
----@param flip boolean
+---@param flip boolean 
 function sprite.set_vflip(url, flip) end
 
 ---@module sys
@@ -3092,7 +3871,7 @@ function sys.deserialize(buffer) end
 --- Check if a path exists
 --- Good for checking if a file exists before loading a large file
 ---@param path string path to check
----@return boolean
+---@return boolean 
 function sys.exists(path) end
 
 ---
@@ -3108,6 +3887,8 @@ function sys.exit(code) end
 ---  On Android, the app_string is the package identifier for the app.
 ---@param app_string string platform specific string with application package or query, see above for details.
 ---@return table table with application information in the following fields:
+--- installed
+--- boolean true if the application is installed, false otherwise.
 function sys.get_application_info(app_string) end
 
 ---
@@ -3141,11 +3922,20 @@ function sys.get_config_string(key, default_value) end
 --- on mobile platforms.
 --- On desktop, this function always return sys.NETWORK_CONNECTED.
 ---@return constant network connectivity status:
+--- sys.NETWORK_DISCONNECTED (no network connection is found)
+--- sys.NETWORK_CONNECTED_CELLULAR (connected through mobile cellular)
+--- sys.NETWORK_CONNECTED (otherwise, Wifi)
 function sys.get_connectivity() end
 
 ---
 --- Returns a table with engine information.
 ---@return table table with engine information in the following fields:
+--- version
+--- string The current Defold engine version, i.e. "1.2.96"
+--- version_sha1
+--- string The SHA1 for the current engine build, i.e. "0060183cce2e29dbd09c85ece83cbb72068ee050"
+--- is_debug
+--- boolean If the engine is a debug or release version
 function sys.get_engine_info() end
 
 ---
@@ -3158,6 +3948,16 @@ function sys.get_host_path(filename) end
 ---
 --- Returns an array of tables with information on network interfaces.
 ---@return table an array of tables. Each table entry contain the following fields:
+--- name
+--- string Interface name
+--- address
+--- string IP address.  might be nil if not available.
+--- mac
+--- string Hardware MAC address.  might be nil if not available.
+--- up
+--- boolean true if the interface is up (available to transmit and receive data), false otherwise.
+--- running
+--- boolean true if the interface is running, false otherwise.
 function sys.get_ifaddrs() end
 
 ---
@@ -3169,8 +3969,31 @@ function sys.get_save_file(application_id, file_name) end
 
 ---
 --- Returns a table with system information.
----@param options table [optional]optional options table - ignore_secure
+---@param options table [optional]optional options table
+--- - ignore_secure boolean this flag ignores values might be secured by OS e.g. device_ident
 ---@return table table with system information in the following fields:
+--- device_model
+--- string  Only available on iOS and Android.
+--- manufacturer
+--- string  Only available on iOS and Android.
+--- system_name
+--- string The system name: "Darwin", "Linux", "Windows", "HTML5", "Android" or "iPhone OS"
+--- system_version
+--- string The system OS version.
+--- api_version
+--- string The API version on the system.
+--- language
+--- string Two character ISO-639 format, i.e. "en".
+--- device_language
+--- string Two character ISO-639 format (i.e. "sr") and, if applicable, followed by a dash (-) and an ISO 15924 script code (i.e. "sr-Cyrl" or "sr-Latn"). Reflects the device preferred language.
+--- territory
+--- string Two character ISO-3166 format, i.e. "US".
+--- gmt_offset
+--- number The current offset from GMT (Greenwich Mean Time), in minutes.
+--- device_ident
+--- string This value secured by OS.  "identifierForVendor" on iOS.  "android_id" on Android. On Android, you need to add READ_PHONE_STATE permission to be able to get this data. We don't use this permission in Defold.
+--- user_agent
+--- string  The HTTP user agent, i.e. "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/602.4.8 (KHTML, like Gecko) Version/10.0.3 Safari/602.4.8"
 function sys.get_sys_info(options) end
 
 ---
@@ -3210,6 +4033,15 @@ function sys.load_buffer(path) end
 --- based on request path.
 ---@param path string the path to load the buffer from
 ---@param status_callback function(self, request_id, result) A status callback that will be invoked when a request has been handled, or an error occured. The result is a table containing:
+--- status
+--- number The status of the request, supported values are:
+--- 
+--- resource.REQUEST_STATUS_FINISHED
+--- resource.REQUEST_STATUS_ERROR_IO_ERROR
+--- resource.REQUEST_STATUS_ERROR_NOT_FOUND
+--- 
+--- buffer
+--- buffer If the request was successfull, this will contain the request payload in a buffer object, and nil otherwise. Make sure to check the status before doing anything with the buffer value!
 ---@return handle a handle to the request
 function sys.load_buffer_async(path, status_callback) end
 
@@ -3224,13 +4056,20 @@ function sys.load_buffer_async(path, status_callback) end
 --- included:
 --- For example "main/data/,assets/level_data.json".
 ---@param filename string resource to load, full path
----@return string | nil loaded data, or
+---@return string | nil loaded data, or nil if the resource could not be loaded
 function sys.load_resource(filename) end
 
 ---
 --- Open URL in default application, typically a browser
 ---@param url string url to open
 ---@param attributes table [optional]table with attributes
+--- target
+--- - string : Optional. Specifies the target attribute or the name of the window. The following values are supported:
+--- - _self - (default value) URL replaces the current page.
+--- - _blank - URL is loaded into a new window, or tab.
+--- - _parent - URL is loaded into the parent frame.
+--- - _top - URL replaces any framesets that may be loaded.
+--- - name - The name of the window (Note: the name does not specify the title of the new window).
 ---@return boolean a boolean indicating if the url could be opened or not
 function sys.open_url(url, attributes) end
 
@@ -3278,6 +4117,12 @@ function sys.set_connectivity_host(host) end
 --- Set the Lua error handler function.
 --- The error handler is a function which is called whenever a lua runtime error occurs.
 ---@param error_handler function(source, message, traceback) the function to be called on error
+--- source
+--- string The runtime context of the error. Currently, this is always "lua".
+--- message
+--- string The source file, line number and error message.
+--- traceback
+--- string The stack traceback.
 function sys.set_error_handler(error_handler) end
 
 ---
@@ -3374,13 +4219,25 @@ function timer.cancel(handle) end
 ---@param delay number time interval in seconds
 ---@param repeat_ boolean true = repeat timer until cancel, false = one-shot timer
 ---@param callback function(self, handle, time_elapsed) timer callback function
+--- self
+--- object The current object
+--- handle
+--- number The handle of the timer
+--- time_elapsed
+--- number The elapsed time - on first trigger it is time since timer.delay call, otherwise time since last trigger
 ---@return hash identifier for the create timer, returns timer.INVALID_TIMER_HANDLE if the timer can not be created
 function timer.delay(delay, repeat_, callback) end
 
 ---
 --- Get information about timer.
 ---@param handle hash the timer handle returned by timer.delay()
----@return table | nil table or
+---@return table | nil table or nil if timer is cancelled/completed. table with data in the following fields:
+--- time_remaining
+--- number Time remaining until the next time a timer.delay() fires.
+--- delay
+--- number Time interval.
+--- repeating
+--- boolean true = repeat timer until cancel, false = one-shot timer.
 function timer.get_info(handle) end
 
 ---
@@ -3717,10 +4574,10 @@ function vmath.vector4(x, y, z, w) end
 ---@field DIMMING_OFF number Dimming mode is used to control whether or not a mobile device should dim the screen after a period without user interaction.
 ---@field DIMMING_ON number Dimming mode is used to control whether or not a mobile device should dim the screen after a period without user interaction.
 ---@field DIMMING_UNKNOWN number Dimming mode is used to control whether or not a mobile device should dim the screen after a period without user interaction. This mode indicates that the dim mode can't be determined, or that the platform doesn't support dimming.
----@field WINDOW_EVENT_DEICONIFIED number
+---@field WINDOW_EVENT_DEICONIFIED number 
 ---@field WINDOW_EVENT_FOCUS_GAINED number This event is sent to a window event listener when the game window or app screen has gained focus. This event is also sent at game startup and the engine gives focus to the game.
 ---@field WINDOW_EVENT_FOCUS_LOST number This event is sent to a window event listener when the game window or app screen has lost focus.
----@field WINDOW_EVENT_ICONFIED number
+---@field WINDOW_EVENT_ICONFIED number 
 ---@field WINDOW_EVENT_RESIZED number This event is sent to a window event listener when the game window or app screen is resized. The new size is passed along in the data field to the event listener.
 
 
@@ -3729,6 +4586,9 @@ function vmath.vector4(x, y, z, w) end
 --- The dimming mode specifies whether or not a mobile device should dim the screen after a period without user interaction.
 --- On platforms that does not support dimming, window.DIMMING_UNKNOWN is always returned.
 ---@return constant The mode for screen dimming
+--- window.DIMMING_UNKNOWN
+--- window.DIMMING_ON
+--- window.DIMMING_OFF
 function window.get_dim_mode() end
 
 ---
@@ -3746,11 +4606,29 @@ function window.get_size() end
 --- The dimming mode specifies whether or not a mobile device should dim the screen after a period without user interaction. The dimming mode will only affect the mobile device while the game is in focus on the device, but not when the game is running in the background.
 --- This function has no effect on platforms that does not support dimming.
 ---@param mode constant The mode for screen dimming
+--- window.DIMMING_ON
+--- window.DIMMING_OFF
 function window.set_dim_mode(mode) end
 
 ---
 --- Sets a window event listener.
----@param callback function(self, event, data) | nil A callback which receives info about window events. Pass an empty function or
+---@param callback function(self, event, data) | nil A callback which receives info about window events. Pass an empty function or nil if you no longer wish to receive callbacks.
+--- self
+--- object The calling script
+--- event
+--- constant The type of event. Can be one of these:
+--- 
+--- window.WINDOW_EVENT_FOCUS_LOST
+--- window.WINDOW_EVENT_FOCUS_GAINED
+--- window.WINDOW_EVENT_RESIZED
+--- window.WINDOW_EVENT_ICONIFIED
+--- window.WINDOW_EVENT_DEICONIFIED
+--- 
+--- data
+--- table The callback value data is a table which currently holds these values
+--- 
+--- number width: The width of a resize event. nil otherwise.
+--- number height: The height of a resize event. nil otherwise.
 function window.set_listener(callback) end
 
 ---
@@ -3773,3 +4651,4 @@ function zlib.deflate(buf) end
 ---@param buf string buffer to inflate
 ---@return string inflated buffer
 function zlib.inflate(buf) end
+

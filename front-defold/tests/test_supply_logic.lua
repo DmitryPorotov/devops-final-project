@@ -1,7 +1,7 @@
 local luaunit = require 'luaunit'
---local luaunit = require 'lua_modules/share/lua/5.1/luaunit'
 
 local supply_logic = require 'main/ui/supply_logic'
+local army_logic = require 'main/ui/army_logic'
 
 
 supply_logic.set_available_supplies(1)
@@ -48,7 +48,9 @@ function test_filter()
 		},
 	}
 	local targets = {1,5,6,7,13}
-	local r = supply_logic.filter_target_candidates("3", 2, targets, armies)
+	local r = supply_logic.filter_target_candidates("3", 2, targets,
+			army_logic:house_armies_to_gui_format("wolf",armies)
+	)
 	for _, v in ipairs(targets) do
 		if v== 7 then
 			luaunit.assertNotTableContains(r, 7, 'should filter out 7')
