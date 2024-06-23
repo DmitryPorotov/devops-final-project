@@ -1,9 +1,9 @@
 package fwc.game
 
 class FWCException (message: String) extends RuntimeException(message) {
-  private var _gameId: String = null
-  private var _userId: Int = -1;
-  private var _messageId: String = null;
+  private final var _gameId: String = null
+  private final var _userId: Int = -1;
+  private final var _messageId: String = null;
   def gameId: String = _gameId
   def userId: Int = _userId
   def messageId: String = _messageId
