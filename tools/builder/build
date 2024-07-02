@@ -65,7 +65,7 @@ def start():
             print_error('Building React front-end failed.')
             is_static_content_error = True
         else:
-            print_success('Building React front-end successful.')
+            print_success('Building React front-end was successful.')
 
     if not args.save_only and (not args.only or 'defold' in args.only):
         print_header("Building Defold front-end...")
@@ -99,10 +99,10 @@ def start():
             os.mkdir("../../build")
         print_header("Zipping and saving the docker images to the 'build' directory...\n")
 
-        print_header("Saving Web Server...")
         if is_nest_error:
             print_warning("There was an error building the Nest.js server, skipping...")
-        else:
+        elif not args.only or 'nest' in args.only:
+            print_header("Saving Web Server...")
             with open('../../build/web_server.tar.gz', 'w') as outfile:
                 save = subprocess.run(['docker', 'save', 'web_server_prod'], check=True, capture_output=True)
                 result = subprocess.run(["gzip"], input=save.stdout, stdout=outfile)
@@ -112,10 +112,10 @@ def start():
                 else:
                     print_success('Saving Web Server docker image was successful.')
 
-        print_header("Saving Worker...")
         if is_worker_error:
             print_warning("There was an error building the worker, skipping...")
-        else:
+        elif not args.only or 'worker' in args.only:
+            print_header("Saving Worker...")
             with open('../../build/worker.tar.gz', 'w') as outfile:
                 save = subprocess.run(['docker', 'save', 'worker_prod'], check=True, capture_output=True)
                 result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)
@@ -125,10 +125,10 @@ def start():
                 else:
                     print_success('Saving Worker docker image was successful.')
 
-        print_header("Saving Nginx...")
         if is_static_content_error:
             print_warning("There was an error building the static web content, skipping...")
-        else:
+        elif not args.only or 'defold' in args.only or 'login' in args.only:
+            print_header("Saving Nginx...")
             with open('../../build/nginx.tar.gz', 'w') as outfile:
                 save = subprocess.run(['docker', 'save', 'nginx_prod'], check=True, capture_output=True)
                 result = subprocess.run(['gzip'], input=save.stdout, stdout=outfile)

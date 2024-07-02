@@ -73,6 +73,8 @@ function on_message(self, message_id, message, sender)
 		else
 			map_:set_house(false)
 		end
+	elseif message_id == hash("kill_units") then
+		map_:kill_units(message)
 	end
 end
 

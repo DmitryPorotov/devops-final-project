@@ -110,6 +110,9 @@ action_type_switch = {
 		army_logic:set_combat(reply.combat)
 		chooseHouseCard:update_outcome()
 	end,
+	autoKillUnitsAfterBattle = function(reply)
+
+	end
 }
 
 action_type_switch.ravenChangeOrder = function(reply)

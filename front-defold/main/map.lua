@@ -4,6 +4,12 @@ local game_data = require "main/ui/game_data"
 
 local MOVEMENT_SPEED = 200
 
+---@class GameWorldMilUnit: MilitaryUnit
+---@field hash hash
+
+---@class GameWorldMap
+---@field armies table<string, GameWorldMilUnit[]>
+---@field armies_by_house table<string, table<string, GameWorldMilUnit[]>>
 local _M = {
 	UNIT_OFFSETS = {
 		vmath.vector3(10, -30, 0.5),
@@ -269,6 +275,8 @@ local function calc_animation_time(...)
 	return dist / MOVEMENT_SPEED
 end
 
+---@param self GameWorldMap
+---@param source_tile_num string
 local function shift_leftover_army(self, source_tile_num)
 	local army = self.armies[tostring(source_tile_num)]
 	if army and army[1] then
@@ -390,6 +398,14 @@ function _M:clean_up()
 	end
 	self.orders = {}
 	labels:clean_up()
+end
+
+---@param message KillUnitsMessage[]
+function _M:kill_units(message)
+	local to_kill = {}
+	for _, kum in ipairs(message) do
+
+	end
 end
 
 return _M

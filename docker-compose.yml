@@ -55,6 +55,8 @@ services:
     build:
         context: ./
         dockerfile: ./nginx.conf.d/Dockerfile
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - "443:443"
       - "80:80"

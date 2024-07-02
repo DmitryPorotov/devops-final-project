@@ -245,7 +245,7 @@
 			let worker;
 			let messages = [];
 			function init() {
-				worker = new SharedWorker('/worker/worker.js');
+				worker = new SharedWorker('/fwc/worker/worker.js');
 				worker.onerror = (e) => console.log(e);
 				worker.onmessageerror = (e) => {
 					console.log(e)

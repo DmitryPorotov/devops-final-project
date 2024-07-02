@@ -39,7 +39,7 @@ class Websocket {
     static makeSocket() {
         return new Promise(async resolve => {
             console.log(Websocket);
-            Websocket.worker = new SharedWorker('/worker/worker.js');
+            Websocket.worker = new SharedWorker('/fwc/worker/worker.js');
             Websocket.worker.onerror = (e) => console.log(e);
             Websocket.worker.onmessageerror = (e) => {
                 console.log(e)

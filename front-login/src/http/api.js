@@ -5,7 +5,7 @@ class Api {
     static protocol = window.envVars.protocol + ':';
     static baseUrl = '//' + (window.envVars.host ? window.envVars.host : window.location.hostname);
     static port = ':' + window.envVars.port;
-    static apiPrefix = '/api/v1';
+    static apiPrefix = '/fwc/api/v1';
 
     static async headers(isLoggedIn){
         const headers = {"Content-Type": "application/json"};

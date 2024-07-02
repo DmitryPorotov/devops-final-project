@@ -72,8 +72,11 @@ const router = createBrowserRouter([
             }
         ]
     },
-
-]);
+],
+    {
+        basename: '/fwc'
+    }
+);
 
 export const AuthContext = createContext({});
 
