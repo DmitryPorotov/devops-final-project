@@ -246,10 +246,12 @@
 			let messages = [];
 			function init() {
 				worker = new SharedWorker('/fwc/worker/worker.js');
-				worker.onerror = (e) => console.log(e);
-				worker.onmessageerror = (e) => {
+				worker.addEventListener('error', (e) =>
 					console.log(e)
-				};
+				);
+				// worker.onmessageerror = (e) => {
+				// 	console.log(e)
+				// };
 				worker.port.addEventListener('message', function(msg){
 					messages.push(msg.data)
 				});

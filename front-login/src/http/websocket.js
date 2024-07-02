@@ -40,10 +40,12 @@ class Websocket {
         return new Promise(async resolve => {
             console.log(Websocket);
             Websocket.worker = new SharedWorker('/fwc/worker/worker.js');
-            Websocket.worker.onerror = (e) => console.log(e);
-            Websocket.worker.onmessageerror = (e) => {
+            Websocket.worker.addEventListener('error',(e) =>
                 console.log(e)
-            };
+            );
+            // Websocket.worker.onmessageerror = (e) => {
+            //     console.log(e)
+            // };
             const user = Storage.getUser();
             Websocket.worker.port.postMessage({
                 action: 'init',
