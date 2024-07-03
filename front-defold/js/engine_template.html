@@ -99,6 +99,7 @@
 	<script id='engine-loader' type='text/javascript' src="dmloader.js"></script>
 	<!-- -->
 	<script id='engine-setup' type='text/javascript'>
+	CUSTOM_PARAMETERS["resize_window_callback"] = null;
 	var extra_params = {
 		archive_location_filter: function( path ) {
 			return ("{{DEFOLD_ARCHIVE_LOCATION_PREFIX}}" + path + "{{DEFOLD_ARCHIVE_LOCATION_SUFFIX}}");

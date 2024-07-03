@@ -4,20 +4,21 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {serverIsDeadHandler} from "../Pages/common/GlobalErrorHandlers";
-import {AuthContext, WsContext} from "../App";
+import serverIsDeadHandler from "../Pages/common/GlobalErrorHandlers";
+import {AuthContext, LobbyContext} from "../App";
+import Websocket from "../http/websocket";
 
 const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
-    const scrollToRef = useRef();
+    const scrollToRef = useRef<HTMLDivElement>();
     const auth = useContext(AuthContext);
-    const ws = useContext(WsContext);
+    const lobbyCtx = useContext(LobbyContext);
 
     const formatDate = (time) => `[${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}:${String(time.getSeconds()).padStart(2, '0')}]`;
 
     useEffect(() => {
-        if (!ws.lobbyData) return ;
+        if (!lobbyCtx.lobbyData) return ;
         const receiveMessage = async (message) => {
             if (message.type === 'chat') {
                 message.ts = formatDate(new Date());
@@ -30,7 +31,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
                 console.warn(message);
             }
         };
-        ws.websocket.onMessage(lobbyId, receiveMessage);
+        Websocket.onMessage(lobbyId, receiveMessage);
         const messages = afterInitGetMissedMessages();
         if (messages.length) {
             for (let i = 0; i < messages.length; i++) {
@@ -42,20 +43,20 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
             }, 1)
         }
 
-        return () => ws.websocket.offMessage(receiveMessage);
-    }, [chatMessages, ws, lobbyId]);
+        return () => Websocket.offMessage(receiveMessage);
+    }, [chatMessages, lobbyCtx, lobbyId]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
         if (!message) return;
         try {
-            ws.websocket.send({
-                userId: ws.websocket.playerId,
+            Websocket.send({
+                userId: Websocket.playerId,
                 type: 'chat',
                 lobbyId,
                 body: {
-                    to: ws.lobbyData.sendTo?.length ? [...ws.lobbyData.sendTo, ws.websocket.playerId] : [],
+                    to: lobbyCtx.lobbyData.sendTo?.length ? [...lobbyCtx.lobbyData.sendTo, Websocket.playerId] : [],
                     type: 'message',
                     body: message
                 }
@@ -75,7 +76,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
                     if (msg.body.to?.length) {
                         return `${header} [to ${msg.body.to
                             .reduce((a,c) => {
-                                const pl = ws.lobbyData.participants.find(p => p.id === c);
+                                const pl = lobbyCtx.lobbyData.participants.find(p => p.id === c);
                                 if (pl && c !== msg.userId) {
                                     a.push(pl.name)
                                 }
@@ -101,17 +102,18 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
     return (
         <Paper variant={"outlined"} style={style}>
             <Card>
-            <CardContent>
-            <Card sx={{minWidth: 100, flexGrow:5, maxHeight: '12rem', overflowY: 'auto'}}>
+            <CardContent sx={{padding:"8px", ":last-child": {paddingBottom:"12px"}}}>
+            <Card sx={{minWidth: 100, flexGrow:5, maxHeight: '10rem', overflowY: 'auto'}}>
                 {!!chatMessages.length
                  &&
                     chatMessages.map((msg,i) => {
                             if (i !== chatMessages.length - 1) {
-                               return <CardContent key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"8px", overflowY: "auto"}}>
+                               return <CardContent key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"3px", overflowY: "auto"}}>
                                    {buildMessageBody(msg)}
                                 </CardContent>
-                            } else {
-                                return <CardContent ref={scrollToRef} key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"8px", overflowY: "auto"}}>
+                            }
+                            else {
+                                return <CardContent ref={scrollToRef} key={`msg-${i}`} sx={{maxHeight: "30rem", padding:"3px", overflowY: "auto", ":last-child": {paddingBottom:"5px"}}}>
                                     {buildMessageBody(msg)}
                                 </CardContent>
                             }
@@ -119,7 +121,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
                     )
                 }
             </Card>
-            <Card sx={{margin: '.8rem .2rem .3rem .2rem', paddingTop: '.4rem'}}>
+            <Card sx={{margin: '.4rem .2rem .3rem .2rem', paddingTop: '.4rem'}}>
                     <form style={{display: 'flex'}} onSubmit={handleSubmit} autoComplete={'off'}>
                         <TextField
                             sx={{flexGrow:4}}

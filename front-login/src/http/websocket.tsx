@@ -1,13 +1,6 @@
 import Api from "./api";
 import Storage from "./storage";
 
-// export interface MessageInterface {
-//     from: number;
-//     type: 'chat' | 'action';
-//     lobbyId: number;
-//     body: ChatMessageInterface;
-// }
-
 class Websocket {
     static isInit = false;
     static protocol = window.envVars.protocol.endsWith('s') ? 'wss:' : 'ws:';
@@ -37,7 +30,7 @@ class Websocket {
     }
 
     static makeSocket() {
-        return new Promise(async resolve => {
+        return new Promise<void>(async resolve => {
             console.log(Websocket);
             Websocket.worker = new SharedWorker('/fwc/worker/worker.js');
             Websocket.worker.addEventListener('error',(e) =>

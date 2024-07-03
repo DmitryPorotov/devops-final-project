@@ -10,7 +10,15 @@ const InputField = ({
                         type,
                         name,
                         isAutofocus,
-                    }) => {
+                    }: {
+    labelText: string,
+    onChange:(string) => void,
+    value?: string,
+    errorMessages?: Array<string>,
+    type?: string,
+    name: string,
+    isAutofocus?: boolean,
+}) => {
 
     if (!type) type = "text";
     if (!value) value = '';

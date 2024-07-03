@@ -1,6 +1,5 @@
 import Storage from "./storage";
 
-
 class Api {
     static protocol = window.envVars.protocol + ':';
     static baseUrl = '//' + (window.envVars.host ? window.envVars.host : window.location.hostname);
@@ -16,13 +15,7 @@ class Api {
         return headers;
     };
 
-    /**
-     *
-     * @param {string} url
-     * @param {?string=} body
-     * @param {boolean=} isLoggedIn
-     */
-    static async get(url, body, isLoggedIn = true) {
+    static async get(url: string, body?: string, isLoggedIn: boolean = true) {
         return Api.doFetch(url, body, 'GET', isLoggedIn);
     }
 
@@ -63,7 +56,7 @@ class Api {
      * @param {boolean=} isLoggedIn
      */
     static async doFetch(url, body, method, isLoggedIn = true) {
-        const init = {
+        const init: RequestInit = {
             method,
             headers: await Api.headers(isLoggedIn)
         };

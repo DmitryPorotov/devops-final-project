@@ -2,8 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import Api from "../http/api";
 import LobbyLoginModal from "../components/LobbyLoginModal";
-import {AuthContext, WsContext} from "../App";
-import {serverIsDeadHandler} from "./common/GlobalErrorHandlers";
+import {AuthContext, LobbyContext} from "../App";
+import serverIsDeadHandler from "./common/GlobalErrorHandlers";
 import styled from "@mui/material/styles/styled";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import LobbyEditModal from "../components/LobbyEditModal";
 import Storage_ from "../http/storage";
 import PlayersList from "../components/PlayersList";
+import Websocket from "../http/websocket";
 
 /**
  * @param {{participants: Array.<{id:number,name:string,ping:string,connected:boolean}>}} data
@@ -61,12 +62,10 @@ const houses = {
 };
 
 const Lobby = () => {
-    let {id} = useParams();
+    const {id: idStr} = useParams();
 
-    /**
-     * @type {number}
-     */
-    id = parseInt(id);
+
+    const id = parseInt(idStr);
 
     const [isInit, setIsInit] = useState(false);
 
@@ -88,18 +87,19 @@ const Lobby = () => {
 
     const auth = useContext(AuthContext);
 
-    const ws = useContext(WsContext);
+    const lobbyCtx = useContext(LobbyContext);
 
     const navigate =  useNavigate();
 
     const broadcastLobbyEdit = (s) => {
         try {
-            const body = {type: 'edit', lobbyName: s.name, deletePassword: !!s.deletePassword };
+            const body : {type: 'edit', lobbyName: string, deletePassword: boolean, password?: string }
+                = {type: 'edit', lobbyName: s.name, deletePassword: !!s.deletePassword };
             if (s.password) {
                 body.password = '*';
             }
-            ws.websocket.send({
-                userId: ws.websocket.playerId,
+            Websocket.send({
+                userId: Websocket.playerId,
                 type: 'chat',
                 lobbyId: id,
                 body
@@ -123,10 +123,8 @@ const Lobby = () => {
         else return []
     };
 
-    let gameWindowRef;
-
     const setHouseIfMe = (player) => {
-        if ((player.userId === ws.websocket.playerId) && player.house) {
+        if ((player.userId === Websocket.playerId) && player.house) {
             Storage_.setHouseForLobby(id, player.house);
             return true;
         }
@@ -141,51 +139,51 @@ const Lobby = () => {
             if (message.type === 'chat') {
                 switch (message.body.type) {
                     case 'join':
-                        if (ws.lobbyData && !ws.lobbyData.participants.find(p => p.id === message.userId)) {
-                            ws.setLobbyData({
-                                ...ws.lobbyData,
-                                participants: [...ws.lobbyData.participants, {id: message.userId, name: message.name, connected: true}]
+                        if (lobbyCtx.lobbyData && !lobbyCtx.lobbyData.participants.find(p => p.id === message.userId)) {
+                            lobbyCtx.setLobbyData({
+                                ...lobbyCtx.lobbyData,
+                                participants: [...lobbyCtx.lobbyData.participants, {id: message.userId, name: message.name, connected: true}]
                             })
                         }
                         break;
                     case 'leave':
-                        if (message.userId === ws.websocket.playerId) {
+                        if (message.userId === Websocket.playerId) {
                             navigate('/');
                         }
                         else {
-                            const participants = ws.lobbyData.participants.filter(p => p.id !== message.userId);
+                            const participants = lobbyCtx.lobbyData.participants.filter(p => p.id !== message.userId);
                             let newOwner;
-                            if (message.userId === ws.lobbyData.owner.id) {
+                            if (message.userId === lobbyCtx.lobbyData.owner.id) {
                                 const response = await Api.get(`/lobby/${id}`);
                                 const data = await response.json();
                                 newOwner = data.owner;
 
                             }
-                            ws.setLobbyData({
-                                ...ws.lobbyData,
+                            lobbyCtx.setLobbyData({
+                                ...lobbyCtx.lobbyData,
                                 participants,
-                                owner: newOwner || ws.lobbyData.owner
+                                owner: newOwner || lobbyCtx.lobbyData.owner
                             })
                         }
                         break;
                     case 'kick':
-                        if (message.body.to[0] === ws.websocket.playerId) {
+                        if (message.body.to[0] === Websocket.playerId) {
                             if (message.body.body) {
                                 window.alert(message.body.body);
                             }
                             navigate('/');
                         }
                         else {
-                            const participants = ws.lobbyData.participants.filter(p => p.id !== message.body.to[0]);
-                            ws.setLobbyData({
-                                ...ws.lobbyData,
+                            const participants = lobbyCtx.lobbyData.participants.filter(p => p.id !== message.body.to[0]);
+                            lobbyCtx.setLobbyData({
+                                ...lobbyCtx.lobbyData,
                                 participants,
                             })
                         }
                         break;
                     case 'edit':
-                        ws.setLobbyData({
-                            ...ws.lobbyData,
+                        lobbyCtx.setLobbyData({
+                            ...lobbyCtx.lobbyData,
                             name: message.body.lobbyName
                         });
                         break;
@@ -205,9 +203,9 @@ const Lobby = () => {
                                 const unusedHouses = {};
                                 let joined;
                                 for (const p of message.status.details.gameSettings.players) {
-                                    const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
+                                    const participant = lobbyCtx.lobbyData.participants.find(p_ => p_.id === p.userId);
                                     participant && (participant.house = p.house);
-                                    unusedHouses[p.house] = p.userId === ws.websocket.playerId;
+                                    unusedHouses[p.house] = p.userId === Websocket.playerId;
                                     !joined && (joined = setHouseIfMe(p));
                                 }
                                 if (joined) {
@@ -222,8 +220,8 @@ const Lobby = () => {
                                     ...houses,
                                     ...unusedHouses,
                                 });
-                                ws.setLobbyData({
-                                    ...ws.lobbyData
+                                lobbyCtx.setLobbyData({
+                                    ...lobbyCtx.lobbyData
                                 });
                             }
                             else {
@@ -234,24 +232,24 @@ const Lobby = () => {
                     case "join_game":
                         const unusedHouses = {};
                         for (const p of message.gameSettings.players) {
-                            const participant = ws.lobbyData.participants.find(p_ => p_.id === p.userId);
+                            const participant = lobbyCtx.lobbyData.participants.find(p_ => p_.id === p.userId);
                             setHouseIfMe(p) && setCanSelectHouse(false);
                             participant.house = p.house;
-                            unusedHouses[p.house] = p.userId === ws.websocket.playerId;
+                            unusedHouses[p.house] = p.userId === Websocket.playerId;
                         }
                         setUnusedHouseOptions({
                             ...houses,
                             ...unusedHouses,
                         });
-                        ws.setLobbyData({
-                            ...ws.lobbyData
+                        lobbyCtx.setLobbyData({
+                            ...lobbyCtx.lobbyData
                         });
                         break;
                 }
             }
             else if (message.type === 'system') {
                 console.log(message)
-                const p = ws.lobbyData?.participants.find(pr => pr.id === message.userId);
+                const p = lobbyCtx.lobbyData?.participants.find(pr => pr.id === message.userId);
                 if (p) {
                     if (message.body.type === 'error') {
                         p.connected = false;
@@ -259,14 +257,14 @@ const Lobby = () => {
                         p.ping = message.body.body;
                     }
                 }
-                ws.setLobbyData({
-                    ...ws.lobbyData
+                lobbyCtx.setLobbyData({
+                    ...lobbyCtx.lobbyData
                 })
             }
         };
-        ws.websocket.onMessage(id, receiveMessage);
-        return () => ws.websocket.offMessage(receiveMessage);
-    }, [isInit, ws, id, navigate]);
+        Websocket.onMessage(id, receiveMessage);
+        return () => Websocket.offMessage(receiveMessage);
+    }, [isInit, lobbyCtx, id, navigate]);
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
@@ -276,7 +274,7 @@ const Lobby = () => {
                 return ;
             }
             setIsInit(true);
-            await ws.websocket.init(storedUser.id);
+            await Websocket.init(storedUser.id);
             let data;
             try {
                 const response = await Api.get(`/lobby/${id}`);
@@ -300,22 +298,22 @@ const Lobby = () => {
             } else {
                 await joinLobby(id);
             }
-            ws.setLobbyData(data);
-            await ws.websocket.init(storedUser.id);
-            await ws.websocket.subscribe(id);
+            lobbyCtx.setLobbyData(data);
+            await Websocket.init(storedUser.id);
+            await Websocket.subscribe(id);
             setTimeout(() => {
-                ws.websocket.send({
+                Websocket.send({
                     action: 'get_status',
                     type: "action",
                 });
             }, 1)
         });
         if (!isInit) getLobbyData();
-    }, [isLoginModalOpen, setIsLoginModalOpen, ws, auth, isInit, id]);
+    }, [isLoginModalOpen, setIsLoginModalOpen, lobbyCtx, auth, isInit, id]);
 
     const createGame = () => {
-        ws.websocket.send({
-            userId: ws.websocket.playerId,
+        Websocket.send({
+            userId: Websocket.playerId,
             lobbyId: id,
             type: 'action',
             action: 'create_game',
@@ -324,11 +322,11 @@ const Lobby = () => {
     };
 
     const joinGame = async () => {
-        ws.websocket.send({
+        Websocket.send({
             type: 'action',
             action: 'join_game',
             name: Storage_.getUser().name,
-            joinAs: ws.lobbyData.participants.find((c) => c.id === ws.websocket.playerId).house
+            joinAs: lobbyCtx.lobbyData.participants.find((c) => c.id === Websocket.playerId).house
         });
         setAlreadyJoined(true);
         // !gameWindowRef && (gameWindowRef = window.open(`/lobby/${id}/game/`, `lobby${id}`));
@@ -337,27 +335,27 @@ const Lobby = () => {
 
     const houseSelectionChanged = (e) => {
         setCanJoin(e.target.value !== 'none');
-        const me = ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId);
+        const me = lobbyCtx.lobbyData?.participants.find((c) => c.id === Websocket.playerId);
         if (e.target.value === 'none')
             delete me.house;
         else me.house = e.target.value;
-        ws.setLobbyData({
-            ...ws.lobbyData,
+        lobbyCtx.setLobbyData({
+            ...lobbyCtx.lobbyData,
         });
     };
 
     return (
         <div>
-            <LobbyHeader>Lobby: {ws.lobbyData?.name}
+            <LobbyHeader>Lobby: {lobbyCtx.lobbyData?.name}
                 {
-                    ws.lobbyData?.owner.id === ws.websocket.playerId &&
+                    lobbyCtx.lobbyData?.owner.id === Websocket.playerId &&
                         <Button onClick={()=>{setIsSettingsModalOpen(true)}}>Edit lobby</Button>
                 }
             </LobbyHeader>
             <div style={{display: "flex"}}>
                 <div style={{flexFlow: "row", flexGrow: alreadyJoined ? 10: 2}}>
                     <div style={{flexFlow:"column", display:"flex"}}>
-                    {alreadyJoined && <iframe style={{width:"100%", border:"none", flexGrow:3, minHeight:"50vh", height:"calc(98vh - 430px)"}} src={`/lobby/${id}/game/index.html`}/>}
+                    {alreadyJoined && <iframe style={{width:"100%", border:"none", flexGrow:3, minHeight:"50vh", height:"calc(97.5vh - 372px)"}} src={`/lobby/${id}/game/index.html`}/>}
                     {!isLoginModalOpen && <Chat style={{flexGrow:1}} lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
                     </div>
                 </div>
@@ -367,7 +365,7 @@ const Lobby = () => {
                             <Select
                                 disabled={!canSelectHouse}
                                 onChange={houseSelectionChanged}
-                                value={ws.lobbyData?.participants.find((c) => c.id === ws.websocket.playerId)?.house || 'none'}
+                                value={lobbyCtx.lobbyData?.participants.find((c) => c.id === Websocket.playerId)?.house || 'none'}
                                 style={{minWidth: 220}}
                                 defaultValue={'none'}
                             >
@@ -379,7 +377,7 @@ const Lobby = () => {
                                 {unusedHouseOptions.pufferfish && <MenuItem value={'pufferfish'}>Puffer fish</MenuItem>}
                                 {unusedHouseOptions.lion && <MenuItem value={'lion'}>Lion</MenuItem>}
                             </Select>
-                            {ws.lobbyData?.owner.id === ws.websocket.playerId && !canJoin && !gameCreated &&
+                            {lobbyCtx.lobbyData?.owner.id === Websocket.playerId && !canJoin && !gameCreated &&
                                 <Button
                                     onClick={createGame}
                                 >Create Game</Button>
@@ -401,7 +399,7 @@ const Lobby = () => {
                     setPasswordErrors([]);
                     if (!lobbyData.statusCode) {
                         setIsLoginModalOpen(false);
-                        ws.setLobbyData(lobbyData);
+                        lobbyCtx.setLobbyData(lobbyData);
                     } else if (String(lobbyData.statusCode).startsWith('4')) {
                         if ('string' === typeof lobbyData.message) {
                             setPasswordErrors([lobbyData.message]);
@@ -419,7 +417,7 @@ const Lobby = () => {
                     <LobbyEditModal
                         isOpen={isSettingsModalOpen}
                         errors={lobbySettingsErrors}
-                        oldName={ws.lobbyData.name}
+                        oldName={lobbyCtx.lobbyData.name}
                         oldPassword={''}
                         updateSettings={async s => {
                             if (!s.password) {
@@ -432,8 +430,8 @@ const Lobby = () => {
                             setLobbySettingsErrors({});
                             if (!lobbyData.statusCode) {
                                 setIsSettingsModalOpen(false);
-                                ws.setLobbyData({
-                                    ...ws.lobbyData,
+                                lobbyCtx.setLobbyData({
+                                    ...lobbyCtx.lobbyData,
                                     name: lobbyData.name
                                 });
                                 broadcastLobbyEdit(s)

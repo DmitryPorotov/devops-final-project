@@ -8,25 +8,23 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import React, {useContext, useEffect} from "react";
-import {WsContext} from "../App";
+import {LobbyContext} from "../App";
 import {useParams} from "react-router-dom";
+import Websocket from "../http/websocket";
 
-const PlayersList = ({hasJoinedGame}) => {
-    const ws = useContext(WsContext);
+const PlayersList = ({hasJoinedGame}: {hasJoinedGame: boolean, id?: string | number}) => {
+    const lobbyCtx = useContext(LobbyContext);
 
-    let {id} = useParams();
+    const {id: idStr} = useParams();
+
+    const id = parseInt(idStr);
 
     useEffect(()=>{
-    }, [ws, ws.lobbyData]);
-
-    /**
-     * @type {number}
-     */
-    id = parseInt(id);
+    }, [lobbyCtx, lobbyCtx.lobbyData]);
 
     const handleLeaveClick = (event) => {
-        ws.websocket.send({
-            userId: ws.websocket.playerId,
+        Websocket.send({
+            userId: Websocket.playerId,
             type: 'chat',
             lobbyId: id,
             body: {type:'leave'}
@@ -35,22 +33,22 @@ const PlayersList = ({hasJoinedGame}) => {
     };
 
     const handlePMChange = (event, playerId) => {
-        let sendTo = ws.lobbyData.sendTo || [];
+        let sendTo = lobbyCtx.lobbyData.sendTo || [];
         if (event.target.checked) {
             sendTo.push(playerId)
         } else {
             sendTo = sendTo.filter(i => i !== playerId);
         }
-        ws.setLobbyData({
-            ...ws.lobbyData,
+        lobbyCtx.setLobbyData({
+            ...lobbyCtx.lobbyData,
             sendTo
         })
     };
 
     const handleKickClick = (playerId, name) => {
         //TODO add a prompt
-        ws.websocket.send({
-            userId: ws.websocket.playerId,
+        Websocket.send({
+            userId: Websocket.playerId,
             type: 'chat',
             lobbyId: id,
             body: {type:'kick', to: [playerId]}
@@ -58,11 +56,11 @@ const PlayersList = ({hasJoinedGame}) => {
     };
 
     return (
-        <Card sx={{minWidth: 90, height:"calc(98vh - 224px)"}}>
+        <Card sx={{minWidth: 90, height:"calc(97.5vh - 224px)"}}>
             <CardContent>
                 <List>
                     {
-                        ws.lobbyData?.participants.map((cur, i) => {
+                        lobbyCtx.lobbyData?.participants.map((cur, i) => {
                             return (
                                 <div key={`user-${i}`}>
                                     <ListItem>
@@ -70,7 +68,7 @@ const PlayersList = ({hasJoinedGame}) => {
                                             primary={cur.name}
                                             secondary={
                                                 <>
-                                                    {cur.id === ws.lobbyData?.owner.id ?
+                                                    {cur.id === lobbyCtx.lobbyData?.owner.id ?
                                                         <span>[lobby owner] </span> : null}
                                                     {cur.house ? <span>{cur.house}</span> : null}
                                                     {cur.ping ? <span> {cur.ping}ms</span> : ''}
@@ -78,7 +76,7 @@ const PlayersList = ({hasJoinedGame}) => {
                                             }
                                         />
                                         {
-                                            cur.id !== ws.websocket.playerId &&
+                                            cur.id !== Websocket.playerId &&
                                             <FormControlLabel control={
                                                 <Checkbox aria-label={'private message'}
                                                           onChange={(e) => handlePMChange(e, cur.id)}/>
@@ -86,12 +84,12 @@ const PlayersList = ({hasJoinedGame}) => {
 
                                         }
                                         {
-                                            cur.id !== ws.lobbyData.owner.id &&
-                                            ws.lobbyData.owner.id === ws.websocket.playerId &&
+                                            cur.id !== lobbyCtx.lobbyData.owner.id &&
+                                            lobbyCtx.lobbyData.owner.id === Websocket.playerId &&
                                             <Button onClick={() => handleKickClick(cur.id, cur.name)}>Kick</Button>
                                         }
                                     </ListItem>
-                                    {(i < ws.lobbyData.participants.length - 1) &&
+                                    {(i < lobbyCtx.lobbyData.participants.length - 1) &&
                                     <Divider/>
                                     }
                                 </div>

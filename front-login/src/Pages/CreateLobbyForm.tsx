@@ -20,7 +20,10 @@ const CreateLobbyForm = ({onSuccess}) => {
         event.stopPropagation();
 
         try {
-            const payload = {name};
+            const payload: {
+                name: string,
+                password?: string
+            } = {name};
             if (password) {
                 payload.password = password
             }

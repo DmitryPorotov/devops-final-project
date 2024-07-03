@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, {TableCellProps} from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
@@ -10,11 +10,17 @@ import TableRow from '@mui/material/TableRow';
 import Api from "../http/api";
 import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "../App";
-import {serverIsDeadHandler} from "./common/GlobalErrorHandlers";
+import serverIsDeadHandler from "./common/GlobalErrorHandlers";
 import Button from "@mui/material/Button";
 import CreateLobbyForm from "./CreateLobbyForm";
+import Lobby from "./lobby.interface";
 
-const columns = [
+interface ColumnInterface {
+    label: string
+    minWidth: number
+}
+
+const columns: Array<TableCellProps & ColumnInterface> = [
     { id: 'name', label: 'Name', minWidth: 170 },
     { id: 'owner', label: 'Owner name', minWidth: 100 },
     {
@@ -69,7 +75,7 @@ const Lobbies = () => {
     const auth = useContext(AuthContext);
 
     useEffect(() => {
-        const getData = () => new Promise(async (resolve, reject) => {
+        const getData = () => new Promise<Array<Lobby>>(async (resolve, reject) => {
             try {
                 const response = await Api.get('/lobby');
                 const data = await response.json();
@@ -79,7 +85,12 @@ const Lobbies = () => {
                         auth.setIsLoginShown(false);
                         return getData();
                     }
-                } else {
+                }
+                else if (data.statusCode === 403) {
+                    auth.setIsSnackbarOpen(true);
+                    auth.globalError = data.message;
+                }
+                else {
                     resolve(data);
                 }
             } catch (e) {
@@ -89,24 +100,18 @@ const Lobbies = () => {
 
         const loadRows = async () => {
             const data = await getData();
-            if (data.statusCode) {
-                auth.setIsSnackbarOpen(true);
-                auth.globalError = data.message;
-            }
-            else {
-                setRows(data.map(r => {
-                    return {
-                        id: r.id,
-                        name: r.name,
-                        owner: r.owner.name,
-                        numParticipants: r.participants.length,
-                        password: r.password ? 'yes' : 'no',
-                        join: (
-                            <Link to={`/lobby/${r.id}`}>Join</Link>
-                        )
-                    }
-                }));
-            }
+            setRows(data.map(r => {
+                return {
+                    id: r.id,
+                    name: r.name,
+                    owner: r.owner.name,
+                    numParticipants: r.participants.length,
+                    password: r.password ? 'yes' : 'no',
+                    join: (
+                        <Link to={`/lobby/${r.id}`}>Join</Link>
+                    )
+                }
+            }));
         };
         if (!rows.length) loadRows();
     });
@@ -145,9 +150,7 @@ const Lobbies = () => {
                                                 const value = row[column.id];
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        {column.format && typeof value === 'number'
-                                                            ? column.format(value)
-                                                            : value}
+                                                        {value}
                                                     </TableCell>
                                                 );
                                             })}

@@ -7,16 +7,18 @@ import Lobby from "./Pages/Lobby";
 import {Outlet} from "react-router";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import websocket from "./http/websocket";
 import Storage from "./http/storage";
 import HeaderBar from "./components/HeaderBar";
+import AuthContextValue from "./auth-context-values.interface";
+import User from './user.interface'
+import ILobby from './Pages/lobby.interface'
 
 const RoutesWrapper = () => {
     const auth = useContext(AuthContext);
-    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
     auth.setIsSnackbarOpen = setIsSnackbarOpen;
 
-    const handleSnackbarClose = (event, reason) => {
+    const handleSnackbarClose = (event, reason?) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -78,14 +80,14 @@ const router = createBrowserRouter([
     }
 );
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext<AuthContextValue>(null);
 
-export const WsContext = createContext({});
+export const LobbyContext = createContext<{lobbyData: ILobby, setLobbyData: (ILobby) => void}>(null);
 
 const App = () => {
-    const [isLoginShown, setIsLoginShown] = useState(false);
-    const [lobbyData, setLobbyData] = useState();
-    const [loggedUser, setLoggedUser] = useState(() => Storage.getUser());
+    const [isLoginShown, setIsLoginShown] = useState<boolean>(false);
+    const [lobbyData, setLobbyData] = useState<ILobby>();
+    const [loggedUser, setLoggedUser] = useState<User>(() => Storage.getUser());
     const storeUser = useCallback( async result => {
         Storage.setUser(result);
         setLoggedUser(result)
@@ -93,7 +95,7 @@ const App = () => {
 
 
 
-    const authContextValue = useMemo(() => ({
+    const authContextValue = useMemo<AuthContextValue>(() => ({
         storeUser,
         setIsLoginShown,
         isLoginShown,
@@ -103,8 +105,7 @@ const App = () => {
         setIsSnackbarOpen: null,
     }), [storeUser, setIsLoginShown, isLoginShown, loggedUser]);
 
-    const wsContextValue = {
-        websocket,
+    const lobbyContextValue = {
         lobbyData,
         setLobbyData
     };
@@ -112,9 +113,9 @@ const App = () => {
     return (
         <>
             <AuthContext.Provider value={authContextValue}>
-                <WsContext.Provider value={wsContextValue}>
+                <LobbyContext.Provider value={lobbyContextValue}>
                     <RouterProvider router={router}/>
-                </WsContext.Provider>
+                </LobbyContext.Provider>
             </AuthContext.Provider>
         </>
 )
