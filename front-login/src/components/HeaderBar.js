@@ -6,18 +6,19 @@ import React, {useContext} from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 // import MenuIcon from '@mui/icons-material/Menu';
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import Storage from "../http/storage"
 import {AuthContext} from "../App";
 
 
 const HeaderBar = ({sx}) => {
-    const navigate =  useNavigate();
+    // const navigate =  useNavigate();
     const auth = useContext(AuthContext);
 
     const handleLogoutClick = () => {
         Storage.deleteUser();
-        navigate("/", {replace :true});
+        // navigate("/", {replace :true});
+        window.location.reload();
     };
 
     return (

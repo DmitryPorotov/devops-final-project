@@ -3,9 +3,11 @@ import InputField from "../components/InputField";
 import BaseLoginSignupForm from "./common/BaseLoginSignupForm";
 import {Link} from "react-router-dom";
 import Storage from "../http/storage";
+import {useNavigate} from 'react-router-dom';
 
 
 const SignupForm = () => {
+    const navigate = useNavigate();
 
     /**
      * @type {{getBody(): string, getEmailAndPassword: function, onFailure(*): void, url: string, onSuccess(*): void}}
@@ -19,14 +21,12 @@ const SignupForm = () => {
             });
         },
         onSuccess(result) {
-            const user = Storage.getUser() || {};
-            Storage.setUser({
-                ...user,
-                token: result.token
-            })
+            setNameErrors([]);
+            Storage.setUser(result);
+            navigate('/')
         },
         onFailure(messages) {
-            setNameErrors(messages.n);
+            setNameErrors(messages.name);
         },
         getEmailAndPassword: null
     };

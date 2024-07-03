@@ -100,6 +100,7 @@ const App = () => {
         loggedUser,
         loginCallback: null,
         globalError: null,
+        setIsSnackbarOpen: null,
     }), [storeUser, setIsLoginShown, isLoginShown, loggedUser]);
 
     const wsContextValue = {

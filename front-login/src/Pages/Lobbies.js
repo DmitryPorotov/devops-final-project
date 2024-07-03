@@ -89,18 +89,24 @@ const Lobbies = () => {
 
         const loadRows = async () => {
             const data = await getData();
-            setRows(data.map(r => {
-                return {
-                    id: r.id,
-                    name: r.name,
-                    owner: r.owner.name,
-                    numParticipants: r.participants.length,
-                    password: r.password ? 'yes' : 'no',
-                    join: (
-                        <Link to={`/lobby/${r.id}`}>Join</Link>
-                    )
-                }
-            }));
+            if (data.statusCode) {
+                auth.setIsSnackbarOpen(true);
+                auth.globalError = data.message;
+            }
+            else {
+                setRows(data.map(r => {
+                    return {
+                        id: r.id,
+                        name: r.name,
+                        owner: r.owner.name,
+                        numParticipants: r.participants.length,
+                        password: r.password ? 'yes' : 'no',
+                        join: (
+                            <Link to={`/lobby/${r.id}`}>Join</Link>
+                        )
+                    }
+                }));
+            }
         };
         if (!rows.length) loadRows();
     });

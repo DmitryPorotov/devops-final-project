@@ -2,7 +2,7 @@ import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
-    DeleteDateColumn, OneToMany, ManyToMany,
+    OneToMany, ManyToMany,
 } from 'typeorm';
 import {BaseEntity} from "../../common/base.entity";
 import {Lobby} from "../../lobby/entities/lobby.entity";

@@ -18,7 +18,7 @@ export class UserService {
   ) {
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const hashed = await bcrypt.hash(
         createUserDto.password,
         constants.HASH_SALT_ROUNDS

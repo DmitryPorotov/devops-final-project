@@ -1,4 +1,4 @@
-import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from '@nestjs/common';
+import {CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {Reflector} from "@nestjs/core";
 import {FastifyRequest} from 'fastify';
 import {JwtService} from "@nestjs/jwt";
@@ -23,7 +23,11 @@ export class AuthGuard implements CanActivate {
         }
         request.user = await this.getUser(token);
 
-        return request.user.isEnabled && (request.user.isAdmin || !rolesToUse.includes('admin'));
+        if (!request.user.isEnabled) {
+            throw new ForbiddenException('This account is not validated by the admin. Please contact the admin for validation.')
+        }
+
+        return request.user.isAdmin || !rolesToUse.includes('admin');
     }
 
     async getUser(token: string): Promise<LoginUserDto | null> {
