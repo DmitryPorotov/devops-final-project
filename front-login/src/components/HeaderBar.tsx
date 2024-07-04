@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 // import MenuIcon from '@mui/icons-material/Menu';
 // import {useNavigate} from "react-router-dom";
-import Storage from "../http/storage"
+import Storage_ from "../http/storage"
 import {AuthContext} from "../App";
 
 
@@ -16,7 +16,7 @@ const HeaderBar = ({sx}) => {
     const auth = useContext(AuthContext);
 
     const handleLogoutClick = () => {
-        Storage.deleteUser();
+        Storage_.deleteUser();
         // navigate("/", {replace :true});
         window.location.reload();
     };

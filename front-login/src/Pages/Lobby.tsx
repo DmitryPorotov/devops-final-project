@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import Api from "../http/api";
 import LobbyLoginModal from "../components/LobbyLoginModal";
@@ -115,20 +115,20 @@ const Lobby = () => {
 
     const [unusedHouseOptions, setUnusedHouseOptions] = useState({...houses});
 
-    const afterChatInitSetMissedMessages = () => {
+    const afterChatInitSetMissedMessages = useCallback(() => {
         if (!isInitChat) {
             setIsInitChat(true);
             return missedMessages;
         }
         else return []
-    };
+    }, [isInitChat, missedMessages]);
 
-    const setHouseIfMe = (player) => {
+    const setHouseIfMe = useCallback( (player) => {
         if ((player.userId === Websocket.playerId) && player.house) {
             Storage_.setHouseForLobby(id, player.house);
             return true;
         }
-    };
+    }, [id]);
 
     useEffect(() => {
         if (!isInit) return ;
@@ -264,7 +264,7 @@ const Lobby = () => {
         };
         Websocket.onMessage(id, receiveMessage);
         return () => Websocket.offMessage(receiveMessage);
-    }, [isInit, lobbyCtx, id, navigate]);
+    }, [isInit, lobbyCtx, id, navigate, isInitChat, missedMessages, setHouseIfMe]);
 
     useEffect(() => {
         const getLobbyData = () => new Promise(async (resolve) => {
@@ -295,8 +295,14 @@ const Lobby = () => {
 
             if (data.password && !(await amParticipating(data))) {
                 setIsLoginModalOpen(true);
-            } else {
-                await joinLobby(id);
+            }
+            else {
+                const response = await joinLobby(id);
+                if (response.statusCode === 409) {
+                    navigate('/');
+                    auth.globalError = response.message;
+                    auth.setIsSnackbarOpen(true);
+                }
             }
             lobbyCtx.setLobbyData(data);
             await Websocket.init(storedUser.id);
@@ -309,7 +315,7 @@ const Lobby = () => {
             }, 1)
         });
         if (!isInit) getLobbyData();
-    }, [isLoginModalOpen, setIsLoginModalOpen, lobbyCtx, auth, isInit, id]);
+    }, [isLoginModalOpen, setIsLoginModalOpen, lobbyCtx, auth, isInit, id, navigate]);
 
     const createGame = () => {
         Websocket.send({
@@ -355,7 +361,7 @@ const Lobby = () => {
             <div style={{display: "flex"}}>
                 <div style={{flexFlow: "row", flexGrow: alreadyJoined ? 10: 2}}>
                     <div style={{flexFlow:"column", display:"flex"}}>
-                    {alreadyJoined && <iframe style={{width:"100%", border:"none", flexGrow:3, minHeight:"50vh", height:"calc(97.5vh - 372px)"}} src={`/lobby/${id}/game/index.html`}/>}
+                    {alreadyJoined && <iframe title={"defold-frame"} style={{width:"100%", border:"none", flexGrow:3, minHeight:"50vh", height:"calc(97.5vh - 372px)"}} src={`/lobby/${id}/game/index.html`}/>}
                     {!isLoginModalOpen && <Chat style={{flexGrow:1}} lobbyId={id} afterInitGetMissedMessages={afterChatInitSetMissedMessages}/>}
                     </div>
                 </div>

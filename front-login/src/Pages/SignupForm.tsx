@@ -2,17 +2,15 @@ import React, {useState} from "react";
 import InputField from "../components/InputField";
 import BaseLoginSignupForm from "./common/BaseLoginSignupForm";
 import {Link} from "react-router-dom";
-import Storage from "../http/storage";
+import Storage_ from "../http/storage";
 import {useNavigate} from 'react-router-dom';
+import FetchOptionsInterface from "./common/fetch-options.interface";
 
 
 const SignupForm = () => {
     const navigate = useNavigate();
 
-    /**
-     * @type {{getBody(): string, getEmailAndPassword: function, onFailure(*): void, url: string, onSuccess(*): void}}
-     */
-    const fetchOptions = {
+    const fetchOptions: FetchOptionsInterface = {
         url: '/auth/signup',
         getBody() {
             return JSON.stringify({
@@ -22,7 +20,7 @@ const SignupForm = () => {
         },
         onSuccess(result) {
             setNameErrors([]);
-            Storage.setUser(result);
+            Storage_.setUser(result);
             navigate('/')
         },
         onFailure(messages) {

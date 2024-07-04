@@ -44,7 +44,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
         }
 
         return () => Websocket.offMessage(receiveMessage);
-    }, [chatMessages, lobbyCtx, lobbyId]);
+    }, [chatMessages, lobbyCtx, lobbyId, afterInitGetMissedMessages]);
 
     const handleSubmit = (event) => {
         event.preventDefault();

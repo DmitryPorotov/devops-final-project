@@ -18,6 +18,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "jsx": "react"
+    "jsx": "react",
+    "lib": [
+      "es2016",
+      "dom"
+    ]
   }
 }

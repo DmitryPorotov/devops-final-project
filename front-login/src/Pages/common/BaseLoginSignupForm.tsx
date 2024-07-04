@@ -1,12 +1,21 @@
-import React, {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import Button from "@mui/material/Button";
 import InputField from "../../components/InputField";
 import Card from "@mui/material/Card";
 import Alert from "@mui/material/Alert";
 import Api from "../../http/api";
+import FetchOptionsInterface from "./fetch-options.interface";
 
 const AdditionalFields = ({children}) =>
     <>{children}</>;
+
+export interface BaseLoginSignupFormInterface {
+    moreFields: ReactNode,
+    link: ReactNode,
+    fetchOptions: FetchOptionsInterface,
+    formTitle: string,
+    buttonText: string,
+}
 
 const BaseLoginSignupForm = ({
                        moreFields,
@@ -14,7 +23,7 @@ const BaseLoginSignupForm = ({
                         fetchOptions,
                         formTitle,
                         buttonText,
-                   }) => {
+                   }: BaseLoginSignupFormInterface) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     fetchOptions.getEmailAndPassword = () => ({email, password});

@@ -1,17 +1,17 @@
 import React, {useContext} from "react";
 import BaseLoginSignupForm from "./common/BaseLoginSignupForm";
-import {Link, /*useNavigate*/} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {AuthContext} from "../App";
 import {createPortal} from "react-dom";
+import FetchOptionsInterface from "./common/fetch-options.interface";
 
 const LoginForm = () => {
-    // const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
     /**
      * @type {{getBody(): string, url: string, onSuccess(*=): void, getEmailAndPassword: function}}
      */
-    const fetchOptions = {
+    const fetchOptions: FetchOptionsInterface = {
         url: '/auth/login',
         getBody() {
             return JSON.stringify(this.getEmailAndPassword());

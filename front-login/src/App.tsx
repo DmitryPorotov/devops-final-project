@@ -7,7 +7,7 @@ import Lobby from "./Pages/Lobby";
 import {Outlet} from "react-router";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import Storage from "./http/storage";
+import Storage_ from "./http/storage";
 import HeaderBar from "./components/HeaderBar";
 import AuthContextValue from "./auth-context-values.interface";
 import User from './user.interface'
@@ -87,9 +87,9 @@ export const LobbyContext = createContext<{lobbyData: ILobby, setLobbyData: (ILo
 const App = () => {
     const [isLoginShown, setIsLoginShown] = useState<boolean>(false);
     const [lobbyData, setLobbyData] = useState<ILobby>();
-    const [loggedUser, setLoggedUser] = useState<User>(() => Storage.getUser());
+    const [loggedUser, setLoggedUser] = useState<User>(() => Storage_.getUser());
     const storeUser = useCallback( async result => {
-        Storage.setUser(result);
+        Storage_.setUser(result);
         setLoggedUser(result)
     },[]);
 

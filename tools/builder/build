@@ -5,11 +5,12 @@ import subprocess
 import argparse
 
 parser = argparse.ArgumentParser('Table games production builder.')
-parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login', 'defold']
+parser.add_argument('-o', '--only', nargs='+', choices=['worker', 'nest', 'login', 'defold', 'nginx']
                     , action='store', help='Build only selected projects; {worker} - game-logic-core - Scala project,'
                                            + '{nest} - Nest.js http and WS server,'
                                            + '{login} - front-login React front-end project,'
-                                           + '{defold} - front-defold - Defold game GUI.')
+                                           + '{defold} - front-defold - Defold game GUI.'
+                                           + '{nginx} - nGinx web server - this option is used in --save-only')
 parser.add_argument('-nd', '--no-docker-build', action='store_true', help='Don\'t run "docker compose build".')
 parser.add_argument('-s', '--save', action='store_true', help='Save docker images to the \'build\' directory.')
 parser.add_argument('-so', '--save-only', action='store_true', help='Do not build anything, only save previously '
@@ -127,7 +128,7 @@ def start():
 
         if is_static_content_error:
             print_warning("There was an error building the static web content, skipping...")
-        elif not args.only or 'defold' in args.only or 'login' in args.only:
+        elif not args.only or 'defold' in args.only or 'login' in args.only or 'nginx' in args.only:
             print_header("Saving Nginx...")
             with open('../../build/nginx.tar.gz', 'w') as outfile:
                 save = subprocess.run(['docker', 'save', 'nginx_prod'], check=True, capture_output=True)

@@ -8,7 +8,7 @@
  */
 
 
-class Storage {
+class Storage_ {
     /**
      *
      * @returns {User|null}
@@ -43,4 +43,4 @@ class Storage {
     }
 }
 
-export default Storage
+export default Storage_

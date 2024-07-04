@@ -1,18 +1,18 @@
 import Api from "./api";
-import Storage from "./storage";
+import Storage_ from "./storage";
 
 class Websocket {
-    static isInit = false;
+    static isInit: boolean = false;
     static protocol = window.envVars.protocol.endsWith('s') ? 'wss:' : 'ws:';
     static baseUrl = Api.baseUrl;
     static port = ':' + window.envVars.wsPort;
     static path = '/ws';
-    static playerId;
-    static worker;
+    static playerId: number;
+    static worker: SharedWorker;
     /**
      * @type Map
      */
-    static eventHandlers;
+    static eventHandlers: Map<(msg:object)=>Promise<void>, (msg:object)=>void>;
 
     /**
      * @type WebSocket
@@ -25,13 +25,11 @@ class Websocket {
             Websocket.playerId = playerId;
         }
         else return;
-
         return Websocket.makeSocket();
     }
 
     static makeSocket() {
         return new Promise<void>(async resolve => {
-            console.log(Websocket);
             Websocket.worker = new SharedWorker('/fwc/worker/worker.js');
             Websocket.worker.addEventListener('error',(e) =>
                 console.log(e)
@@ -39,7 +37,7 @@ class Websocket {
             // Websocket.worker.onmessageerror = (e) => {
             //     console.log(e)
             // };
-            const user = Storage.getUser();
+            const user = Storage_.getUser();
             Websocket.worker.port.postMessage({
                 action: 'init',
                 args: [
@@ -59,23 +57,10 @@ class Websocket {
         });
     }
 
-    /**
-     * @typedef {{lobbyId: number,from:number, messageId: string}} Message
-     */
-
-    /**
-     * @callback OnMessageCallBack
-     * @param message
-     * @return Promise
-     */
-
-    /**
-     * @param {number} lobbyId
-     * @param {OnMessageCallBack} callBack
-     */
-    static onMessage(lobbyId, callBack) {
+    static onMessage(lobbyId: number, callBack: (message: object) => Promise<void>) {
         if (Websocket.eventHandlers.has(callBack)) return;
         const cbWrapper = (msg) => {
+            // eslint-disable-next-line
             if (msg.data.lobbyId === lobbyId || msg.data.gameId == lobbyId) {
                 callBack(msg.data).then();
             }
