@@ -3,14 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>Dmitry P. home page.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 </head>
 <body>
-<!--<style type="text/css">-->
-<!--    header {-->
-<!--        position: fixed;-->
-<!--        height: 5rem;-->
-<!--    }-->
-<!--</style>-->
+<style type="text/css">
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    .cards-container {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        width: 80vw;
+        margin: auto;
+    }
+
+    .card-wrapper {
+        display: flex;
+    }
+
+    .card {
+        border: 1px grey solid;
+        border-radius: 1rem;
+        padding: 1%;
+        align-self: end;
+        width: 100%;
+        position: relative;
+        box-shadow: 5px 3px 3px lightgrey;
+    }
+    .card h4 {
+        margin: 0;
+        position: absolute;
+        top: -10px;
+        left: 22px;
+        background: white;
+        padding: 2px;
+    }
+    .card li {
+        list-style: none;
+    }
+    .card-wrapper:nth-child(even) .card {
+        align-self: flex-end;
+    }
+    .card-wrapper:nth-child(odd) .card {
+        align-self: flex-start;
+    }
+
+    @media all and (min-width: 0) and (max-width: 600px) {
+        .card-wrapper {
+            width: 98%;
+            margin: 2% 0 2% 0;
+            height: auto;
+        }
+    }
+
+    @media all and (min-width: 601px) {
+        .card-wrapper {
+            width: 45%;
+            margin: 2%;
+            height: 250px;
+        }
+    }
+    h3.tech {
+        text-align: center;
+    }
+    .top-part {
+        width: 80vw;
+        margin: 0 auto 0 auto;
+    }
+    footer {
+        text-align: center;
+    }
+    footer a {
+        padding: 5px;
+        text-decoration: none;
+    }
+</style>
+<div class="top-part">
 <header>
     <h1>Hello there!</h1>
     <h2>Welcome to Dmitry Porotov's home page.</h2>
@@ -18,126 +87,140 @@
 <section>
     <h3>About me</h3>
     <p>
-        I'm a full-stack programmer with more then 10 years of experience. I have a bachelor's degree in Information Systems Engineering.
+        I'm a full-stack programmer with more then 10 years of experience. I have a bachelor's degree in Information
+        Systems Engineering.
     </p>
 </section>
-<section>
-    <h3>My technology stack</h3>
-    <h4>Programming Languages</h4>
-    <p>
+</div>
+<h3 class="tech">My technology stack</h3>
+<section class="cards-container">
+    <div class="card-wrapper">
+        <div class="card">
+            <h4>Programming Languages</h4>
+            <ul>
+                <li>JavaScript + TypeScript - 99%</li>
+                <li>PHP - 95%</li>
+                <li>Scala - 80%</li>
+                <li>Java - 70%</li>
+                <li>C# - 90%</li>
+                <li>C++ - 50%</li>
+                <li>Python - 80%</li>
+                <li>Lua - 90%</li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Front-end web Development
+        </h4>
         <ul>
-    <li>
-        JavaScript + TypeScript
-    </li>
-    <li>
-        PHP
-    </li>
-    <li>
-        Scala
-    </li>
-    <li>
-        Java
-    </li>
-    <li>
-        C#
-    </li>
-    <li>
-        C++
-    </li>
-    <li>
-        Python
-    </li>
-    <li>
-        Lua
-    </li>
+            <li>HTML - 95%</li>
+            <li>CSS - 90%</li>
+            <li>SVG - 85%</li>
+            <li>Angular - 85%</li>
+            <li>React - 80%</li>
         </ul>
-    </p>
-    <h4>
-        Front-end web Development
-    </h4>
-    <p>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Back-end web development
+        </h4>
         <ul>
-    <li>Html</li>
-    <li>CSS</li>
-    <li>SVG</li>
-    <li>Angular</li>
-    <li>React</li>
+            <li>Nest.js - 80%</li>
+            <li>Laravel PHP - 90%</li>
+            <li>ASP.NET - 80%</li>
         </ul>
-    </p>
-    <h4>
-        Back-end web development
-    </h4>
-    <p>
-    <ul>
-        <li>Nest.js</li>
-        <li>Laravel PHP</li>
-        <li>ASP.NET</li>
-    </ul>
-    <h4>
-        Database Systems
-    </h4>
-    <p>
-    <ul>
-        <li>MySQL</li>
-        <li>PostgreSQL</li>
-        <li>MSSQL</li>
-        <li>Redis</li>
-    </ul>
-    </p>
-    <h4>
-        Message Queues
-    </h4>
-    <p>
-    <ul>
-        <li>ZeroMQ</li>
-        <li>Redis</li>
-    </ul>
-    </p>
-    <h4>
-        OSes
-    </h4>
-    <p>
-    <ul>
-        <li>Linux</li>
-        <li>Windows</li>
-    </ul>
-    </p>
-    <h4>
-        IDEs and tools
-    </h4>
-    <p>
-    <ul>
-        <li>IntelliJ Idea based IDEs</li>
-        <li>Git</li>
-        <li>Npm</li>
-        <li>Docker</li>
-        <li>Nginx</li>
-        <li>Visual Studio</li>
-    </ul>
-    </p>
-    <h4>
-        Cloud
-    </h4>
-    <p>
-    <ul>
-        <li>AWS</li>
-    </ul>
-    </p>
-    </p>
-    <h4>
-        Dev technics and paradigms
-    </h4>
-    <p>
-    <ul>
-        <li>OOP</li>
-        <li>FP</li>
-        <li>Automated testing</li>
-    </ul>
-    </p>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Database Systems
+        </h4>
+        <ul>
+            <li>MySQL - 90%</li>
+            <li>PostgreSQL - 85%</li>
+            <li>MSSQL - 80%</li>
+            <li>Redis - 80%</li>
+        </ul>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Message Queues
+        </h4>
+        <ul>
+            <li>ZeroMQ - 70%</li>
+            <li>Redis - 80%</li>
+        </ul>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            OSes
+        </h4>
+        <ul>
+            <li>Linux - 90%</li>
+            <li>Windows - 90%</li>
+        </ul>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            IDEs and tools
+        </h4>
+        <ul>
+            <li>IntelliJ Idea based IDEs</li>
+            <li>Visual Studio</li>
+            <li>Git</li>
+            <li>Npm</li>
+            <li>Docker</li>
+            <li>Nginx</li>
+        </ul>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Cloud
+        </h4>
+        <ul>
+            <li>AWS</li>
+        </ul>
+    </div>
+    </div>
+    <div class="card-wrapper">
+    <div class="card">
+        <h4>
+            Dev technics and paradigms
+        </h4>
+        <ul>
+            <li>OOP</li>
+            <li>FP</li>
+            <li>Automated testing</li>
+        </ul>
+    </div>
+    </div>
 </section>
 <footer>
-    <a href="kedin.com/in/dmitry-porotov/">Linked In</a>
-    <a href="https://stackoverflow.com/users/2003070/dmitry">Stack Overflow</a>
+    <a href="https://linkedin.com/in/dmitry-porotov/" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" focusable="false">
+            <path fill="black" d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z">
+            </path>
+        </svg>
+    </a>
+    <a href="https://stackoverflow.com/users/2003070/dmitry" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="37" viewBox="0 0 32 37" focusable="false">
+            <path d="M26 33v-9h4v13H0V24h4v9h22Z" fill="black"></path>
+            <path d="m21.5 0-2.7 2 9.9 13.3 2.7-2L21.5 0ZM26 18.4 13.3 7.8l2.1-2.5 12.7 10.6-2.1 2.5ZM9.1 15.2l15 7 1.4-3-15-7-1.4 3Zm14 10.79.68-2.95-16.1-3.35L7 23l16.1 2.99ZM23 30H7v-3h16v3Z" fill="black"></path>
+        </svg>
+    </a>
 </footer>
 </body>
 </html>
