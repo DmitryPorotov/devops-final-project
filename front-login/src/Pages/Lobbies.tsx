@@ -114,7 +114,7 @@ const Lobbies = () => {
             }));
         };
         if (!rows.length) loadRows();
-    });
+    }, [auth]);
 
     return (
         <>
