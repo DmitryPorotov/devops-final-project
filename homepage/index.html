@@ -20,6 +20,7 @@
 
     .card-wrapper {
         display: flex;
+        position: relative;
     }
 
     .card {
@@ -63,6 +64,9 @@
             margin: 2%;
             height: 250px;
         }
+        .card-wrapper + .card-wrapper + .card-wrapper {
+            height: 200px;
+        }
     }
     h3.tech {
         text-align: center;
@@ -77,6 +81,15 @@
     footer a {
         padding: 5px;
         text-decoration: none;
+    }
+    .html-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:0;
+        right: 0;
+        opacity: 0.5;
+        border-radius: 1rem;
     }
 </style>
 <div class="top-part">
@@ -110,18 +123,19 @@
         </div>
     </div>
     <div class="card-wrapper">
-    <div class="card">
-        <h4>
-            Front-end web Development
-        </h4>
-        <ul>
-            <li>HTML - 95%</li>
-            <li>CSS - 90%</li>
-            <li>SVG - 85%</li>
-            <li>Angular - 85%</li>
-            <li>React - 80%</li>
-        </ul>
-    </div>
+        <div class="card">
+            <h4>
+                Front-end web Development
+            </h4>
+            <ul>
+                <li>HTML - 95%</li>
+                <li>CSS - 90%</li>
+                <li>SVG - 85%</li>
+                <li>Angular - 85%</li>
+                <li>React - 80%</li>
+            </ul>
+            <img class="html-img" src="html.png"/>
+        </div>
     </div>
     <div class="card-wrapper">
     <div class="card">
@@ -176,12 +190,12 @@
             IDEs and tools
         </h4>
         <ul>
-            <li>IntelliJ Idea based IDEs</li>
-            <li>Visual Studio</li>
-            <li>Git</li>
-            <li>Npm</li>
-            <li>Docker</li>
-            <li>Nginx</li>
+            <li>IntelliJ Idea based IDEs - 90%</li>
+            <li>Visual Studio - 90%</li>
+            <li>Git - 80%</li>
+            <li>NPM - 80%</li>
+            <li>Docker - 90%</li>
+            <li>Nginx - 70%</li>
         </ul>
     </div>
     </div>
@@ -191,7 +205,7 @@
             Cloud
         </h4>
         <ul>
-            <li>AWS</li>
+            <li>AWS - 70%</li>
         </ul>
     </div>
     </div>
@@ -201,9 +215,9 @@
             Dev technics and paradigms
         </h4>
         <ul>
-            <li>OOP</li>
-            <li>FP</li>
-            <li>Automated testing</li>
+            <li>OOP - 95%</li>
+            <li>FP - 80%</li>
+            <li>Automated testing - 75%</li>
         </ul>
     </div>
     </div>
@@ -219,6 +233,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="37" viewBox="0 0 32 37" focusable="false">
             <path d="M26 33v-9h4v13H0V24h4v9h22Z" fill="black"></path>
             <path d="m21.5 0-2.7 2 9.9 13.3 2.7-2L21.5 0ZM26 18.4 13.3 7.8l2.1-2.5 12.7 10.6-2.1 2.5ZM9.1 15.2l15 7 1.4-3-15-7-1.4 3Zm14 10.79.68-2.95-16.1-3.35L7 23l16.1 2.99ZM23 30H7v-3h16v3Z" fill="black"></path>
+        </svg>
+    </a>
+    <a href="https://github.com/DmitryPorotov" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 16 16" version="1.1" width="32" >
+            <path fill="black" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
         </svg>
     </a>
 </footer>
