@@ -9,8 +9,8 @@ class Order:
 
     @classmethod
     def from_json(cls, json):
-        cls(
-            json['type'],
-            json['isStar'],
-            json['modifier']
+        return cls(
+            OrderType.from_str(json['type']),
+            json['isStar'] if 'isStar' in json else False,
+            json['modifier'] if 'modifier' in json else 0
         )

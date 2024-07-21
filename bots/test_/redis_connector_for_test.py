@@ -23,7 +23,7 @@ class RedisConnectorForTest:
         self._pubsub.psubscribe(**{'game2.*': on_message})
         self._on_message = on_message
 
-        def ex_handler(ex):
+        def ex_handler(ex, arg1, arg2):
             print(ex)
 
         self._thread = self._pubsub.run_in_thread(sleep_time=.001, exception_handler=ex_handler)

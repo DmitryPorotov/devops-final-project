@@ -5,10 +5,10 @@ class TidesOfBattleCard:
             power: int,
             death: bool = False,
             attack: bool = False,
-            defence: bool = False
+            defense: bool = False
     ):
         self.code = code
         self.power = power
         self.death = death
         self.attack = attack
-        self.defence = defence
+        self.defense = defense
