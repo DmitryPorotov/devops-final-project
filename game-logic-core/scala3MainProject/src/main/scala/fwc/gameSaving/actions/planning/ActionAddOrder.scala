@@ -23,10 +23,7 @@ case class ActionAddOrder(
   override def doAction(): GameState = {
     if !gameState.subPhase.isInstanceOf[SubPhaseAddOrder]
     then throw new ActionException("Wrong phase")
-
-    /* todo need to switch it back to having houses who did not confirm orders to be in
-    houseTypes and those who confirmed orders to be removed from houseTypes.
-    This is to be consistent with rest of the code */
+    
     if !gameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(houseType)
     then throw new ActionException("You have already confirmed your orders")
 

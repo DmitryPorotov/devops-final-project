@@ -1,6 +1,5 @@
 package fwc
 
-import fwc.game.FWCException
 import fwc.game.board.*
 import fwc.game.houses.*
 import fwc.game.planningPhase.*
