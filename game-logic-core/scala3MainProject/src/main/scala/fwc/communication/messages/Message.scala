@@ -60,6 +60,9 @@ object Message {
         MessageRestoreGames(userId, gameId, messageId, games)
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
+      case "add_bots" => 
+        val houseTypes = Try[List[HouseType]](json.obj("houseTypes").arr.map(s => HouseType.fromString(s.str)).toList) getOrElse null
+        MessageAddBots(userId, gameId, houseTypes, messageId)
       case a => throw new FWCException(s"Unknown action $a", gameId, userId, messageId)
   }
 }
