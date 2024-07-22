@@ -34,9 +34,9 @@ class GameRules:
             list(BoardTile.from_json(bt) for bt in json['board']),
             json['kingsCourtStars'],
             json['supplyUsage'],
-            {MilitaryUnitType.from_str(mut): json['maxArmies'][mut] for mut in json['maxArmies']},
+            {MilitaryUnitType.from_str(mut): num for mut, num in json['maxArmies'].items()},
             BoardCards.from_json(json['boardCards']),
-            {OrderType.from_str(ot): list(Order.from_json(o) for o in json['loadedOrders'][ot]) for ot in json['loadedOrders']},
+            {OrderType.from_str(ot): list(Order.from_json(o) for o in od) for ot, od in json['loadedOrders'].items()},
             list(HouseCard.from_json(hc) for hc in json['houseCards']),
-            {MilitaryUnitType.from_str(mut): MilitaryUnitInfo.from_json(json['militaryUnits'][mut]) for mut in json['militaryUnits']}
+            {MilitaryUnitType.from_str(mut): MilitaryUnitInfo.from_json(mui) for mut, mui in json['militaryUnits'].items()}
         )
