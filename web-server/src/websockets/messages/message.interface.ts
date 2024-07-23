@@ -11,4 +11,5 @@ export interface MessageInterface {
     type: 'chat' | 'action' | 'test' | 'error' | 'system';
     lobbyId?: number;
     body?: ChatMessageInterface;
+    player_action?: object | unknown
 }

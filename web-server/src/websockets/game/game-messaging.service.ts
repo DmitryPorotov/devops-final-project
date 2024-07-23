@@ -11,7 +11,7 @@ import NoGameInRedisCacheError from "../../redis/NoGameInRedisCacheError";
 import {LobbyClients} from "../lobby-clients.interface";
 import {v4 as uuid} from 'uuid'
 import MessageResendService from "../../redis/message-resend.service";
-import constants from '../../constants'
+import {FillWithBots} from "./actions/fill-with-bots";
 
 @Injectable()
 class GameMessagingService {
@@ -33,6 +33,9 @@ class GameMessagingService {
         let handler: BaseGameAction;
         if (message.action === "create_game") {
             handler = new CreateGame(this.lobbies, this.workerRelayService);
+        }
+        else if (message.action === "fill_with_bots") {
+            handler = new FillWithBots(this.lobbies, this.workerRelayService);
         }
         else {
             if (!message.messageId) {
