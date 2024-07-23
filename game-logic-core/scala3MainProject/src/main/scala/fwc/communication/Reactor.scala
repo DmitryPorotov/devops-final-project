@@ -108,6 +108,9 @@ object Reactor {
             "userId" -> userId,
             "gameRules" -> gameRules.toJson,
             "gameState" -> (
+              if userId < 0 then
+                game.currentGameState.toJson
+              else
               if game.gameSettings.isInputOnly && inputtingPlayer.nonEmpty then
                 game.currentGameState.toJsonForInputtingPlayer(inputtingPlayer.head.forHouses)
               else
