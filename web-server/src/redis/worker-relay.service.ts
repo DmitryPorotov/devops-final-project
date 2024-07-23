@@ -6,6 +6,7 @@ import {WorkerMessageInterface} from "../websockets/messages/worker-message.inte
 import GameTransferService from "./game-transfer.service";
 import {v4 as uuid} from 'uuid'
 import MessageResendService from "./message-resend.service";
+import {MessageInterface} from "../websockets/messages/message.interface";
 
 @Injectable()
 class WorkerRelayService {
@@ -123,6 +124,13 @@ class WorkerRelayService {
         const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
         if (!workerName) throw new NoGameInRedisCacheError();
         this.redisPubSub.publishToGame(workerName, `game${gameId}`, message);
+    }
+
+    async sendToBot(gameId: number, message: string) {
+        const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
+        if (!workerName) throw new NoGameInRedisCacheError();
+        //todo: ask bot servers for their load and choose a less busy one
+        this.redisPubSub.publishToGame('bot1', workerName, message);
     }
 
     async createNewGame(userId: number, gameId: number, isRandomHouses: boolean, messageId: string) {
