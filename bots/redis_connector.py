@@ -48,3 +48,6 @@ class RedisConnector:
 
     def send(self, channel: str, message: str):
         self._redis.publish(channel, message)
+
+    def send_to_chat(self, stream_name: str, message: str):
+        self._redis.xadd(stream_name, {'json': message}, '*', maxlen=100)

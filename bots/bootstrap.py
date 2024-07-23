@@ -12,11 +12,12 @@ my_channel = (os.getenv('MY_NAME') + '.*').encode('utf-8')
 def handle_requests(message: RedisMessage):
     if message['type'] == 'pmessage' and message['pattern'] == my_channel:
         data = json.loads(message['data'])
-        game_state = GameState.from_json(data['gameState'])
-        handle_request_for_bots(game_state, None)
+        channel = message['channel'].decode('utf-8')
+        handle_request_for_bots(data, channel, connection)
 
 
 def react_to_game(message: RedisMessage):
+
     pass
 
 

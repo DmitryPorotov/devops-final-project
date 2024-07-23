@@ -61,6 +61,16 @@ const houses = {
     'lion': true,
 };
 
+function unusedHousesToArray(unusedHouses: {[k:string]: boolean}): string[] {
+    const retVal = [];
+    for (let k in unusedHouses) {
+        if (unusedHouses[k]) {
+            retVal.push(k)
+        }
+    }
+    return retVal;
+}
+
 const Lobby = () => {
     const {id: idStr} = useParams();
 
@@ -204,7 +214,13 @@ const Lobby = () => {
                                 let joined;
                                 for (const p of message.status.details.gameSettings.players) {
                                     const participant = lobbyCtx.lobbyData.participants.find(p_ => p_.id === p.userId);
-                                    participant && (participant.house = p.house);
+                                    if (participant) {
+                                        (participant.house = p.house);
+                                    }
+                                    else {
+                                        lobbyCtx.lobbyData.participants.push(p);
+                                    }
+
                                     unusedHouses[p.house] = p.userId === Websocket.playerId;
                                     !joined && (joined = setHouseIfMe(p));
                                 }
@@ -234,7 +250,7 @@ const Lobby = () => {
                         for (const p of message.gameSettings.players) {
                             const participant = lobbyCtx.lobbyData.participants.find(p_ => p_.id === p.userId);
                             setHouseIfMe(p) && setCanSelectHouse(false);
-                            participant.house = p.house;
+                            participant && (participant.house = p.house);
                             unusedHouses[p.house] = p.userId === Websocket.playerId;
                         }
                         setUnusedHouseOptions({
@@ -350,6 +366,16 @@ const Lobby = () => {
         });
     };
 
+    const botsButtonClick = (e) => {
+        Websocket.send({
+            type: 'action',
+            action: 'fill_with_bots',
+            player_action: {
+                houseTypes: unusedHousesToArray(unusedHouseOptions)
+            }
+        });
+    };
+
     return (
         <div>
             <LobbyHeader>Lobby: {lobbyCtx.lobbyData?.name}
@@ -394,6 +420,14 @@ const Lobby = () => {
                             }
                         </CardContent>
                     </Card>
+                    {
+                        lobbyCtx.lobbyData?.owner.id === Websocket.playerId &&
+                        <Card sx={{minWidth: 100}} style={{marginBottom: ".5rem"}}>
+                            <CardContent>
+                                <Button onClick={botsButtonClick}>Fill with bots</Button>
+                            </CardContent>
+                        </Card>
+                    }
                     <PlayersList id={id} hasJoinedGame={alreadyJoined}/>
                 </div>
             </div>
