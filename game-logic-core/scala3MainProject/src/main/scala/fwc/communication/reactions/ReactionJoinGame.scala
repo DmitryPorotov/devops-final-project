@@ -24,12 +24,12 @@ object ReactionJoinGame {
           else acc
       )
       then
-        throw new FWCException("Other player has selected this house already")
+        throw new FWCException("Other player has selected this house already", gameSettings.gameId, userId)
       val player = gameSettings.players.head.find(_.userId == userId)
       if player.nonEmpty && player.head.house.nonEmpty && player.head.house.head == houseType.head then
         return gameSettings
       else if player.nonEmpty then
-        throw new FWCException(s"You already joined as ${player.head.house.head}")
+        throw new FWCException(s"You already joined as ${player.head.house.head}", gameSettings.gameId, userId)
     }
     val updatedSettings = gameSettings.copy(players = Some((gameSettings.players getOrElse Seq[Player]()) appended Player(userId, name, houseType)))
     updatedSettings
