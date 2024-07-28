@@ -1,5 +1,5 @@
-from server.game_state.house_type import HouseType
-from server.game_state.military_unit_type import MilitaryUnitType
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.military_unit_type import MilitaryUnitType
 
 
 class MilitaryUnit:

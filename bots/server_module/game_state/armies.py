@@ -1,5 +1,5 @@
-from server.game_state.military_unit import MilitaryUnit
-from server.game_state.house_type import HouseType
+from server_module.game_state.military_unit import MilitaryUnit
+from server_module.game_state.house_type import HouseType
 
 
 class Armies(dict[int, list[MilitaryUnit]]):

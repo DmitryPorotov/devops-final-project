@@ -1,7 +1,7 @@
-from game_state.game_state import GameState
-from game_state.house_type import HouseType
-from game_state.military_unit import MilitaryUnit
-from game_state.order import Order
+from server_module.game_state.game_state import GameState
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.military_unit import MilitaryUnit
+from server_module.game_state.order import Order
 import random
 
 
@@ -16,7 +16,8 @@ class AddOrderReaction:
 
     def react(self):
         my_armies = self.game_state.armies.get_armies_by_house_type(self.house_type)
-        my_placed_orders = self.game_state.placed_orders[self.house_type]
+        my_placed_orders = self.game_state.placed_orders[self.house_type] if (self.house_type
+                                                                              in self.game_state.placed_orders) else {}
         rnd_orders = self._get_random_orders(my_armies, my_placed_orders)
 
     def _get_random_orders(self,
@@ -33,7 +34,7 @@ class AddOrderReaction:
         for t in avail_orders:
             flat_avail_orders.extend(avail_orders[t])
         random.shuffle(flat_avail_orders)
-        rnd_orders = []
+        rnd_orders = {}
         idx = 0
         for a in armies_no_orders:
             rnd_orders[a] = flat_avail_orders[idx]

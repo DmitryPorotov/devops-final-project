@@ -1,4 +1,4 @@
-from server.game_state.house_type import HouseType
+from server_module.game_state.house_type import HouseType
 
 type CardCode = int
 

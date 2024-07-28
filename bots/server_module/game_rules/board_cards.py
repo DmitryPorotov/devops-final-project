@@ -1,6 +1,6 @@
-from server.game_rules.round_event_card import RoundEventCard
-from server.game_state.tides_of_battle_card import TidesOfBattleCard
-from server.game_rules.wildling_card import WildlingCard
+from server_module.game_rules.round_event_card import RoundEventCard
+from server_module.game_state.tides_of_battle_card import TidesOfBattleCard
+from server_module.game_rules.wildling_card import WildlingCard
 
 
 class BoardCards:

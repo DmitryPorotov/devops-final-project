@@ -2,6 +2,7 @@ import datetime
 import json
 from typing import TypedDict
 from enum import IntEnum
+from redis_connector import RedisConnector
 
 
 class HouseToBotId(IntEnum):
@@ -11,8 +12,6 @@ class HouseToBotId(IntEnum):
     KRAKEN = -4
     ROSE = -5
     LION = -6
-
-from redis_connector import RedisConnector
 
 
 class PlayerActionType(TypedDict):
@@ -27,13 +26,27 @@ class RequestForBotsMessage(TypedDict):
     player_action: PlayerActionType
 
 
+def send_join_to_chat(redis_connector: RedisConnector, game_id: int, user_id: int, bot_name: str):
+    time_now = datetime.datetime.now().isoformat()
+    message_to_chat = {
+        'lobbyId': game_id,
+        'userId': user_id,
+        'type': 'chat',
+        'name': bot_name,
+        'time': time_now,
+        'body': {
+            'type': 'join'
+        }
+    }
+    redis_connector.send_to_chat('chat' + str(game_id), json.dumps(message_to_chat))
+
+
 def handle_request_for_bots(message: RequestForBotsMessage, channel: str, redis_connector: RedisConnector):
     game_id = message['lobbyId']
     game_channel_prefix = 'game' + str(game_id)
     redis_connector.subscribe(game_channel_prefix)
     worker_name = channel.split('.')[1]
     i = 1
-    time_now = datetime.datetime.now().isoformat()
     for house in message['player_action']['houseTypes']:
         bot_name = 'Bot' + str(i)
         i += 1
@@ -45,17 +58,6 @@ def handle_request_for_bots(message: RequestForBotsMessage, channel: str, redis_
             'name': bot_name,
             'joinAs': str(HouseToBotId[house.upper()].name.lower())
         }
-        # message_to_chat = {
-        #     'lobbyId': game_id,
-        #     'userId': HouseToBotId[house.upper()],
-        #     'type': 'chat',
-        #     'name': bot_name,
-        #     'time': time_now,
-        #     'body': {
-        #         'type': 'join'
-        #     }
-        # }
-        # redis_connector.send_to_chat('chat' + str(game_id), json.dumps(message_to_chat))
         redis_connector.send(worker_name + '.' + game_channel_prefix, json.dumps(message_to_worker))
     get_game_state_message = {
         'gameId': str(game_id),

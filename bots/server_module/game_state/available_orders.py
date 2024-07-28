@@ -1,7 +1,7 @@
-from server.game_rules.game_rules import GameRules
-from server.game_state.order import Order, OrderType
-from server.game_state.house_type import HouseType
-from server.game_state.placed_orders import PlacedOrders
+from server_module.game_rules.game_rules import GameRules
+from server_module.game_state.order import Order, OrderType
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.placed_orders import PlacedOrders
 
 
 class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):

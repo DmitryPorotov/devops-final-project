@@ -1,11 +1,11 @@
 import unittest
 import json
 
-from server.game_rules.game_rules import GameRules
-from server.game_state.game_state import GameState
-from server.game_state.house_type import HouseType
-from server.game_state.order import Order
-from server.game_state.order_type import OrderType
+from server_module.game_rules.game_rules import GameRules
+from server_module.game_state.game_state import GameState
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.order import Order
+from server_module.game_state.order_type import OrderType
 from test_.redis_connector_for_test import RedisConnectorForTest, RedisMessage
 from time import sleep
 

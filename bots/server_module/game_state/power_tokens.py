@@ -1,7 +1,7 @@
-from server.game_state.house_type import HouseType
+from server_module.game_state.house_type import HouseType
 
 
-class Supplies(dict[HouseType, int]):
+class PowerTokens(dict[HouseType, int]):
     def __init__(self, **kwargs):
         if kwargs is None:
             super().__init__()

@@ -1,12 +1,12 @@
-from server.game_state.armies import Armies
-from server.game_state.placed_orders import PlacedOrders
-from server.game_state.tracks import Tracks
-from server.game_state.supplies import Supplies
-from server.game_state.discarded_house_cards import DiscardedHouseCards
-from server.game_state.power_tokens import PowerTokens
-from server.game_state.used_mustering_points import UsedMusteringPoints
-from server.game_state.available_orders import AvailableOrders
-from server.game_state.combat import Combat
+from server_module.game_state.armies import Armies
+from server_module.game_state.placed_orders import PlacedOrders
+from server_module.game_state.tracks import Tracks
+from server_module.game_state.supplies import Supplies
+from server_module.game_state.discarded_house_cards import DiscardedHouseCards
+from server_module.game_state.power_tokens import PowerTokens
+from server_module.game_state.used_mustering_points import UsedMusteringPoints
+from server_module.game_state.available_orders import AvailableOrders
+from server_module.game_state.combat import Combat
 
 
 class GameState:

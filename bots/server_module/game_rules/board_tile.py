@@ -1,7 +1,7 @@
 from typing import Optional
 
-from server.game_rules.board_tile_type import BoardTileType
-from server.game_state.house_type import HouseType
+from server_module.game_rules.board_tile_type import BoardTileType
+from server_module.game_state.house_type import HouseType
 
 
 class BoardTile:

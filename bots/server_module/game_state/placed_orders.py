@@ -1,5 +1,5 @@
-from server.game_state.house_type import HouseType
-from server.game_state.order import Order
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.order import Order
 
 
 class PlacedOrders(dict[HouseType, dict[int, Order]]):

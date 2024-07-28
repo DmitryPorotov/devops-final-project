@@ -1,4 +1,4 @@
-from server.game_state.order_type import OrderType
+from server_module.game_state.order_type import OrderType
 
 
 class Order:

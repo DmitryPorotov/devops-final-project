@@ -1,5 +1,5 @@
-from server.game_state.house_type import HouseType
-from server.game_state.track_type import TrackType
+from server_module.game_state.house_type import HouseType
+from server_module.game_state.track_type import TrackType
 
 
 class Tracks(dict[TrackType, list[HouseType]]):

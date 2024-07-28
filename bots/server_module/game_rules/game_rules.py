@@ -1,10 +1,10 @@
-from server.game_rules.board_cards import BoardCards
-from server.game_rules.board_tile import BoardTile
-from server.game_rules.military_unit_info import MilitaryUnitInfo
-from server.game_state.house_card import HouseCard
-from server.game_state.military_unit_type import MilitaryUnitType
-from server.game_state.order import Order
-from server.game_state.order_type import OrderType
+from server_module.game_rules.board_cards import BoardCards
+from server_module.game_rules.board_tile import BoardTile
+from server_module.game_rules.military_unit_info import MilitaryUnitInfo
+from server_module.game_state.house_card import HouseCard
+from server_module.game_state.military_unit_type import MilitaryUnitType
+from server_module.game_state.order import Order
+from server_module.game_state.order_type import OrderType
 
 
 class GameRules:

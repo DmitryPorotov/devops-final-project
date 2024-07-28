@@ -1,8 +1,8 @@
-from server.game_state.military_unit import MilitaryUnit
-from server.game_state.order import Order
-from server.game_state.house_card import HouseCard, HouseType
-from server.game_state.tides_of_battle_card import TidesOfBattleCard
-from server.game_state.combat_outcome import CombatOutcome
+from server_module.game_state.military_unit import MilitaryUnit
+from server_module.game_state.order import Order
+from server_module.game_state.house_card import HouseCard, HouseType
+from server_module.game_state.tides_of_battle_card import TidesOfBattleCard
+from server_module.game_state.combat_outcome import CombatOutcome
 
 
 type TileNumber = int

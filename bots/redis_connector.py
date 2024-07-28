@@ -36,10 +36,10 @@ class RedisConnector:
         self._thread = self._pubsub.run_in_thread(sleep_time=.001, exception_handler=ex_handler)
 
     def subscribe(self, channel: str):
-        self._pubsub.psubscribe(**{channel + '.*': self._on_message})
+        self._thread.pubsub.psubscribe(**{channel + '.*': self._on_message})
 
     def unsubscribe(self, channel: str):
-        self._pubsub.unsubscribe(channel + '.*')
+        self._thread.pubsub.unsubscribe(channel + '.*')
 
     def stop(self):
         if self._thread:
