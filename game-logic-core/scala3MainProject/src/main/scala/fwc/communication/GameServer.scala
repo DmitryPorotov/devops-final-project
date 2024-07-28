@@ -23,8 +23,8 @@ object GameServer {
   private val subscriber = new JedisPubSub {
     override def onPMessage(pattern: String, channel: String, message: String): Unit = {
       if isShuttingDown then return 
-      val replyTo = channel.split('.')(1)
-      println(" [x] Received '" + message + "'")
+      val replyTo = channel.split('.')(1) + "." + workerName
+      println(" [x] Received from " + channel + "\n '" + message + "'")
       val reply = 
         try {
           Try[Message](Message.parse(message)) match
@@ -74,9 +74,9 @@ object GameServer {
                 "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
               )
               .render(fwc.jsonIndentation)
-      println(" [x] Sent '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
+      println(" [x] Sent to " + replyTo + "\n '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
       if !isShuttingDown then 
-        jedisPub.publish(replyTo + "." + workerName, reply)
+        jedisPub.publish(replyTo, reply)
     }
   }
   
