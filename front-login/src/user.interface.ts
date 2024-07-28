@@ -1,11 +1,11 @@
 export default interface User {
     id: number
 
-    email: string
+    email?: string
 
     name: string
 
-    token: string
+    token?: string
 
     house?: string
 

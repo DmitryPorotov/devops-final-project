@@ -82,7 +82,7 @@ const router = createBrowserRouter([
 
 export const AuthContext = createContext<AuthContextValue>(null);
 
-export const LobbyContext = createContext<{lobbyData: ILobby, setLobbyData: (ILobby) => void}>(null);
+export const LobbyContext = createContext<{lobbyData: ILobby, setLobbyData: (data: ILobby) => void}>(null);
 
 const App = () => {
     const [isLoginShown, setIsLoginShown] = useState<boolean>(false);
