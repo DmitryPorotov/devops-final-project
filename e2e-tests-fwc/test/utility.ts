@@ -94,18 +94,21 @@ export class WebSocketWrap {
         const messageId = data.messageId;
         const messages = [];
         return new Promise<Array<any>>(async (resolve, reject) => {
-            this.webSocket.addEventListener("message", event => {
+            let listener = event => {
                 try {
                     const json = JSON.parse(event.data as string);
                     messages.push(json);
                     if (messageId == json.messageId) {
-                        resolve(messages)
+                        resolve(messages);
+                        //note: I need array of messages for 2 serves?
+                        // this.webSocket.removeEventListener('message', listener);
                     }
                 }
                 catch (e) {
                     reject(e)
                 }
-            });
+            };
+            this.webSocket.addEventListener("message", listener);
             this.webSocket.send(JSON.stringify(data), {}, err => {
                 if (err) reject(err);
             });
