@@ -3,7 +3,6 @@ import org.junit.jupiter.api.{Assertions, Test}
 import ujson.Obj
 import utils.{JoinGame, PlayerBehavior, TestRunner}
 
-import scala.collection.mutable.Map as MutMap
 
 class GameLoadSuite {
   @Test
