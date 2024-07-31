@@ -25,6 +25,7 @@ def react_to_game(message: RedisMessage):
         channel = message['channel'].decode('utf-8')
         game, worker = channel.split('.')
         game_id = game.split('game')[1]
+        replies = None
         if data['action'] == 'join_game':
             server.add_game(game_id, worker)
             for player in data['gameSettings']['players']:
@@ -32,9 +33,12 @@ def react_to_game(message: RedisMessage):
                     if server.play_as(game_id, player['house']):
                         send_join_to_chat(connection, int(game_id), player['userId'], player['name'])
         elif data['action'] == 'get_game_state':
-            server.add_state(game_id, data['gameState'])
-            server.add_game_rules(data['gameRules'])
-            server.react(game_id, data['gameState']['subPhase'])
+            server.add_game_rules_and_state(data['gameRules'], game_id, data['gameState'])
+            replies = server.react(game_id, data['gameState']['subPhase'])
+
+        if replies is not None:
+            for r in replies:
+                connection.send(worker + '.' + game, json.dumps(r))
 
 
 connection = RedisConnector(react_to_game)

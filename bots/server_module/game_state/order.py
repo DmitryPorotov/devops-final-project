@@ -7,6 +7,16 @@ class Order:
         self.is_star = is_star
         self.modifier = modifier
 
+    def to_json(self):
+        o = {
+            'type': self.order_type,
+        }
+        if self.is_star:
+            o['isStar'] = self.is_star
+        if self.modifier:
+            o['modifier'] = self.modifier
+        return o
+
     @classmethod
     def from_json(cls, json):
         return cls(

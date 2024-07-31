@@ -28,7 +28,7 @@ describe('single_server_game_setup', function () {
                 console.log("after lobby create");
                 expect(createdLobbyMsg.body.type).toBe('create');
                 const messageId1 = String(Math.random());
-                await sleep(500);
+                await sleep(1000);
                 const [createdGameMsg] = await sock.send({
                     type: 'action',
                     lobbyId: 4,

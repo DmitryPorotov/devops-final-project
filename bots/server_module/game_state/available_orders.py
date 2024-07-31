@@ -18,18 +18,21 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
                     orders_by_type[OrderType.from_str(ot)] = orders
                 self[HouseType[ht.upper()]] = orders_by_type
 
-    def build_from_placed_orders(self, game_rules: GameRules, placed_orders: PlacedOrders):
+    @classmethod
+    def build_from_placed_orders(cls, game_rules: GameRules, placed_orders: PlacedOrders):
+        inst = cls()
         for ht in HouseType:
             if ht is not HouseType.NEUTRAL:
-                self[ht] = {}
+                inst[ht] = {}
                 for ot, orders in game_rules.loaded_orders.items():
-                    self[ht][ot] = []
+                    inst[ht][ot] = []
                     for o in orders:
-                        self[ht][ot].append(o)
+                        inst[ht][ot].append(o)
 
         for ht in placed_orders:
             for tn, o in placed_orders[ht].items():
-                idx = [i for i, j in enumerate(self[ht][o.order_type])
+                idx = [i for i, j in enumerate(inst[ht][o.order_type])
                        if j.modifier == o.modifier and j.is_star == o.is_star]
                 if len(idx):
-                    del self[ht][o.order_type][idx[0]]
+                    del inst[ht][o.order_type][idx[0]]
+        return inst

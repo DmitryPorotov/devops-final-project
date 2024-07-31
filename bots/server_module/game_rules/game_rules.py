@@ -40,3 +40,9 @@ class GameRules:
             list(HouseCard.from_json(hc) for hc in json['houseCards']),
             {MilitaryUnitType.from_str(mut): MilitaryUnitInfo.from_json(mui) for mut, mui in json['militaryUnits'].items()}
         )
+
+    def get_total_num_stars_by_court_position(self, court_position: int) -> int:
+        try:
+            return self.kings_court_stars[court_position]
+        except IndexError:
+            return 0

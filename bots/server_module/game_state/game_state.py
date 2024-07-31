@@ -1,3 +1,4 @@
+from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.armies import Armies
 from server_module.game_state.placed_orders import PlacedOrders
 from server_module.game_state.tracks import Tracks
@@ -37,16 +38,18 @@ class GameState:
         self.round_counter = round_counter
 
     @classmethod
-    def from_json(cls, json):
+    def from_json(cls, json, game_rules: GameRules):
+        placed_orders = PlacedOrders(**json['placedOrders']) if 'placedOrders' in json else PlacedOrders()
+        available_orders = AvailableOrders.build_from_placed_orders(game_rules, placed_orders)
         return cls(
             Armies(**json['armies']),
-            PlacedOrders(**json['placedOrders']) if 'placedOrders' in json else PlacedOrders(),
+            placed_orders,
             Tracks(**json['tracks']),
             Supplies(**json['supplies']),
             DiscardedHouseCards(**json['discardedHouseCards']),
             PowerTokens(**json['powerTokens']),
             UsedMusteringPoints(**json['usedMusteringPoints']),
-            AvailableOrders(**json['availableOrders']) if 'availableOrders' in json else AvailableOrders(),
+            available_orders,
             Combat.from_json(json['combat']) if ('combat' in json and json['combat'] is not None) else None,
             json['wildlingCounter'],
             json['roundCounter'],
