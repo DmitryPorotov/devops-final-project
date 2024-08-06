@@ -1,3 +1,7 @@
+import ujson.Value
+
+import upickle.core.LinkedHashMap
+
 package object enrichment {
 
   implicit class ExtSeq[A](ls: Seq[A]) {
@@ -15,4 +19,9 @@ package object enrichment {
     }
   }
 
+  implicit class ExtUPickleHashMap(ls: LinkedHashMap[String, Value]) {
+    def addPairs(elems: (String, Value)*): LinkedHashMap[String, Value] = {
+      ls.addAll(elems)
+    }
+  }
 }
