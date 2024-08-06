@@ -18,6 +18,7 @@ const InputField = ({
     type?: string,
     name: string,
     isAutofocus?: boolean,
+    children?: never[],
 }) => {
 
     if (!type) type = "text";
