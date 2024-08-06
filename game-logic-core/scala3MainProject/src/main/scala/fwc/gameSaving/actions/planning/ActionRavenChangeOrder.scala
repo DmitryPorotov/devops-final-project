@@ -2,13 +2,12 @@ package fwc.gameSaving.actions.planning
 
 import fwc.JsonSerializable
 import fwc.game.actionPhase.DominanceTokensUsage
-import fwc.game.board.{DominanceTokenMessengerRaven, TrackCourt}
+import fwc.game.board.{DominanceTokenMessengerRaven, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChangeOrder
 import fwc.game.planningPhase.{Order, OrderRaid}
 import fwc.game.{GameState, gameRules}
 import fwc.gameSaving.actions.action.NextOrderFinder
-import fwc.gameSaving.actions.planning.ActionAddOrder
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -16,7 +15,7 @@ case class ActionRavenChangeOrder(
                                    gameState: GameState,
                                    houseType: HouseType,
                                    order: Order,
-                                   tileNumber: Int
+                                   tileNumber: TileNumber
                                  ) extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
     if !gameState.subPhase.isInstanceOf[SubPhaseRavenChangeOrder]

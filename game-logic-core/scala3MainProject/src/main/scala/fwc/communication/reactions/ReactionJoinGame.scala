@@ -19,7 +19,9 @@ object ReactionJoinGame {
       then {
       if gameSettings.players.head.foldLeft(false)(
         (acc, player) =>
-          if player.house.nonEmpty && player.house.head.equals(houseType.head) then
+          if player.house.nonEmpty 
+            && player.house.head.equals(houseType.head)
+            && userId != player.userId then
             true
           else acc
       )

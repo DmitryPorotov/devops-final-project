@@ -1,4 +1,3 @@
-import fwc.communication.GameServer
 import Scala2Project.MainScala2Project
 
 object Main extends App {

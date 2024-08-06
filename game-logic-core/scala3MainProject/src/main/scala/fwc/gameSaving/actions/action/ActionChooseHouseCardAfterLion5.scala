@@ -11,7 +11,7 @@ import ujson.Value
 case class ActionChooseHouseCardAfterLion5(
                                             gameState: GameState,
                                             houseType: HouseType,
-                                            cardCode: Int
+                                            cardCode: CardCode
                                           ) extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
     if !gameState.subPhase.isInstanceOf[SubPhaseChooseHouseCardAfterLion5]

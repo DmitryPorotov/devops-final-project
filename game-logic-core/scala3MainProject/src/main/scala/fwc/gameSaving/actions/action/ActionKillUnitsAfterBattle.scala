@@ -6,7 +6,6 @@ import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitGarrison, MilitaryUnitP
 import fwc.game.houses.{HouseType, HouseWolf}
 import fwc.game.phases.SubPhase
 import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterCombat, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
-import fwc.game.planningPhase.OrderMarch
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 

@@ -19,10 +19,11 @@ object Action extends JsonParsableAction {
       case "addOrder" => ActionAddOrder.fromJson(gameState, json)
       case "removeOrder" => ActionRemoveOrder.fromJson(gameState, json)
       case "openOrders" => ActionOpenOrders.fromJson(gameState, json)
-
       case "ravenChooseChangeOrderOrLookAtWildlingCard" => ActionRavenChooseChangeOrderOrLookAtWildlingCard.fromJson(gameState, json)
       case "ravenChangeOrder" => ActionRavenChangeOrder.fromJson(gameState, json)
       case "ravenChoosePutWildlingsCardOnTopOrBottom" => ActionRavenChoosePutWildlingsCardOnTopOrBottom.fromJson(gameState, json)
+      case "ravenGetWildlingsCard" => ActionRavenGetWildlingsCard.fromJson(gameState, json)
+
       case "resolveRaidOrder" => ActionResolveRaidOrder.fromJson(gameState, json)
       case "resolveMarchOrder" => ActionResolveMarchOrder.fromJson(gameState, json)
       case "leavePowerTokenAtTile" => ActionLeavePowerTokenAtTile.fromJson(gameState, json)

@@ -1,6 +1,6 @@
-package fwc.communication
-import fwc.communication.messages.Message
+import fwc.communication.{Reactor, RestoreGamesException}
 import fwc.game.FWCException
+import fwc.communication.messages.Message
 
 import scala.util.{Failure, Success, Try}
 import redis.clients.jedis.*

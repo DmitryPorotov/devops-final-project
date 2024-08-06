@@ -48,7 +48,7 @@ case class ActionMuster(
         "fromTile" -> fromTile
       )
     if toTile.nonEmpty
-    then json.obj.addOne("toTile" -> toTile)
+    then json.obj.addOne("toTile" -> toTile.head)
     if isUpgrade
     then json.obj.addOne("isUpgrade" -> isUpgrade)
     json
