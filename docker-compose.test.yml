@@ -59,9 +59,9 @@ services:
       - "./game-logic-core:/fwc"
     working_dir: "/fwc"
     environment:
-      - RABBIT_HOST=rabbitmq
       - REDIS_HOST=redis
       - WORKER_NAME=worker1
+      - ENVIRONMENT=dev
     command: ["sbt", "run", "--", "-Xrs"]
     networks:
       - net1

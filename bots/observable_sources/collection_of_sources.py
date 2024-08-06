@@ -1,9 +1,22 @@
-from reactivex import create, Observer, Observable
+import json
+
+from reactivex import create, Observer, Observable, operators as op
 from reactivex.abc import DisposableBase, SchedulerBase, ObserverBase
 
 from handle_request_for_bots import send_join_to_chat
 from redis_connector import RedisConnector
 from server_module.server import Server
+from DTO.actions.planning import *
+
+
+class PlanningPhaseActionSources:
+    addOrder: ActionAddOrder
+    removeOrder: ActionRemoveOrder
+    openOrders: ActionOpenOrders
+    ravenChooseChangeOrderOrLookAtWildlingCard: ActionRavenChooseChangeOrderOrLookAtWildlingCard
+    ravenChangeOrder: ActionRavenChangeOrder
+    ravenGetWildlingsCard: ActionRavenGetWildlingsCard
+    ravenChoosePutWildlingsCardOnTopOrBottom: ActionRavenChoosePutWildlingsCardOnTopOrBottom
 
 
 class CollectionOfSources:
@@ -13,9 +26,10 @@ class CollectionOfSources:
                  event_source: Observable[tuple[dict, str, str, str]],
                  server: Server,
                  connection: RedisConnector):
-        self._event_source = event_source
+        self._event_source: Observable[tuple[dict, str, str, str]] = event_source
         self._server = server
         self._connection = connection
+        self.planning_phase_action_sources = PlanningPhaseActionSources
 
     def start(self):
         def func(msg_tuple):
@@ -35,3 +49,6 @@ class CollectionOfSources:
                 for r in replies:
                     self._connection.send(worker + '.' + game, json.dumps(r))
         self._event_source.subscribe(on_next=func)
+        self.planning_phase_action_sources.addOrder = self._event_source.pipe(
+            op.filter(lambda t: t[0]['action'] == 'game_action' and t[0]['player_action']['actionType'] == 'addOrder')
+        )

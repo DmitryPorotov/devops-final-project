@@ -1,6 +1,6 @@
 import fwc.communication.{Reactor, RestoreGamesException}
 import fwc.game.FWCException
-import fwc.communication.messages.Message
+import fwc.communication.messagesFromClient.Message
 
 import scala.util.{Failure, Success, Try}
 import redis.clients.jedis.*
@@ -16,6 +16,8 @@ object GameServer {
     if System.getenv("WORKER_NAME") == null
     then "worker1"
     else System.getenv("WORKER_NAME")
+    
+  private val isProd: Boolean = "prod".equals(System.getenv("ENVIRONMENT"))
 
   private val jedisSub = new Jedis(redisHost, 6379)
   private val jedisPub = new Jedis(redisHost, 6379)
@@ -24,10 +26,10 @@ object GameServer {
     override def onPMessage(pattern: String, channel: String, message: String): Unit = {
       if isShuttingDown then return 
       val replyTo = channel.split('.')(1) + "." + workerName
-      println(" [x] Received from " + channel + "\n '" + message + "'")
+      if !isProd then println(" [x] Received from " + channel + "\n '" + message + "'")
       val reply = 
         try {
-          Try[Message](Message.parse(message)) match
+          Try[(Message, ujson.Value)](Message.parse(message)) match
             case Failure(e: FWCException) =>
               ujson.Obj(
                 "action" -> "error",
@@ -38,8 +40,8 @@ object GameServer {
                 "messageId" -> e.messageId,
               ).render(fwc.jsonIndentation)
             case Failure(e) => throw e
-            case Success(msg: Message) =>
-              Try[String](Reactor.apply(msg)) match
+            case Success((msg: Message, json: ujson.Value)) =>
+              Try[String](Reactor(msg, json)) match
                 case Success(s) => s
                 case Failure(e: FWCException) =>
                   val errJson = ujson.Obj(
@@ -74,7 +76,7 @@ object GameServer {
                 "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
               )
               .render(fwc.jsonIndentation)
-      println(" [x] Sent to " + replyTo + "\n '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
+      if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
       if !isShuttingDown then 
         jedisPub.publish(replyTo, reply)
     }

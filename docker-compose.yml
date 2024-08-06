@@ -45,6 +45,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - WORKER_NAME=worker1
+      - ENVIRONMENT=prod
     command: ["java", "-Xrs", "-jar", 'worker.jar']
     networks:
       - net1
