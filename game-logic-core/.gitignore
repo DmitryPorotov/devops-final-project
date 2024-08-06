@@ -5,3 +5,4 @@
 target/
 #saves/[0-9]*/
 .bsp/
+generated/
