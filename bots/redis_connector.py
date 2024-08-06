@@ -19,13 +19,13 @@ class RedisMessage(TypedDict):
 
 
 class RedisConnector:
-    def __init__(self, on_message: Optional[Callable[[RedisMessage], None]] = None):
+    def __init__(self):
         self._redis = redis.Redis(
             host=redis_host, port=redis_port,
         )
         self._pubsub = self._redis.pubsub()
         self._thread: Optional[PubSubWorkerThread] = None
-        self._on_message = on_message
+        self._on_message: Optional[Callable[[RedisMessage], None]] = None
 
     def start(self, on_message: Callable[[RedisMessage], None]):
         self._pubsub.psubscribe(**{my_name + '.*': on_message})
@@ -40,6 +40,12 @@ class RedisConnector:
 
     def unsubscribe(self, channel: str):
         self._thread.pubsub.unsubscribe(channel + '.*')
+
+    def set_new_reset_game_handler(self, handler: Callable[[RedisMessage], None]):
+        self._thread.pubsub.subscribe(**{'new_game': handler})
+
+    def set_react_to_game_handler(self, on_message: Optional[Callable[[RedisMessage], None]]):
+        self._on_message = on_message
 
     def stop(self):
         if self._thread:

@@ -23,6 +23,10 @@ class Server:
         if game_id not in self.games:
             self.games[game_id] = GameHandle(worker, None, set())
 
+    def delete_game(self, game_id: str):
+        if game_id in self.games:
+            del self.games[game_id]
+
     def add_game_rules_and_state(self, game_rules: dict, game_id: str,  game_state: dict):
         if self.game_rules is None:
             self.game_rules = GameRules.from_json(game_rules)
