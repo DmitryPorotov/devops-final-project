@@ -10,7 +10,7 @@ local function wrap(message)
 	if game_data.user_data then
 		message.userId = game_data.user_data.id
 	end
-	if message.player_action then
+	if message.player_action and message.action ~= 'fill_with_bots' then
 		message.player_action.houseType = game_data.me
 		message.type = 'action'
 		message.action = 'game_action'

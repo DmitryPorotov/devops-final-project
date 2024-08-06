@@ -6,6 +6,7 @@ function _M:init()
 	self.save_load_menu = gui.get_node("save_load/back_drop")
 	self.save_button = gui.get_node("save_load/save_game")
 	self.load_button = gui.get_node("save_load/load_game")
+	self.fill_bots_button = gui.get_node("save_load/fill_with_bots")
 	self.close_button = gui.get_node("save_load/close")
 end
 
@@ -29,6 +30,17 @@ function _M:check_button_pressed(x, y)
 				type = "action",
 				action = "list_saves",
 			})
+			return true
+		elseif gui.pick_node(self.fill_bots_button, x, y) then
+			ws.send({
+				type = "action",
+				action = "fill_with_bots",
+				player_action = {
+					houseTypes = { "lion", "kraken", "moose", "rose", "pufferfish", "wolf"}
+				}
+			})
+			gui.set_enabled(self.save_load_menu, false)
+			msg.post('/camera', 'take_focus')
 			return true
 		elseif gui.pick_node(self.save_load_menu, x, y) then
 			return true
