@@ -3,12 +3,13 @@ package generator
 import fwc.JsonSerializable
 
 abstract class GeneratorTemplate {
-  protected val _builder: StringBuilder = StringBuilder()
+  private val _builder: StringBuilder = StringBuilder()
 
-  def builder: StringBuilder = _builder
+  override def toString: String =
+    addFileHeader() + _builder.toString()
 
   def generate(instancies: Map[String, JsonSerializable]): Unit = {
-    addFileHeader()
+
     instancies.foreach((name, v) => {
       buildTypes(name, v)
     })
@@ -23,7 +24,7 @@ abstract class GeneratorTemplate {
     _builder.underlying.append(classFooter)
   }
 
-  protected def addFileHeader(): Unit
+  protected def addFileHeader(): String
   
   protected def classHeader(className: String): String
   

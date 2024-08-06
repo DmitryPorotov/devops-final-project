@@ -1,6 +1,6 @@
-package fwc.communication.messages
+package fwc.communication.messagesFromClient
 
-case class MessageStartGame(
+case class MessageGetStatus(
                              override val userId: Int,
                              override val gameId: String,
                              override val messageId: String

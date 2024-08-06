@@ -1,5 +1,9 @@
 package generator
 
+import fwc.communication.messagesFromClient.*
+import fwc.{JsonSerializable, Player}
+import fwc.communication.reactions.ReactionCreateGame
+import fwc.communication.repliesToClient.*
 import fwc.game.actionPhase.{RavenChoiceNothing, ValyrianSteelBladeChoiceNothing}
 import fwc.game.board.{MilitaryUnit, MilitaryUnitKnights, TrackThrone, TrackType}
 import fwc.gameSaving.actions.Action
@@ -17,6 +21,7 @@ import fwc.game.phases.actionSubPhases.*
 import fwc.game.phases.planningSubPhases.*
 import fwc.game.phases.roundEventsSubPhases.*
 import fwc.game.planningPhase.*
+import fwc.gameSaving.GameReplay
 
 import scala.util.Try
 
@@ -145,5 +150,37 @@ object InstanciesCollection {
    "SubPhaseAwaitingStart" ->  SubPhaseAwaitingStart(),
    "SubPhaseAutoKillUnitsAfterBattle" ->  SubPhaseAutoKillUnitsAfterBattle(),
    "SubPhaseAutoRetreatAfterBattle" ->  SubPhaseAutoRetreatAfterBattle(),
+  )
+  val replies: Map[String, JsonSerializable] = {
+    val (id, settings, state) = ReactionCreateGame(1, "2", false, false)
+    val replay = GameReplay(settings, state.boardCards, state, Seq())
+    val statusDetails = StatusDetails(replay)
+    Map(
+      "ReplyCreateGame" -> ReplyCreateGame(id, "dsafsdfasfs"),
+      "ReplyError" -> ReplyError(1, id, "get fucked", ujson.Obj("action" -> "hello"), "fsfsfsasdfs"),
+      "ReplyGameAction" -> ReplyGameAction(id, ujson.Obj(), "fsafsdfsd"),
+      "ReplyGetGameState" -> {
+        ReplyGetGameState(1, id, gameRules, state, settings, "sadf")
+      },
+      "ReplyGetStatus" -> ReplyGetStatus(1, id, replay, "sdfasfs"),
+      "ReplyJoinGame" -> ReplyJoinGame(1, id, settings.copy(players = Some(Seq(
+        Player(
+          1, "player name", Some(HouseLion)
+        )
+      ))), "dsasdfsd"),
+      "ReplyListSaves" -> ReplyListSaves(1, id, Seq("save1.json", "save2.json") , "dsfasdfdsf"),
+      "ReplyLoadGame" -> ReplyLoadGame(id, "dsafsdafgsd"),
+      "ReplyNewGame" -> ReplyNewGame(id, 3, "sfsadfsdf"),
+      "ReplySaveGame" -> ReplySaveGame(1, id, "save5.json", "dsafdsffd"),
+      "ReplyStartGame" -> ReplyStartGame(id, "sadfdsafsdfewgrhytu34"),
+      "ReplyTestConnectivity" -> ReplyTestConnectivity("safdsdhthew"),
+      "GameStatus" -> GameStatus(true, statusDetails.toJson),
+      "StatusDetails" -> statusDetails,
+    )
+  }
+  
+  val messages: Map[String, JsonSerializable] = Map(
+    "Message" -> new Message(1, "2", "safsdfasdfads"),
+    "MessageGameAction" -> MessageGameAction(1, "2", ujson.Obj(), "fsfdsfasf")
   )
 }

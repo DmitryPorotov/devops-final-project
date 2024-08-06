@@ -1,8 +1,9 @@
 package fwc.communication
 
-import fwc.communication.messages.*
+import fwc.communication.messagesFromClient.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.communication.reactions.*
+import fwc.communication.repliesToClient.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
@@ -13,120 +14,58 @@ object Reactor {
 
   private var games: Map[String, GameReplay] = Map[String, GameReplay]()
 
-  def apply(msg: Message): String = {
-    Try[ujson.Obj] {
+  def apply(msg: Message, json: ujson.Value): String = {
+    Try[Reply] {
       msg match
         case MessageGameAction(userId, gameId, gameAction, messageId) =>
           val gameReplay = games(gameId)
           val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction(userId, gameReplay, gameAction)
           games = games updated (gameId, replay)
-          ujson.Obj(
-            "action" -> "game_action",
-            "gameId" -> ujson.Str(gameId),
-            "reply" -> reply
-          )
+          ReplyGameAction(gameId, reply, messageId)
+
         case MessageTestConnectivity(_, messageId) =>
-          ujson.Obj(
-            "action" -> "hello",
-            "messageId" -> (if messageId != null then messageId else ujson.Null),
-          )
+          ReplyTestConnectivity(messageId)
+
         case MessageSaveGame(userId, gameId, saveName, messageId) =>
-          ujson.Obj(
-            "action" -> "save",
-            "userId" -> userId,
-            "saveName" -> ReactionSaveGame(userId, gameId, saveName, games(gameId))
-          )
+          ReplySaveGame(userId, gameId,ReactionSaveGame(userId, gameId, saveName, games(gameId)), messageId)
+
         case MessageListSaves(userId, gameId, messageId) =>
-          ujson.Obj(
-            "action" -> "list_saves",
-            "gameId" -> gameId,
-            "userId" -> userId,
-            "saves" -> ReactionListSavedGames(userId)
-          )
+          ReplyListSaves(userId, gameId, ReactionListSavedGames(userId), messageId)
+
         case MessageLoadGame(userId, gameId, saveName, messageId) =>
           //todo: how do I handle setting change? Not the same players and in the saved file? Different houses?
           // need to support changing settings after load
           val replay = ReactionLoadGame(userId, saveName)
           //val settings = games(gameId).gameSettings
           games = games updated (gameId, replay)
-          ujson.Obj(
-            "action" -> "load",
-            "gameId" -> gameId,
-          )
+          ReplyLoadGame(gameId, messageId)
+
         case MessageNewGame(userId, gameId, messageId) =>
-          ujson.Obj(
-            "action" -> "new_game",
-            "gameId" -> ujson.Str(gameId),
-            "gamesCount" -> ujson.Num(games.size),
-          )
+          ReplyNewGame(gameId, games.size, messageId)
+
         case MessageGetStatus(userId, gameId, messageId) =>
           val gameReplay = Try {
             games(gameId)
           } match
             case Success(gr) => gr
             case Failure(e) => null
-          val status = gameReplay != null
-          val details =
-            if status
-            then ujson.Obj(
-              "roundCounter" -> gameReplay.currentGameState.roundCounter,
-              "gameSettings" -> gameReplay.gameSettings.toJson,
-              "subPhase" -> gameReplay.currentGameState.subPhase.toJson,
-            )
-            else ujson.Obj()
-          ujson.Obj(
-            "action" -> "get_status",
-            "gameId" -> gameId,
-            "userId" -> userId,
-            "status" -> ujson.Obj(
-              "created" -> status,
-              "details" -> details,
-            ),
-          )
+          ReplyGetStatus(userId, gameId, gameReplay, messageId)
+
         case MessageJoinGame(userId, gameId, joinAs, name, messageId) =>
           val settings = games(gameId).gameSettings
           val result = ReactionJoinGame(userId, joinAs, name, settings)
           games = games updated (gameId, games(gameId).copy(gameSettings = result))
-          ujson.Obj(
-            "action" -> "join_game",
-            "gameId" -> ujson.Str(gameId),
-            "gameSettings" -> result.toJson,
-          )
+          ReplyJoinGame(userId, gameId, result, messageId)
+
         case MessageGetGameState(userId, gameId, messageId) =>
           val game = games(gameId)
-          val player =
-            if game.gameSettings.players.nonEmpty then
-              game.gameSettings.players.head.find(_.userId == userId)
-            else None
-          val inputtingPlayer =
-            if game.gameSettings.isInputOnly && game.gameSettings.playersInputting.nonEmpty
-            then game.gameSettings.playersInputting.head.find(_.userId == userId)
-            else None
-          ujson.Obj(
-            "action" -> "get_game_state",
-            "gameId" -> ujson.Str(gameId),
-            "userId" -> userId,
-            "gameRules" -> gameRules.toJson,
-            "gameState" -> (
-              if userId < 0 then
-                game.currentGameState.toJson
-              else
-              if game.gameSettings.isInputOnly && inputtingPlayer.nonEmpty then
-                game.currentGameState.toJsonForInputtingPlayer(inputtingPlayer.head.forHouses)
-              else
-                if player.nonEmpty && player.head.house.nonEmpty
-                then game.currentGameState.toPersonalJson(player.head.house.head)
-                else game.currentGameState.toCleanJson
-              ),
-          )
+          ReplyGetGameState(userId, gameId, gameRules, game.currentGameState, game.gameSettings, messageId)
+
         case MessageCreateGame(userId, gameId, isRandomHouses, isInputOnly, messageId) =>
           val result = ReactionCreateGame(userId, gameId, isRandomHouses, isInputOnly)
           games = games updated (result._1, GameReplay(result._2, result._3.boardCards, result._3, Seq()))
-          ujson.Obj(
-            "action" -> "create_game",
-            //          "userId" -> userId,
-            "gameId" -> ujson.Str(result._1),
-          )
+          ReplyCreateGame(gameId, messageId)
+
         case MessageStartGame(userId, gameId, messageId) =>
           val result = ReactionStartGame(userId, games(gameId).gameSettings)
           val state = games(gameId).currentGameState
@@ -134,33 +73,15 @@ object Reactor {
             gameSettings = result,
             currentGameState = state.copy(subPhase = SubPhaseAddOrder(HouseType.getSeqOfAll))
           ))
-          ujson.Obj(
-            "action" -> "start_game",
-            "gameId" -> ujson.Str(gameId),
-            "gameState" -> games(gameId).currentGameState.toCleanJson,
-            "gameSettings" -> games(gameId).gameSettings.toJson,
-            "gameRules" -> gameRules.toJson,
-          )
+          ReplyStartGame(gameId, messageId)
+
         case MessageRestoreGames(userId, gameId, messageId, games) =>
           throw new RestoreGamesException(games, messageId)
     } match
-      case Success(response: ujson.Obj) => 
-        response
-        .value.addAll(Map(
-            "messageId" -> (if msg.messageId != null then msg.messageId else ujson.Null),
-            "type" -> "action"
-          ))
-        .render(fwc.jsonIndentation)
+      case Success(reply: Reply) =>
+        reply.toJsonString
       case Failure(e: FWCException) =>
-        ujson.Obj(
-          "action" -> "error",
-          "type" -> "action",
-          "gameId" -> msg.gameId,
-          "userId" -> msg.userId,
-          "messageId" -> (if msg.messageId != null then msg.messageId else ujson.Null),
-          "message" -> e.getMessage,
-//          "originalMessageString" -> message,
-        ).render(fwc.jsonIndentation)
+        ReplyError(msg.userId, msg.gameId, e.getMessage, json, msg.messageId).toJsonString
       case Failure(e) => throw e
   }
   

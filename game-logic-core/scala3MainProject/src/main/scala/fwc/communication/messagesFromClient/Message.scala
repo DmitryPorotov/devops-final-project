@@ -1,14 +1,29 @@
-package fwc.communication.messages
+package fwc.communication.messagesFromClient
 
+import fwc.JsonSerializable
 import fwc.game.FWCException
 import fwc.game.houses.HouseType
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
-class Message(val userId: Int, val gameId: String, val messageId: String)
+class Message(
+               val userId: Int,
+               val gameId: String,
+               val messageId: String
+             ) extends JsonSerializable {
+  def toJson: ujson.Obj = {
+    ujson.Obj(
+      "userId" -> userId,
+      "gameId" -> gameId,
+      "messageId" -> messageId,
+      "type" -> "action",
+      "action" -> "dummy_action"
+    )
+  }
+}
 
 object Message {
-  def parse(str: String): Message = {
+  def parse(str: String): (Message, ujson.Value) = {
     val json = ujson.read(str)
 
     val gameId = Try[String](json.obj("gameId").str) getOrElse null
@@ -22,7 +37,7 @@ object Message {
     if (action != "create_game" && action != "new_game" && action != "hello" && gameId == null)
       throw new FWCException("Message has no gameId", null, userId)
 
-    action match
+    val message = action match
       case "game_action" =>
         val gameAction = json("player_action")
         MessageGameAction(userId, gameId, gameAction, messageId)
@@ -61,5 +76,6 @@ object Message {
       case "start_game" => MessageStartGame(userId, gameId, messageId)
       case "try_join_game" => MessageTryJoinGame(userId, gameId, messageId)
       case a => throw new FWCException(s"Unknown action $a", gameId, userId, messageId)
+    (message, json)
   }
 }

@@ -2,7 +2,7 @@ package generator
 
 class LuaGenerator extends GeneratorTemplate {
 
-  override protected def addFileHeader(): Unit = {}
+  override protected def addFileHeader(): String = ""
 
   override protected def classHeader(className: String): String = s"\n---@class $className : userdata\n"
 

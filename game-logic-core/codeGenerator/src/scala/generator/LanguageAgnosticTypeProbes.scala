@@ -70,8 +70,42 @@ object LanguageAgnosticTypeProbes {
       case "SubPhaseWildlingsDowngradeKnights" =>
         houseTypesMap(objKey)
       case "ActionResolveMarchOrder" =>
-        if objKey == "targets" then "obj<int,arr<MilitaryUnit>>" else ""
-      case _ => throw new RuntimeException("Class " + className + " is not in this match. Add the class here.")
+        if objKey == "targets" then "obj<int,arr<MilitaryUnit>>" else throwIfNoField(className, objKey)
+      case "ReplyJoinGame" =>
+        if objKey == "gameSettings"
+        then "GameSettings"
+        else throwIfNoField(className, objKey)
+      case "ReplyGetStatus" =>
+        if objKey == "status"
+        then "GameStatus"
+        else throwIfNoField(className, objKey)
+      case "StatusDetails" =>
+        objKey match
+          case "gameSettings" => "StatusDetails"
+          case "subPhase" => "SubPhase"
+          case _ => throwIfNoField(className, objKey)
+      case "GameStatus" =>
+        if objKey == "details"
+        then "StatusDetails"
+        else throwIfNoField(className, objKey)
+      case "ReplyGameAction" =>
+        if objKey == "reply"
+        then "arr<obj>" //todo : make a reply object
+        else throwIfNoField(className, objKey)
+      case "ReplyGetGameState" =>
+        objKey match
+          case "gameRules" => "GameRules"
+          case "gameState" => "GameState"
+          case _ => throwIfNoField(className, objKey)
+      case "ReplyError" =>
+        if objKey == "originalMessage"
+        then "Message"
+        else throwIfNoField(className, objKey)
+      case "MessageGameAction" =>
+        if objKey == "game_action"
+        then "Action"
+        else throwIfNoField(className, objKey)
+      case _ => throw new RuntimeException(s"Class '$className' is not in this match. Add the class and the field '$objKey' here.")
   }
 
   private def keyIsUnitLike(key: String):String = {
@@ -89,5 +123,10 @@ object LanguageAgnosticTypeProbes {
 
   private def wildlingCard(key: String): String = {
     if key == "subPhaseWildlingsCard" then "SubPhaseWildlingsCard" else ""
+  }
+
+  @throws[RuntimeException]
+  private def throwIfNoField(className: String, objKey: String): Nothing = {
+    throw new RuntimeException(s"Class's '$className' field '$objKey' is not in the match. Add the field here.")
   }
 }

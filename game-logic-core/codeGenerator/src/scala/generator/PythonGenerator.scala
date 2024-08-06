@@ -3,12 +3,11 @@ package generator
 
 class PythonGenerator extends GeneratorTemplate {
 
-  override protected def addFileHeader(): Unit = {
-    _builder.underlying.append("from typing import TypedDict, Optional\n")
-    _builder.underlying.append("from server_module.game_state.military_unit import HouseType, MilitaryUnitType, MilitaryUnit\n")
-    _builder.underlying.append("from server_module.game_state.track_type import TrackType\n")
-    _builder.underlying.append("from server_module.game_state.order import Order, OrderType\n")
-  }
+  override protected def addFileHeader(): String = 
+    "from typing import TypedDict, Optional\n" +
+    "from server_module.game_state.military_unit import HouseType, MilitaryUnitType, MilitaryUnit\n" +
+    "from server_module.game_state.track_type import TrackType\n" +
+    "from server_module.game_state.order import Order, OrderType\n"
 
   override protected def getField(key: String, _type: String, isOptional: Boolean): String = {
     "    " + key + (if _type.isBlank then "" else ": " + _type) + "\n"

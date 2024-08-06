@@ -2,7 +2,7 @@ package generator
 
 class TypeScriptGenerator extends GeneratorTemplate {
 
-  override protected def addFileHeader(): Unit = {}
+  override protected def addFileHeader(): String = ""
 
   override protected def classHeader(className: String): String = s"\nexport interface $className {\n"
 

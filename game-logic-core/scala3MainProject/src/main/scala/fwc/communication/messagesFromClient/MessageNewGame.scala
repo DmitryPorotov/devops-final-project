@@ -1,4 +1,4 @@
-package fwc.communication.messages
+package fwc.communication.messagesFromClient
 
 case class MessageNewGame(
                            override val userId: Int,
