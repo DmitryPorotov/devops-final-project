@@ -4,125 +4,122 @@ import fwc.JsonSerializable
 
 import scala.util
 import scala.util.{Success, Try}
+import languageAgnosticTypeObjects.*
 
 object LanguageAgnosticTypeProbes {
-  def probeType(fromObj: JsonSerializable, objKey: String, value: ujson.Value): String = {
+  def probeType(fromObj: JsonSerializable, objKey: String, value: ujson.Value): TypeObject = {
     val isOptional = Try[Boolean] {
       fromObj.getClass.getDeclaredField(objKey).getType.getName == "scala.Option"
     } match
         case Success(o) => o
         case _ => false
-    val type_ = value.getClass.getName match
+    value.getClass.getName match
       case "ujson.Str" => probeString(objKey, value.asInstanceOf[ujson.Str])
-      case "ujson.Num" => "int"
-      case "ujson.Bool" => "bool"
-      case "ujson.False$" => "bool"
-      case "ujson.True$" => "bool"
+      case "ujson.Num" => Int(isOptional)
+      case "ujson.Bool" => Bool(isOptional)
+      case "ujson.False$" => Bool(isOptional)
+      case "ujson.True$" => Bool(isOptional)
       case "ujson.Obj" => probeObj(fromObj, objKey)
       case "ujson.Arr" => probeArray(fromObj, objKey, value.asInstanceOf[ujson.Arr])
 
-      case _ => ""
-
-    if isOptional && !type_.isBlank then
-      type_ + "-opt"
-    else type_
+      case _ => throwIfNoField(fromObj.getClass.getName, objKey)
   }
   
-  private def probeArray(fromObj: JsonSerializable, objKey: String, arr: ujson.Arr): String = {
+  private def probeArray(fromObj: JsonSerializable, objKey: String, arr: ujson.Arr): TypeObject = {
     if arr.value.isEmpty then 
-      "arr<any>"
+      Arr()
     else 
-      "arr<" + probeType(fromObj,objKey: String, arr.value(0)) + ">"
+      Arr(Some(probeType(fromObj, objKey, arr.value(0))))
   }
 
-  private def probeString(objKey: String, value: ujson.Str): String = {
-    if objKey.contains("ouseType") then "enum<HouseType>"
-    else if objKey == "trackType" then "enum<TrackType>"
-    else if objKey == "actionType" || objKey == "mainPhase" || objKey == "subPhase" then "str-val-" + value.value
-    else "str"
+  private def probeString(objKey: String, value: ujson.Str): TypeObject = {
+    if objKey.contains("ouseType") then Enum("HouseType") //"enum<HouseType>"
+    else if objKey == "trackType" then Enum("TrackType")//"enum<TrackType>"
+    else if objKey == "actionType" || objKey == "mainPhase" || objKey == "subPhase" then Str(Some(value.value))
+    else Str()
   }
 
-  private def probeObj(fromObj: JsonSerializable, objKey: String): String = {
+  private def probeObj(fromObj: JsonSerializable, objKey: String): TypeObject = {
     val className = fromObj.getClass.getName.split("\\.").last
     className match
       case "ActionResolveSpecialConsolidatePower" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionResolveSpecialConsolidatePower", objKey)
       case "ActionDisbandUnitsAfterCombat" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionDisbandUnitsAfterCombat", objKey)
       case "ActionKillUnitsAfterBattle" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionKillUnitsAfterBattle", objKey)
       case "ActionWildlingsKillUnit" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionWildlingsKillUnit", objKey)
       case "ActionRavenChangeOrder" =>
-        keyIsOrder(objKey)
+        keyIsOrder("ActionRavenChangeOrder", objKey)
       case "ActionAddOrder" =>
-        keyIsOrder(objKey)
+        keyIsOrder("ActionAddOrder", objKey)
       case "ActionDisbandUnitDueToSupplies" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionDisbandUnitDueToSupplies", objKey)
       case "ActionMuster" =>
-        keyIsUnitLike(objKey)
+        keyIsUnitLike("ActionMuster", objKey)
       case "SubPhaseSetWildlingsCard" =>
-        wildlingCard(objKey)
+        wildlingCard("SubPhaseSetWildlingsCard", objKey)
       case "SubPhaseGetWildlingsCard" =>
-        wildlingCard(objKey)
+        wildlingCard("SubPhaseGetWildlingsCard", objKey)
       case "SubPhaseWildlingsKillUnits" =>
-        houseTypesMap(objKey)
+        houseTypesMap("SubPhaseWildlingsKillUnits", objKey)
       case "SubPhaseWildlingsDowngradeKnights" =>
-        houseTypesMap(objKey)
+        houseTypesMap("SubPhaseWildlingsDowngradeKnights", objKey)
       case "ActionResolveMarchOrder" =>
-        if objKey == "targets" then "obj<int,arr<MilitaryUnit>>" else throwIfNoField(className, objKey)
+        if objKey == "targets" then Obj(keyType = Some(Int()), valueType = Some(Arr(Some(Obj(Some("MilitaryUnit")))))) else throwIfNoField(className, objKey)
       case "ReplyJoinGame" =>
         if objKey == "gameSettings"
-        then "GameSettings"
+        then Obj(Some("GameSettings"))
         else throwIfNoField(className, objKey)
       case "ReplyGetStatus" =>
         if objKey == "status"
-        then "GameStatus"
+        then Obj(Some("GameStatus"))
         else throwIfNoField(className, objKey)
       case "StatusDetails" =>
         objKey match
-          case "gameSettings" => "StatusDetails"
-          case "subPhase" => "SubPhase"
+          case "gameSettings" => Obj(Some("StatusDetails"))
+          case "subPhase" => Obj(Some("SubPhase"))
           case _ => throwIfNoField(className, objKey)
       case "GameStatus" =>
         if objKey == "details"
-        then "StatusDetails"
+        then Obj(Some("StatusDetails"))
         else throwIfNoField(className, objKey)
       case "ReplyGameAction" =>
         if objKey == "reply"
-        then "arr<obj>" //todo : make a reply object
+        then Arr(Some(Obj())) //todo : make a reply object
         else throwIfNoField(className, objKey)
       case "ReplyGetGameState" =>
         objKey match
-          case "gameRules" => "GameRules"
-          case "gameState" => "GameState"
+          case "gameRules" => Obj(Some("GameRules"))
+          case "gameState" => Obj(Some("GameState"))
           case _ => throwIfNoField(className, objKey)
       case "ReplyError" =>
         if objKey == "originalMessage"
-        then "Message"
+        then Obj(Some("Message"))
         else throwIfNoField(className, objKey)
       case "MessageGameAction" =>
         if objKey == "game_action"
-        then "Action"
+        then Obj(Some("Action"))
         else throwIfNoField(className, objKey)
       case _ => throw new RuntimeException(s"Class '$className' is not in this match. Add the class and the field '$objKey' here.")
   }
 
-  private def keyIsUnitLike(key: String):String = {
+  private def keyIsUnitLike(className: String, key: String): TypeObject = {
     //note: this includes "units", "unitToMuster" etc.
-    if key.startsWith("unit") then "MilitaryUnit" else ""
+    if key.startsWith("unit") then Obj(Some("MilitaryUnit")) else throwIfNoField(className, key)
   }
 
-  private def keyIsOrder(key: String): String = {
-    if key == "order" then "Order" else ""
+  private def keyIsOrder(className: String, key: String): TypeObject = {
+    if key == "order" then Obj(Some("Order")) else throwIfNoField(className, key)
   }
 
-  private def houseTypesMap(key: String): String = {
-    if key == "houseTypes" then "obj<enum<HouseType>,int>" else ""
+  private def houseTypesMap(className: String, key: String): TypeObject = {
+    if key == "houseTypes" then Obj(Some("obj<enum<HouseType>,int>")) else throwIfNoField(className, key)
   }
 
-  private def wildlingCard(key: String): String = {
-    if key == "subPhaseWildlingsCard" then "SubPhaseWildlingsCard" else ""
+  private def wildlingCard(className: String, key: String): TypeObject = {
+    if key == "subPhaseWildlingsCard" then Obj(Some("SubPhaseWildlingsCard")) else throwIfNoField(className, key)
   }
 
   @throws[RuntimeException]

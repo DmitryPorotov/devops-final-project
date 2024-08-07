@@ -1,30 +1,78 @@
 package generator
 
 import fwc.JsonSerializable
+import generator.languageAgnosticTypeObjects.TypeObject
+import languageAgnosticTypeObjects.*
 
 abstract class GeneratorTemplate {
   private val _builder: StringBuilder = StringBuilder()
 
+  protected var header: String = ""
+
   override def toString: String =
     addFileHeader() + _builder.toString()
+    
+  def toString(unionHeader: Boolean): String =
+    addFileHeader(unionHeader) + _builder.toString()
+
+  def generateUnion(union: String): Unit = {
+    _builder.underlying.append(
+      if !union.isBlank then DependenciesMap.buildUnionType(
+      this,
+      union,
+      if union == "Action"
+      then InstanciesCollection.actions.foldLeft[Seq[String]](Seq())((acc, v) => {
+        val (cat, map) = v
+        acc :++ map.keys.toSeq
+      })
+      else if union == "SubPhase" then
+        InstanciesCollection.phases.keys.toSeq
+      else throw new RuntimeException("Unknown union" + union)
+      )
+      else ""
+    )
+  }
 
   def generate(instancies: Map[String, JsonSerializable]): Unit = {
-
-    instancies.foreach((name, v) => {
-      buildTypes(name, v)
+    val dependencies = instancies.foldLeft(Set[String]())((acc, tup) => {
+      val (name, v) = tup
+      acc ++ buildTypes(name, v)
     })
+
+    header = DependenciesMap.getHeaderLines(this, dependencies)
   }
 
-  private def buildTypes(key: String, value: JsonSerializable): Unit = {
+  private def buildTypes(key: String, value: JsonSerializable): Set[String] = {
+    def objTypeMatch(acc: Set[String], obj: TypeObject): Set[String] = {
+      obj match
+        case Obj(n, k, v, _) =>
+          if n.isDefined then acc + n.head
+          else {
+            if k.nonEmpty then
+              objTypeMatch(acc, k.head); objTypeMatch(acc, v.head)
+            else acc
+          }
+        case Arr(v, _) =>
+          if v.isDefined && (v.head.isInstanceOf[Obj] || v.head.isInstanceOf[Enum]) then objTypeMatch(acc, v.head)
+          else acc
+        case Enum(v, _) => acc + v
+        case _ => acc
+    }
+
     _builder.underlying.append(classHeader(key))
-    value.toJson.obj.foreach((k, v) => {
-      val (type_, isOptional) = probeType(value, k, v)
-      _builder.underlying.append(getField(k, type_, isOptional))
+    val dependencies = value.toJson.obj.foldLeft(Set[String]())((acc, cur) => {
+      val (k,v) = cur
+      val (typeStr, typeObj) = probeType(value, k, v)
+      var typesToImport = _builder.underlying.append(getField(k, typeStr, typeObj.isOptional))
+      objTypeMatch(acc, typeObj)
     })
+
     _builder.underlying.append(classFooter)
+
+    dependencies
   }
 
-  protected def addFileHeader(): String
+  protected def addFileHeader(isUnionHeader: Boolean = false): String
   
   protected def classHeader(className: String): String
   
@@ -56,36 +104,47 @@ abstract class GeneratorTemplate {
 
   protected val genericCloseBracket: String
 
-  protected def probeType(fromObj: JsonSerializable, objKey: String,  value: ujson.Value): (String, Boolean) = {
-    def probeTypeInner(str: String): (String, Boolean) =
-      var isOptional = false
-      val typeStr = str match
-        case "str" => strType
-        case "int" => intType
-        case "bool" => boolType
-        case "obj" => objType
-        case s =>
-          if s.startsWith("arr") then
-            val parts = s.split("<", 2)
-            if parts(1).startsWith("any") then
-              arrType
-            else
-              if arrTypeIsPostfix then s"${probeTypeInner(parts(1).dropRight(1))._1}$arrType"
-              else s"$arrType$genericOpenBracket${probeTypeInner(parts(1).dropRight(1))._1}$genericCloseBracket"
-          else if s.startsWith("obj") then
-            val inner = s.split("<", 2)(1).dropRight(1)
-            val parts = inner.split(",")
-            s"$objType$genericOpenBracket${probeTypeInner(parts(0))._1}, ${probeTypeInner(parts(1))._1}$genericCloseBracket"
-          else if s.startsWith("enum") then
-            if enumIsString then strType
-            else s.split("<", 2)(1).dropRight(1)
-          else if s.contains("-opt") then
-            isOptional = true
-            s"${if optionalTypeIsOnKey then "" else optionalType + genericOpenBracket}${probeTypeInner(s.split("-")(0))._1}${if optionalTypeIsOnKey then "" else genericCloseBracket}"
-          else if s.startsWith("str-val-") then
-            s"$strType $strValuePrefix\"${s.split("str-val-")(1)}\""
-          else s
-      (typeStr, isOptional)
+  protected def probeType(fromObj: JsonSerializable, objKey: String,  value: ujson.Value): (String, TypeObject) = {
+    def addOptional(t: TypeObject): String = {
+      s"${if optionalTypeIsOnKey then "" else optionalType + genericOpenBracket}${probeTypeInner(
+        if t.isInstanceOf[Str] then
+          t.asInstanceOf[Str].copy(isOptional = false)
+        else if t.isInstanceOf[Int] then
+          t.asInstanceOf[Int].copy(isOptional = false)
+        else if t.isInstanceOf[Bool] then
+            t.asInstanceOf[Bool].copy(isOptional = false)
+        else if t.isInstanceOf[Enum] then
+          t.asInstanceOf[Enum].copy(isOptional = false)
+        else throw new RuntimeException(s"Type $t is should not be optional.")
+      )._1}${if optionalTypeIsOnKey then "" else genericCloseBracket}"
+    }
+
+    def probeTypeInner(t: TypeObject): (String, TypeObject) =
+      val typeStr = t match
+        case Str(None, o) =>
+          if o then addOptional(t)
+          else strType
+        case Str(v, _) => s"$strType $strValuePrefix\"${v.mkString("")}\""
+        case Int(o) =>
+          if o then addOptional(t)
+          else intType
+        case Bool(o) =>
+          if o then addOptional(t)
+          else boolType
+        case Obj(None, None, None, _) => objType
+        case Obj(None, k, v, _) => s"$objType$genericOpenBracket${probeTypeInner(k.head)._1}, ${probeTypeInner(v.head)._1}$genericCloseBracket"
+        case Obj(n, None, None, _) => n.mkString("")
+        case Enum(n, _) =>
+          if enumIsString then strType
+          else n
+        case Arr(None, _) => arrType
+        case Arr(t, _) =>
+          if arrTypeIsPostfix then s"${probeTypeInner(t.head)._1}$arrType"
+          else s"$arrType$genericOpenBracket${probeTypeInner(t.head)._1}$genericCloseBracket"
+
+      (typeStr, t)
     probeTypeInner(LanguageAgnosticTypeProbes.probeType(fromObj, objKey, value))
   }
+
+
 }

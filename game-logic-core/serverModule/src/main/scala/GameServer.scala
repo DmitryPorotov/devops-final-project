@@ -4,6 +4,9 @@ import fwc.communication.messagesFromClient.Message
 
 import scala.util.{Failure, Success, Try}
 import redis.clients.jedis.*
+import redis.clients.jedis.exceptions.JedisConnectionException
+
+import scala.annotation.tailrec
 
 object GameServer {
 
@@ -85,13 +88,23 @@ object GameServer {
   @volatile 
   private var isShuttingDown: Boolean = false
   
-  def start(): Unit = {
-    jedisSub.psubscribe(subscriber, workerName + ".*", "new_game.*")
+  @tailrec
+  def start(retry: Int = 0): Unit = {
+    try {
+      jedisSub.psubscribe(subscriber, workerName + ".*", "new_game.*")
+    } catch
+      case e: JedisConnectionException =>
+        if retry <= 100 then
+          val delay = Math.E
+          println(s"Could not connect to Redis. Waiting $delay seconds to retry. ${if retry > 0 then s" Retry #$retry" else ""}")
+          Thread.sleep((delay * 1000).toLong)
+          start(retry + 1)
   }
   
   def shutdown(): Unit =
     isShuttingDown = true
-    subscriber.unsubscribe()
+    if subscriber.isSubscribed then
+      subscriber.unsubscribe()
     val ids = Reactor.prepareShutdown.foldLeft(Map[String, ujson.Str]())((map, kv) => {
       jedisCache.set("game_save_" + kv._2.gameSettings.gameUuid.toString, kv._2.toJson.render())
       map + (kv._1 -> kv._2.gameSettings.gameUuid.toString)
