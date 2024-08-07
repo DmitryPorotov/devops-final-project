@@ -257,14 +257,14 @@ class SubPhaseAddOrder(TypedDict):
 class SubPhaseWildlingsKillUnits(TypedDict):
     mainPhase: str  # = "phaseRoundEvents"
     subPhase: str  # = "wildlingsKillUnits"
-    houseTypes: dict[HouseType, int]
-    loserHouse: Optional[str]
+    houseTypes: obj<enum<HouseType>,int>
+    loserHouse: str
 
 
 class SubPhaseWildlingsDowngradeKnights(TypedDict):
     mainPhase: str  # = "phaseRoundEvents"
     subPhase: str  # = "wildlingsDowngradeKnights"
-    houseTypes: dict[HouseType, int]
+    houseTypes: obj<enum<HouseType>,int>
 
 
 class SubPhaseSetTidesOfBattleCards(TypedDict):

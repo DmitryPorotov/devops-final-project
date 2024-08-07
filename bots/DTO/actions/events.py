@@ -26,7 +26,7 @@ class ActionGetEventCards(TypedDict):
 class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(TypedDict):
     actionType: str  # = "wildlingsChooseKill2UnitsOr2PositionsOnTrack"
     houseType: HouseType
-    track: Optional[str]
+    track: str
 
 
 class ActionResolveTiesAfterBiddingOnTracks(TypedDict):
