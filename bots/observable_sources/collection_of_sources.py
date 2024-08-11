@@ -49,6 +49,29 @@ class CollectionOfSources:
                 for r in replies:
                     self._connection.send(worker + '.' + game, json.dumps(r))
         self._event_source.subscribe(on_next=func)
-        self.planning_phase_action_sources.addOrder = self._event_source.pipe(
-            op.filter(lambda t: t[0]['action'] == 'game_action' and t[0]['player_action']['actionType'] == 'addOrder')
+        game_actions_source = self._event_source.pipe(
+            op.filter(lambda t: t[0]['action'] == 'game_action')
         )
+
+        self.planning_phase_action_sources.addOrder = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'addOrder')
+        )
+        self.planning_phase_action_sources.removeOrder = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'removeOrder')
+        )
+        self.planning_phase_action_sources.openOrders = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'openOrders')
+        )
+        self.planning_phase_action_sources.ravenChooseChangeOrderOrLookAtWildlingCard = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'ravenChooseChangeOrderOrLookAtWildlingCard')
+        )
+        self.planning_phase_action_sources.ravenChangeOrder = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'ravenChangeOrder')
+        )
+        self.planning_phase_action_sources.ravenGetWildlingsCard = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'ravenGetWildlingsCard')
+        )
+        self.planning_phase_action_sources.ravenChoosePutWildlingsCardOnTopOrBottom = game_actions_source.pipe(
+            op.filter(lambda t: t[0]['player_action']['actionType'] == 'ravenChoosePutWildlingsCardOnTopOrBottom')
+        )
+

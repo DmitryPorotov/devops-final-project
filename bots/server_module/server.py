@@ -1,5 +1,5 @@
 from handle_request_for_bots import HouseToBotId
-from server_module.add_order_reaction import AddOrderReaction
+from server_module.reactions.add_order_reaction import AddOrderReaction
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
