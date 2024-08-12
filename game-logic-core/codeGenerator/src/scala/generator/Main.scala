@@ -64,5 +64,8 @@ object Main extends App {
       case "typescript" => TypeScriptGenerator()
       case l => throw new RuntimeException(s"Unknown PL $l")
   }
+
   println("Finished generating.")
+
+
 }

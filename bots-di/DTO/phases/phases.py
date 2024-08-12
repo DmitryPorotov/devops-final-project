@@ -214,12 +214,6 @@ class SubPhaseChooseDisableMarchPlus1OrDefendOrders(TypedDict):
     houseType: HouseType
 
 
-class SubPhaseSetWildlingsCards(TypedDict):
-    mainPhase: str  # = "phaseRoundEvents"
-    subPhase: str  # = "setWildlingsCards"
-    subPhaseWildlingsCard: SubPhaseWildlingsCard
-
-
 class SubPhaseResolveTiesAfterBiddingOnTracks(TypedDict):
     mainPhase: str  # = "phaseRoundEvents"
     subPhase: str  # = "resolveTiesAfterBiddingOnTracks"
@@ -257,14 +251,14 @@ class SubPhaseAddOrder(TypedDict):
 class SubPhaseWildlingsKillUnits(TypedDict):
     mainPhase: str  # = "phaseRoundEvents"
     subPhase: str  # = "wildlingsKillUnits"
-    houseTypes: obj<enum<HouseType>,int>
+    houseTypes: dict[HouseType, int]
     loserHouse: str
 
 
 class SubPhaseWildlingsDowngradeKnights(TypedDict):
     mainPhase: str  # = "phaseRoundEvents"
     subPhase: str  # = "wildlingsDowngradeKnights"
-    houseTypes: obj<enum<HouseType>,int>
+    houseTypes: dict[HouseType, int]
 
 
 class SubPhaseSetTidesOfBattleCards(TypedDict):
@@ -274,9 +268,24 @@ class SubPhaseSetTidesOfBattleCards(TypedDict):
     defenderCard: Optional[int]
 
 
+class SubPhaseWildlingsCard(TypedDict):
+    mainPhase: str  # = "phaseAction"
+    subPhase: str  # = "wildlingsCard"
+    houseTypes: list[HouseType]
+    loserWinnerHouse: str
+    cardCode: int
+    isWin: bool
+
+
 class SubPhaseGetWildlingsCard(TypedDict):
     mainPhase: str  # = "phaseAction"
     subPhase: str  # = "getWildlingsCard"
+    subPhaseWildlingsCard: SubPhaseWildlingsCard
+
+
+class SubPhaseSetWildlingsCards(TypedDict):
+    mainPhase: str  # = "phaseRoundEvents"
+    subPhase: str  # = "setWildlingsCards"
     subPhaseWildlingsCard: SubPhaseWildlingsCard
 
 
@@ -314,11 +323,3 @@ class SubPhaseWildlingsChooseTrackToBeFirstAt(TypedDict):
     subPhase: str  # = "wildlingsChooseTrackToBeFirstAt"
     houseType: HouseType
 
-
-class SubPhaseWildlingsCard(TypedDict):
-    mainPhase: str  # = "phaseAction"
-    subPhase: str  # = "wildlingsCard"
-    houseTypes: list[HouseType]
-    loserWinnerHouse: str
-    cardCode: int
-    isWin: bool

@@ -1,5 +1,7 @@
 from typing import Union
 
+from DTO.phases.phases import *
+
 SubPhase = Union[SubPhaseSetEventCards,
         SubPhaseWildlingsDiscardHouseCard,
         SubPhaseRavenChoosePutWildlingsCardOnTopOrBottom,

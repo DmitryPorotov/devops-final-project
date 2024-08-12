@@ -22,6 +22,7 @@ class RedisConnector(BaseService):
         self._pubsub = self._redis.pubsub()
         self._thread: Optional[PubSubWorkerThread] = None
         self._on_game_message: Optional[Callable[[RedisMessage], None]] = None
+        self._on_game_reset: Optional[Callable[[RedisMessage], None]] = None
         self._on_fill_with_bots_message: Optional[Callable[[RedisMessage], None]] = None
 
     def start(self):
@@ -32,6 +33,7 @@ class RedisConnector(BaseService):
             self.logger.critical("Exception in Redis", exc_info=ex, stack_info=True, stacklevel=3)
 
         self._thread = self._pubsub.run_in_thread(sleep_time=.001, exception_handler=ex_handler)
+        self._thread.pubsub.subscribe(**{'new_game': self._on_game_reset})
 
     def subscribe(self, channel: str):
         self._thread.pubsub.psubscribe(**{channel + '.*': self._on_game_message})
@@ -40,7 +42,7 @@ class RedisConnector(BaseService):
         self._thread.pubsub.unsubscribe(channel + '.*')
 
     def set_new_reset_game_handler(self, handler: Callable[[RedisMessage], None]):
-        self._thread.pubsub.subscribe(**{'new_game': handler})
+        self._on_game_reset = handler
 
     def set_react_to_game_handler(self, on_message: Optional[Callable[[RedisMessage], None]]):
         self._on_game_message = on_message

@@ -1,7 +1,7 @@
 package generator
 
 import fwc.communication.messagesFromClient.*
-import fwc.{JsonSerializable, Player}
+import fwc.{JsonSerializable, Player, PlayerInputting}
 import fwc.communication.reactions.ReactionCreateGame
 import fwc.communication.repliesToClient.*
 import fwc.game.actionPhase.{RavenChoiceNothing, ValyrianSteelBladeChoiceNothing}
@@ -152,10 +152,19 @@ object InstanciesCollection {
    "SubPhaseAutoRetreatAfterBattle" ->  SubPhaseAutoRetreatAfterBattle(),
   )
   val replies: Map[String, JsonSerializable] = {
-    val (id, settings, state) = ReactionCreateGame(1, "2", false, false)
+    val (id, settings0, state) = ReactionCreateGame(1, "2", false, false)
+    val player = Player(1, "user1", Some(HouseLion))
+    val playerInputting = PlayerInputting(2, Seq(HouseWolf,HouseRose))
+    val settings = settings0.copy(
+      players = Some(Seq(player)),
+      playersInputting = Some(Seq(playerInputting))
+    )
     val replay = GameReplay(settings, state.boardCards, state, Seq())
     val statusDetails = StatusDetails(replay)
     Map(
+      "PlayerInputting" -> playerInputting,
+      "Player" -> player,
+      "GameSettings" -> settings,
       "ReplyCreateGame" -> ReplyCreateGame(id, "dsafsdfasfs"),
       "ReplyError" -> ReplyError(1, id, "get fucked", ujson.Obj("action" -> "hello"), "fsfsfsasdfs"),
       "ReplyGameAction" -> ReplyGameAction(id, ujson.Obj(), "fsafsdfsd"),
@@ -163,11 +172,7 @@ object InstanciesCollection {
         ReplyGetGameState(1, id, gameRules, state, settings, "sadf")
       },
       "ReplyGetStatus" -> ReplyGetStatus(1, id, replay, "sdfasfs"),
-      "ReplyJoinGame" -> ReplyJoinGame(1, id, settings.copy(players = Some(Seq(
-        Player(
-          1, "player name", Some(HouseLion)
-        )
-      ))), "dsasdfsd"),
+      "ReplyJoinGame" -> ReplyJoinGame(1, id, settings.copy(players = Some(Seq(player))), "dsasdfsd"),
       "ReplyListSaves" -> ReplyListSaves(1, id, Seq("save1.json", "save2.json") , "dsfasdfdsf"),
       "ReplyLoadGame" -> ReplyLoadGame(id, "dsafsdafgsd"),
       "ReplyNewGame" -> ReplyNewGame(id, 3, "sfsadfsdf"),

@@ -138,9 +138,11 @@ abstract class GeneratorTemplate {
           if enumIsString then strType
           else n
         case Arr(None, _) => arrType
-        case Arr(t, _) =>
-          if arrTypeIsPostfix then s"${probeTypeInner(t.head)._1}$arrType"
-          else s"$arrType$genericOpenBracket${probeTypeInner(t.head)._1}$genericCloseBracket"
+        case Arr(n, o) =>
+          if arrTypeIsPostfix then s"${probeTypeInner(n.head)._1}$arrType"
+          else s"${if o && !optionalTypeIsOnKey then optionalType + genericOpenBracket else ""}" +
+           s"$arrType$genericOpenBracket${probeTypeInner(n.head)._1}" +
+           s"$genericCloseBracket${if o && !optionalTypeIsOnKey then genericCloseBracket else ""}"
 
       (typeStr, t)
     probeTypeInner(LanguageAgnosticTypeProbes.probeType(fromObj, objKey, value))

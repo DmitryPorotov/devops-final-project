@@ -16,3 +16,16 @@ class CombatOutcome:
         self.defender_units_to_kill = defender_units_to_kill
         self.winner = winner
 
+    @classmethod
+    def from_json(cls, json):
+        if json is not None:
+            return cls(
+                json['attackerStrength'],
+                json['defenderStrength'],
+                json['attackerUnitsToKill'],
+                json['defenderUnitsToKill'],
+                json['winner'],
+            )
+        else:
+            return None
+        

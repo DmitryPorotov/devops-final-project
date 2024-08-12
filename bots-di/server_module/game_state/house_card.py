@@ -1,7 +1,15 @@
+from typing import Optional
+
 from server_module.game_state.house_type import HouseType
 
 
 class HouseCard:
+    _game_rules = None  # type: Optional[GameRules]
+
+    @classmethod
+    def set_game_rules(cls, game_rules) -> None:
+        cls._game_rules = game_rules  # type: GameRules
+
     def __init__(
             self,
             house: HouseType,
@@ -31,3 +39,11 @@ class HouseCard:
             json['attack'],
             json['defense'],
         )
+
+    @staticmethod
+    def from_house_and_code(house: HouseType, code: int):
+        if HouseCard._game_rules is None:
+            raise RuntimeError('HouseCard\'s game rules are not initialized!')
+        for house_card in HouseCard._game_rules.house_cards:
+            if house_card.code == code and house_card.house == house:
+                return house_card

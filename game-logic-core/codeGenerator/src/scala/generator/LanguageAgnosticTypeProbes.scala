@@ -22,7 +22,11 @@ object LanguageAgnosticTypeProbes {
       case "ujson.Obj" => probeObj(fromObj, objKey)
       case "ujson.Arr" => probeArray(fromObj, objKey, value.asInstanceOf[ujson.Arr])
 
-      case _ => throwIfNoField(fromObj.getClass.getName, objKey)
+      case n =>
+        if n == null || n == "ujson.Null" then
+        throw new RuntimeException(s"Class's '${value.getClass.getName}' field '$objKey' is null or none. " +
+          "Fill the field with a value inside the InstanciesCollection and rerun.")
+        else  throwIfNoField(fromObj.getClass.getName, objKey)
   }
   
   private def probeArray(fromObj: JsonSerializable, objKey: String, arr: ujson.Arr): TypeObject = {
@@ -78,7 +82,7 @@ object LanguageAgnosticTypeProbes {
         else throwIfNoField(className, objKey)
       case "StatusDetails" =>
         objKey match
-          case "gameSettings" => Obj(Some("StatusDetails"))
+          case "gameSettings" => Obj(Some("GameSettings"))
           case "subPhase" => Obj(Some("SubPhase"))
           case _ => throwIfNoField(className, objKey)
       case "GameStatus" =>
@@ -102,6 +106,11 @@ object LanguageAgnosticTypeProbes {
         if objKey == "game_action"
         then Obj(Some("Action"))
         else throwIfNoField(className, objKey)
+      case "GameSettings" =>
+        objKey match
+          case "players" => Arr(Some(Obj(Some("Player"))), true)
+          case "playersInputting" => Arr(Some(Obj(Some("PlayerInputting"))), true)
+          case _ => throwIfNoField(className, objKey)
       case _ => throw new RuntimeException(s"Class '$className' is not in this match. Add the class and the field '$objKey' here.")
   }
 

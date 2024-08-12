@@ -1,3 +1,5 @@
+from typing import Optional
+
 from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.order import Order
 from server_module.game_state.house_card import HouseCard, HouseType
@@ -24,7 +26,7 @@ class Combat:
             defender_card_resolved: bool,
             defender_tides_of_battle: TidesOfBattleCard,
             defender_support: list[int],
-            combat_outcome: CombatOutcome = None
+            combat_outcome: Optional[CombatOutcome] = None
     ):
         self.attacker_tile_num = attacker_tile_num
         self.attacker_house = attacker_house
@@ -46,6 +48,25 @@ class Combat:
 
     @classmethod
     def from_json(cls, json):
-        attack_army = (MilitaryUnit.from_json(json['attackerArmy']))
-        return cls()  # todo
+        attacker_house = HouseType[json['attackerHouse'].upper()]
+        defender_house = HouseType[json['defenderHouse'].upper()]
+        return cls(
+            json['attackerTileNum'],
+            attacker_house,
+            (MilitaryUnit.from_json(json['attackerArmy'])),
+            Order.from_json(json['attackerOrder']),
+            HouseCard.from_house_and_code(attacker_house, json['attackerCard']),  # this is just the code
+            json['attackerCardResolved'],
+            json['attackerTidesOfBattle'],  # this is just the code
+            json['attackerSupport'],  # array of tile numbers
+            json['defenderTileNum'],
+            defender_house,
+            (MilitaryUnit.from_json(json['defenderArmy'])),
+            Order.from_json(json['defenderOrder']),
+            HouseCard.from_house_and_code(defender_house, json['defenderCard']),
+            json['defenderCardResolved'],
+            json['defenderTidesOfBattle'],
+            json['defenderSupport'],
+            CombatOutcome.from_json(json['combatOutcome']),
+        )  # todo
 

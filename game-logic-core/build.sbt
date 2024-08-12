@@ -29,7 +29,6 @@ lazy val scala3MainProject = project
       "org.scalactic" %% "scalactic" % "3.2.18",
       "org.scalatest" %% "scalatest" % "3.2.18" % "test",
       "com.lihaoyi" %% "upickle" % "3.3.1",
-//      "redis.clients" % "jedis" % "5.1.3",
     ),
   )
 
@@ -59,9 +58,10 @@ resolvers +=
 val jarName = "worker.jar"
 assembly/assemblyJarName := jarName
 
-lazy val gen = (project in file("."))
+lazy val gen = (project in file("codeGenerator"))
   .settings(
     name := "code-generation",
     scalaVersion := scala3Version,
-    version := "0.1.0-SNAPSHOT"
+    version := "0.1.0-SNAPSHOT",
+    mainClass := Some("Main"),
   ) dependsOn scala3MainProject

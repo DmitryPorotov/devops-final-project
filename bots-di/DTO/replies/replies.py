@@ -1,11 +1,33 @@
-from typing import TypedDict
+from typing import TypedDict, Optional
 from DTO.phases.all_phases import SubPhase
 from server_module.game_state.game_state import GameState, GameRules
 
 
+class PlayerInputting(TypedDict):
+    userId: int
+    forHouses: list[str]
+
+
+class Player(TypedDict):
+    userId: int
+    house: str
+    name: str
+
+
+class GameSettings(TypedDict):
+    gameId: str
+    gameUuid: str
+    ownerId: int
+    isInputOnly: bool
+    isRandomHouses: bool
+    isRandomEventsServerSide: bool
+    players: Optional[list[Player]]
+    playersInputting: Optional[list[PlayerInputting]]
+
+
 class StatusDetails(TypedDict):
     roundCounter: int
-    gameSettings: StatusDetails
+    gameSettings: GameSettings
     subPhase: SubPhase
 
 
@@ -44,13 +66,6 @@ class ReplyListSaves(TypedDict):
     messageId: str
     userId: int
     saves: list[str]
-
-
-class ReplyStartGame(TypedDict):
-    type: str
-    action: str
-    gameId: str
-    messageId: str
 
 
 class ReplyGetStatus(TypedDict):
@@ -110,3 +125,13 @@ class ReplyError(TypedDict):
     userId: int
     message: str
     originalMessage: Message
+
+
+class ReplyStartGame(TypedDict):
+    type: str
+    action: str
+    gameId: str
+    messageId: str
+
+
+
