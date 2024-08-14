@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Testing bots</title>
+</head>
+<body>
+<script>
+  function onClick() {
+    fetch('http://127.0.0.1:3001/api/v1/auth/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: 'a@b.com',
+        password: "12345678"
+      })
+    }).then(async (data) => {
+      const user = await data.json();
+      const exampleSocket = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${user.token}`, "events");
+      exampleSocket.onmessage = (event) => {
+        console.log("message:" + event.data);
+        const msg = JSON.parse(event.data);
+        if (msg.action === 'create_game') {
+          exampleSocket.send(JSON.stringify({
+            type: 'action',
+            action: 'fill_with_bots',
+            lobbyId: 3,
+            userId: 1,
+            player_action: {
+              houseTypes :[ "lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
+            }
+          }))
+        }
+        else if (msg.type === 'chat') {
+          exampleSocket.send(JSON.stringify({
+            type: 'action',
+            action: 'create_game',
+            lobbyId: 3,
+            isRandomHouses: false,
+            userId: 1,
+
+          }))
+        }
+      };
+      exampleSocket.onopen = (event) => {
+        console.log("on open: ", event);
+        exampleSocket.send(JSON.stringify({
+          type: 'chat',
+          lobbyId: 3,
+          userId: 1,
+          body: {
+            type: 'create'
+          }
+
+        }))
+      };
+    });
+  }
+</script>
+  <header>
+    <h1>Start bots only game</h1>
+    <button onclick="onClick()">Start</button>
+  </header>
+</body>
+</html>
