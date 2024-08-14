@@ -42,10 +42,10 @@ class FillWithBots:
 
             message_to_worker = {
                 'gameId': str(game_id),
-                'userId': HouseToBotId[house.upper()],
+                'userId': HouseToBotId.get_bot_id_by_house(house),
                 'action': 'join_game',
                 'name': bot_name,
-                'joinAs': str(HouseToBotId[house.upper()].name.lower())
+                'joinAs': house
             }
             self._redis_service.send(worker_name + '.' + game_channel_prefix, json.dumps(message_to_worker))
         get_game_state_message = {

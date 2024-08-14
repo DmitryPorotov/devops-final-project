@@ -1,6 +1,7 @@
+from server_module.reactions.game_action_reactions.action_react import ActionReact
 from server_module.reactions.management.fill_with_bots import FillWithBots
 from server_module.reactions.management.get_game_state import GetGameState
-from server_module.reactions.game_phase_reactions.multi_house_reaction import MultiHouseReact
+from server_module.reactions.game_phase_reactions.phase_multi_house_reaction import MultiHouseReact
 from server_module.reactions.management.join_game import JoinGame
 
 
@@ -9,6 +10,7 @@ def init():
     GetGameState()
     JoinGame()
     MultiHouseReact.init()
+    ActionReact.init()
 
 
 def imports():

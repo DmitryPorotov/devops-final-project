@@ -1,6 +1,8 @@
-from typing import TypedDict
-from DTO.actions.all_actions import Action
+from typing import TypedDict, TypeVar, Generic, Optional
 
+from DTO.messages.reply import Reply
+
+_T = TypeVar('_T')
 
 class Message(TypedDict):
     userId: int
@@ -10,11 +12,12 @@ class Message(TypedDict):
     action: str
 
 
-class MessageGameAction(TypedDict):
+class MessageGameAction(TypedDict, Generic[_T]):
     userId: int
     gameId: str
     messageId: str
     type: str
     action: str
-    game_action: Action
+    player_action: Optional[_T]
+    reply: Optional[list[Reply[_T]]]
 

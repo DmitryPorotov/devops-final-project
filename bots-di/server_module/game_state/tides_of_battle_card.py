@@ -1,12 +1,13 @@
 from typing import Optional
+import server_module.game_rules.game_rules as gr
 
 
 class TidesOfBattleCard:
-    _game_rules = None  # type: Optional[GameRules]
+    _game_rules = None  # type: Optional[gr.GameRules]
 
     @classmethod
     def set_game_rules(cls, game_rules) -> None:
-        cls._game_rules = game_rules  # type: GameRules
+        cls._game_rules = game_rules  # type: gr.GameRules
 
     def __init__(
             self,

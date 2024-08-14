@@ -2,16 +2,16 @@ from server_module.game_state.house_type import HouseType
 from server_module.game_state.order import Order
 
 
-class PlacedOrders(dict[HouseType, dict[int, Order]]):
+class PlacedOrders(dict[HouseType, dict[str, Order]]):
     def __init__(self, **kwargs):
         if kwargs is None:
             super().__init__()
         else:
-            for ht in kwargs:
+            for ht, os in kwargs.items():
                 orders = {}
-                for tile_num in kwargs[ht]:
-                    orders[tile_num] = Order.from_json(kwargs[ht][tile_num])
-                self[HouseType[ht]] = orders
+                for tile_num, o in os.items():
+                    orders[tile_num] = Order.from_json(o)
+                self[HouseType[ht.upper()]] = orders
 
     def place_order(self, house: HouseType, tile_num: int, order: Order, pos_on_cour_track: int):
         if house in self:

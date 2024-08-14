@@ -73,3 +73,7 @@ class EventSourcesService(BaseService):
         self.react_to_game_event_sources.message_get_game_state = react_to_game_message_only.pipe(
             op.filter(lambda t: t['action'] == 'get_game_state'),
         )
+
+        self.react_to_game_action = react_to_game_message_only.pipe(
+            op.filter(lambda m: m['action'] == "game_action")
+        )
