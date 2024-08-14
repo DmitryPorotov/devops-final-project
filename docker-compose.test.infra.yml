@@ -71,6 +71,7 @@ services:
     volumes:
       - ./nginx.conf.d/fwc.conf:/etc/nginx/nginx.conf
       - ./front-defold/build/:/www/data/html
+      - ./homepage:/www/data/homepage
     ports:
       - "8888:80"
     networks:
