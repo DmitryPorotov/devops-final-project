@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.Mustering
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -16,7 +16,7 @@ class UpgradeFootmenToKnightsSpec extends AnyFlatSpec with should.Matchers {
 
     val newGameState = Mustering.musterGroundUnit(
       3,
-      MilitaryUnit(HouseWolf, MilitaryUnitKnights),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Knights),
       gameState,
       true,
     )
@@ -26,18 +26,18 @@ class UpgradeFootmenToKnightsSpec extends AnyFlatSpec with should.Matchers {
       "1 mustering points should be used at tile 3, after upgrading footmen to knights")
 
     assert(
-      newGameState._1.getOrElse(3, null).count(_.unitType == MilitaryUnitKnights) == 2,
+      newGameState._1.getOrElse(3, null).count(_.unitType == MilitaryUnitType.Knights) == 2,
       "there should be 2 knights at tile 3"
     )
 
     assert(
-      newGameState._1.getOrElse(3, null).count(_.unitType == MilitaryUnitFootmen) == 0,
+      newGameState._1.getOrElse(3, null).count(_.unitType == MilitaryUnitType.Footmen) == 0,
       "there should be 0 footmen at tile 3"
     )
 
     val newGameState2 = Mustering.musterGroundUnit(
       3,
-      MilitaryUnit(HouseWolf, MilitaryUnitFootmen),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),
       gameState.copy(
         armies = newGameState._1,
         usedMusteringPoints = newGameState._2

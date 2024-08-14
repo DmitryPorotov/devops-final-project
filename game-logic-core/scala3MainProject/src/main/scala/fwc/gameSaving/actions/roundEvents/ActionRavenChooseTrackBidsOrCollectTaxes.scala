@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.TrackThrone
+import fwc.game.board.TrackType
 import fwc.game.eventsPhase.cards.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseChooseTracksBidsOrCollectTaxes, SubPhaseCollectTaxes, SubPhaseTracksBids}
@@ -23,7 +23,7 @@ case class ActionRavenChooseTrackBidsOrCollectTaxes(
 
     val newPhase =
       if choice == EventCardChoiceA
-      then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackThrone)
+      then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)
       else if choice == EventCardChoiceB
       then SubPhaseCollectTaxes()
       else EventCards.getPhaseForDeck3Card(gameState.boardCards.roundEvents3.head, gameState.tracks.steelBladeOwner)

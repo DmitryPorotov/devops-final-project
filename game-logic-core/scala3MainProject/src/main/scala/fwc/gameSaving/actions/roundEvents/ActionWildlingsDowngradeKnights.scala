@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, TileNumber}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseMuster, SubPhaseWildlingsDowngradeKnights}
 import fwc.gameSaving.actions.roundEvents.wildlingsCards.WildlingsCards
@@ -26,7 +26,7 @@ case class ActionWildlingsDowngradeKnights(
 
     val knight = MilitaryUnit(
       houseType,
-      MilitaryUnitKnights
+      MilitaryUnitType.Knights
     )
 
     if !gameState.armies(tileNumber).contains(knight)
@@ -36,12 +36,12 @@ case class ActionWildlingsDowngradeKnights(
 
     val numFootmen = updatedArmies.foldLeft(0)(
       (acc, cur: (TileNumber, Seq[MilitaryUnit])) =>
-        acc + cur._2.count(mu => mu.unitType == MilitaryUnitFootmen && mu.house == houseType)
+        acc + cur._2.count(mu => mu.unitType == MilitaryUnitType.Footmen && mu.house == houseType)
     )
 
     val updatedArmies2 =
-      if numFootmen < gameRules.maxArmies(MilitaryUnitFootmen)
-      then updatedArmies + (tileNumber -> (updatedArmies(tileNumber) :+ MilitaryUnit(houseType, MilitaryUnitFootmen)))
+      if numFootmen < gameRules.maxArmies(MilitaryUnitType.Footmen)
+      then updatedArmies + (tileNumber -> (updatedArmies(tileNumber) :+ MilitaryUnit(houseType, MilitaryUnitType.Footmen)))
       else updatedArmies
 
     val updatedPhase =

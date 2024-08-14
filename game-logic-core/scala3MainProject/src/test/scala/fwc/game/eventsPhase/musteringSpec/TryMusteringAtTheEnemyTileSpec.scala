@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.{Mustering, MusteringException}
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -17,7 +17,7 @@ class TryMusteringAtTheEnemyTileSpec extends AnyFlatSpec with should.Matchers {
     try {
       Mustering.musterGroundUnit(
         16,
-        MilitaryUnit(HouseWolf, MilitaryUnitFootmen),
+        MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),
         gameState,
       )
     } catch {

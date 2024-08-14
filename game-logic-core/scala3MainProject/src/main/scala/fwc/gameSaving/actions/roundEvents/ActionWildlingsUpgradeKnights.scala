@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, TileNumber}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseMuster, SubPhaseWildlingsUpgradeKnights}
 import fwc.gameSaving.actions.roundEvents.wildlingsCards.WildlingsCards
@@ -26,7 +26,7 @@ case class ActionWildlingsUpgradeKnights(
 
     val footman = MilitaryUnit(
       houseType,
-      MilitaryUnitFootmen
+      MilitaryUnitType.Footmen
     )
 
     if !gameState.armies(tileNumber1).contains(footman)
@@ -36,18 +36,18 @@ case class ActionWildlingsUpgradeKnights(
     then throw new ActionException(s"There is no footman to upgrade at tile ${tileNumber2.head} " +
       s"(${gameRules.board(tileNumber2.head).name})")
 
-    val numKnights = gameState.armies.countUnitsByTypeAndHouse(MilitaryUnitKnights, houseType)
+    val numKnights = gameState.armies.countUnitsByTypeAndHouse(MilitaryUnitType.Knights, houseType)
 
-    if numKnights > (gameRules.maxArmies(MilitaryUnitKnights) - 1) && tileNumber2.nonEmpty
+    if numKnights > (gameRules.maxArmies(MilitaryUnitType.Knights) - 1) && tileNumber2.nonEmpty
     then throw new ActionException("You can only upgrade one footman to a knight")
 
     val updatedArmies = gameState.armies.disbandMilitaryUnit(tileNumber1, footman)
-     + (tileNumber1 -> (gameState.armies(tileNumber1) :+ MilitaryUnit(houseType, MilitaryUnitKnights)))
+     + (tileNumber1 -> (gameState.armies(tileNumber1) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
 
     val updatedArmies2 =
       if tileNumber2.nonEmpty
       then  updatedArmies.disbandMilitaryUnit(tileNumber2.head, footman)
-        + (tileNumber2.head -> (gameState.armies(tileNumber2.head) :+ MilitaryUnit(houseType, MilitaryUnitKnights)))
+        + (tileNumber2.head -> (gameState.armies(tileNumber2.head) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
       else updatedArmies
 
     gameState.copy(

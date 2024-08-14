@@ -1,6 +1,6 @@
 package fwc.game.board
 
-import fwc.game.houses.{HouseType, HouseWolf}
+import fwc.game.houses.HouseType
 import fwc.gameLoading
 import fwc.game.board
 import org.scalatest.*

@@ -2,8 +2,8 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, TileNumber}
-import fwc.game.houses.{HouseMoose, HouseType}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
 import fwc.game.planningPhase.OrderMarch
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -29,22 +29,22 @@ case class ActionResolveCardMoose2(
       }
       || !gameState.armies.exists(
         (ta: (TileNumber, Seq[MilitaryUnit])) =>
-          ta._1 == tileNumber && ta._2.exists(mu => mu.unitType == MilitaryUnitFootmen && mu.house == HouseMoose)
+          ta._1 == tileNumber && ta._2.exists(mu => mu.unitType == MilitaryUnitType.Footmen && mu.house == HouseType.Moose)
       )
     then throw new ActionException(s"There is no footman to upgrade at tile number $tileNumber")
 
-    val footmen = gameState.armies(tileNumber).find(_.unitType == MilitaryUnitFootmen).head
+    val footmen = gameState.armies(tileNumber).find(_.unitType == MilitaryUnitType.Footmen).head
 
     val army: Seq[MilitaryUnit] = gameState.armies(tileNumber).deleteFirstMatch(footmen) :+ MilitaryUnit(
-      HouseMoose,
-      MilitaryUnitKnights
+      HouseType.Moose,
+      MilitaryUnitType.Knights
     )
 
     val updatedArmies = gameState.armies + (tileNumber -> army)
 
     val newPhase =
       if updatedCombat.loserCard.exists(_.isMoose3)
-      then SubPhaseResolveHouseCard(HouseMoose, 3)
+      then SubPhaseResolveHouseCard(HouseType.Moose, 3)
       else NextOrderFinder.nextSubPhase(gameState, OrderMarch, updatedCombat.attackerHouse)
 
     gameState.copy(

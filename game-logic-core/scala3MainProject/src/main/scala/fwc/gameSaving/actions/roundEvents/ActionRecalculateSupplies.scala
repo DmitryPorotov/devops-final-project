@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{TrackCourt, TrackFiefdoms, TrackThrone}
+import fwc.game.board.TrackType
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseDisbandUnit, SubPhaseRecalculateSupplies}
@@ -26,7 +26,7 @@ case class ActionRecalculateSupplies(
       if armiesToConsolidate.nonEmpty
       then
         SubPhaseDisbandUnit(
-          Supplies.getHouseToConsolidate(armiesToConsolidate, gameState.tracks(TrackThrone)),
+          Supplies.getHouseToConsolidate(armiesToConsolidate, gameState.tracks(TrackType.Throne)),
           UnitDisbandNextStepDeck2
         )
       else

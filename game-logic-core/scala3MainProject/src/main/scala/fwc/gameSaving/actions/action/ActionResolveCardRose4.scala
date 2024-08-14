@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.TileNumber
-import fwc.game.houses.{HouseKraken, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.planningPhase.OrderSupport
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -18,7 +18,7 @@ case class ActionResolveCardRose4(
       gameState.subPhase,
       houseType,
       gameState.combat,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
 
     val tileToRemoveOrder = gameRules.board(tileNumber)

@@ -2,12 +2,12 @@ package fwc.game.planningPhase
 
 import fwc.game.houses.*
 import enrichment.ExtSeq
-import fwc.game.board.{TrackCourt, Tracks}
+import fwc.game.board.{TrackType, Tracks}
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.{FWCException, gameRules}
 import ujson.Value
-import scala.util.boundary
 
+import scala.util.boundary
 import scala.util.Try
 
 case class AvailableOrders(
@@ -91,7 +91,7 @@ case class AvailableOrders(
   }
 
   def hasAvailableOrders(houseType: HouseType, tracks: Tracks): Boolean = boundary {
-    val availableStars = Try(gameRules.kingsCourtStars(tracks(TrackCourt).indexOf(houseType))).getOrElse(0)
+    val availableStars = Try(gameRules.kingsCourtStars(tracks(TrackType.Court).indexOf(houseType))).getOrElse(0)
     val starsShouldBeLeft = 5 - availableStars
     
     val ordersLeft = orders(houseType).view.flatten[Order](_._2).foldLeft(0)(
@@ -107,12 +107,12 @@ object AvailableOrders extends JsonParsable {
   def initialize(): AvailableOrders = {
     AvailableOrders(
       Map(
-        HouseWolf -> gameRules.loadedOrders,
-        HouseMoose -> gameRules.loadedOrders,
-        HousePufferfish -> gameRules.loadedOrders,
-        HouseKraken -> gameRules.loadedOrders,
-        HouseRose -> gameRules.loadedOrders,
-        HouseLion -> gameRules.loadedOrders
+        HouseType.Wolf -> gameRules.loadedOrders,
+        HouseType.Moose -> gameRules.loadedOrders,
+        HouseType.PufferFish -> gameRules.loadedOrders,
+        HouseType.Kraken -> gameRules.loadedOrders,
+        HouseType.Rose -> gameRules.loadedOrders,
+        HouseType.Lion -> gameRules.loadedOrders
       )
     )
   }

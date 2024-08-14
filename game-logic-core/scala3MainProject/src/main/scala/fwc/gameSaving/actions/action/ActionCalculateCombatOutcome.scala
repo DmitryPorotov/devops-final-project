@@ -3,8 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.actionPhase.CombatOutcomeCalculator
-import fwc.game.board.TrackThrone
-import fwc.game.houses.{HouseType, HouseWolf}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseAutoKillUnitsAfterBattle, SubPhaseCalculateCombatOutcome, SubPhaseKillUnitsAfterBattle, SubPhaseRetreatUnitsAfterBattle}
 import fwc.gameLoading.HouseCard
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction}

@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitGarrison, MilitaryUnitPowerToken, MilitaryUnitSiegeEngines, TileNumber}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.eventsPhase.{Mustering, Supplies}
 import fwc.game.houses.HouseType
 import fwc.game.phases.PhaseAction
@@ -57,7 +57,7 @@ case class ActionResolveCardWolf0(
           if armyAtTile.head.house != gameState.combat.loser.head
           then acc
           else
-            if armyAtTile.size == 1 && (armyAtTile.head.unitType == MilitaryUnitGarrison || armyAtTile.head.unitType == MilitaryUnitPowerToken)
+            if armyAtTile.size == 1 && !armyAtTile.head.unitType.canBeMustered
             then acc + (tn -> 0)
             else acc + (tn -> countPossibleLoses(tn, armyToMove))
     )

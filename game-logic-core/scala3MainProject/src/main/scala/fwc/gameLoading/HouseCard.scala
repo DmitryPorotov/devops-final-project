@@ -25,17 +25,17 @@ case class HouseCard(
     "defense" -> defense
   )
 
-  def isWolf0: Boolean = house == HouseWolf && code == 0
-  def isWolf2: Boolean = house == HouseWolf && code == 2
-  def isWolf5: Boolean = house == HouseWolf && code == 5
-  def isWolf6: Boolean = house == HouseWolf && code == 6
-  def isKraken4: Boolean = house == HouseKraken && code == 4
-  def isMoose2: Boolean = house == HouseMoose && code == 2
-  def isMoose3: Boolean = house == HouseMoose && code == 3
-  def isMoose6: Boolean = house == HouseMoose && code == 6
-  def isPufferfish2: Boolean = house == HousePufferfish && code == 2
-  def isRose0: Boolean = house == HouseRose && code == 0
-  def isLion1: Boolean = house == HouseLion && code == 1
-  def isLion2: Boolean = house == HouseLion && code == 2
+  def isWolf0: Boolean = house == HouseType.Wolf && code == 0
+  def isWolf2: Boolean = house == HouseType.Wolf && code == 2
+  def isWolf5: Boolean = house == HouseType.Wolf && code == 5
+  def isWolf6: Boolean = house == HouseType.Wolf && code == 6
+  def isKraken4: Boolean = house == HouseType.Kraken && code == 4
+  def isMoose2: Boolean = house == HouseType.Moose && code == 2
+  def isMoose3: Boolean = house == HouseType.Moose && code == 3
+  def isMoose6: Boolean = house == HouseType.Moose && code == 6
+  def isPufferfish2: Boolean = house == HouseType.PufferFish && code == 2
+  def isRose0: Boolean = house == HouseType.Rose && code == 0
+  def isLion1: Boolean = house == HouseType.Lion && code == 1
+  def isLion2: Boolean = house == HouseType.Lion && code == 2
 
 }

@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.planning
 
 import fwc.game.GameState
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.planningPhase.{Order, OrderMarch}
 import fwc.gameLoading
@@ -15,7 +15,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
     val gameState = GameState.fromJson(json)
     val gameStateAfter = ActionAddOrder(
       gameState,
-      HouseWolf,
+      HouseType.Wolf,
       Order(
         OrderMarch
       ),
@@ -23,7 +23,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
     ).doAction()
     val gameStateAfter2 = ActionAddOrder(
       gameStateAfter,
-      HouseWolf,
+      HouseType.Wolf,
       Order(
         OrderMarch,
         modifier = -1
@@ -32,7 +32,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
     ).doAction()
     val gameStateAfter3 = ActionAddOrder(
       gameStateAfter2,
-      HouseWolf,
+      HouseType.Wolf,
       Order(
         OrderMarch,
         true,
@@ -42,11 +42,11 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
     ).doAction()
     
     assert(
-      gameStateAfter3.placedOrders.placedOrders(HouseWolf).size == 3, 
+      gameStateAfter3.placedOrders.placedOrders(HouseType.Wolf).size == 3, 
       "Wolf has 3 orders placed"
     )
     assert(
-      gameStateAfter3.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(HouseWolf),
+      gameStateAfter3.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.contains(HouseType.Wolf),
       "Wolf needs to confirm orders"
     )
   }

@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.{Mustering, MusteringException}
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -16,16 +16,16 @@ class TryMusteringWhenNotEnoughSuppliesSpec extends AnyFlatSpec with should.Matc
 
     val gameState1 = gameState.copy(
       armies = gameState.armies + (1 -> Seq[MilitaryUnit](
-          MilitaryUnit(HouseWolf, MilitaryUnitSiegeEngines),
-          MilitaryUnit(HouseWolf, MilitaryUnitSiegeEngines),
-          MilitaryUnit(HouseWolf, MilitaryUnitFootmen),
+          MilitaryUnit(HouseType.Wolf, MilitaryUnitType.SiegeEngines),
+          MilitaryUnit(HouseType.Wolf, MilitaryUnitType.SiegeEngines),
+          MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),
         ))
     )
 
     try {
       Mustering.musterGroundUnit(
         7,
-        MilitaryUnit(HouseWolf, MilitaryUnitFootmen),
+        MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),
         gameState1,
       )
     } catch {

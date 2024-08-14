@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.TrackType
-import fwc.game.houses.{HouseKraken, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -18,7 +18,7 @@ case class ActionResolveCardKraken6(
       gameState.subPhase,
       houseType,
       gameState.combat,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
 
     if newCardCode < 0
@@ -27,16 +27,16 @@ case class ActionResolveCardKraken6(
       combat = updatedCombat
     )
     else
-      if gameState.powerTokens(HouseKraken) < 2
+      if gameState.powerTokens(HouseType.Kraken) < 2
       then throw new ActionException("House Kraken has not enough power tokens.")
 
-      val discardedKrakenCards: Seq[Int] = gameState.discardedHouseCards.getOrElse(HouseKraken, Seq())
-      val newKrakenCard = gameRules.houseCards.find(hc => hc.house == HouseKraken && hc.code == newCardCode).head
+      val discardedKrakenCards: Seq[Int] = gameState.discardedHouseCards.getOrElse(HouseType.Kraken, Seq())
+      val newKrakenCard = gameRules.houseCards.find(hc => hc.house == HouseType.Kraken && hc.code == newCardCode).head
       if discardedKrakenCards.contains(newCardCode)
       then throw new ActionException(s"House Kraken's card ${newKrakenCard.name} is discarded.")
 
-      val updatedPowerTokens = gameState.powerTokens + (HouseKraken -> (gameState.powerTokens(HouseKraken) - 2))
-      val updatedDisCards = gameState.discardedHouseCards + (HouseKraken -> (discardedKrakenCards :+ newCardCode))
+      val updatedPowerTokens = gameState.powerTokens + (HouseType.Kraken -> (gameState.powerTokens(HouseType.Kraken) - 2))
+      val updatedDisCards = gameState.discardedHouseCards + (HouseType.Kraken -> (discardedKrakenCards :+ newCardCode))
       val updatedCombat2 =
         if isAttackerAction
         then updatedCombat.copy(attackerCard = newKrakenCard)

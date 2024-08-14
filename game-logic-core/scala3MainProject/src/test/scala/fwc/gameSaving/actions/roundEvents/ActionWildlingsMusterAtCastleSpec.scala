@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.roundEvents
 
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen}
-import fwc.game.houses.HouseMoose
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
+import fwc.game.houses.HouseType
 import fwc.gameSaving.actions.Action
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -11,14 +11,14 @@ class ActionWildlingsMusterAtCastleSpec extends AnyFlatSpec with should.Matchers
     val gameState = fwc.game.initializeGameState()
     val action = ActionWildlingsMusterAtCastle(
       gameState,
-      houseType = HouseMoose,
+      houseType = HouseType.Moose,
       sourceTile = 3,
       targetUnits = Seq((
         3,
         false,
         MilitaryUnit(
-          HouseMoose,
-          MilitaryUnitFootmen
+          HouseType.Moose,
+          MilitaryUnitType.Footmen
         )
       ))
     )

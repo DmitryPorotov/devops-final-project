@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitShips, TileNumber}
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.eventsPhase.{Mustering, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
@@ -28,7 +28,7 @@ case class ActionMuster(
     then throw new ActionException("Wrong house")
 
     val (ar: Armies, usedMustPoints: UsedMusteringPoints) =
-      if unitToMuster.unitType == MilitaryUnitShips
+      if unitToMuster.unitType == MilitaryUnitType.Ships
       then if toTile.isEmpty
         then throw new ActionException("toTile should not be empty")
         else Mustering.musterShips(fromTile, toTile.head, unitToMuster, gameState)

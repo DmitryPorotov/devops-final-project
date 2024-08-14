@@ -1,6 +1,6 @@
 package fwc.game.eventsPhase
 
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitPowerToken, TileNumber}
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.houses.*
 import ujson.Value
@@ -36,11 +36,11 @@ case class PowerTokens(tokens: Map[HouseType, Int] = Map()) extends JsonSerializ
 
     val tokensOnMap = armies.foldLeft(0)(
       (acc, tileNumberArmy: (TileNumber, Seq[MilitaryUnit])) =>
-        acc + tileNumberArmy._2.count(_.unitType == MilitaryUnitPowerToken)
+        acc + tileNumberArmy._2.count(_.unitType == MilitaryUnitType.PowerToken)
     )
     
-    if ((sum + tokensOnMap) > gameRules.maxArmies(MilitaryUnitPowerToken))
-    then copy(tokens + (houseType -> gameRules.maxArmies(MilitaryUnitPowerToken)))
+    if ((sum + tokensOnMap) > gameRules.maxArmies(MilitaryUnitType.PowerToken))
+    then copy(tokens + (houseType -> gameRules.maxArmies(MilitaryUnitType.PowerToken)))
     else copy(tokens + (houseType -> sum))
   }
 }
@@ -48,12 +48,12 @@ case class PowerTokens(tokens: Map[HouseType, Int] = Map()) extends JsonSerializ
 object PowerTokens extends JsonParsable {
   def initialize(num: Int): PowerTokens = PowerTokens(
     Map(
-      HouseLion -> num,
-      HouseKraken -> num,
-      HousePufferfish -> num,
-      HouseWolf -> num,
-      HouseMoose -> num,
-      HouseRose -> num
+      HouseType.Lion -> num,
+      HouseType.Kraken -> num,
+      HouseType.PufferFish -> num,
+      HouseType.Wolf -> num,
+      HouseType.Moose -> num,
+      HouseType.Rose -> num
     )
   )
 

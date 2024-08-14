@@ -1,7 +1,7 @@
 package fwc.game.eventsPhase
 
 import fwc.game.board.{Armies, TileNumber}
-import fwc.game.houses.{HouseNeutral, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.gameRules
 import fwc.gameLoading.BoardTilePort
 
@@ -12,7 +12,7 @@ object Taxes {
         army <- armies;
         tile <- gameRules.board if army._1 == tile.number
           && (tile.powerPoints > 0 || tile.tileType == BoardTilePort)
-          && army._2.head.house != HouseNeutral
+          && army._2.head.house != HouseType.Neutral
       )
       yield (army._2.head.house, tile.number, if tile.powerPoints > 0 then tile.powerPoints else 1)
     )

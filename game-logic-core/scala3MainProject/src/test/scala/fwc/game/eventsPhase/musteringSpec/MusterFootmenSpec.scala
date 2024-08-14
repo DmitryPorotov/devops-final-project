@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.Mustering
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -16,7 +16,7 @@ class MusterFootmenSpec extends AnyFlatSpec with should.Matchers {
 
     val newGameState = Mustering.musterGroundUnit(
       7,
-      MilitaryUnit(HouseWolf, MilitaryUnitFootmen),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),
       gameState,
     )
 
@@ -26,7 +26,7 @@ class MusterFootmenSpec extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      newGameState._1.getOrElse(7, null).count(_.unitType == MilitaryUnitFootmen) == 2,
+      newGameState._1.getOrElse(7, null).count(_.unitType == MilitaryUnitType.Footmen) == 2,
       "there should be 2 footmen at tile 7"
     )
   }

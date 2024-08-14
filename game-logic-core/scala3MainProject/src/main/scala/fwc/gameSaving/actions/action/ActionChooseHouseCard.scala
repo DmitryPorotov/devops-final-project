@@ -58,10 +58,10 @@ case class ActionChooseHouseCard(
       gameState.powerTokens(combat.defenderHouse)
     )
 
-    if attackerP != null && attackerP.cardCode == 5 && attackerP.houseType == HouseLion
+    if attackerP != null && attackerP.cardCode == 5 && attackerP.houseType == HouseType.Lion
     then return attackerP
 
-    if defenderP != null && defenderP.cardCode == 5 && defenderP.houseType == HouseLion
+    if defenderP != null && defenderP.cardCode == 5 && defenderP.houseType == HouseType.Lion
     then return defenderP
 
     if attackerP != null

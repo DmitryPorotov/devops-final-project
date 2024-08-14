@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.{Mustering, MusteringException}
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -16,7 +16,7 @@ class TryUpgradingWhenNoFootmenSpec extends AnyFlatSpec with should.Matchers {
 
     val newGameState = Mustering.musterGroundUnit(
       3,
-      MilitaryUnit(HouseWolf, MilitaryUnitKnights),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Knights),
       gameState,
       true,
     )
@@ -24,7 +24,7 @@ class TryUpgradingWhenNoFootmenSpec extends AnyFlatSpec with should.Matchers {
     try {
     val newGameState2 = Mustering.musterGroundUnit(
       3,
-      MilitaryUnit(HouseWolf, MilitaryUnitKnights),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Knights),
       gameState.copy(
         armies = newGameState._1,
         usedMusteringPoints = newGameState._2

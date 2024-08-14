@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.actionPhase.CardCode
-import fwc.game.houses.{HouseKraken, HouseLion, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCardAfterLion5, SubPhaseGetTidesOfBattleCards}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -17,7 +17,7 @@ case class ActionChooseHouseCardAfterLion5(
     if !gameState.subPhase.isInstanceOf[SubPhaseChooseHouseCardAfterLion5]
     then throw new ActionException("Wrong phase")
 
-    if (houseType == HouseLion)
+    if (houseType == HouseType.Lion)
       || (gameState.combat.attackerHouse != houseType
       && gameState.combat.defenderHouse != houseType)
     then throw new ActionException("Wrong house")
@@ -36,13 +36,13 @@ case class ActionChooseHouseCardAfterLion5(
     if discardedHouseCards.contains(cardCode)
     then throw new ActionException(s"The card ${houseCard.name} is discarded")
 
-    val isAttackerAction = gameState.combat.defenderHouse == HouseLion
+    val isAttackerAction = gameState.combat.defenderHouse == HouseType.Lion
 
     val updatedDiscardedForHouse = gameState.discardedHouseCards(houseType) :+ cardCode
 
     val updatedPhase = CombatCommon.getImmediatelyResolvableCardSubPhase(
       houseCard,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
 
     gameState.copy(

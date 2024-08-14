@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.TrackThrone
+import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -20,10 +20,10 @@ case class ActionStopMustering(
     then throw new ActionException("Wrong house")
 
     val newPhase =
-      val idx: Int = gameState.tracks(TrackThrone).indexOf(houseType)
+      val idx: Int = gameState.tracks(TrackType.Throne).indexOf(houseType)
       if idx >= 5
       then EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards)
-      else SubPhaseMuster(gameState.tracks(TrackThrone)(idx + 1))
+      else SubPhaseMuster(gameState.tracks(TrackType.Throne)(idx + 1))
 
     gameState.copy(newPhase)
   }

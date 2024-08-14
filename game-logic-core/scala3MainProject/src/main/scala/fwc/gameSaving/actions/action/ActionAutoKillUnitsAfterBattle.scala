@@ -3,8 +3,8 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.Combat
-import fwc.game.board.TrackThrone
-import fwc.game.houses.{HouseType, HouseWolf}
+import fwc.game.board.TrackType
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import fwc.gameSaving.actions.{Action, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -19,7 +19,7 @@ case class ActionAutoKillUnitsAfterBattle(
 
     val updatedCombat2 = autoKillDefenderUnits(updatedCombat1)
 
-    val isAttackerHigherOnThrone = updatedCombat2.attackerHouse.isHigherOnTrack(gameState.tracks(TrackThrone))(updatedCombat2.defenderHouse)
+    val isAttackerHigherOnThrone = updatedCombat2.attackerHouse.isHigherOnTrack(gameState.tracks(TrackType.Throne))(updatedCombat2.defenderHouse)
 
     if updatedCombat2.combatOutcome.attackerUnitsToKill > 0 && updatedCombat2.combatOutcome.defenderUnitsToKill > 0 then
       gameState.copy(
@@ -42,7 +42,7 @@ case class ActionAutoKillUnitsAfterBattle(
           if updatedCombat2.winner.contains(updatedCombat2.defenderHouse)
           then SubPhaseAutoRetreatAfterBattle()
           else if updatedCombat2.winnerCard.exists(_.isWolf0) 
-          then SubPhaseResolveHouseCard(HouseWolf, 0)
+          then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
             else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
       )
 

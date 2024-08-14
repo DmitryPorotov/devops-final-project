@@ -17,12 +17,12 @@ class CollectTaxesSpec extends AnyFlatSpec with should.Matchers {
     val powerTokens = Taxes.collectTaxes(gameState.armies, gameState.powerTokens)
 
     val neededResult = Map[HouseType, Int](
-      HouseWolf -> 6,
-      HouseKraken -> 7,
-      HouseRose -> 6,
-      HouseMoose -> 7,
-      HousePufferfish -> 6,
-      HouseLion -> 6
+      HouseType.Wolf -> 6,
+      HouseType.Kraken -> 7,
+      HouseType.Rose -> 6,
+      HouseType.Moose -> 7,
+      HouseType.PufferFish -> 6,
+      HouseType.Lion -> 6
     )
 
     powerTokens.tokens.foreach((h , n) => {

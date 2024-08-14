@@ -2,8 +2,8 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitGarrison, MilitaryUnitPowerToken}
-import fwc.game.houses.{HouseType, HouseWolf}
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
 import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterCombat, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -34,7 +34,7 @@ case class ActionKillUnitsAfterBattle(
       then throw new ActionException("Military unit to kill must not be defeated")
       if mu.house != houseType
       then throw new ActionException("Military unit to kill is from wrong house")
-      if mu.unitType == MilitaryUnitGarrison || mu.unitType == MilitaryUnitPowerToken
+      if !mu.unitType.canBeMustered
       then throw new ActionException(s"Military unit to kill can't be ${mu.unitType}")
     )
 
@@ -57,7 +57,7 @@ case class ActionKillUnitsAfterBattle(
         )
         then
           if winnerHasWolf0
-          then SubPhaseResolveHouseCard(HouseWolf, 0)
+          then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
           else SubPhaseRetreatUnitsAfterBattle(loserHouse)
         else SubPhaseCleanUpAfterCombat()
 

@@ -1,7 +1,6 @@
 package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
-import fwc.game.board.{TrackCourt, TrackFiefdoms, TrackThrone}
 import fwc.game.eventsPhase.Bids
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType

@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.planning
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{ TileNumber, TrackCourt, isValid}
+import fwc.game.board.{TileNumber, TrackType, isValid}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.planningPhase.Order
@@ -36,7 +36,7 @@ case class ActionAddOrder(
       houseType,
       tileNumber,
       order,
-      gameState.tracks(TrackCourt).indexOf(houseType)
+      gameState.tracks(TrackType.Court).indexOf(houseType)
     )
 
     val availableOrders = gameState.availableOrders.useOrder(houseType, order)

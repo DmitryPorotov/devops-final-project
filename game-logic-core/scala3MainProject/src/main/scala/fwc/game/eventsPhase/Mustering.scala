@@ -27,7 +27,7 @@ object Mustering {
       || (armyAtTile.nonEmpty && armyAtTile.head.house != militaryUnitToMuster.house)
     then throw new MusteringException(s"This tile does not belong to ${militaryUnitToMuster.house}")
 
-    if isUpgrade && !armyAtTile.exists(_.unitType == MilitaryUnitFootmen)
+    if isUpgrade && !armyAtTile.exists(_.unitType == MilitaryUnitType.Footmen)
     then throw new MusteringException("This tile has no Footmen to upgrade")
 
     if isUpgrade && militaryUnitToMuster.unitType.musteringPoints != 2
@@ -36,7 +36,7 @@ object Mustering {
     val newArmyAtTile =
       if isUpgrade
       then armyAtTile.deleteFirstMatch {
-          MilitaryUnit(militaryUnitToMuster.house, MilitaryUnitFootmen)
+          MilitaryUnit(militaryUnitToMuster.house, MilitaryUnitType.Footmen)
         }
       else armyAtTile
 
@@ -130,7 +130,7 @@ object Mustering {
                  militaryUnitToMuster: MilitaryUnit,
                  gameState: GameState
                  ): (Armies, UsedMusteringPoints) = {
-    if militaryUnitToMuster.unitType != MilitaryUnitShips
+    if militaryUnitToMuster.unitType != MilitaryUnitType.Ships
     then throw new MusteringException("This function only musters ships")
 
     val targetBoardTile = gameRules.board(musteringTargetTileNumber)
@@ -149,6 +149,6 @@ object Mustering {
     if !musteringBoardTile.isNeighbourOf(targetBoardTile)
     then throw new MusteringException(s"${musteringBoardTile.name} is not a neighbor of ${targetBoardTile.name}")
 
-    doMastering(gameState, militaryUnitToMuster, musteringBoardTile, targetBoardTile, armyAtTargetTile, MilitaryUnitShips.musteringPoints)
+    doMastering(gameState, militaryUnitToMuster, musteringBoardTile, targetBoardTile, armyAtTargetTile, MilitaryUnitType.Ships.musteringPoints)
   }
 }

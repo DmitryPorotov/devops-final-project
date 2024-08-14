@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.houses.{HouseKraken, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCardAfterLion5, SubPhaseGetTidesOfBattleCards}
 import fwc.gameSaving.actions.{Action, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -16,7 +16,7 @@ case class ActionResolveCardLion5(
       gameState.subPhase,
       houseType,
       gameState.combat,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
 
     val opponentHouseType =

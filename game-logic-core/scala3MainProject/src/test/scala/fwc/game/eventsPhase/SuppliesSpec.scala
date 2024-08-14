@@ -13,12 +13,12 @@ class SuppliesSpec extends AnyFlatSpec with should.Matchers {
 
     val newSupplyTrack = Supplies.recalculateSupplyTrack(gameState.armies)
 
-    assert(newSupplyTrack.supplies.getOrElse(HouseKraken, -1) == 1)
-    assert(newSupplyTrack.supplies.getOrElse(HouseWolf, -1) == 1)
-    assert(newSupplyTrack.supplies.getOrElse(HouseLion, -1) == 2)
-    assert(newSupplyTrack.supplies.getOrElse(HouseRose, -1) == 2)
-    assert(newSupplyTrack.supplies.getOrElse(HousePufferfish, -1) == 2)
-    assert(newSupplyTrack.supplies.getOrElse(HouseMoose, -1) == 2)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.Kraken, -1) == 1)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.Wolf, -1) == 1)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.Lion, -1) == 2)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.Rose, -1) == 2)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.PufferFish, -1) == 2)
+    assert(newSupplyTrack.supplies.getOrElse(HouseType.Moose, -1) == 2)
   }
 
   "eventsPhase object findArmiesToConsolidate function" should "find armies to consolidate" in {
@@ -27,36 +27,36 @@ class SuppliesSpec extends AnyFlatSpec with should.Matchers {
     val testArmies =
       gameState.armies + (27 -> (
         gameState.armies(27)
-          :+ MilitaryUnit(HouseLion, MilitaryUnitFootmen)
-          :+ MilitaryUnit(HouseLion, MilitaryUnitFootmen)
+          :+ MilitaryUnit(HouseType.Lion, MilitaryUnitType.Footmen)
+          :+ MilitaryUnit(HouseType.Lion, MilitaryUnitType.Footmen)
 //          :+ MilitaryUnit(HouseLion, Footmen)
         ))
-        + (21 -> (gameState.armies(21) :+ MilitaryUnit(HouseLion, MilitaryUnitShips)))
-        + (22 -> Seq(MilitaryUnit(HouseLion, MilitaryUnitFootmen),MilitaryUnit(HouseLion, MilitaryUnitFootmen),MilitaryUnit(HouseLion, MilitaryUnitKnights)))
-        + (15 -> Seq(MilitaryUnit(HouseKraken, MilitaryUnitShips),MilitaryUnit(HouseKraken, MilitaryUnitShips),MilitaryUnit(HouseKraken, MilitaryUnitShips)))
-        + (17 -> Seq(MilitaryUnit(HouseKraken, MilitaryUnitShips),MilitaryUnit(HouseKraken, MilitaryUnitShips),MilitaryUnit(HouseKraken, MilitaryUnitShips)))
-        + (7 -> Seq(MilitaryUnit(HouseWolf, MilitaryUnitFootmen),MilitaryUnit(HouseWolf, MilitaryUnitFootmen)))
-        + (2 -> Seq(MilitaryUnit(HouseWolf, MilitaryUnitShips),MilitaryUnit(HouseWolf, MilitaryUnitShips)))
+        + (21 -> (gameState.armies(21) :+ MilitaryUnit(HouseType.Lion, MilitaryUnitType.Ships)))
+        + (22 -> Seq(MilitaryUnit(HouseType.Lion, MilitaryUnitType.Footmen),MilitaryUnit(HouseType.Lion, MilitaryUnitType.Footmen),MilitaryUnit(HouseType.Lion, MilitaryUnitType.Knights)))
+        + (15 -> Seq(MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships),MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships),MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships)))
+        + (17 -> Seq(MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships),MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships),MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships)))
+        + (7 -> Seq(MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen),MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Footmen)))
+        + (2 -> Seq(MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships),MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships)))
 
 
     val toConsolidate = Supplies.findArmiesToConsolidate(testArmies,
-      Supplies(gameState.supplies.supplies + (HouseLion -> 0))
+      Supplies(gameState.supplies.supplies + (HouseType.Lion -> 0))
     )
 
-    assert(toConsolidate(HouseLion).size == 2)
-    assert(toConsolidate(HouseKraken).size == 2)
-    assert(toConsolidate(HouseWolf).size == 3)
-    assert(toConsolidate(HouseRose).isEmpty)
-    assert(toConsolidate(HouseMoose).isEmpty)
-    assert(toConsolidate(HousePufferfish).isEmpty)
+    assert(toConsolidate(HouseType.Lion).size == 2)
+    assert(toConsolidate(HouseType.Kraken).size == 2)
+    assert(toConsolidate(HouseType.Wolf).size == 3)
+    assert(toConsolidate(HouseType.Rose).isEmpty)
+    assert(toConsolidate(HouseType.Moose).isEmpty)
+    assert(toConsolidate(HouseType.PufferFish).isEmpty)
 
     val toConsolidate1 = Supplies.findArmiesToConsolidate(
       testArmies,
-      Supplies(gameState.supplies.supplies + (HouseLion -> 0)),
-      HouseKraken
+      Supplies(gameState.supplies.supplies + (HouseType.Lion -> 0)),
+      HouseType.Kraken
     )
 
-    assert(toConsolidate1(HouseKraken).size == 2)
+    assert(toConsolidate1(HouseType.Kraken).size == 2)
   }
 
 }

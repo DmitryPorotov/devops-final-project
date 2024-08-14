@@ -1,6 +1,6 @@
 package fwc.gameSaving.actions.roundEvents
 
-import fwc.game.board.{TrackCourt, TrackFiefdoms, TrackThrone, TrackType, Tracks}
+import fwc.game.board.{TrackType, Tracks}
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
@@ -22,7 +22,7 @@ object EventCards {
   def getPhaseForDeck2Card(card2: RoundEventCard, ravenOwner: HouseType): SubPhase =
     card2.code match
       case 0 => SubPhaseCollectTaxes()
-      case 1 => SubPhaseTracksBids(HouseType.getSeqOfAll, TrackThrone)
+      case 1 => SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)
       case 2 => SubPhaseChooseTracksBidsOrCollectTaxes(ravenOwner)
       case 3 => SubPhaseGetEventCards()
       case 4 => null
@@ -59,10 +59,10 @@ object EventCards {
   }
 
   def bidsFallThroughFromThrone(trackType: TrackType, card3: RoundEventCard, steelBladeOwner: HouseType): SubPhase = {
-    if trackType == TrackThrone
-    then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackFiefdoms)
-    else if trackType == TrackFiefdoms
-    then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackCourt)
+    if trackType == TrackType.Throne
+    then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Fiefdoms)
+    else if trackType == TrackType.Fiefdoms
+    then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Court)
     else EventCards.getPhaseForDeck3Card(card3, steelBladeOwner)
   }
 }

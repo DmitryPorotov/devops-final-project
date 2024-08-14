@@ -2,8 +2,7 @@ package fwc.gameSaving.actions.planning
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.actionPhase.{RavenChoiceChangeOrder, RavenChoiceLookAtWildlingsCard, RavenChoiceNothing, RavenChoiceType}
-import fwc.game.board.{TrackCourt, TrackThrone}
+import fwc.game.actionPhase.RavenChoiceType
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveRaidOrder
 import fwc.game.phases.planningSubPhases.{SubPhaseRavenChangeOrder, SubPhaseRavenGetWildlingsCard, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard}
@@ -24,13 +23,13 @@ case class ActionRavenChooseChangeOrderOrLookAtWildlingCard(
 
     if gameState.tracks.ravenOwner != houseType
     then throw new ActionException(s"House $houseType is not 1st at the Court track")
-    
-    val newPhase = ravenChoiceType match
-      case RavenChoiceChangeOrder => SubPhaseRavenChangeOrder(houseType)
-      case RavenChoiceLookAtWildlingsCard => SubPhaseRavenGetWildlingsCard()
-      case RavenChoiceNothing => 
-        NextOrderFinder.nextSubPhase(gameState, OrderRaid)
-    
+
+    val newPhase =
+      ravenChoiceType match
+        case _: RavenChoiceType.ChangeOrder.type => SubPhaseRavenChangeOrder(houseType)
+        case _: RavenChoiceType.LookAtWildlingsCard.type => SubPhaseRavenGetWildlingsCard()
+        case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderRaid)
+
     gameState.copy(
       subPhase = newPhase
     )

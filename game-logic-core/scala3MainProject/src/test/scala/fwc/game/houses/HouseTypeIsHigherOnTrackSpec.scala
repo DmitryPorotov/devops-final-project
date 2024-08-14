@@ -6,17 +6,17 @@ import org.scalatest.matchers.*
 
 class HouseTypeIsHigherOnTrackSpec extends AnyFlatSpec with should.Matchers {
   "isHigherOnTrack" should "compare on given track" in {
-    val mooseIsHigherThen = HouseMoose.isHigherOnTrack(Seq(HouseMoose, HouseKraken, HouseWolf))
-    assert(mooseIsHigherThen(HouseWolf))
+    val mooseIsHigherThen = HouseType.Moose.isHigherOnTrack(Seq(HouseType.Moose, HouseType.Kraken, HouseType.Wolf))
+    assert(mooseIsHigherThen(HouseType.Wolf))
 
     extension (ht: HouseType)
       def isHigher(ht2: HouseType): Boolean =
-        ht.isHigherOnTrack(Seq(HouseMoose, HouseKraken, HouseWolf))(ht2)
+        ht.isHigherOnTrack(Seq(HouseType.Moose, HouseType.Kraken, HouseType.Wolf))(ht2)
 
 
-    val wolfIsHigherThen = HouseWolf.isHigherOnTrack(Seq(HouseMoose, HouseKraken, HouseWolf))
-    assert(!wolfIsHigherThen(HouseMoose))
+    val wolfIsHigherThen = HouseType.Wolf.isHigherOnTrack(Seq(HouseType.Moose, HouseType.Kraken, HouseType.Wolf))
+    assert(!wolfIsHigherThen(HouseType.Moose))
 
-    assert(HouseMoose isHigher HouseWolf)
+    assert(HouseType.Moose isHigher HouseType.Wolf)
   }
 }

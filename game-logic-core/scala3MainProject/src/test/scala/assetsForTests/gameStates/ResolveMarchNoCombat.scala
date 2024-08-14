@@ -1,8 +1,8 @@
 package assetsForTests.gameStates
 
 import assetsForTests.gameStates.OneOrderLeftToAdd.gameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, MilitaryUnitPowerToken}
-import fwc.game.houses.{HousePufferfish, HouseRose}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveMarchOrder
 import fwc.game.planningPhase.{Order, OrderMarch}
 import fwc.gameSaving.actions.planning.ActionAddOrder
@@ -14,31 +14,31 @@ object ResolveMarchNoCombat extends App {
   val initialGameState = fwc.game.initializeGameState()
   var gameState = initialGameState.copy(
     subPhase = SubPhaseResolveMarchOrder(
-      HousePufferfish
+      HouseType.PufferFish
     ),
     armies = initialGameState.armies + (
       54 -> (
         initialGameState.armies(54)
         :+ MilitaryUnit(
-          HousePufferfish,
-          MilitaryUnitFootmen
+          HouseType.PufferFish,
+          MilitaryUnitType.Footmen
           )
         :+ MilitaryUnit(
-          HousePufferfish,
-          MilitaryUnitKnights
+          HouseType.PufferFish,
+          MilitaryUnitType.Knights
         )
       )
     )
     + (
       52 -> Seq(
         MilitaryUnit(
-          HouseRose,
-          MilitaryUnitPowerToken
+          HouseType.Rose,
+          MilitaryUnitType.PowerToken
         )
       )
     ),
-    placedOrders = initialGameState.placedOrders.placeOrder(HousePufferfish, 54, Order(OrderMarch), 2),
-    availableOrders = initialGameState.availableOrders.useOrder(HousePufferfish, Order(OrderMarch))
+    placedOrders = initialGameState.placedOrders.placeOrder(HouseType.PufferFish, 54, Order(OrderMarch), 2),
+    availableOrders = initialGameState.availableOrders.useOrder(HouseType.PufferFish, Order(OrderMarch))
   )
 
   Files.write(Paths.get("saves/forUnitTests/ResolveMarchNoCombat.json"), gameState.toJsonString.getBytes(StandardCharsets.UTF_8))

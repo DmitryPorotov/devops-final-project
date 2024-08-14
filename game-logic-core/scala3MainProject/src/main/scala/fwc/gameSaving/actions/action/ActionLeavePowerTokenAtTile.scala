@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitPowerToken, TileNumber, TrackThrone}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber, TrackType}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseLeavePowerTokenAtTile
 import fwc.game.planningPhase.OrderMarch
@@ -28,7 +28,7 @@ case class ActionLeavePowerTokenAtTile(
         gameState.copy(
           armies = gameState.armies + (tileNumber -> Seq(MilitaryUnit(
             houseType,
-            MilitaryUnitPowerToken
+            MilitaryUnitType.PowerToken
           ))),
           powerTokens = gameState.powerTokens + (houseType -> (gameState.powerTokens(houseType) - 1))
         )
@@ -40,7 +40,7 @@ case class ActionLeavePowerTokenAtTile(
         then NextOrderFinder.nextSubPhase(gameState, OrderMarch, houseType)
         else CombatCommon.getNewSubPhaseForMarchSupport(
           updatedGameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum),
-          gameState.tracks(TrackThrone),
+          gameState.tracks(TrackType.Throne),
           gameState.combat.attackerHouse,
           gameState.combat.defenderHouse
         )

@@ -3,7 +3,7 @@ package fwc.game.eventsPhase
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.gameRules
 import fwc.game.houses.*
-import fwc.game.board.{Armies, MilitaryUnitGarrison, MilitaryUnitPowerToken}
+import fwc.game.board.{Armies, MilitaryUnitType}
 import fwc.gameLoading.BoardStart
 import ujson.Value
 
@@ -33,7 +33,7 @@ object Supplies extends JsonParsable {
     Supplies(
       boardStart.view
         .map(bs => bs.house -> bs.tracks.supply)
-        .filter(_._1 != HouseNeutral)
+        .filter(_._1 != HouseType.Neutral)
         .toMap
     )
   }
@@ -72,7 +72,8 @@ object Supplies extends JsonParsable {
     type tileNum = Int
     type armySize = Int
     val houseToNumArmies = armies.foldLeft(Map[HouseType, Seq[(tileNum, armySize)]]())((acc, cur) => {
-      val curTile = (cur._1, cur._2.count(mu => mu.unitType != MilitaryUnitGarrison && mu.unitType != MilitaryUnitPowerToken))
+      val curTile = (cur._1, cur._2.count(mu => 
+        mu.unitType != MilitaryUnitType.Garrison && mu.unitType != MilitaryUnitType.PowerToken))
 
       if (houseType != null && houseType != cur._2.head.house)
         acc

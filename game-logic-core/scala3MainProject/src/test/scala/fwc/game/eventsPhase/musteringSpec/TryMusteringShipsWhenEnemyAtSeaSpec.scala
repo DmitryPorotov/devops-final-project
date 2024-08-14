@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.*
-import fwc.game.houses.{HouseKraken, HouseWolf}
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -16,7 +16,7 @@ class TryMusteringShipsWhenEnemyAtSeaSpec extends AnyFlatSpec with should.Matche
     val gameState1 = gameState.copy(
       armies = gameState.armies +
         (0 -> Seq[MilitaryUnit](
-          MilitaryUnit(HouseKraken, MilitaryUnitShips)
+          MilitaryUnit(HouseType.Kraken, MilitaryUnitType.Ships)
         ))
     )
 
@@ -25,7 +25,7 @@ class TryMusteringShipsWhenEnemyAtSeaSpec extends AnyFlatSpec with should.Matche
       Mustering.musterShips(
         3,
         0,
-        MilitaryUnit(HouseWolf, MilitaryUnitShips),
+        MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships),
         gameState1,
       )
     } catch {

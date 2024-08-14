@@ -125,6 +125,7 @@ object ReactionGameAction {
       case _: SubPhaseResolveConsolidatePowerOrder => ActionResolveConsolidatePowerOrder(gameState)
       case _: SubPhaseCollectTaxes => ActionCollectTaxes(gameState)
       case s: SubPhaseDisableOrder => ActionDisableOrder(gameState, s.orderType)
+//      case _ => throw new RuntimeException("SubPhase " + subPhase + " has no matching action.")
 
 
   private def matchActionToReply(

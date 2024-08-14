@@ -2,8 +2,8 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.actionPhase.{CombatOutcome, ValyrianSteelBladeChoiceNothing, ValyrianSteelBladeChoicePlusOne, ValyrianSteelBladeChoiceType}
-import fwc.game.board.{DominanceTokenValyrianSword, TrackFiefdoms}
+import fwc.game.actionPhase.{CombatOutcome, ValyrianSteelBladeChoiceType}
+import fwc.game.board.DominanceTokenValyrianSword
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseGetTidesOfBattleCards}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -30,12 +30,12 @@ case class ActionUseValyrianSteelBlade(
     then throw new ActionException(s"Valyrian Steel Blade was already used this round")
 
     val updatedUsage =
-      if choice != ValyrianSteelBladeChoiceNothing
+      if choice != ValyrianSteelBladeChoiceType.Nothing
       then gameState.dominanceTokensUsage + (DominanceTokenValyrianSword -> true)
       else gameState.dominanceTokensUsage
 
     val updatedCombat =
-      if choice == ValyrianSteelBladeChoicePlusOne
+      if choice == ValyrianSteelBladeChoiceType.PlusOne
       then gameState.combat.copy(
         combatOutcome = CombatOutcome(
           if isAttackerAction then 1 else 0,
@@ -51,7 +51,7 @@ case class ActionUseValyrianSteelBlade(
         else gameState.combat.copy(defenderTidesOfBattle = null)
 
     val newPhase =
-      if choice == ValyrianSteelBladeChoiceNothing || choice == ValyrianSteelBladeChoicePlusOne
+      if choice == ValyrianSteelBladeChoiceType.Nothing || choice == ValyrianSteelBladeChoiceType.PlusOne
       then SubPhaseCalculateCombatOutcome()
       else SubPhaseGetTidesOfBattleCards()
 

@@ -1,6 +1,6 @@
 package fwc.gameSaving.actions.action
 
-import fwc.game.board.{MilitaryUnitShips, TileNumber}
+import fwc.game.board.{MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.{GameState, gameRules}
 import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileSea}
@@ -21,7 +21,7 @@ trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
               else
                 army.head.nonEmpty
                   && army.head.head.house == houseType
-                  && army.head.head.unitType == MilitaryUnitShips
+                  && army.head.head.unitType == MilitaryUnitType.Ships
                   && gameRules.board(cur).tileType != BoardTilePort
 
             if !visited.contains(cur) && hasShipAtSea
@@ -59,7 +59,7 @@ trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
             else
               army.head.nonEmpty
                 && army.head.head.house == houseType
-                && army.head.head.unitType == MilitaryUnitShips
+                && army.head.head.unitType == MilitaryUnitType.Ships
                 && gameRules.board(cur).tileType != BoardTilePort
 
           if !visited.contains(cur) && hasShipAtSea

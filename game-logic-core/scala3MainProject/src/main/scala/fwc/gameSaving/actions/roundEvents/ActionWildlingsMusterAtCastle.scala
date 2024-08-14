@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitShips, TileNumber}
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.eventsPhase.Mustering
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseMuster, SubPhaseWildlingsMusterAtCastle}
@@ -56,7 +56,7 @@ case class ActionWildlingsMusterAtCastle(
     targetUnits.foldLeft(updatedGameState)(
       (acc: GameState, cur: (TileNumber, Boolean, MilitaryUnit)) => {
         val (armies: Armies, _) =
-          if cur._3.unitType == MilitaryUnitShips
+          if cur._3.unitType == MilitaryUnitType.Ships
           then Mustering.musterShips(sourceTile, cur._1, cur._3, acc)
           else Mustering.musterGroundUnit(sourceTile, cur._3, acc, cur._2)
 

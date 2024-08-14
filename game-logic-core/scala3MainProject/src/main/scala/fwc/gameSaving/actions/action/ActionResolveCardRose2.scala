@@ -3,8 +3,8 @@ package fwc.gameSaving.actions.action
 import enrichment.ExtSeq
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen}
-import fwc.game.houses.{HouseKraken, HouseType}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
+import fwc.game.houses.HouseType
 import fwc.gameSaving.actions.{Action, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -17,16 +17,16 @@ case class ActionResolveCardRose2(
       gameState.subPhase,
       houseType,
       gameState.combat,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
 
     def deleteFootmen(army: Seq[MilitaryUnit]): Seq[MilitaryUnit] = {
-      if army.exists(mu => mu.isDefeated && mu.unitType == MilitaryUnitFootmen)
+      if army.exists(mu => mu.isDefeated && mu.unitType == MilitaryUnitType.Footmen)
       then
         army.deleteFirstMatch(
           MilitaryUnit(
             army.head.house,
-            MilitaryUnitFootmen,
+            MilitaryUnitType.Footmen,
             true
           )
         )
@@ -34,7 +34,7 @@ case class ActionResolveCardRose2(
         army.deleteFirstMatch(
           MilitaryUnit(
             army.head.house,
-            MilitaryUnitFootmen
+            MilitaryUnitType.Footmen
           )
         )
     }

@@ -1,7 +1,7 @@
 package fwc.game
 
 import fwc.JsonSerializable
-import fwc.game.board.{Board, MilitaryUnitFootmen, MilitaryUnitKnights, MilitaryUnitShips, MilitaryUnitSiegeEngines, MilitaryUnitType}
+import fwc.game.board.{Board, MilitaryUnitType}
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.HouseCard
@@ -27,10 +27,10 @@ case class GameRules(
     "loadedOrders" -> loadedOrders.map((ot, ods) => ot.toString -> ods.map(_.toJson)),
     "houseCards" -> houseCards.map(_.toJson),
     "militaryUnits" -> ujson.Obj(
-      MilitaryUnitFootmen.toString -> MilitaryUnitFootmen.toJson,
-      MilitaryUnitKnights.toString -> MilitaryUnitKnights.toJson,
-      MilitaryUnitShips.toString -> MilitaryUnitShips.toJson,
-      MilitaryUnitSiegeEngines.toString -> MilitaryUnitSiegeEngines.toJson
+      MilitaryUnitType.Footmen.toString -> MilitaryUnitType.Footmen.toJson,
+      MilitaryUnitType.Knights.toString -> MilitaryUnitType.Knights.toJson,
+      MilitaryUnitType.Ships.toString -> MilitaryUnitType.Ships.toJson,
+      MilitaryUnitType.SiegeEngines.toString -> MilitaryUnitType.SiegeEngines.toJson
     )
   )
 }

@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.planning
 
 import fwc.game.GameState
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseReadyToOpenOrders}
 import fwc.game.planningPhase.{Order, OrderMarch}
 import fwc.gameLoading
@@ -16,7 +16,7 @@ class ActionAddLastOrderSpec extends AnyFlatSpec with should.Matchers {
     val gameState = GameState.fromJson(json)
     val action = ActionAddOrder(
       gameState,
-      HouseWolf,
+      HouseType.Wolf,
       Order(
         OrderMarch
       ),
@@ -27,7 +27,7 @@ class ActionAddLastOrderSpec extends AnyFlatSpec with should.Matchers {
     assert(updatedGameState.subPhase.isInstanceOf[SubPhaseAddOrder])
     assert(updatedGameState.subPhase.asInstanceOf[SubPhaseAddOrder].houseTypes.size == 1)
 
-    val action2 = ActionOpenOrders(updatedGameState, HouseWolf)
+    val action2 = ActionOpenOrders(updatedGameState, HouseType.Wolf)
     val updatedGameState2 = action2.doAction()
     assert(updatedGameState2.subPhase.isInstanceOf[SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard])
   }

@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
-import fwc.game.board.TrackThrone
+import fwc.game.board.TrackType
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseCalculateGameWinner
@@ -13,7 +13,7 @@ case class ActionCalculateGameWinner(
                                     ) extends Action(gameState) with JsonSerializable {
   extension (ht1: HouseType)
     def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =
-      ht1.isHigherOnTrack(gameState.tracks(TrackThrone))(ht2)
+      ht1.isHigherOnTrack(gameState.tracks(TrackType.Throne))(ht2)
 
   override def doAction(): GameState = {
 //    if !gameState.subPhase.isInstanceOf[SubPhaseCalculateGameWinner]

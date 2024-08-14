@@ -30,22 +30,22 @@ object GameServer {
       if isShuttingDown then return 
       val replyTo = channel.split('.')(1) + "." + workerName
       if !isProd then println(" [x] Received from " + channel + "\n '" + message + "'")
-      val reply = 
+      val (reply, isError) = 
         try {
           Try[(Message, ujson.Value)](Message.parse(message)) match
             case Failure(e: FWCException) =>
-              ujson.Obj(
+              (ujson.Obj(
                 "action" -> "error",
                 "message" -> e.getMessage,
                 "type" -> "action",
                 "gameId" -> e.gameId,
                 "userId" -> e.userId,
                 "messageId" -> e.messageId,
-              ).render(fwc.jsonIndentation)
+              ).render(fwc.jsonIndentation), true)
             case Failure(e) => throw e
             case Success((msg: Message, json: ujson.Value)) =>
               Try[String](Reactor(msg, json)) match
-                case Success(s) => s
+                case Success(s) => (s, false)
                 case Failure(e: FWCException) =>
                   val errJson = ujson.Obj(
                     "action" -> "error",
@@ -57,29 +57,33 @@ object GameServer {
                     errJson.value.addOne("gameId" -> e.gameId)
                   if e.userId != -1 then
                     errJson.value.addOne("userId" -> e.userId)
-                  errJson.render(fwc.jsonIndentation)
+                  (errJson.render(fwc.jsonIndentation), true)
                 case Failure(e: RestoreGamesException) =>
                   e.games.foreach(gId => {
                     val gameReplayStr = jedisCache.get("game_save_" + gId)
                     jedisCache.del("game_save_" + gId)
                     Reactor.restoreGame(gameReplayStr)
                   })
-                  ujson.Obj(
+                  (ujson.Obj(
                     "action" -> "restore_games",
                     "messageId" -> e.messageId
-                  ).render(fwc.jsonIndentation)
+                  ).render(fwc.jsonIndentation), true)
                 case Failure(e) => throw e
         }
         catch
           case e: Exception =>
-            ujson.Obj(
+            (ujson.Obj(
                 "action" -> "error",
                 "message" -> e.getMessage,
                 "type" -> "action",
                 "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
               )
-              .render(fwc.jsonIndentation)
-      if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (if reply.length > 1000 then reply.substring(0, 1000) else reply) + "'")
+              .render(fwc.jsonIndentation), true)
+      if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (
+        if reply.length > 1000 && !isError 
+        then reply.substring(0, 1000) 
+        else reply
+        ) + "'")
       if !isShuttingDown then 
         jedisPub.publish(replyTo, reply)
     }

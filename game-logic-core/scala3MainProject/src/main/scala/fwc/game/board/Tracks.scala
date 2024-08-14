@@ -1,7 +1,7 @@
 package fwc.game.board
 
 import fwc.{JsonParsable, JsonSerializable}
-import fwc.game.houses.{HouseNeutral, HouseType}
+import fwc.game.houses.HouseType
 import fwc.gameLoading.BoardStart
 import ujson.Value
 
@@ -23,11 +23,11 @@ case class Tracks(private val tracks: Map[TrackType, Seq[HouseType]]) extends Js
   @targetName("updated")
   def +(kv: (TrackType, Seq[HouseType])): Tracks = copy(tracks + kv)
 
-  def throneOwner: HouseType = tracks(TrackThrone).head
+  def throneOwner: HouseType = tracks(TrackType.Throne).head
 
-  def steelBladeOwner: HouseType = tracks(TrackFiefdoms).head
+  def steelBladeOwner: HouseType = tracks(TrackType.Fiefdoms).head
 
-  def ravenOwner: HouseType = tracks(TrackCourt).head
+  def ravenOwner: HouseType = tracks(TrackType.Court).head
   
   def setHouseHighestOnTrack(houseType: HouseType, trackType: TrackType): Tracks = {
     copy(
@@ -78,20 +78,20 @@ object Tracks extends JsonParsable {
   def initialize(boardStart: Seq[BoardStart]): Tracks = {
     val throneTrack = boardStart.sortWith((a, b) => a.tracks.throne < b.tracks.throne)
       .map(_.house)
-      .filter(_ != HouseNeutral)
+      .filter(_ != HouseType.Neutral)
 
     val fiefdomsTrack = boardStart.sortWith((a,b) => a.tracks.fiefdoms < b.tracks.fiefdoms)
       .map(_.house)
-      .filter(_ != HouseNeutral)
+      .filter(_ != HouseType.Neutral)
     
     val courtTrack = boardStart.sortWith((a,b) => a.tracks.court < b.tracks.court)
       .map(_.house)
-      .filter(_ != HouseNeutral)
+      .filter(_ != HouseType.Neutral)
     
     Tracks(Map(
-      TrackThrone -> throneTrack,
-      TrackFiefdoms -> fiefdomsTrack,
-      TrackCourt -> courtTrack
+      TrackType.Throne -> throneTrack,
+      TrackType.Fiefdoms -> fiefdomsTrack,
+      TrackType.Court -> courtTrack
     ))
   }
 

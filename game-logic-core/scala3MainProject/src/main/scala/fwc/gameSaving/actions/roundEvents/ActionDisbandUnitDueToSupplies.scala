@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{MilitaryUnit, MilitaryUnitGarrison, MilitaryUnitPowerToken, TileNumber, TrackThrone}
+import fwc.game.board.{MilitaryUnit, TileNumber, TrackType}
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
 import fwc.game.phases.PhaseRoundEvents
@@ -58,7 +58,7 @@ case class ActionDisbandUnitDueToSupplies(
       else if updatedToCon.contains(houseType)
         then SubPhaseDisbandUnit(houseType, currentPhase.nextStep)
         else SubPhaseDisbandUnit(
-          Supplies.getHouseToConsolidate(updatedToCon, gameState.tracks(TrackThrone)),
+          Supplies.getHouseToConsolidate(updatedToCon, gameState.tracks(TrackType.Throne)),
           currentPhase.nextStep
         )
 

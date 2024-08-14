@@ -1,8 +1,8 @@
 package fwc.gameSaving.actions.action.ActionResolveMarchOrderTests
 
 import fwc.game.GameState
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitShips}
-import fwc.game.houses.HouseKraken
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType}
+import fwc.game.houses.HouseType
 import fwc.gameLoading
 import fwc.gameSaving.actions.action.ActionResolveMarchOrder
 import org.scalatest.*
@@ -17,12 +17,12 @@ class HasPathSpec extends AnyFlatSpec with should.Matchers {
     val newGameState = gameState.copy(
       armies =
         gameState.armies + (10 -> Seq(MilitaryUnit(
-          HouseKraken,
-          MilitaryUnitShips
+          HouseType.Kraken,
+          MilitaryUnitType.Ships
         )))
     )
 
-    val action = ActionResolveMarchOrder(newGameState, HouseKraken, 16, Map())
+    val action = ActionResolveMarchOrder(newGameState, HouseType.Kraken, 16, Map())
     val n = action.hasPath(16, 33)
     val a = 0
   }

@@ -213,11 +213,11 @@ package object gameLoading {
       "supplyUsage" -> jsonData.obj("supplyUsage").arr.view.map(_.arr.map(_.num.toInt).toSeq).toVector,
       "maxArmies" -> jsonData.obj("maxArmies").obj.map((k, v)=> {
         k match
-          case "footmen" => MilitaryUnitFootmen -> v.num.toInt
-          case "knights" => MilitaryUnitKnights -> v.num.toInt
-          case "ships" => MilitaryUnitShips -> v.num.toInt
-          case "siegeEngines" => MilitaryUnitSiegeEngines -> v.num.toInt
-          case "powerToken" => MilitaryUnitPowerToken -> v.num.toInt
+          case "footmen" => MilitaryUnitType.Footmen -> v.num.toInt
+          case "knights" => MilitaryUnitType.Knights -> v.num.toInt
+          case "ships" => MilitaryUnitType.Ships -> v.num.toInt
+          case "siegeEngines" => MilitaryUnitType.SiegeEngines -> v.num.toInt
+          case "powerToken" => MilitaryUnitType.PowerToken -> v.num.toInt
       }).toMap
     )
 

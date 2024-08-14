@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.*
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -18,7 +18,7 @@ class TryMusteringShipsAtLandSpec extends AnyFlatSpec with should.Matchers {
       Mustering.musterShips(
         3,
         3,
-        MilitaryUnit(HouseWolf, MilitaryUnitShips),
+        MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships),
         gameState,
       )
     } catch {

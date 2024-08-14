@@ -11,63 +11,69 @@ sealed trait HouseType {
     idx1 < idx2
 }
 
-case object HouseWolf extends HouseType {
-  override def toString = "wolf"
-
-  override protected def concreteObj: HouseType = this
-}
-
-case object HouseMoose extends HouseType {
-  override def toString = "moose"
-
-  override protected def concreteObj: HouseType = this
-}
-
-case object HousePufferfish extends HouseType {
-  override def toString = "pufferfish"
-  override protected def concreteObj: HouseType = this
-}
-
-case object HouseKraken extends HouseType {
-  override def toString = "kraken"
-  override protected def concreteObj: HouseType = this
-}
-
-case object HouseRose extends HouseType {
-  override def toString = "rose"
-  override protected def concreteObj: HouseType = this
-}
-
-case object HouseLion extends HouseType {
-  override def toString = "lion"
-  override protected def concreteObj: HouseType = this
-}
-
-case object HouseNeutral extends HouseType {
-  override def toString = "neutral"
-  override protected def concreteObj: HouseType = ???
-  override def isHigherOnTrack(track: Seq[HouseType])(houseType: HouseType): Boolean = ???
-}
-
 object HouseType {
+  case object Wolf extends HouseType {
+    override def toString = "wolf"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object Moose extends HouseType {
+    override def toString = "moose"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object PufferFish extends HouseType {
+    override def toString = "pufferfish"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object Kraken extends HouseType {
+    override def toString = "kraken"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object Rose extends HouseType {
+    override def toString = "rose"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object Lion extends HouseType {
+    override def toString = "lion"
+
+    override protected def concreteObj: HouseType = this
+  }
+
+  case object Neutral extends HouseType {
+    override def toString = "neutral"
+
+    override protected def concreteObj: HouseType = ???
+
+    override def isHigherOnTrack(track: Seq[HouseType])(houseType: HouseType): Boolean = ???
+  }
+  
   def fromString(str: String): HouseType = {
     str match
-      case "lion" => HouseLion
-      case "kraken" => HouseKraken
-      case "pufferfish" => HousePufferfish
-      case "wolf" => HouseWolf
-      case "moose" => HouseMoose
-      case "rose" => HouseRose
-      case "neutral" => HouseNeutral
+      case "lion" => Lion
+      case "kraken" => Kraken
+      case "pufferfish" => PufferFish
+      case "wolf" => Wolf
+      case "moose" => Moose
+      case "rose" => Rose
+      case "neutral" => Neutral
       case _ => throw new RuntimeException(s"Unknown house $str")
   }
 
   def getSeqOfAll: Seq[HouseType] = Seq(
-    HouseMoose,
-    HouseKraken,
-    HouseLion,
-    HouseRose,
-    HouseWolf,
-    HousePufferfish
+    Moose,
+    Kraken,
+    Lion,
+    Rose,
+    Wolf,
+    PufferFish
   )
 }

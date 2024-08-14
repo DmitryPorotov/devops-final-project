@@ -1,9 +1,9 @@
 package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
-import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitSiegeEngines, TileNumber, TrackThrone}
+import fwc.game.board.{Armies, MilitaryUnit, TileNumber, TrackType}
 import fwc.game.{GameState, gameRules}
-import fwc.game.houses.{HouseNeutral, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.*
 import fwc.game.planningPhase.{Order, OrderMarch}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -26,7 +26,7 @@ case class ActionResolveSupportOrder(
     if currentSubPhase.houseType == fromHouseType
     then throw new ActionException(s"House $fromHouseType has no support orders in near ${targetTile.name}")
 
-    if toHouseType == HouseNeutral
+    if toHouseType == HouseType.Neutral
     then throw new ActionException("Can not support neutral house")
 
     supportingTiles.foreach(
@@ -47,7 +47,7 @@ case class ActionResolveSupportOrder(
       val newPhase = CombatCommon.getNewSubPhaseForMarchSupport(
         gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
           .filter((tn, _) => remainingSupportOrdersTiles.contains(tn)),
-        gameState.tracks(TrackThrone),
+        gameState.tracks(TrackType.Throne),
         gameState.combat.attackerHouse,
         gameState.combat.defenderHouse
       )

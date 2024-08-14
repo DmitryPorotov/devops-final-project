@@ -18,7 +18,7 @@ case class MilitaryUnit(
       "type" -> ujson.Str(unitType.toString)
     )
     if isDefeated then milUnit.obj addOne ("isDefeated" -> ujson.Bool(isDefeated))
-    if unitType == MilitaryUnitGarrison then milUnit.obj addOne ("defPoints" -> ujson.Num(garrisonDefensePoints))
+    if unitType == MilitaryUnitType.Garrison then milUnit.obj addOne ("defPoints" -> ujson.Num(garrisonDefensePoints))
     milUnit
   }
 

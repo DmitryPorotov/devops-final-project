@@ -15,12 +15,12 @@ package object board {
       yield (tile, st.house)
 
     def makeArmy(boardStartTile: (BoardStartTile, HouseType)): Seq[MilitaryUnit] = {
-      List.fill(boardStartTile._1.ships)(MilitaryUnit(boardStartTile._2, MilitaryUnitShips))
-        ++ List.fill(boardStartTile._1.footmen)(MilitaryUnit(boardStartTile._2, MilitaryUnitFootmen))
-        ++ List.fill(boardStartTile._1.knights)(MilitaryUnit(boardStartTile._2, MilitaryUnitKnights))
+      List.fill(boardStartTile._1.ships)(MilitaryUnit(boardStartTile._2, MilitaryUnitType.Ships))
+        ++ List.fill(boardStartTile._1.footmen)(MilitaryUnit(boardStartTile._2, MilitaryUnitType.Footmen))
+        ++ List.fill(boardStartTile._1.knights)(MilitaryUnit(boardStartTile._2, MilitaryUnitType.Knights))
         ++ (
         if boardStartTile._1.garrison > 0
-        then  List(MilitaryUnit(boardStartTile._2, MilitaryUnitGarrison,false, boardStartTile._1.garrison))
+        then  List(MilitaryUnit(boardStartTile._2, MilitaryUnitType.Garrison,false, boardStartTile._1.garrison))
         else List.empty
         )
     }

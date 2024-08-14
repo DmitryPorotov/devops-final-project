@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.board.{TrackType, Tracks}
-import fwc.game.houses.{HouseKraken, HousePufferfish, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
 import fwc.gameLoading.HouseCard
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -19,7 +19,7 @@ case class ActionResolveCardPufferfish0(
       gameState.subPhase, 
       houseType, 
       gameState.combat,
-      gameState.powerTokens(HouseKraken)
+      gameState.powerTokens(HouseType.Kraken)
     )
     
     val updatedTracks =
@@ -40,7 +40,7 @@ case class ActionResolveCardPufferfish0(
   }
 
   private def isPufferFishCard0(houseCard: HouseCard): Boolean =
-    houseCard.house == HousePufferfish && houseCard.code == 0
+    houseCard.house == HouseType.PufferFish && houseCard.code == 0
 
   def updateTracks(houseType: HouseType): Tracks = {
     gameState.tracks +

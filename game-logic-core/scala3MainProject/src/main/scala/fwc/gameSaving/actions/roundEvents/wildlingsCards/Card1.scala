@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.roundEvents.wildlingsCards
 
 import fwc.game.GameState
-import fwc.game.board.TrackThrone
+import fwc.game.board.TrackType
 import fwc.game.eventsPhase.{Bids, Supplies}
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseDisbandUnit
@@ -34,7 +34,7 @@ case class Card1(gameState: GameState) extends WildlingsCards(gameState) {
       if toConsolidate.isEmpty
       then getNextNonWildlingsPhase
       else SubPhaseDisbandUnit(
-        Supplies.getHouseToConsolidate(toConsolidate, gameState.tracks(TrackThrone)),
+        Supplies.getHouseToConsolidate(toConsolidate, gameState.tracks(TrackType.Throne)),
         if gameState.wildlingsStartedFrom12Points.head then UnitDisbandNextStepDeck1 else UnitDisbandNextStepPlanningPhase
       )
 

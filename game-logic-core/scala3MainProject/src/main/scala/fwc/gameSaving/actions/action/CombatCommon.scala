@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.action
 
 import fwc.game.actionPhase.DiscardedHouseCards
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{MilitaryUnit, MilitaryUnitSiegeEngines, TileNumber}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.*
 import fwc.game.phases.SubPhase
 import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCard, SubPhaseResolveHouseCard, SubPhaseResolveSupportOrder}
@@ -31,7 +31,7 @@ object CombatCommon {
         .head,
       supportOrders._1.toSeq
     )
-    else if defendingHouse != HouseNeutral
+    else if defendingHouse != HouseType.Neutral
     then SubPhaseChooseHouseCard(Seq(attackingHouse, defendingHouse))
     else throw new AttackNeutralException
   }
@@ -41,18 +41,18 @@ object CombatCommon {
                                             krakenPowerTokens: Int,
                                           ): SubPhaseResolveHouseCard = {
     houseCard match
-      case HouseCard(HousePufferfish, 0, _, _, _, _, _)
-      => SubPhaseResolveHouseCard(HousePufferfish, 0)
-      case HouseCard(HouseKraken, 6, _, _, _, _, _)
+      case HouseCard(HouseType.PufferFish, 0, _, _, _, _, _)
+      => SubPhaseResolveHouseCard(HouseType.PufferFish, 0)
+      case HouseCard(HouseType.Kraken, 6, _, _, _, _, _)
       => if krakenPowerTokens > 1
-          then SubPhaseResolveHouseCard(HouseKraken, 6)
+          then SubPhaseResolveHouseCard(HouseType.Kraken, 6)
           else null
-      case HouseCard(HouseRose, 2, _, _, _, _, _)
-      => SubPhaseResolveHouseCard(HouseRose, 2)
-      case HouseCard(HouseRose, 4, _, _, _, _, _)
-      => SubPhaseResolveHouseCard(HouseRose, 4)
-      case HouseCard(HouseLion, 5, _, _, _, _, _)
-      => SubPhaseResolveHouseCard(HouseLion, 5)
+      case HouseCard(HouseType.Rose, 2, _, _, _, _, _)
+      => SubPhaseResolveHouseCard(HouseType.Rose, 2)
+      case HouseCard(HouseType.Rose, 4, _, _, _, _, _)
+      => SubPhaseResolveHouseCard(HouseType.Rose, 4)
+      case HouseCard(HouseType.Lion, 5, _, _, _, _, _)
+      => SubPhaseResolveHouseCard(HouseType.Lion, 5)
       case _ => null
   }
 
@@ -62,7 +62,7 @@ object CombatCommon {
     val tileNumberUnderAttack = gameState.combat.defenderTileNum
     val attackerArmy = gameState.combat.attackerArmy
     val sumUnitStrength = (acc: Int, mu: MilitaryUnit) =>
-      if mu.unitType == MilitaryUnitSiegeEngines
+      if mu.unitType == MilitaryUnitType.SiegeEngines
         && gameRules.board(tileNumberUnderAttack).musteringPoints == 0
       then acc
       else acc + mu.unitType.strength

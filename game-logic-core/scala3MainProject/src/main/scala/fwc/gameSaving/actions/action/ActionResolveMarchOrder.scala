@@ -5,7 +5,7 @@ import enrichment.ExtSeq
 import fwc.game.{GameState, gameRules}
 import fwc.game.actionPhase.Combat
 import fwc.game.board.*
-import fwc.game.houses.{HouseNeutral, HouseType}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveMarchOrder, SubPhaseResolveSupportOrder}
 import fwc.game.planningPhase.OrderMarch
 import fwc.gameLoading.{BoardTileLand, BoardTilePort}
@@ -54,7 +54,7 @@ case class ActionResolveMarchOrder(
       (tileNum, armies: Seq[MilitaryUnit]) =>
         targetTileNumbers.contains(tileNum)
           && armies.head.house != houseType
-          && !(armies.size == 1 && armies.head.unitType == MilitaryUnitPowerToken)
+          && !(armies.size == 1 && armies.head.unitType == MilitaryUnitType.PowerToken)
     )
 
     if enemyArmiesAtTargets.size > 1
@@ -117,7 +117,7 @@ case class ActionResolveMarchOrder(
         try {
           val newPhase = CombatCommon.getNewSubPhaseForMarchSupport(
             gameStateOrderRemoved.placedOrders.getSupportOrdersForTile(tileNumberUnderAttack),
-            gameStateOrderRemoved.tracks(TrackThrone),
+            gameStateOrderRemoved.tracks(TrackType.Throne),
             houseType,
             enemyArmiesAtTargets.head._2.head.house
           )
@@ -144,7 +144,7 @@ case class ActionResolveMarchOrder(
       then throw new ActionException(s"There is no path from source tile ${gameRules.board(sourceTileNumber).name}" +
           s" to the target ${gameRules.board(tn).name}")
       mus.foreach(mu =>
-        if mu.unitType == MilitaryUnitGarrison || mu.unitType == MilitaryUnitPowerToken
+        if !mu.unitType.canBeMustered
         then throw new ActionException(s"Can not march ${mu.unitType}")
       )
     }

@@ -44,7 +44,7 @@ case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()
       if armies.contains(targetTileNum)
         && armies(targetTileNum).size == 1
         && armies(targetTileNum).head.house != houseType
-        && armies(targetTileNum).head.unitType == MilitaryUnitPowerToken
+        && armies(targetTileNum).head.unitType == MilitaryUnitType.PowerToken
       then armies - targetTileNum
       else armies
 

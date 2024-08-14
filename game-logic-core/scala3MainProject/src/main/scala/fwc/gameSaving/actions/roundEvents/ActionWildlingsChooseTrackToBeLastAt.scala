@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.board.{TrackThrone, TrackType}
+import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseMuster, SubPhaseWildlingsChooseTrackToBeLastAt}
 import fwc.gameSaving.actions.roundEvents.wildlingsCards.WildlingsCards
@@ -24,7 +24,7 @@ class ActionWildlingsChooseTrackToBeLastAt(
     if currentPhase.houseTypes.head != houseType
     then throw new ActionException("Wrong house")
 
-    if trackType == TrackThrone
+    if trackType == TrackType.Throne
     then throw new ActionException("You should choose either the Fiefdoms or King's Court Influence track")
 
     val newPhase =

@@ -1,9 +1,9 @@
 package fwc.gameSaving.actions.action.ActionResolveMarchOrderTests
 
 import fwc.game.GameState
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitKnights, MilitaryUnitPowerToken}
+import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
 import fwc.game.eventsPhase.Supplies
-import fwc.game.houses.{HousePufferfish, HouseRose}
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveConsolidatePowerOrder}
 import fwc.gameLoading
 import fwc.gameSaving.actions.action.ActionResolveMarchOrder
@@ -18,30 +18,30 @@ class MoveUnitsAndRemoveEnemyPowerTokenSpec extends AnyFlatSpec with should.Matc
   }
 
   "ActionResolveMarchOrder" should "be able to move units and remove enemy power token" in {
-    val footman = MilitaryUnit(HousePufferfish, MilitaryUnitFootmen)
-    val updatedState = ActionResolveMarchOrder(initState, HousePufferfish, 54, Map(
+    val footman = MilitaryUnit(HouseType.PufferFish, MilitaryUnitType.Footmen)
+    val updatedState = ActionResolveMarchOrder(initState, HouseType.PufferFish, 54, Map(
       52 -> Seq(footman),
       53 -> Seq(footman)
     )).doAction()
 
     assert(updatedState.armies(52).contains(footman))
     assert(!updatedState.armies(52).contains(MilitaryUnit(
-      HouseRose,
-      MilitaryUnitPowerToken
+      HouseType.Rose,
+      MilitaryUnitType.PowerToken
     )))
     assert(updatedState.armies(53).contains(footman))
     assert(updatedState.armies(54).contains(MilitaryUnit(
-      HousePufferfish,
-      MilitaryUnitKnights
+      HouseType.PufferFish,
+      MilitaryUnitType.Knights
     )))
 
     assert(updatedState.subPhase.isInstanceOf[SubPhaseResolveConsolidatePowerOrder])
   }
 
   "ActionResolveMarchOrder" should "be able to ask to leave a power token on empty tile" in {
-    val footman = MilitaryUnit(HousePufferfish, MilitaryUnitFootmen)
-    val updatedState = ActionResolveMarchOrder(initState, HousePufferfish, 54, Map(
-      53 -> Seq(footman, footman, MilitaryUnit(HousePufferfish, MilitaryUnitKnights))
+    val footman = MilitaryUnit(HouseType.PufferFish, MilitaryUnitType.Footmen)
+    val updatedState = ActionResolveMarchOrder(initState, HouseType.PufferFish, 54, Map(
+      53 -> Seq(footman, footman, MilitaryUnit(HouseType.PufferFish, MilitaryUnitType.Knights))
     )).doAction()
 
     assert(updatedState.combat == null)

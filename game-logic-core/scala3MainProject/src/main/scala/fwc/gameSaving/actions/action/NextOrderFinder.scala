@@ -1,7 +1,7 @@
 package fwc.gameSaving.actions.action
 
 import fwc.game.{FWCException, GameState, gameRules}
-import fwc.game.board.{TrackThrone, Tracks}
+import fwc.game.board.{TrackType, Tracks}
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
 import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterRound, SubPhaseResolveConsolidatePowerOrder, SubPhaseResolveMarchOrder, SubPhaseResolveRaidOrder, SubPhaseResolveSpecialConsolidatePower}
@@ -40,8 +40,8 @@ object NextOrderFinder {
     
     val tempThroneTrack = 
       if lastHouseWhoResolvedOrder == null
-      then tracks(TrackThrone)
-      else reorderThroneTrack(tracks(TrackThrone))
+      then tracks(TrackType.Throne)
+      else reorderThroneTrack(tracks(TrackType.Throne))
     
     val flatOrders = (
       for (
@@ -61,7 +61,7 @@ object NextOrderFinder {
 
     val marchHouseOrder = if orderTypeToSearch == OrderMarch
     then searchFunc(OrderMarch, marchOrderFilter, tempThroneTrack)
-    else searchFunc(OrderMarch, marchOrderFilter, tracks(TrackThrone))
+    else searchFunc(OrderMarch, marchOrderFilter, tracks(TrackType.Throne))
 
     if marchHouseOrder.nonEmpty
     then return marchHouseOrder
@@ -73,7 +73,7 @@ object NextOrderFinder {
 
     val consPowerHouseOrder = if orderTypeToSearch == OrderConsolidatePower
     then searchFunc(OrderConsolidatePower, specialConsPowerOrderFilter, tempThroneTrack)
-    else searchFunc(OrderConsolidatePower, specialConsPowerOrderFilter, tracks(TrackThrone))
+    else searchFunc(OrderConsolidatePower, specialConsPowerOrderFilter, tracks(TrackType.Throne))
 
     consPowerHouseOrder
   }

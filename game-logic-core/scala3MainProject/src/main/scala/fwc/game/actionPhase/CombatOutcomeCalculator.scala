@@ -1,7 +1,7 @@
 package fwc.game.actionPhase
 
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{MilitaryUnit, MilitaryUnitFootmen, MilitaryUnitGarrison, MilitaryUnitKnights, MilitaryUnitPowerToken, MilitaryUnitShips, MilitaryUnitSiegeEngines, MilitaryUnitType, TileNumber, TrackFiefdoms, TrackThrone}
+import fwc.game.board.*
 import fwc.game.houses.*
 import fwc.game.planningPhase.{Order, OrderDefend}
 import fwc.gameLoading.{HouseCard, TidesOfBattleCard}
@@ -9,10 +9,10 @@ import fwc.gameLoading.{HouseCard, TidesOfBattleCard}
 class CombatOutcomeCalculator(gameState: GameState) {
   extension (ht1: HouseType)
     def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =
-      ht1.isHigherOnTrack(gameState.tracks(TrackThrone))(ht2)
+      ht1.isHigherOnTrack(gameState.tracks(TrackType.Throne))(ht2)
 
     def isHigherOnFiefdomsTrackThan(ht2: HouseType): Boolean =
-      ht1.isHigherOnTrack(gameState.tracks(TrackFiefdoms))(ht2)
+      ht1.isHigherOnTrack(gameState.tracks(TrackType.Fiefdoms))(ht2)
 
   def calculate(): CombatOutcome = {
     val attackerStrFunc = (acc: Int, mu: MilitaryUnit) =>
@@ -20,23 +20,23 @@ class CombatOutcomeCalculator(gameState: GameState) {
       then 0
       else
         mu.unitType match
-        case MilitaryUnitShips =>
+        case MilitaryUnitType.Ships =>
             attackerShipStrength(gameState.combat.attackerCard, gameState.combat.defenderCard, mu)
             + acc
-        case MilitaryUnitFootmen =>
+        case MilitaryUnitType.Footmen =>
           val card = gameState.combat.attackerCard
-          (if card.code == 4 && card.house == HouseLion
+          (if card.code == 4 && card.house == HouseType.Lion
           then 2
           else 1)
             + acc
-        case MilitaryUnitKnights => MilitaryUnitKnights.strength + acc
-        case MilitaryUnitSiegeEngines =>
+        case MilitaryUnitType.Knights => MilitaryUnitType.Knights.strength + acc
+        case MilitaryUnitType.SiegeEngines =>
           acc +
             (if gameRules.board(gameState.combat.defenderTileNum).musteringPoints > 0
-            then MilitaryUnitSiegeEngines.strength
+            then MilitaryUnitType.SiegeEngines.strength
             else 0)
-        case MilitaryUnitGarrison => acc
-        case MilitaryUnitPowerToken => acc
+        case MilitaryUnitType.Garrison => acc
+        case MilitaryUnitType.PowerToken => acc
 
     val attackerArmyStrength = gameState.combat.attackerArmy.foldLeft(0)(
       attackerStrFunc
@@ -51,14 +51,14 @@ class CombatOutcomeCalculator(gameState: GameState) {
       then 0
       else
         mu.unitType match
-          case MilitaryUnitShips =>
+          case MilitaryUnitType.Ships =>
             defenderShipStrength(gameState.combat.attackerCard, gameState.combat.defenderCard, mu)
               + acc
-          case MilitaryUnitFootmen => MilitaryUnitFootmen.strength + acc
-          case MilitaryUnitKnights => MilitaryUnitKnights.strength + acc
-          case MilitaryUnitSiegeEngines => acc
-          case MilitaryUnitGarrison => mu.garrisonDefensePoints + acc
-          case MilitaryUnitPowerToken => acc
+          case MilitaryUnitType.Footmen => MilitaryUnitType.Footmen.strength + acc
+          case MilitaryUnitType.Knights => MilitaryUnitType.Knights.strength + acc
+          case MilitaryUnitType.SiegeEngines => acc
+          case MilitaryUnitType.Garrison => mu.garrisonDefensePoints + acc
+          case MilitaryUnitType.PowerToken => acc
 
     val defenderArmyStrength = gameState.combat.defenderArmy.foldLeft(0)(
       defenderStrFunc
@@ -109,7 +109,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
   }
 
   private def attackerShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
-    if mu.unitType != MilitaryUnitShips
+    if mu.unitType != MilitaryUnitType.Ships
     then throw new RuntimeException("Only for ships")
 
     if attackerCard != null
@@ -118,9 +118,9 @@ class CombatOutcomeCalculator(gameState: GameState) {
       && defenderCard.isMoose6
       && gameState.combat.defenderSupport.nonEmpty
     then
-      if HouseKraken isHigherOnThroneTrackThan HouseMoose
+      if HouseType.Kraken isHigherOnThroneTrackThan HouseType.Moose
       then
-        if mu.house == HouseKraken
+        if mu.house == HouseType.Kraken
         then 2
         else 0
       else 0
@@ -129,13 +129,13 @@ class CombatOutcomeCalculator(gameState: GameState) {
         && attackerCard.isKraken4
         && !(defenderCard != null && defenderCard.isMoose6)
       then
-        if mu.house == HouseKraken
+        if mu.house == HouseType.Kraken
         then 2
         else 1
       else
         if oneOfCardsIsMoose6(attackerCard, defenderCard)
         then
-          if mu.house != HouseMoose
+          if mu.house != HouseType.Moose
           then 0
           else 1
         else 1
@@ -146,12 +146,12 @@ class CombatOutcomeCalculator(gameState: GameState) {
       || (defenderCard != null && defenderCard.isMoose6 && gameState.combat.defenderSupport.nonEmpty)
 
   private def defenderShipStrength(attackerCard: HouseCard, defenderCard: HouseCard, mu: MilitaryUnit): Int = {
-    if mu.unitType != MilitaryUnitShips
+    if mu.unitType != MilitaryUnitType.Ships
     then throw new RuntimeException("Only for ships")
 
     if oneOfCardsIsMoose6(attackerCard, defenderCard)
     then
-      if mu.house != HouseMoose
+      if mu.house != HouseType.Moose
       then 0
       else 1
     else 1
@@ -223,24 +223,24 @@ class CombatOutcomeCalculator(gameState: GameState) {
   private def getHouseCardAttack(houseCard: HouseCard): Int = {
     val bonus =
       houseCard match
-        case HouseCard(HouseMoose, 5, _, _, _, _, _) =>
-          if gameState.discardedHouseCards.getOrElse(HouseMoose, Seq()).contains(0)
+        case HouseCard(HouseType.Moose, 5, _, _, _, _, _) =>
+          if gameState.discardedHouseCards.getOrElse(HouseType.Moose, Seq()).contains(0)
           then 1
           else 0
-        case HouseCard(HouseKraken, 1, _, _, _, _, _) =>
-          if gameState.combat.defenderHouse == HouseKraken
+        case HouseCard(HouseType.Kraken, 1, _, _, _, _, _) =>
+          if gameState.combat.defenderHouse == HouseType.Kraken
             && gameRules.board(gameState.combat.defenderTileNum).musteringPoints > 0
           then 1
           else 0
-        case HouseCard(HousePufferfish, 6, _, _, _, _, _) =>
-          if gameState.combat.attackerHouse == HousePufferfish
+        case HouseCard(HouseType.PufferFish, 6, _, _, _, _, _) =>
+          if gameState.combat.attackerHouse == HouseType.PufferFish
           then 1
           else 0
-        case HouseCard(HouseKraken, 5, _, _, _, _, _) =>
-          if (gameState.combat.attackerHouse == HouseKraken
+        case HouseCard(HouseType.Kraken, 5, _, _, _, _, _) =>
+          if (gameState.combat.attackerHouse == HouseType.Kraken
             && gameState.combat.attackerSupport.isEmpty)
             ||
-            (gameState.combat.defenderHouse == HouseKraken
+            (gameState.combat.defenderHouse == HouseType.Kraken
               && gameState.combat.defenderSupport.isEmpty)
           then 2
           else 0
@@ -251,15 +251,15 @@ class CombatOutcomeCalculator(gameState: GameState) {
   private def getHouseCardDefence(houseCard: HouseCard): Int = {
     val bonus =
       houseCard match
-        case HouseCard(HousePufferfish, 6, _, _, _, _, _) =>
-          if gameState.combat.defenderHouse == HousePufferfish
+        case HouseCard(HouseType.PufferFish, 6, _, _, _, _, _) =>
+          if gameState.combat.defenderHouse == HouseType.PufferFish
           then 1
           else 0
-        case HouseCard(HouseKraken, 5, _, _, _, _, _) =>
-          if (gameState.combat.attackerHouse == HouseKraken
+        case HouseCard(HouseType.Kraken, 5, _, _, _, _, _) =>
+          if (gameState.combat.attackerHouse == HouseType.Kraken
             && gameState.combat.attackerSupport.isEmpty)
             ||
-            (gameState.combat.defenderHouse == HouseKraken
+            (gameState.combat.defenderHouse == HouseType.Kraken
               && gameState.combat.defenderSupport.isEmpty)
           then 1
           else 0
@@ -268,7 +268,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
   }
 
   private def getCardStrength(houseCard: HouseCard, opponentHouseCard: HouseCard): Int = {
-    val str = if opponentHouseCard.house == HouseKraken && opponentHouseCard.code == 3
+    val str = if opponentHouseCard.house == HouseType.Kraken && opponentHouseCard.code == 3
       then 0
     else houseCard.strength
     str + getCardBonusStrength(houseCard)
@@ -276,28 +276,28 @@ class CombatOutcomeCalculator(gameState: GameState) {
 
   private def getCardBonusStrength(houseCard: HouseCard): Int = {
     houseCard match
-      case HouseCard(HouseWolf, 6, _, _, _, _, _) =>
+      case HouseCard(HouseType.Wolf, 6, _, _, _, _, _) =>
         val order = gameState.placedOrders.getOrderByTileNumber(gameState.combat.defenderTileNum)
-        if gameState.combat.defenderHouse == HouseWolf
+        if gameState.combat.defenderHouse == HouseType.Wolf
           && order.nonEmpty
-          && order.head._1 == HouseWolf
+          && order.head._1 == HouseType.Wolf
           && order.head._2.orderType == OrderDefend
         then order.head._2.modifier
         else 0
-      case HouseCard(HouseMoose, 0, _, _, _, _, _) =>
+      case HouseCard(HouseType.Moose, 0, _, _, _, _, _) =>
         val opponentHouse =
-          if gameState.combat.attackerHouse == HouseMoose
+          if gameState.combat.attackerHouse == HouseType.Moose
           then gameState.combat.defenderHouse
           else gameState.combat.attackerHouse
-        if opponentHouse isHigherOnThroneTrackThan HouseMoose
+        if opponentHouse isHigherOnThroneTrackThan HouseType.Moose
         then 1
         else 0
-      case HouseCard(HouseMoose, 5, _, _, _, _, _) =>
-        if gameState.discardedHouseCards.getOrElse(HouseMoose, Seq()).contains(0)
+      case HouseCard(HouseType.Moose, 5, _, _, _, _, _) =>
+        if gameState.discardedHouseCards.getOrElse(HouseType.Moose, Seq()).contains(0)
         then 1
         else 0
-      case HouseCard(HouseKraken, 1, _, _, _, _, _) =>
-        if gameState.combat.defenderHouse == HouseKraken
+      case HouseCard(HouseType.Kraken, 1, _, _, _, _, _) =>
+        if gameState.combat.defenderHouse == HouseType.Kraken
           && gameRules.board(gameState.combat.defenderTileNum).musteringPoints > 0
         then 1
         else 0

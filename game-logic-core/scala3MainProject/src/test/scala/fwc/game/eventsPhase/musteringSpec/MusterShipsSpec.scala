@@ -3,7 +3,7 @@ package fwc.game.eventsPhase.musteringSpec
 import fwc.game.*
 import fwc.game.board.*
 import fwc.game.eventsPhase.Mustering
-import fwc.game.houses.HouseWolf
+import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
@@ -17,7 +17,7 @@ class MusterShipsSpec extends AnyFlatSpec with should.Matchers {
     val newGameState = Mustering.musterShips(
       3,
       0,
-      MilitaryUnit(HouseWolf, MilitaryUnitShips),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships),
       gameState,
     )
 
@@ -26,14 +26,14 @@ class MusterShipsSpec extends AnyFlatSpec with should.Matchers {
       "1 mustering points should be used at tile 3")
 
     assert(
-      newGameState._1.getOrElse(0, null).count(_.unitType == MilitaryUnitShips) == 1,
+      newGameState._1.getOrElse(0, null).count(_.unitType == MilitaryUnitType.Ships) == 1,
       "there should be 1 ships at tile 0"
     )
 
     val newGameState2 = Mustering.musterShips(
       3,
       4,
-      MilitaryUnit(HouseWolf, MilitaryUnitShips),
+      MilitaryUnit(HouseType.Wolf, MilitaryUnitType.Ships),
       gameState.copy(
         armies = newGameState._1,
         usedMusteringPoints = newGameState._2
@@ -45,7 +45,7 @@ class MusterShipsSpec extends AnyFlatSpec with should.Matchers {
       "2 mustering points should be used at tile 3")
 
     assert(
-      newGameState2._1.getOrElse(4, null).count(_.unitType == MilitaryUnitShips) == 1,
+      newGameState2._1.getOrElse(4, null).count(_.unitType == MilitaryUnitType.Ships) == 1,
       "there should be 1 ships at tile 4"
     )
   }
