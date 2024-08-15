@@ -5,7 +5,7 @@ import fwc.game.GameState
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 import enrichment.ExtSeq
@@ -45,7 +45,7 @@ case class ActionResolveCardMoose2(
     val newPhase =
       if updatedCombat.loserCard.exists(_.isMoose3)
       then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderMarch, updatedCombat.attackerHouse)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, updatedCombat.attackerHouse)
 
     gameState.copy(
       subPhase = newPhase,

@@ -4,24 +4,26 @@ import fwc.game.FWCException
 
 sealed trait EventCardChoiceType
 
-case object EventCardChoiceA extends EventCardChoiceType {
-  override def toString: String = "a"
-}
 
-case object EventCardChoiceB extends EventCardChoiceType {
-  override def toString: String = "b"
-}
-
-case object EventCardChoiceC extends EventCardChoiceType {
-  override def toString: String = "c"
-}
 
 object EventCardChoiceType {
+  case object ChoiceA extends EventCardChoiceType {
+    override def toString: String = "a"
+  }
+
+  case object ChoiceB extends EventCardChoiceType {
+    override def toString: String = "b"
+  }
+
+  case object ChoiceC extends EventCardChoiceType {
+    override def toString: String = "c"
+  }
+
   def fromString(str: String): EventCardChoiceType = {
     str match
-      case "a" => EventCardChoiceA
-      case "b" => EventCardChoiceB
-      case "c" => EventCardChoiceC
+      case "a" => ChoiceA
+      case "b" => ChoiceB
+      case "c" => ChoiceC
       case s => throw new FWCException(s"Unknown event card choice $s")
   }
 }

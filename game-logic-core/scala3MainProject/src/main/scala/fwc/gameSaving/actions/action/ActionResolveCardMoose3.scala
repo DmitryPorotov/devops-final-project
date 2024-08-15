@@ -4,7 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.{CardCode, isValid}
 import fwc.game.houses.HouseType
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -35,7 +35,7 @@ case class ActionResolveCardMoose3(
         else gameState.discardedHouseCards + (loserHouse -> (gameState.discardedHouseCards(loserHouse) :+ cardCode))
 
     gameState.copy(
-      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.attackerHouse),
+      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.attackerHouse),
       combat = null,
       discardedHouseCards = updatedDiscardedHouseCards.resetDecksAfterCombat(updatedCombat)
     )

@@ -20,7 +20,7 @@ case class ActionAutoRetreatAfterBattle(
       )
     else
       updatedGameState1.copy(
-        subPhase = SubPhaseCleanUpAfterCombat()
+        subPhase = SubPhaseCleanUpAfterCombat(Seq(updatedGameState1.combat.attackerHouse, updatedGameState1.combat.defenderHouse))
       )
 
 

@@ -29,9 +29,9 @@ object CardResolveBeforeCombat {
           )
         if p != null
         then p
-        else SubPhaseGetTidesOfBattleCards()
+        else SubPhaseGetTidesOfBattleCards(Seq(combat.attackerHouse, combat.defenderHouse))
       }
-      else SubPhaseGetTidesOfBattleCards()
+      else SubPhaseGetTidesOfBattleCards(Seq(combat.attackerHouse, combat.defenderHouse))
 
     (isAttackerAction_, updatedCombat, cardPhase)
   }

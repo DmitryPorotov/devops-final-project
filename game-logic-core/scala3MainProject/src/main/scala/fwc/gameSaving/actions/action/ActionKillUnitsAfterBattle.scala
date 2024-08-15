@@ -59,7 +59,7 @@ case class ActionKillUnitsAfterBattle(
           if winnerHasWolf0
           then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
           else SubPhaseRetreatUnitsAfterBattle(loserHouse)
-        else SubPhaseCleanUpAfterCombat()
+        else SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
 
     val newPhase: SubPhase =
       if isAttackerAction

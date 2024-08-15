@@ -4,7 +4,7 @@ import assetsForTests.gameStates.OneOrderLeftToAdd.gameState
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveMarchOrder
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameSaving.actions.planning.ActionAddOrder
 
 import java.nio.charset.StandardCharsets
@@ -37,8 +37,8 @@ object ResolveMarchNoCombat extends App {
         )
       )
     ),
-    placedOrders = initialGameState.placedOrders.placeOrder(HouseType.PufferFish, 54, Order(OrderMarch), 2),
-    availableOrders = initialGameState.availableOrders.useOrder(HouseType.PufferFish, Order(OrderMarch))
+    placedOrders = initialGameState.placedOrders.placeOrder(HouseType.PufferFish, 54, Order(OrderType.OrderMarch), 2),
+    availableOrders = initialGameState.availableOrders.useOrder(HouseType.PufferFish, Order(OrderType.OrderMarch))
   )
 
   Files.write(Paths.get("saves/forUnitTests/ResolveMarchNoCombat.json"), gameState.toJsonString.getBytes(StandardCharsets.UTF_8))

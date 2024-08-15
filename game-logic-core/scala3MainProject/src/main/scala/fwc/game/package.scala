@@ -5,12 +5,9 @@ import fwc.game.board.*
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.houses.*
-import fwc.game.phases.SubPhaseAwaitingStart
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
-import fwc.gameLoading.BoardStart
 
-import scala.util.Random
 
 package object game {
   def initializeGameState(randomEventsServerSide: Boolean = true): GameState = {

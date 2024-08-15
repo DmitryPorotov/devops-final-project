@@ -2,7 +2,7 @@ package assetsForTests.gameReplays
 
 import assetsForTests.gameReplays.ReplayAddAllOrders.replay14
 import fwc.communication.reactions.ReactionGameAction
-import fwc.game.planningPhase.{Order, OrderConsolidatePower, OrderMarch}
+import fwc.game.planningPhase.Order
 import fwc.gameSaving.GameReplay
 
 import java.nio.charset.StandardCharsets

@@ -4,7 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.TileNumber
 import fwc.game.houses.HouseType
-import fwc.game.planningPhase.OrderSupport
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -48,7 +48,7 @@ case class ActionResolveCardRose4(
     val updatedPlacedOrders = gameState.placedOrders.removeOrder(houseOrder._1, tileNumber)
 
     val updatedCombat2 =
-      if houseOrder._2.orderType == OrderSupport
+      if houseOrder._2.orderType == OrderType.OrderSupport
       then
         if isAttackerAction
         then updatedCombat.copy(defenderSupport = updatedCombat.defenderSupport.filter(_ != tileNumber))

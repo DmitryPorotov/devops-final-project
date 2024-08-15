@@ -6,7 +6,7 @@ import fwc.game.board.{Armies, MilitaryUnit, TileNumber}
 import fwc.game.eventsPhase.Mustering
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveSpecialConsolidatePower
-import fwc.game.planningPhase.OrderConsolidatePower
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -30,7 +30,7 @@ case class ActionResolveSpecialConsolidatePower(
       then throw new ActionException(s"There is no order at tile $tileNumber")
       else orderOpt.head
 
-    if order._1 != houseType || order._2.orderType != OrderConsolidatePower || !order._2.isStar
+    if order._1 != houseType || order._2.orderType != OrderType.OrderConsolidatePower || !order._2.isStar
     then throw new ActionException(s"There is no special consolidate power order of house $houseType at tile $tileNumber")
 
     val tile = gameRules.board(tileNumber)
@@ -44,7 +44,7 @@ case class ActionResolveSpecialConsolidatePower(
 
     val updatedGameState2 =
       updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderConsolidatePower, houseType)
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderConsolidatePower, houseType)
       )
 
     if unit == null

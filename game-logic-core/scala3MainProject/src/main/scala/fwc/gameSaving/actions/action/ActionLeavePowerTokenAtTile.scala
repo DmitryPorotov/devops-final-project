@@ -5,7 +5,7 @@ import fwc.game.GameState
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber, TrackType}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseLeavePowerTokenAtTile
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -37,7 +37,7 @@ case class ActionLeavePowerTokenAtTile(
     try {
       val updatedSubPhase =
         if gameState.combat == null
-        then NextOrderFinder.nextSubPhase(gameState, OrderMarch, houseType)
+        then NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, houseType)
         else CombatCommon.getNewSubPhaseForMarchSupport(
           updatedGameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum),
           gameState.tracks(TrackType.Throne),

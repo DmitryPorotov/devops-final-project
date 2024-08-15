@@ -1,7 +1,7 @@
 package assetsForTests.gameStates
 
 import fwc.game.houses.*
-import fwc.game.planningPhase.{Order, OrderConsolidatePower, OrderDefend, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameSaving.actions.planning.ActionAddOrder
 
 import java.nio.charset.StandardCharsets
@@ -10,15 +10,15 @@ import java.nio.file.{Files, Paths}
 object OneOrderLeftToAdd extends App {
   val initialGameState = fwc.game.initializeGameState()
   val orderDefend = Order(
-    OrderDefend,
+    OrderType.OrderDefend,
     modifier = 1
   )
-  val orderMarch = Order(OrderMarch)
+  val orderMarch = Order(OrderType.OrderMarch)
   var gameState = ActionAddOrder(initialGameState, HouseType.Lion, orderDefend, 21).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Lion, orderDefend, 22).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Lion, orderMarch, 27).doAction()
 
-  gameState = ActionAddOrder(gameState, HouseType.Kraken, Order(OrderConsolidatePower), 15).doAction()
+  gameState = ActionAddOrder(gameState, HouseType.Kraken, Order(OrderType.OrderConsolidatePower), 15).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderDefend, 16).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderDefend, 17).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderMarch, 12).doAction()

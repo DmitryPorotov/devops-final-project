@@ -60,7 +60,7 @@ case class ActionRetreatUnitsAfterBattle(
     val newPhase =
       if toConsolidate(houseType).nonEmpty
       then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepCombatCleanUp, PhaseAction)
-      else SubPhaseCleanUpAfterCombat()
+      else SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, gameState.combat.attackerHouse))
 
     gameState.copy(
       subPhase = newPhase,

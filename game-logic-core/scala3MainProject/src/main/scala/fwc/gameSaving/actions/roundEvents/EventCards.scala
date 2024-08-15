@@ -15,16 +15,16 @@ object EventCards {
       case 0 => SubPhaseRecalculateSupplies()
       case 1 => SubPhaseMuster(throneOwner)
       case 2 => SubPhaseChooseUpdateSupplyOrMuster(throneOwner)
-      case 3 => SubPhaseGetEventCards()
+      case 3 => SubPhaseGetEventCards(HouseType.getSeqOfAll)
       case 4 => null
       case c => throw new ActionException(s"Unknown card code $c for deck 1")
       
   def getPhaseForDeck2Card(card2: RoundEventCard, ravenOwner: HouseType): SubPhase =
     card2.code match
-      case 0 => SubPhaseCollectTaxes()
+      case 0 => SubPhaseCollectTaxes(HouseType.getSeqOfAll)
       case 1 => SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)
       case 2 => SubPhaseChooseTracksBidsOrCollectTaxes(ravenOwner)
-      case 3 => SubPhaseGetEventCards()
+      case 3 => SubPhaseGetEventCards(HouseType.getSeqOfAll)
       case 4 => null
       case c => throw new ActionException(s"Unknown card code $c for deck 2")
 
@@ -32,11 +32,11 @@ object EventCards {
     card3.code match
       case 0 => SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, false)
       case 1 => SubPhaseChooseDisableMarchPlus1OrDefendOrders(steelBladeOwner)
-      case 2 => SubPhaseDisableOrder(OrderMarch)
-      case 3 => SubPhaseDisableOrder(OrderSupport)
-      case 4 => SubPhaseDisableOrder(OrderDefend)
-      case 5 => SubPhaseDisableOrder(OrderConsolidatePower)
-      case 6 => SubPhaseDisableOrder(OrderRaid)
+      case 2 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderMarch)
+      case 3 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderSupport)
+      case 4 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderDefend)
+      case 5 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderConsolidatePower)
+      case 6 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderRaid)
       case c => throw new ActionException(s"Unknown card code $c for deck 3")
 
   def fallThroughFromDeck1(

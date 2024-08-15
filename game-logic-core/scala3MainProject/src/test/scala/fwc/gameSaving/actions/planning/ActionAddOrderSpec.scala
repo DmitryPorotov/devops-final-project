@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.planning
 import fwc.game.GameState
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading
 import fwc.gameSaving.actions.planning.ActionAddOrder
 import org.scalatest.flatspec.AnyFlatSpec
@@ -17,7 +17,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Wolf,
       Order(
-        OrderMarch
+        OrderType.OrderMarch
       ),
       3
     ).doAction()
@@ -25,7 +25,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameStateAfter,
       HouseType.Wolf,
       Order(
-        OrderMarch,
+        OrderType.OrderMarch,
         modifier = -1
       ),
       7
@@ -34,7 +34,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameStateAfter2,
       HouseType.Wolf,
       Order(
-        OrderMarch,
+        OrderType.OrderMarch,
         true,
         1
       ),

@@ -1,11 +1,16 @@
 package fwc.game.phases.actionSubPhases
 
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseNoHouse}
+import fwc.game.houses.HouseType
+import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseMultipleHouses, SubPhasePassive}
+import ujson.Value
 
 case class SubPhaseCalculateGameWinner(
+                                        houseTypes: Seq[HouseType],
                                         mainPhase: MainPhase = PhaseAction
-                                      )extends SubPhase(mainPhase) with SubPhaseNoHouse (
-  mainPhase
-) {
-  def getSubPhaseName: String = "calculateGameWinner"
+                                      ) extends SubPhase(mainPhase)
+  with SubPhasePassive (mainPhase)
+  with SubPhaseMultipleHouses(houseTypes, mainPhase)
+  {
+    override def toJson: Value = super.toJson
+    def getSubPhaseName: String = "calculateGameWinner"
 }

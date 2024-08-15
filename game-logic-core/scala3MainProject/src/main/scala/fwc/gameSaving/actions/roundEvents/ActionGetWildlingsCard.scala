@@ -2,6 +2,7 @@ package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.GameState
+import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseGetWildlingsCard, SubPhaseSetWildlingsCard}
 import fwc.gameSaving.actions.{Action, JsonParsableAction}
 import ujson.Value
@@ -17,6 +18,7 @@ case class ActionGetWildlingsCard(
 
     val newPhase =
       SubPhaseSetWildlingsCard(
+        HouseType.getSeqOfAll,
         if isRandom
         then currentPhase.subPhaseWildlingsCard.copy(
           cardCode = gameState.boardCards.wildlings.head.code

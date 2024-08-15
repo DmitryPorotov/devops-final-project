@@ -3,8 +3,8 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterCombat, SubPhaseResolveConsolidatePowerOrder}
-import fwc.game.planningPhase.{Order, OrderConsolidatePower}
+import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterRound, SubPhaseResolveConsolidatePowerOrder}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.BoardTileSea
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction}
 import ujson.Value
@@ -21,7 +21,7 @@ case class ActionResolveConsolidatePowerOrder(
     val taxes = m.foldLeft(Map[HouseType, Int]())(
       (acc, tnToHouseOrder: (Int,(HouseType,Order))) =>
         val tile = gameRules.board(tnToHouseOrder._1)
-        if tnToHouseOrder._2._2.orderType == OrderConsolidatePower 
+        if tnToHouseOrder._2._2.orderType == OrderType.OrderConsolidatePower
           && tile.tileType != BoardTileSea
         then acc + (tnToHouseOrder._2._1 -> (acc.getOrElse(tnToHouseOrder._2._1, 0) + tile.powerPoints + 1))
         else acc
@@ -36,7 +36,7 @@ case class ActionResolveConsolidatePowerOrder(
       )
 
     gameState.copy(
-      subPhase = SubPhaseCleanUpAfterCombat(),
+      subPhase = SubPhaseCleanUpAfterRound(HouseType.getSeqOfAll),
       powerTokens = updatedPowerTokens
     )
   }

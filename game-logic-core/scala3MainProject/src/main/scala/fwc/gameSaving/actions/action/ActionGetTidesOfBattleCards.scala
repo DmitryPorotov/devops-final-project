@@ -3,6 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.eventsPhase.cards.TidesOfBattleDeckEmptyException
+import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseGetTidesOfBattleCards, SubPhaseRefreshTidesOfBattleDeck, SubPhaseSetTidesOfBattleCards}
 import fwc.gameSaving.actions.{Action, JsonParsableAction}
 import fwc.gameSaving.actions.roundEvents.ActionGetEventCards
@@ -23,6 +24,7 @@ case class ActionGetTidesOfBattleCards(
           subPhase =
             if gameState.subPhase.isInstanceOf[SubPhaseGetTidesOfBattleCards]
             then SubPhaseSetTidesOfBattleCards(
+              HouseType.getSeqOfAll,
               Some(card1.code)
             )
             else gameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards].copy(
@@ -38,7 +40,7 @@ case class ActionGetTidesOfBattleCards(
             subPhase = SubPhaseRefreshTidesOfBattleDeck()
           )
     else gameState.copy(
-      subPhase = SubPhaseSetTidesOfBattleCards(),
+      subPhase = SubPhaseSetTidesOfBattleCards(HouseType.getSeqOfAll),
     )
   }
 

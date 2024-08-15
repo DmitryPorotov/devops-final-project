@@ -5,7 +5,7 @@ import fwc.game.GameState
 import fwc.game.eventsPhase.PowerTokens
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveRaidOrder
-import fwc.game.planningPhase.{Order, OrderConsolidatePower, OrderDefend, OrderMarch, OrderRaid}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.game.gameRules
 import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileSea}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -26,7 +26,7 @@ case class ActionResolveRaidOrder(
 
     val sourceOrderOpt = gameState.placedOrders.getOrderByTileNumber(sourceTileNumber)
     val sourceOrder = if sourceOrderOpt.isEmpty
-      || sourceOrderOpt.head._2.orderType != OrderRaid
+      || sourceOrderOpt.head._2.orderType != OrderType.OrderRaid
       || sourceOrderOpt.head._1 != houseType
     then throw new ActionException(s"There is no raid order of house \"$houseType\" in the source tile")
     else sourceOrderOpt.head
@@ -40,7 +40,7 @@ case class ActionResolveRaidOrder(
         placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
       )
       return updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderRaid, houseType)
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderRaid, houseType)
       )
     else if !sourceTile.isNeighbourOf(targetTile)
     then throw new ActionException(s"Tile ${sourceTile.name} is not a not a neighbour of ${targetTile.name}")
@@ -60,17 +60,17 @@ case class ActionResolveRaidOrder(
     if targetOrder._1 == houseType
     then throw new ActionException("Can not remove own order")
 
-    if targetOrder._2.orderType == OrderMarch
+    if targetOrder._2.orderType == OrderType.OrderMarch
     then throw new ActionException("Can not remove a march order")
 
-    if targetOrder._2.orderType == OrderDefend && !sourceOrder._2.isStar
+    if targetOrder._2.orderType == OrderType.OrderDefend && !sourceOrder._2.isStar
     then throw new ActionException("Can not remove a defend order using non-special raid order")
 
-    val newPowerTokens = if targetOrder._2.orderType == OrderConsolidatePower
+    val newPowerTokens = if targetOrder._2.orderType == OrderType.OrderConsolidatePower
     then gameState.powerTokens.transferOneToken(targetOrder._1, houseType, gameState.armies)
     else gameState.powerTokens
 
-    val newSubPhase = NextOrderFinder.nextSubPhase(gameState, OrderRaid, houseType)
+    val newSubPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid, houseType)
     gameState.copy(
       subPhase = newSubPhase,
       powerTokens = newPowerTokens,

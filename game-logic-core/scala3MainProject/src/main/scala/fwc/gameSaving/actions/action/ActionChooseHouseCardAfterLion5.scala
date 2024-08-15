@@ -49,7 +49,7 @@ case class ActionChooseHouseCardAfterLion5(
       subPhase =
         if updatedPhase != null
         then updatedPhase
-        else SubPhaseGetTidesOfBattleCards(),
+        else SubPhaseGetTidesOfBattleCards(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse)),
       discardedHouseCards = gameState.discardedHouseCards + (houseType -> updatedDiscardedForHouse),
       combat = 
         if isAttackerAction

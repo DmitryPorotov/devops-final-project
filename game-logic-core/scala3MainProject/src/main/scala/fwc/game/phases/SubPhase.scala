@@ -78,21 +78,25 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfSingleHouse(json)
         SubPhaseDisbandUnit(f._1, UnitDisbandNextStepType.fromString(json("nextStep").str), f._2)
       case "muster" =>
-        val f = getFieldsOfSingleHouse(json)
-        SubPhaseMuster(f._1, f._2)
+        val (ht, mp) = getFieldsOfSingleHouse(json)
+        SubPhaseMuster(ht, mp)
       case "setTidesOfBattleCards" =>
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
         val atkCard = Try(json("attackerCard").numOpt.map(_.toInt)).getOrElse(None)
         val defCard = Try(json("defenderCard").numOpt.map(_.toInt)).getOrElse(None)
-        SubPhaseSetTidesOfBattleCards(atkCard, defCard, getFieldsOfNoHouse(json))
+        SubPhaseSetTidesOfBattleCards(ht, atkCard, defCard, mp)
       case "setEventCards" =>
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
         val cardCode1 = Try(json("card1").numOpt.map(c => gameRules.boardCards.roundEvents1.find(_.code == c.toInt).head)).getOrElse(None)
         val cardCode2 = Try(json("card2").numOpt.map(c => gameRules.boardCards.roundEvents2.find(_.code == c.toInt).head)).getOrElse(None)
         val cardCode3 = Try(json("card3").numOpt.map(c => gameRules.boardCards.roundEvents3.find(_.code == c.toInt).head)).getOrElse(None)
-        SubPhaseSetEventCards(cardCode1, cardCode2, cardCode3, getFieldsOfNoHouse(json))
+        SubPhaseSetEventCards(ht, cardCode1, cardCode2, cardCode3, mp)
       case "setWildlingsCards" =>
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
         SubPhaseSetWildlingsCard(
+          ht,
           SubPhase.fromJson(json("subPhaseWildlingsCard")).asInstanceOf[SubPhaseWildlingsCard],
-          getFieldsOfNoHouse(json)
+          mp
         )
       case "addOrder" =>
         val f = getFieldsOfMultipleHouses(json)
@@ -113,26 +117,32 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfMultipleHousesTracks(json)
         SubPhaseTracksBids(f._1, f._2, f._3)
       case "resolveTiesAfterBiddingOnTracks" =>
-        val f = getFieldsOfSingleHouse(json)
-        SubPhaseResolveTiesAfterBiddingOnTracks(f._1, TrackType.fromString(json.obj("trackType").str) ,f._2)
+        val (ht, mp) = getFieldsOfSingleHouse(json)
+        SubPhaseResolveTiesAfterBiddingOnTracks(ht, TrackType.fromString(json.obj("trackType").str) ,mp)
       case "cleanUpAfterRound" =>
-        SubPhaseCleanUpAfterRound(getFieldsOfNoHouse(json))
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseCleanUpAfterRound(ht, mp)
       case "leavePowerTokenAtTile" =>
         val f = getFieldsOfSingleHouse(json)
         val tileNumber = json("tileNumber").num.toInt
         SubPhaseLeavePowerTokenAtTile(f._1, tileNumber, f._2)
       case "calculateCombatOutcome" =>
-        SubPhaseCalculateCombatOutcome()
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseCalculateCombatOutcome(ht, mp)
       case "cleanUpAfterCombat" =>
-        SubPhaseCleanUpAfterCombat()
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseCleanUpAfterCombat(ht, mp)
       case "calculateGameWinner" =>
-        SubPhaseCalculateGameWinner()
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseCalculateGameWinner(ht, mp)
       case "recalculateSupplies" =>
         SubPhaseRecalculateSupplies()
       case "collectTaxes" =>
-        SubPhaseCollectTaxes()
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseCollectTaxes(ht, mp)
       case "disableOrder" =>
-        SubPhaseDisableOrder(OrderType.fromString(json("orderType").str))
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseDisableOrder(ht, OrderType.fromString(json("orderType").str), mp)
       case "resolveTiesAfterBiddingOnWildlings" =>
         val f = getFieldsOfMultipleHouses(json)
         SubPhaseResolveTiesAfterBiddingOnWildlings(f._1, json("isWinner").bool, f._2)
@@ -162,26 +172,33 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfMultipleHouses(json)
         SubPhaseWildlingsChooseTrackToBeLastAt(f._1, f._2)
       case "refreshTidesOfBattleDeck" =>
-        SubPhaseRefreshTidesOfBattleDeck(getFieldsOfNoHouse(json))
+        SubPhaseRefreshTidesOfBattleDeck()
       case "resolveConsolidatePowerOrder" =>
-        SubPhaseResolveConsolidatePowerOrder(getFieldsOfNoHouse(json))
+        SubPhaseResolveConsolidatePowerOrder()
       case "ravenGetWildlingsCard" =>
-        SubPhaseRavenGetWildlingsCard(getFieldsOfNoHouse(json))
+        val (ht, mp) = getFieldsOfSingleHouse(json)
+        SubPhaseRavenGetWildlingsCard(ht, mp)
       case "getTidesOfBattleCards" =>
-        SubPhaseGetTidesOfBattleCards(getFieldsOfNoHouse(json))
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseGetTidesOfBattleCards(ht, mp)
       case "getEventCards" =>
-        SubPhaseGetEventCards(getFieldsOfNoHouse(json))
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseGetEventCards(ht, mp)
       case "getWildlingsCard" =>
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
         SubPhaseGetWildlingsCard(
+          ht,
           SubPhase.fromJson(json("subPhaseWildlingsCard")).asInstanceOf[SubPhaseWildlingsCard],
-          getFieldsOfNoHouse(json)
+          mp
         )
       case "awaitingStart" =>
         SubPhaseAwaitingStart()
       case "autoKillUnitsAfterBattle" =>
-        SubPhaseAutoKillUnitsAfterBattle()
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseAutoKillUnitsAfterBattle(ht, mp)
       case "autoRetreatAfterBattle" =>
-        SubPhaseAutoRetreatAfterBattle()
+        val (ht, mp) = getFieldsOfSingleHouse(json)
+        SubPhaseAutoRetreatAfterBattle(ht, mp)
   }
 
 

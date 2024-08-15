@@ -6,7 +6,7 @@ import fwc.game.eventsPhase.cards.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseChooseDisableMarchPlus1OrDefendOrders, SubPhaseDisableOrder}
-import fwc.game.planningPhase.{OrderDefend, OrderMarch}
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -24,10 +24,10 @@ case class ActionSteelBladeChooseDisableMarchOrDefend(
     then throw new ActionException("Wrong house")
 
     val newPhase =
-      if choice == EventCardChoiceA
-      then SubPhaseDisableOrder(OrderDefend)
-      else if choice == EventCardChoiceB
-        then SubPhaseDisableOrder(OrderMarch)
+      if choice == EventCardChoiceType.ChoiceA
+      then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderDefend)
+      else if choice == EventCardChoiceType.ChoiceB
+        then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderMarch)
         else SubPhaseAddOrder(HouseType.getSeqOfAll)
 
     gameState.copy(newPhase)

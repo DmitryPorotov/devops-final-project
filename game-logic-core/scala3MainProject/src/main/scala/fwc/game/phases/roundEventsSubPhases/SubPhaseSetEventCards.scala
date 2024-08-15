@@ -1,18 +1,20 @@
 package fwc.game.phases.roundEventsSubPhases
 
 import fwc.JsonSerializable
-import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseNoHouse}
+import fwc.game.houses.HouseType
+import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseMultipleHouses, SubPhasePassive}
 import fwc.gameLoading.RoundEventCard
 import ujson.Value
 
 case class SubPhaseSetEventCards(
+                                houseTypes: Seq[HouseType],
                                   card1: Option[RoundEventCard] = None,
                                   card2: Option[RoundEventCard] = None,
                                   card3: Option[RoundEventCard] = None,
                                   mainPhase: MainPhase = PhaseRoundEvents
-                                )extends SubPhase(mainPhase) with SubPhaseNoHouse (
-    mainPhase
-  ) {
+                                )extends SubPhase(mainPhase) 
+  with SubPhasePassive (mainPhase)
+  with SubPhaseMultipleHouses(houseTypes, mainPhase) {
   def getSubPhaseName: String = "setEventCards"
 
   override def toJson: Value =

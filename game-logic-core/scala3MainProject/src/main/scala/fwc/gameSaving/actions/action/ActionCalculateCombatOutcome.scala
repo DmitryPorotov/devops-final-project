@@ -19,7 +19,7 @@ case class ActionCalculateCombatOutcome(
     val outcome = new CombatOutcomeCalculator(gameState).calculate()
     
     gameState.copy(
-      subPhase = SubPhaseAutoKillUnitsAfterBattle(),
+      subPhase = SubPhaseAutoKillUnitsAfterBattle(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse)),
       combat = gameState.combat.copy(
         combatOutcome = outcome
       )

@@ -1,8 +1,9 @@
 package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
+import fwc.game.houses.HouseType
 import fwc.game.{GameState, gameRules}
-import fwc.game.phases.roundEventsSubPhases.{SubPhaseSetEventCards, SubPhaseGetEventCards}
+import fwc.game.phases.roundEventsSubPhases.{SubPhaseGetEventCards, SubPhaseSetEventCards}
 import fwc.gameSaving.actions.{Action, JsonParsableAction}
 import ujson.Value
 
@@ -18,11 +19,12 @@ case class ActionGetEventCards(
         val newPhase =
           if isRandom
           then SubPhaseSetEventCards(
+            HouseType.getSeqOfAll,
               Some(gameState.boardCards.roundEvents1.head),
               Some(gameState.boardCards.roundEvents2.head),
               Some(gameState.boardCards.roundEvents3.head),
             )
-          else SubPhaseSetEventCards()
+          else SubPhaseSetEventCards(HouseType.getSeqOfAll)
 
         val updatedBoardCards =
           if isRandom
@@ -69,6 +71,7 @@ case class ActionGetEventCards(
           else gameState.boardCards
         gameState.copy(
           subPhase = set.copy(
+            HouseType.getSeqOfAll,
             Some(updatedBoardCards.roundEvents1.head),
             Some(updatedBoardCards.roundEvents2.head),
           ),

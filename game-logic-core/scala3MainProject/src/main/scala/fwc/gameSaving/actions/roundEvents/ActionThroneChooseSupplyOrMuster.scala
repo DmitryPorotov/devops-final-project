@@ -21,9 +21,9 @@ case class ActionThroneChooseSupplyOrMuster(
     then throw new ActionException("Wrong house")
 
     val newPhase =
-      if choice == EventCardChoiceA
+      if choice == EventCardChoiceType.ChoiceA
       then SubPhaseRecalculateSupplies()
-      else if choice == EventCardChoiceB
+      else if choice == EventCardChoiceType.ChoiceB
         then SubPhaseMuster(gameState.tracks.throneOwner)
         else EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards)
 

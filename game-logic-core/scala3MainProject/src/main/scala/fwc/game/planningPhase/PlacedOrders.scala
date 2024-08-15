@@ -72,7 +72,7 @@ case class PlacedOrders(placedOrders: Map[HouseType, Map[TileNumber, Order]] = M
       orders.foldLeft[Map[TileNumber, (HouseType, Order)]](Map())(
         (acc: Map[TileNumber, (HouseType, Order)], tnOrder: (TileNumber, Order)) =>
           if neighboursTileNumbers.contains(tnOrder._1)
-            && tnOrder._2.orderType == OrderSupport
+            && tnOrder._2.orderType == OrderType.OrderSupport
             && isRelevantTile(gameRules.board(tnOrder._1).tileType)
           then acc + (tnOrder._1 -> (houseType, tnOrder._2))
           else acc

@@ -5,7 +5,7 @@ import fwc.game.actionPhase.DominanceTokensUsage
 import fwc.game.board.{DominanceTokenMessengerRaven, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChangeOrder
-import fwc.game.planningPhase.{Order, OrderRaid}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.game.{GameState, gameRules}
 import fwc.gameSaving.actions.action.NextOrderFinder
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -34,7 +34,7 @@ case class ActionRavenChangeOrder(
     else throw new ActionException(s"There is no order at ${gameRules.board(tileNumber).name} ($tileNumber)")
 
     val newPhase = NextOrderFinder.nextSubPhase(
-      newGameState, OrderRaid
+      newGameState, OrderType.OrderRaid
     )
 
     ActionAddOrder(newGameState, houseType, order, tileNumber).doPlaceOrder().copy(

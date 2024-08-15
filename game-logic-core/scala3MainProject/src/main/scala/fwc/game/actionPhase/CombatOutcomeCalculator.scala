@@ -3,7 +3,7 @@ package fwc.game.actionPhase
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.*
 import fwc.game.houses.*
-import fwc.game.planningPhase.{Order, OrderDefend}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.{HouseCard, TidesOfBattleCard}
 
 class CombatOutcomeCalculator(gameState: GameState) {
@@ -158,7 +158,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
   }
 
   private def getDefenderOrderStrength(houseCard: HouseCard, order: Order): Int = {
-    if order == null || order.orderType != OrderDefend
+    if order == null || order.orderType != OrderType.OrderDefend
     then 0
     else
       if houseCard != null && houseCard.isWolf6
@@ -281,7 +281,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
         if gameState.combat.defenderHouse == HouseType.Wolf
           && order.nonEmpty
           && order.head._1 == HouseType.Wolf
-          && order.head._2.orderType == OrderDefend
+          && order.head._2.orderType == OrderType.OrderDefend
         then order.head._2.modifier
         else 0
       case HouseCard(HouseType.Moose, 0, _, _, _, _, _) =>

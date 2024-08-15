@@ -1,6 +1,6 @@
 package fwc.game.phases
 
-trait SubPhaseNoHouse(
+trait SubPhasePassive(
                        mainPhase: MainPhase
                      ) extends SubPhase {
   override def toJson: ujson.Value = ujson.Obj(

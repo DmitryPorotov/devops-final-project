@@ -7,6 +7,8 @@ import fwc.game.board.DominanceTokenMessengerRaven
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChoosePutWildlingsCardOnTopOrBottom
+import fwc.game.planningPhase.OrderType
+import fwc.gameSaving.actions.action.NextOrderFinder
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -29,6 +31,7 @@ case class ActionRavenChoosePutWildlingsCardOnTopOrBottom(
       val newWildlingsCards = gameState.boardCards.wildlings.tail appended gameState.boardCards.wildlings.head
       
       gameState.copy(
+        subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid),
         boardCards = gameState.boardCards.copy(
           wildlings = newWildlingsCards
         ),

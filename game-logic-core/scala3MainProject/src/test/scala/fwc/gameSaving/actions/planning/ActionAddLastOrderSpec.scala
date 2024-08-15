@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.planning
 import fwc.game.GameState
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseReadyToOpenOrders}
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading
 import fwc.gameSaving.actions.planning.ActionAddOrder
 import org.scalatest.flatspec.*
@@ -18,7 +18,7 @@ class ActionAddLastOrderSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Wolf,
       Order(
-        OrderMarch
+        OrderType.OrderMarch
       ),
       2
     )

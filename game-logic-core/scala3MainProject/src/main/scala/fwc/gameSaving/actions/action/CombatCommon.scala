@@ -6,7 +6,7 @@ import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.*
 import fwc.game.phases.SubPhase
 import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCard, SubPhaseResolveHouseCard, SubPhaseResolveSupportOrder}
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.HouseCard
 
 object CombatCommon {
@@ -73,7 +73,7 @@ object CombatCommon {
         acc + gameState.armies(cur).foldLeft(0)(sumUnitStrength)
     )
 
-    val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.attackerHouse)
+    val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.attackerHouse)
     if attackingArmyStr >= gameState.combat.defenderArmy.head.garrisonDefensePoints
     then
       val armiesWithoutNeutralGarrison = gameState.armies - tileNumberUnderAttack

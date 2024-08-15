@@ -70,7 +70,7 @@ case class ActionChooseHouseCard(
     if defenderP != null
     then return defenderP
 
-    SubPhaseGetTidesOfBattleCards()
+    SubPhaseGetTidesOfBattleCards(Seq(combat.attackerHouse, combat.defenderHouse))
   }
 
   override def toJson: Value = ujson.Obj(

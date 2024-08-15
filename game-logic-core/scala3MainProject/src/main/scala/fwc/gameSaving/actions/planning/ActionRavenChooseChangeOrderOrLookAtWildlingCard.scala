@@ -4,9 +4,8 @@ import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.RavenChoiceType
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.SubPhaseResolveRaidOrder
 import fwc.game.phases.planningSubPhases.{SubPhaseRavenChangeOrder, SubPhaseRavenGetWildlingsCard, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard}
-import fwc.game.planningPhase.OrderRaid
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.action.NextOrderFinder
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -27,8 +26,8 @@ case class ActionRavenChooseChangeOrderOrLookAtWildlingCard(
     val newPhase =
       ravenChoiceType match
         case _: RavenChoiceType.ChangeOrder.type => SubPhaseRavenChangeOrder(houseType)
-        case _: RavenChoiceType.LookAtWildlingsCard.type => SubPhaseRavenGetWildlingsCard()
-        case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderRaid)
+        case _: RavenChoiceType.LookAtWildlingsCard.type => SubPhaseRavenGetWildlingsCard(gameState.tracks.ravenOwner)
+        case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid)
 
     gameState.copy(
       subPhase = newPhase

@@ -32,7 +32,7 @@ case class ActionResolveCardLion5(
     val updatedPhase =
       if hasCardsLeft(opponentHouseType)
       then SubPhaseChooseHouseCardAfterLion5(opponentHouseType, opponentCardCode)
-      else SubPhaseGetTidesOfBattleCards()
+      else SubPhaseGetTidesOfBattleCards(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
 
     gameState.copy(
       subPhase = updatedPhase,

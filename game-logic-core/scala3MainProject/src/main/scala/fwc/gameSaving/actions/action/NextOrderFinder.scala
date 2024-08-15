@@ -4,8 +4,8 @@ import fwc.game.{FWCException, GameState, gameRules}
 import fwc.game.board.{TrackType, Tracks}
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
-import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterRound, SubPhaseResolveConsolidatePowerOrder, SubPhaseResolveMarchOrder, SubPhaseResolveRaidOrder, SubPhaseResolveSpecialConsolidatePower}
-import fwc.game.planningPhase.{Order, OrderConsolidatePower, OrderMarch, OrderRaid, OrderType, PlacedOrders}
+import fwc.game.phases.actionSubPhases.{SubPhaseResolveConsolidatePowerOrder, SubPhaseResolveMarchOrder, SubPhaseResolveRaidOrder, SubPhaseResolveSpecialConsolidatePower}
+import fwc.game.planningPhase.{Order, OrderType, PlacedOrders}
 
 import scala.annotation.tailrec
 
@@ -52,28 +52,28 @@ object NextOrderFinder {
 
     val searchFunc = findRaidByType(flatOrders)
 
-    val raidHouseOrder = searchFunc(OrderRaid, _._3.orderType == OrderRaid, tempThroneTrack)
+    val raidHouseOrder = searchFunc(OrderType.OrderRaid, _._3.orderType == OrderType.OrderRaid, tempThroneTrack)
 
     if raidHouseOrder.nonEmpty
     then return raidHouseOrder
 
-    val marchOrderFilter = (t: (Int, HouseType, Order)) => t._3.orderType == OrderMarch
+    val marchOrderFilter = (t: (Int, HouseType, Order)) => t._3.orderType == OrderType.OrderMarch
 
-    val marchHouseOrder = if orderTypeToSearch == OrderMarch
-    then searchFunc(OrderMarch, marchOrderFilter, tempThroneTrack)
-    else searchFunc(OrderMarch, marchOrderFilter, tracks(TrackType.Throne))
+    val marchHouseOrder = if orderTypeToSearch == OrderType.OrderMarch
+    then searchFunc(OrderType.OrderMarch, marchOrderFilter, tempThroneTrack)
+    else searchFunc(OrderType.OrderMarch, marchOrderFilter, tracks(TrackType.Throne))
 
     if marchHouseOrder.nonEmpty
     then return marchHouseOrder
 
     val specialConsPowerOrderFilter = (t: (Int, HouseType, Order)) =>
-      t._3.orderType == OrderConsolidatePower
+      t._3.orderType == OrderType.OrderConsolidatePower
       && t._3.isStar
       && gameRules.board(t._1).musteringPoints > 0
 
-    val consPowerHouseOrder = if orderTypeToSearch == OrderConsolidatePower
-    then searchFunc(OrderConsolidatePower, specialConsPowerOrderFilter, tempThroneTrack)
-    else searchFunc(OrderConsolidatePower, specialConsPowerOrderFilter, tracks(TrackType.Throne))
+    val consPowerHouseOrder = if orderTypeToSearch == OrderType.OrderConsolidatePower
+    then searchFunc(OrderType.OrderConsolidatePower, specialConsPowerOrderFilter, tempThroneTrack)
+    else searchFunc(OrderType.OrderConsolidatePower, specialConsPowerOrderFilter, tracks(TrackType.Throne))
 
     consPowerHouseOrder
   }
@@ -97,9 +97,9 @@ object NextOrderFinder {
 
   private def buildSubPhase(houseType: HouseType, orderType: OrderType): SubPhase = {
     orderType match
-      case OrderRaid => SubPhaseResolveRaidOrder(houseType)
-      case OrderMarch => SubPhaseResolveMarchOrder(houseType)
-      case OrderConsolidatePower => SubPhaseResolveSpecialConsolidatePower(houseType)
+      case OrderType.OrderRaid => SubPhaseResolveRaidOrder(houseType)
+      case OrderType.OrderMarch => SubPhaseResolveMarchOrder(houseType)
+      case OrderType.OrderConsolidatePower => SubPhaseResolveSpecialConsolidatePower(houseType)
       case other => throw new FWCException(s"Invalid order type ${other.toString}")
   }
 }

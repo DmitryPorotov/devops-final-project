@@ -5,7 +5,7 @@ import fwc.game.phases.*
 import fwc.game.phases.actionSubPhases.*
 import fwc.game.actionPhase.*
 import fwc.game.houses.HouseType
-import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard}
+import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseRavenGetWildlingsCard}
 import fwc.game.phases.roundEventsSubPhases.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.gameSaving.GameReplay
@@ -13,8 +13,8 @@ import fwc.gameSaving.actions.action.*
 import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
 import fwc.gameSaving.actions.roundEvents.*
 import fwc.gameSaving.actions.{Action, ActionSetCard, PlayerAction}
-import scala.util.boundary
 
+import scala.util.boundary
 import scala.annotation.tailrec
 import scala.util.Random
 
@@ -88,7 +88,7 @@ object ReactionGameAction {
         )
         else (updatedGameReplay, updatedReply)
 
-      case phaseNoHouse: SubPhaseNoHouse => loop(
+      case phaseNoHouse: SubPhasePassive => loop(
         matchSubPhaseToAction(
           phaseNoHouse,
           updatedGameState,
@@ -121,6 +121,7 @@ object ReactionGameAction {
         else ActionSetTidesOfBattleCards(gameState, s.attackerCard.head, s.defenderCard.head)
       case _: SubPhaseGetWildlingsCard => ActionGetWildlingsCard(gameState, isRandom)
       case s: SubPhaseSetWildlingsCard => ActionSetWildlingsCard(gameState, s.subPhaseWildlingsCard.cardCode)
+      case _: SubPhaseRavenGetWildlingsCard => ActionRavenGetWildlingsCard(gameState, isRandom)
       case _: SubPhaseRefreshTidesOfBattleDeck => ActionRefreshTidesOfBattleDeck(gameState, Random.shuffle(gameRules.boardCards.tidesOfBattle))
       case _: SubPhaseResolveConsolidatePowerOrder => ActionResolveConsolidatePowerOrder(gameState)
       case _: SubPhaseCollectTaxes => ActionCollectTaxes(gameState)

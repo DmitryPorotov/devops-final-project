@@ -1,7 +1,7 @@
 package fwc.game.phases.roundEventsSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseNoHouse, SubPhaseWildlingsMultiHousesMap}
+import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhasePassive, SubPhaseWildlingsMultiHousesMap}
 import ujson.Value
 
 case class SubPhaseWildlingsKillUnits(
@@ -10,7 +10,7 @@ case class SubPhaseWildlingsKillUnits(
                                        mainPhase: MainPhase = PhaseRoundEvents
                                      )
   extends SubPhase(mainPhase) with SubPhaseWildlingsMultiHousesMap(houseTypes)
-  with SubPhaseNoHouse(mainPhase) {
+  with SubPhasePassive(mainPhase) {
 
   override def getSubPhaseName: String = "wildlingsKillUnits"
 

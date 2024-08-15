@@ -32,7 +32,7 @@ case class ActionSetTidesOfBattleCards(
     val newSubPhase =
       if houseWithSteelBlade.nonEmpty
       then SubPhaseChooseToUseValyrianSteelBlade(houseWithSteelBlade.head)
-      else SubPhaseCalculateCombatOutcome()
+      else SubPhaseCalculateCombatOutcome(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
 
     gameState.copy(
       subPhase = newSubPhase,

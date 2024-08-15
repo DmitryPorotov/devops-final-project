@@ -7,7 +7,7 @@ import fwc.game.eventsPhase.{Mustering, Supplies}
 import fwc.game.houses.HouseType
 import fwc.game.phases.PhaseAction
 import fwc.game.phases.roundEventsSubPhases.SubPhaseDisbandUnit
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepCombatCleanUp
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -84,7 +84,7 @@ case class ActionResolveCardWolf0(
     val newPhase =
       if minLosses > 0
       then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepCombatCleanUp, PhaseAction)
-      else NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.winner.head)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.winner.head)
 
     gameState.copy(
       armies = updatedArmies,

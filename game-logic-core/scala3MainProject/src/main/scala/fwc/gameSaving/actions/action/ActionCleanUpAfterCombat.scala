@@ -5,8 +5,8 @@ import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseCalculateGameWinner, SubPhaseCleanUpAfterCombat, SubPhaseResolveHouseCard}
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.phases.actionSubPhases.{SubPhaseCalculateGameWinner, SubPhaseResolveHouseCard}
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction}
 import ujson.Value
 
@@ -16,8 +16,6 @@ case class ActionCleanUpAfterCombat(
                                      gameState: GameState,
                                    ) extends Action(gameState) with JsonSerializable {
   override def doAction(): GameState = {
-//    if !gameState.subPhase.isInstanceOf[SubPhaseCleanUpAfterCombat]
-//    then throw new ActionException("Wrong phase")
 
     val combat = gameState.combat
     val updatedArmies =
@@ -85,7 +83,7 @@ case class ActionCleanUpAfterCombat(
 
     val newPhase =
       if numOfCastles >= 7
-      then SubPhaseCalculateGameWinner()
+      then SubPhaseCalculateGameWinner(HouseType.getSeqOfAll)
       else
       if combat.winnerCard.exists(_.isMoose2)
         && {
@@ -124,7 +122,7 @@ case class ActionCleanUpAfterCombat(
           loserDiscardedCards.size < 7
         }
       then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderMarch, combat.attackerHouse)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, combat.attackerHouse)
 
     gameState.copy(
       subPhase = newPhase,

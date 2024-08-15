@@ -22,10 +22,10 @@ case class ActionRavenChooseTrackBidsOrCollectTaxes(
     then throw new ActionException("Wrong house")
 
     val newPhase =
-      if choice == EventCardChoiceA
+      if choice == EventCardChoiceType.ChoiceA
       then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)
-      else if choice == EventCardChoiceB
-      then SubPhaseCollectTaxes()
+      else if choice == EventCardChoiceType.ChoiceB
+      then SubPhaseCollectTaxes(HouseType.getSeqOfAll)
       else EventCards.getPhaseForDeck3Card(gameState.boardCards.roundEvents3.head, gameState.tracks.steelBladeOwner)
 
     gameState.copy(newPhase)

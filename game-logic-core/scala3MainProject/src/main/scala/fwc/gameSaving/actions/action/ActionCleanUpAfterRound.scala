@@ -4,7 +4,8 @@ import fwc.JsonSerializable
 import fwc.game.actionPhase.DominanceTokensUsage
 import fwc.game.board.{MilitaryUnit, TileNumber}
 import fwc.game.eventsPhase.UsedMusteringPoints
-import fwc.game.phases.actionSubPhases.{SubPhaseCalculateGameWinner, SubPhaseCleanUpAfterRound}
+import fwc.game.houses.HouseType
+import fwc.game.phases.actionSubPhases.SubPhaseCalculateGameWinner
 import fwc.game.{GameState, gameRules}
 import fwc.game.phases.roundEventsSubPhases.SubPhaseGetEventCards
 import fwc.game.planningPhase.{AvailableOrders, PlacedOrders}
@@ -16,13 +17,11 @@ case class ActionCleanUpAfterRound(
                                     isRandom: Boolean
                                   ) extends Action(gameState) with JsonSerializable {
   override def doAction(): GameState = {
-//    if !gameState.subPhase.isInstanceOf[SubPhaseCleanUpAfterRound]
-//    then throw new ActionException("Wrong phase")
 
     val newPhase =
       if gameState.roundCounter == 10
-      then SubPhaseCalculateGameWinner()
-      else SubPhaseGetEventCards()
+      then SubPhaseCalculateGameWinner(HouseType.getSeqOfAll)
+      else SubPhaseGetEventCards(HouseType.getSeqOfAll)
 
     val updatedArmies = gameState.armies.copy(
       gameState.armies.map(

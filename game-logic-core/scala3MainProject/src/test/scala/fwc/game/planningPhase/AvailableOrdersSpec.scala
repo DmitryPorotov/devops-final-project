@@ -18,13 +18,13 @@ class AvailableOrdersSpec extends AnyFlatSpec with should.Matchers {
   "AvailableOrders.scala" should "be able to use an order" in {
     val ao = AvailableOrders.initialize()
 
-    val ao2 = ao.useOrder(HouseType.Wolf, Order(OrderDefend, modifier = 1))
+    val ao2 = ao.useOrder(HouseType.Wolf, Order(OrderType.OrderDefend, modifier = 1))
 
-    assert(ao2.orders(HouseType.Wolf)(OrderDefend).length == 2, "there should be 2 orders left after use")
+    assert(ao2.orders(HouseType.Wolf)(OrderType.OrderDefend).length == 2, "there should be 2 orders left after use")
 
-    val ao3 = ao2.useOrder(HouseType.Wolf, Order(OrderRaid))
+    val ao3 = ao2.useOrder(HouseType.Wolf, Order(OrderType.OrderRaid))
 
-    assert(ao3.orders(HouseType.Wolf)(OrderRaid).length == 2, "there should be 2 orders left after use")
+    assert(ao3.orders(HouseType.Wolf)(OrderType.OrderRaid).length == 2, "there should be 2 orders left after use")
   }
 
 }

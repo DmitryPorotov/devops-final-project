@@ -52,8 +52,8 @@ case class ActionUseValyrianSteelBlade(
 
     val newPhase =
       if choice == ValyrianSteelBladeChoiceType.Nothing || choice == ValyrianSteelBladeChoiceType.PlusOne
-      then SubPhaseCalculateCombatOutcome()
-      else SubPhaseGetTidesOfBattleCards()
+      then SubPhaseCalculateCombatOutcome(Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse))
+      else SubPhaseGetTidesOfBattleCards(Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse))
 
     gameState.copy(
       subPhase = newPhase,

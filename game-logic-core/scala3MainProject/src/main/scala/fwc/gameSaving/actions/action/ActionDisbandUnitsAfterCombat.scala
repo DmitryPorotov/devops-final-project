@@ -10,7 +10,7 @@ import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, Play
 import ujson.Value
 import enrichment.ExtSeq
 import fwc.game.phases.PhaseAction
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepCombatCleanUp
 
 case class ActionDisbandUnitsAfterCombat(
@@ -48,7 +48,7 @@ case class ActionDisbandUnitsAfterCombat(
 
     val newPhase =
       if toConsolidate2(houseType).isEmpty
-      then NextOrderFinder.nextSubPhase(gameState, OrderMarch, gameState.combat.winner.head)
+      then NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.winner.head)
       else SubPhaseDisbandUnit(houseType, UnitDisbandNextStepCombatCleanUp, PhaseAction)
 
     gameState.copy(

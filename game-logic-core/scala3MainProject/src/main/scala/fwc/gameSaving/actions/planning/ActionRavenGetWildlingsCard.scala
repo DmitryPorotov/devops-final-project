@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.planning
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.eventsPhase.cards.TidesOfBattleDeckEmptyException
-import fwc.game.phases.actionSubPhases.{SubPhaseGetTidesOfBattleCards, SubPhaseRefreshTidesOfBattleDeck, SubPhaseSetTidesOfBattleCards}
+import fwc.game.phases.actionSubPhases.{SubPhaseGetTidesOfBattleCards, SubPhaseRefreshTidesOfBattleDeck}
 import fwc.game.phases.planningSubPhases
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChoosePutWildlingsCardOnTopOrBottom
 import fwc.gameSaving.actions.{Action, JsonParsableAction}

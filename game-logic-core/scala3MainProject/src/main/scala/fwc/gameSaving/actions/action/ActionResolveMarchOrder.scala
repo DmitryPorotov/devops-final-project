@@ -7,7 +7,7 @@ import fwc.game.actionPhase.Combat
 import fwc.game.board.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveMarchOrder, SubPhaseResolveSupportOrder}
-import fwc.game.planningPhase.OrderMarch
+import fwc.game.planningPhase.OrderType
 import fwc.gameLoading.{BoardTileLand, BoardTilePort}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
@@ -34,7 +34,7 @@ case class ActionResolveMarchOrder(
 
     val sourceOrderOpt = gameState.placedOrders.getOrderByTileNumber(sourceTileNumber)
     val sourceOrder = if sourceOrderOpt.isEmpty
-      || sourceOrderOpt.head._2.orderType != OrderMarch
+      || sourceOrderOpt.head._2.orderType != OrderType.OrderMarch
       || sourceOrderOpt.head._1 != houseType
     then throw new ActionException(s"There is no march order of house \"$houseType\" in the source tile")
     else sourceOrderOpt.head._2
@@ -44,7 +44,7 @@ case class ActionResolveMarchOrder(
         placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
       )
       return updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderMarch, houseType)
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderMarch, houseType)
       )
 
     validateTargetTiles(sourceTileNumber, targets)
@@ -71,7 +71,7 @@ case class ActionResolveMarchOrder(
         subPhase =
           if hasAttackerPowerToken && !hasArmyLeftAtSourceTile && game.gameRules.board(sourceTileNumber).tileType == BoardTileLand
           then SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
-          else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderMarch, houseType)
+          else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderType.OrderMarch, houseType)
         ,
         armies = updatedArmies
       )

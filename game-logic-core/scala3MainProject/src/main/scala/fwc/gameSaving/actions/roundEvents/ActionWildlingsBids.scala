@@ -48,6 +48,7 @@ case class ActionWildlingsBids(
       if isWinAndWinnerLoser._2.size == 1
       then 
         SubPhaseGetWildlingsCard(
+          HouseType.getSeqOfAll,
           SubPhaseWildlingsCard(
             gameState.bids.toSeq.map(_._1),
             isWinAndWinnerLoser._2.head,

@@ -8,7 +8,7 @@ import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.phases.SubPhase
-import fwc.game.planningPhase.{AvailableOrders, Order, OrderConsolidatePower, OrderType, PlacedOrders}
+import fwc.game.planningPhase.{AvailableOrders, Order, OrderType, PlacedOrders}
 import fwc.gameLoading.BoardTile
 import ujson.Value
 
@@ -46,7 +46,7 @@ case class GameState(
           else
             houseType -> orders.map(
               (tileNum: TileNumber, order: Order) =>
-                tileNum -> Order(OrderConsolidatePower)
+                tileNum -> Order(OrderType.OrderConsolidatePower)
             )
         ))
       else placedOrders
@@ -93,7 +93,7 @@ case class GameState(
             else
               houseType -> orders.map(
                 (tileNum: TileNumber, order: Order) =>
-                  tileNum -> Order(OrderConsolidatePower)
+                  tileNum -> Order(OrderType.OrderConsolidatePower)
               )
         ))
       else placedOrders

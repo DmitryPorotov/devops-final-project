@@ -5,7 +5,7 @@ import fwc.game.board.{Armies, MilitaryUnit, TileNumber, TrackType}
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.*
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.Order
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 

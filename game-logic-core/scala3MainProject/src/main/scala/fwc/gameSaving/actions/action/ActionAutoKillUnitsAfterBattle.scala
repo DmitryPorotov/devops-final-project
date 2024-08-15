@@ -40,7 +40,7 @@ case class ActionAutoKillUnitsAfterBattle(
         combat = updatedCombat2,
         subPhase =
           if updatedCombat2.winner.contains(updatedCombat2.defenderHouse)
-          then SubPhaseAutoRetreatAfterBattle()
+          then SubPhaseAutoRetreatAfterBattle(updatedCombat2.attackerHouse)
           else if updatedCombat2.winnerCard.exists(_.isWolf0) 
           then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
             else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)

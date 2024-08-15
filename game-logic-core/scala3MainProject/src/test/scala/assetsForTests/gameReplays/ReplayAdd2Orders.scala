@@ -2,7 +2,7 @@ package assetsForTests.gameReplays
 
 import assetsForTests.gameReplays.InitialReplayServerSideRandom.gameReplay
 import fwc.communication.reactions.ReactionGameAction
-import fwc.game.planningPhase.{Order, OrderMarch}
+import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameSaving.GameReplay
 import fwc.gameSaving.actions.planning.ActionAddOrder
 
@@ -19,7 +19,7 @@ object ReplayAdd2Orders extends App {
     replay,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderMarch).toJson,
+      "order" -> Order(OrderType.OrderMarch).toJson,
       "houseType" -> "rose",
       "tileNumber" -> 38
     )
@@ -30,7 +30,7 @@ object ReplayAdd2Orders extends App {
     replay1,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderMarch).toJson,
+      "order" -> Order(OrderType.OrderMarch).toJson,
       "houseType" -> "wolf",
       "tileNumber" -> 3
     )

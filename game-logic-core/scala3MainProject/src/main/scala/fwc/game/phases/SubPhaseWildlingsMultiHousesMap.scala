@@ -7,7 +7,7 @@ import scala.collection.mutable
 trait SubPhaseWildlingsMultiHousesMap(
                                        houseTypes: Map[HouseType, Int],
                                      )
-  extends SubPhaseNoHouse {
+  extends SubPhasePassive {
 
   override def toJson: ujson.Value =
     val json = super.toJson
