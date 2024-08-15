@@ -24,8 +24,9 @@ class BasePhaseReaction:
 
     def get_actions(self) -> MessageGameAction:
         pass
+    
     def finalizing_move_json(self, game_id) -> Optional[MessageGameAction]:
-        pass
+        return None
 
     def _to_json(self, **kwargs) -> list[MessageGameAction]:
         return [{

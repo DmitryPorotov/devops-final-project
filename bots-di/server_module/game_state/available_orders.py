@@ -5,6 +5,8 @@ from server_module.game_state.placed_orders import PlacedOrders
 
 
 class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
+    calls = 0
+
     def __init__(self, **kwargs):
         if kwargs is None:
             super().__init__()
@@ -36,3 +38,15 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
                 if len(idx):
                     del inst[ht][o.order_type][idx[0]]
         return inst
+
+    def use_order(self, house: HouseType, order: Order):
+        AvailableOrders.calls += 1
+        idx = -1
+        for i, o in enumerate(self[house][order.order_type]):
+            if o.is_star == order.is_star and o.modifier == order.modifier:
+                idx = i
+                break
+        if idx >= 0:
+            self[house][order.order_type].pop(idx)
+        else:
+            raise RuntimeError('Order "{}" modifier "{}" does not is not available'.format(order.order_type, order.modifier))

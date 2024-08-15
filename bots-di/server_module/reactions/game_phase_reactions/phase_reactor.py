@@ -1,14 +1,27 @@
 from DTO.phases.all_phases import SubPhase
-from server_module.reactions.game_phase_reactions.phase_multi_house_reaction import MultiHouseReact
+from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.game_phase_reactions.planning.add_order_reaction import AddOrderReaction
-from server_module.reactions.game_phase_reactions.planning.raven_choose_change_order_or_look_at_wildling_card import \
+from server_module.reactions.game_phase_reactions.planning.raven_change_order import RavenChangeOrder
+from server_module.reactions.game_phase_reactions.planning.raven_choose_change_order_or_look_at_wildling_card_reaction import \
     RavenChooseChangeOrderOrLookAtWildlingCardReaction
+from server_module.reactions.game_phase_reactions.planning.raven_choose_put_wildlings_card_on_top_or_bottom_reaction import \
+    RavenChoosePutWildlingsCardOnTopOrBottomReaction
+from server_module.reactions.game_phase_reactions.planning.raven_get_wildlings_card_reaction import \
+    RavenGetWildlingsCardReaction
+
+
 
 switcher_obj = {
     'addOrder':AddOrderReaction,
     'ravenChooseChangeOrderOrLookAtWildlingCard': RavenChooseChangeOrderOrLookAtWildlingCardReaction,
+    'ravenGetWildlingsCard': RavenGetWildlingsCardReaction,
+    'ravenChoosePutWildlingsCardOnTopOrBottom': RavenChoosePutWildlingsCardOnTopOrBottomReaction,
+    'ravenChangeOrder': RavenChangeOrder,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):
-    MultiHouseReact.react(switcher_obj[phase['subPhase']], game_id, phase)
-
+    try:
+        PhaseReact.react(switcher_obj[phase['subPhase']], game_id, phase)
+    except KeyError as e:
+        print(phase)
+        raise e

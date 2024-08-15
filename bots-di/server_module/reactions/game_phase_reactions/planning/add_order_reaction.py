@@ -21,11 +21,18 @@ class AddOrderReaction(BasePhaseReaction):
             self._game_state.tracks[TrackType('court')].index(self._house_type)
         )
 
+    __calls_by_round = {}
 
     def get_actions(self) -> list[MessageGameAction]:
         my_armies = self._game_state.armies.get_armies_by_house_type(self._house_type)
         my_placed_orders = self._game_state.placed_orders[self._house_type] if (self._house_type
                                                                                 in self._game_state.placed_orders) else {}
+        if self._house_type not in AddOrderReaction.__calls_by_round:
+            self.__calls_by_round[self._house_type] = self._game_state.round_counter
+        elif self._house_type in AddOrderReaction.__calls_by_round and self.__calls_by_round[self._house_type] == self._game_state.round_counter:
+            return []
+        self.__calls_by_round[self._house_type] = self._game_state.round_counter
+
         return self._get_random_orders(my_armies, my_placed_orders)
 
     def _get_random_orders(self,
@@ -50,7 +57,8 @@ class AddOrderReaction(BasePhaseReaction):
         while idx_rnd_order < len(flat_avail_orders) and idx_army_no_order < len(armies_no_orders_keys):
             if ((flat_avail_orders[idx_rnd_order].is_star and stars_remaining > 0)
                     or not flat_avail_orders[idx_rnd_order].is_star):
-                rnd_orders[armies_no_orders_keys[idx_army_no_order]] = flat_avail_orders[idx_rnd_order]
+                rnd_orders[str(armies_no_orders_keys[idx_army_no_order])] = flat_avail_orders[idx_rnd_order]
+                self._game_state.available_orders.use_order(self._house_type, flat_avail_orders[idx_rnd_order])
                 if flat_avail_orders[idx_rnd_order].is_star:
                     stars_remaining -= 1
                 idx_rnd_order += 1

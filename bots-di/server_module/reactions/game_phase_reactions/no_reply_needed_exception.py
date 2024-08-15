@@ -1,0 +1,2 @@
+class NoReplyNeedException(RuntimeError):
+    pass

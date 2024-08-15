@@ -13,5 +13,10 @@ class HouseToBotId(IntEnum):
 
     @staticmethod
     def get_bot_id_by_house(house: str | HouseType) -> int:
-        return HouseToBotId[house.upper()].value
-    
+        return HouseToBotId[str(house.upper())].value
+
+    @classmethod
+    def get_house_by_bot_id(cls, id: int):
+        for k in cls:
+            if int(k) == id:
+                return k

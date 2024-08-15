@@ -4,6 +4,7 @@ from dependency_injector.wiring import Provide, inject
 
 from DTO.actions.all_actions import Action
 from DTO.messages.messages import MessageGameAction
+from DTO.messages.reply import Reply
 from containers_module import App
 from events_service import EventSourcesService
 from redis_service import RedisConnector
@@ -25,14 +26,15 @@ class ActionReact:
         ActionReact.redis = redis
         events.react_to_game_action.subscribe(on_next=ActionReact.react)
 
+    calls = 0
     @staticmethod
     def react(message: MessageGameAction[Action]):
         if 'reply' in message:
             game_id = message['gameId']
-            for reply in message['reply']:
+            for reply in message['reply']:  # type: Reply[Action]
                 action = reply['player_action']
-                if action['actionType'] == 'openOrders':
-                    OpenOrdersReaction(ActionReact.game_data.get_game(game_id).state, reply)
+                if action['actionType'] == 'openOrders' and 'orders' in reply['player_action']:
+                    OpenOrdersReaction(ActionReact.game_data.get_game(game_id).state, reply).update_game_state()
                 # elif
 
                 react_to_phase(game_id, reply['current_phase'])

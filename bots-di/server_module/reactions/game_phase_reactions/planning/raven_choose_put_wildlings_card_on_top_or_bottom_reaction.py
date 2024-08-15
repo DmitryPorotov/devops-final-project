@@ -1,6 +1,3 @@
-from typing import Optional
-
-from DTO.actions.all_actions import Action
 from DTO.messages.messages import MessageGameAction
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
@@ -9,23 +6,19 @@ from server_module.reactions.game_phase_reactions.base_phase_reaction import Bas
 import random
 
 
-class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BasePhaseReaction):
+class RavenChoosePutWildlingsCardOnTopOrBottomReaction(BasePhaseReaction):
     def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules):
         super().__init__(game_id, house_type, game_state, game_rules)
-        self.__raven_choices = ['nothing', 'changeOrder', 'lookAtWildlingsCard']
 
     def get_actions(self) -> list[MessageGameAction]:
         return self._to_json()
 
     def _to_json(self):
+        is_top = bool(random.randrange(0, 2))
         json = super()._to_json()[0]
-        # random.shuffle(self.__raven_choices)
         json['player_action'] = {
-            'actionType': 'ravenChooseChangeOrderOrLookAtWildlingCard',
+            'actionType': 'ravenChoosePutWildlingsCardOnTopOrBottom',
             'houseType': self._house_type,
-            'ravenChoice': self.__raven_choices[2]
+            'isPutOnTop': is_top
         }
         return [json]
-
-    def finalizing_move_json(self, game_id) -> Optional[MessageGameAction[Action]]:
-        return None

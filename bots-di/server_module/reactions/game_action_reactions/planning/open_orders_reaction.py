@@ -16,4 +16,7 @@ class OpenOrdersReaction(BaseActionReaction):
             orders = action["orders"]
             for ht, os in orders.items():
                 for tn, o in os.items():
-                    self._game_state.placed_orders[HouseType[ht.upper()]][tn] = Order.from_json(o)
+                    house = HouseType[ht.upper()]
+                    if house not in self._game_state.placed_orders:
+                        self._game_state.placed_orders[house] = dict()
+                    self._game_state.placed_orders[house][tn] = Order.from_json(o)
