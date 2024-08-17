@@ -12,7 +12,7 @@ import scala.util.Try
 
 case class PlacedOrders(placedOrders: Map[HouseType, Map[TileNumber, Order]] = Map()) extends JsonSerializable {
 
-  export placedOrders.{apply, get, getOrElse, flatMap}
+  export placedOrders.{apply, contains, get, getOrElse, flatMap}
 
   def toJson: ujson.Value = {
     ujson.Obj(

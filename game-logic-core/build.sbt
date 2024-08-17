@@ -26,8 +26,8 @@ lazy val scala3MainProject = project
     version := "0.1.0-SNAPSHOT",
     libraryDependencies ++=Seq(
       "org.scalamock" %% "scalamock" % "6.0.0" % "test",
-      "org.scalactic" %% "scalactic" % "3.2.18",
-      "org.scalatest" %% "scalatest" % "3.2.18" % "test",
+      "org.scalactic" %% "scalactic" % "3.2.19",
+      "org.scalatest" %% "scalatest" % "3.2.19" % "test",
       "com.lihaoyi" %% "upickle" % "3.3.1",
     ),
   )

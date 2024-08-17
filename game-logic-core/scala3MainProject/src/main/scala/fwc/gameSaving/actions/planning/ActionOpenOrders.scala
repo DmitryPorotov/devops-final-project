@@ -25,6 +25,9 @@ case class ActionOpenOrders(
     if !currentPhase.houseTypes.contains(houseType)
     then throw new ActionException("You have already confirmed your orders")
 
+    if !gameState.placedOrders.contains(houseType)
+    then throw new ActionException("You have not placed any orders")
+
     val ordersOfHouse = gameState.placedOrders(houseType)
     val noOrderArmies: Map[TileNumber, Seq[MilitaryUnit]] =
       gameState.armies.filter(

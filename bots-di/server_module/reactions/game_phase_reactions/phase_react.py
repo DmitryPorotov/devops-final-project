@@ -3,7 +3,6 @@ import logging
 from typing import Optional, Type
 
 from dependency_injector.wiring import Provide, inject
-from numba import typeof
 
 from DTO.phases.all_phases import SubPhase
 from containers_module import App
@@ -28,7 +27,6 @@ class PhaseReact:
             f"{__name__}.{PhaseReact.__class__.__name__}",
         )
 
-    calls = 0
     @staticmethod
     def react(phase_cls: Type[BasePhaseReaction],
               game_id: str,
@@ -39,7 +37,6 @@ class PhaseReact:
             if isinstance(sub_phase['houseTypes'], list):
                 for h in sub_phase['houseTypes']:
                     if h in game.houses:
-                        PhaseReact.calls += 1
                         PhaseReact.__act_on_house(game_id, game, h, phase_cls)
             elif isinstance(sub_phase['houseTypes'], dict):  # type: dict[HouseType, int]
                 # note this is for bidding

@@ -1,13 +1,11 @@
 import json
 
-from reactivex import Observable, Subject
-from reactivex.abc import ObserverBase, SchedulerBase, DisposableBase
+from reactivex import Observable, Subject, operators as op
 
 from DTO.messages.messages import Message
 from base_service import BaseService
 from configs import my_channel
 from redis_service import RedisConnector, RedisMessage
-from reactivex import operators as op
 
 
 class GameManagementEventSources:

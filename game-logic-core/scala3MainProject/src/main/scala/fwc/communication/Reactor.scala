@@ -13,12 +13,17 @@ import scala.util.{Failure, Success, Try}
 object Reactor {
 
   private var games: Map[String, GameReplay] = Map[String, GameReplay]()
+  private def getGame(id: String): GameReplay = {
+    if games.contains(id) then 
+      games(id)
+    else throw new RuntimeException(s"Game id '$id' does not exist.")
+  }
 
   def apply(msg: Message, json: ujson.Value): String = {
     Try[Reply] {
       msg match
         case MessageGameAction(userId, gameId, gameAction, messageId) =>
-          val gameReplay = games(gameId)
+          val gameReplay = getGame(gameId)
           val (replay: GameReplay, reply: ujson.Value) = ReactionGameAction(userId, gameReplay, gameAction)
           games = games updated (gameId, replay)
           ReplyGameAction(gameId, reply, messageId)
@@ -27,7 +32,7 @@ object Reactor {
           ReplyTestConnectivity(messageId)
 
         case MessageSaveGame(userId, gameId, saveName, messageId) =>
-          ReplySaveGame(userId, gameId,ReactionSaveGame(userId, gameId, saveName, games(gameId)), messageId)
+          ReplySaveGame(userId, gameId,ReactionSaveGame(userId, gameId, saveName, getGame(gameId)), messageId)
 
         case MessageListSaves(userId, gameId, messageId) =>
           ReplyListSaves(userId, gameId, ReactionListSavedGames(userId), messageId)
@@ -52,24 +57,24 @@ object Reactor {
           ReplyGetStatus(userId, gameId, gameReplay, messageId)
 
         case MessageJoinGame(userId, gameId, joinAs, name, messageId) =>
-          val settings = games(gameId).gameSettings
+          val settings = getGame(gameId).gameSettings
           val result = ReactionJoinGame(userId, joinAs, name, settings)
-          games = games updated (gameId, games(gameId).copy(gameSettings = result))
+          games = games updated (gameId, getGame(gameId).copy(gameSettings = result))
           ReplyJoinGame(userId, gameId, result, messageId)
 
         case MessageGetGameState(userId, gameId, messageId) =>
-          val game = games(gameId)
+          val game = getGame(gameId)
           ReplyGetGameState(userId, gameId, gameRules, game.currentGameState, game.gameSettings, messageId)
 
         case MessageCreateGame(userId, gameId, isRandomHouses, isInputOnly, messageId) =>
-          val result = ReactionCreateGame(userId, gameId, isRandomHouses, isInputOnly)
-          games = games updated (result._1, GameReplay(result._2, result._3.boardCards, result._3, Seq()))
+          val (id, settings, state) = ReactionCreateGame(userId, gameId, isRandomHouses, isInputOnly)
+          games = games updated (id, GameReplay(settings, state.boardCards, state, Seq()))
           ReplyCreateGame(gameId, messageId)
 
         case MessageStartGame(userId, gameId, messageId) =>
-          val result = ReactionStartGame(userId, games(gameId).gameSettings)
-          val state = games(gameId).currentGameState
-          games = games updated (gameId, games(gameId).copy(
+          val result = ReactionStartGame(userId, getGame(gameId).gameSettings)
+          val state = getGame(gameId).currentGameState
+          games = games updated (gameId, getGame(gameId).copy(
             gameSettings = result,
             currentGameState = state.copy(subPhase = SubPhaseAddOrder(HouseType.getSeqOfAll))
           ))
