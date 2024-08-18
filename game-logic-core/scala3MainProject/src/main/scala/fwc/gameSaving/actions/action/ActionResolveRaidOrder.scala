@@ -70,13 +70,16 @@ case class ActionResolveRaidOrder(
     then gameState.powerTokens.transferOneToken(targetOrder._1, houseType, gameState.armies)
     else gameState.powerTokens
 
-    val newSubPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid, houseType)
-    gameState.copy(
-      subPhase = newSubPhase,
+    val updatedGameState = gameState.copy(
       powerTokens = newPowerTokens,
       placedOrders = gameState.placedOrders
         .removeOrder(sourceOrder._1, sourceTileNumber)
         .removeOrder(targetOrder._1, targetTileNumber)
+    )
+    
+    val newSubPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderRaid, houseType)
+    updatedGameState.copy(
+      subPhase = newSubPhase,
     )
   }
 
