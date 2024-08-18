@@ -51,6 +51,9 @@
         else if (msg.type === 'chat' && msg.body.type === 'create') {
           send_create_game()
         }
+        else if (msg.action === 'get_game_state') {
+          document.getElementById('game_state').value = JSON.stringify(msg.gameState, null,  2)
+        }
       };
       websock.onopen = (event) => {
         console.log("on open: ", event);
@@ -66,10 +69,29 @@
       };
     });
   }
+  function onGetState() {
+    if (!websock) {
+      onClick()
+    }
+    websock.send(JSON.stringify({
+      type: 'action',
+      action: 'get_game_state',
+      lobbyId: 3,
+      userId: 1,
+    }))
+  }
 </script>
   <header>
     <h1>Start bots only game</h1>
     <button onclick="onClick()">Start</button>
+    <div>
+      <h2>Get game state</h2>
+      <button onclick="onGetState()">Get</button>
+    </div>
   </header>
+  <section>
+    <h2>Game state</h2>
+    <textarea id="game_state"></textarea>
+  </section>
 </body>
 </html>
