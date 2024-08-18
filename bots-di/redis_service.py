@@ -27,10 +27,10 @@ class RedisConnector(BaseService):
 
     def start(self):
         self._pubsub.psubscribe(**{self.my_name + '.*': self._on_fill_with_bots_message})
-        self._pubsub.psubscribe(**{'new_game': self._on_game_reset})
+        self._pubsub.psubscribe(**{'new_game.*': self._on_game_reset})
 
         def ex_handler(ex, arg1, arg2):
-            print(ex, arg1, arg2)
+            print("module " + __name__ + " error " + str(ex), arg1, arg2)
             self.logger.critical("Exception in Redis", exc_info=ex, stack_info=True, stacklevel=3)
 
         self._thread = self._pubsub.run_in_thread(sleep_time=.001, exception_handler=ex_handler)

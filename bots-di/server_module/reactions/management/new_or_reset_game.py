@@ -1,8 +1,10 @@
 from dependency_injector.wiring import inject, Provide
 
+from DTO.messages.messages import Message
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.games_data_service import GamesDataService
+from server_module.reactions.game_phase_reactions.planning.add_order_reaction import AddOrderReaction
 
 
 class NewOrResetGame:
@@ -15,4 +17,6 @@ class NewOrResetGame:
         self._events_service.game_management_event_sources.reset_game.subscribe(on_next=self.on_new_reset)
 
     def on_new_reset(self, msg):
-        data, game, worker, game_id = msg
+        message, channel = msg  # type: Message, str
+        AddOrderReaction.delete_game(message['gameId'])
+        self._games_data.delete_game(message['gameId'])

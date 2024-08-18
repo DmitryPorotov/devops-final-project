@@ -1,4 +1,6 @@
 from DTO.phases.all_phases import SubPhase
+from server_module.reactions.game_phase_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
+from server_module.reactions.game_phase_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.game_phase_reactions.planning.add_order_reaction import AddOrderReaction
 from server_module.reactions.game_phase_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
@@ -17,6 +19,8 @@ switcher_obj = {
     'ravenGetWildlingsCard': RavenGetWildlingsCardReaction,
     'ravenChoosePutWildlingsCardOnTopOrBottom': RavenChoosePutWildlingsCardOnTopOrBottomReaction,
     'ravenChangeOrder': RavenChangeOrderReaction,
+    'resolveRaidOrder': ResolveRaidOrderReaction,
+    'resolveMarchOrder': ResolveMarchOrderReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

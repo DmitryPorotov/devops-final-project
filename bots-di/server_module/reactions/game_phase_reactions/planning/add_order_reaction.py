@@ -23,18 +23,28 @@ class AddOrderReaction(BasePhaseReaction):
             self._game_state.tracks[TrackType('court')].index(self._house_type)
         )
 
-    __calls_by_round: dict[HouseType: int] = {}
+    # todo: implement this thought reactivex somehow
+    __calls_by_round: dict[str, dict[HouseType: int]] = {}
+
+    @staticmethod
+    def delete_game(game_id: str):
+        try:
+            del AddOrderReaction.__calls_by_round[game_id]
+        except KeyError:
+            pass
 
     def get_actions(self) -> list[MessageGameAction]:
         my_armies = self._game_state.armies.get_armies_by_house_type(self._house_type)
         my_placed_orders = self._game_state.placed_orders[self._house_type] if (self._house_type
                                                                                 in self._game_state.placed_orders) else {}
+        if self._game_id not in AddOrderReaction.__calls_by_round:
+            AddOrderReaction.__calls_by_round[self._game_id] = {}
 
-        if self._house_type not in AddOrderReaction.__calls_by_round:
-            AddOrderReaction.__calls_by_round[self._house_type] = self._game_state.round_counter
-        elif self._house_type in AddOrderReaction.__calls_by_round and AddOrderReaction.__calls_by_round[self._house_type] == self._game_state.round_counter:
+        if self._house_type not in AddOrderReaction.__calls_by_round[self._game_id]:
+            AddOrderReaction.__calls_by_round[self._game_id][self._house_type] = self._game_state.round_counter
+        elif self._house_type in AddOrderReaction.__calls_by_round[self._game_id] and AddOrderReaction.__calls_by_round[self._game_id][self._house_type] == self._game_state.round_counter:
             return []
-        AddOrderReaction.__calls_by_round[self._house_type] = self._game_state.round_counter
+        AddOrderReaction.__calls_by_round[self._game_id][self._house_type] = self._game_state.round_counter
 
         return self._get_random_orders(my_armies, my_placed_orders)
 

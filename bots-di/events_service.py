@@ -53,11 +53,11 @@ class EventSourcesService(BaseService):
         self.game_management_event_sources.reset_game = Subject()
 
         def new_reset_game_handler(message: RedisMessage):
-            # todo this is not called for some reason
-            if message['type'] == 'message':
+            if message['type'] == 'pmessage':
                 data = json.loads(message['data'])
                 redis_service.unsubscribe('game' + data['gameId'])
-                self.game_management_event_sources.reset_game.on_next((data, message['channel'].decode('utf-8')))
+                channel = message['channel'].decode('utf-8')
+                self.game_management_event_sources.reset_game.on_next((data, channel))
 
         redis_service.set_new_reset_game_handler(new_reset_game_handler)
 

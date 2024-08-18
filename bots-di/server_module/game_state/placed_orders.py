@@ -21,3 +21,17 @@ class PlacedOrders(dict[HouseType, dict[str, Order]]):
                 self[house][tile_num] = order
         else:
             self[house] = {tile_num: order}
+
+    def remove_order(self, tile_num: str, house_type: HouseType = None):
+        if house_type and house_type in self and tile_num in self[house_type]:
+            del self[house_type][tile_num]
+            if len(self[house_type]) == 0:
+                del self[house_type]
+        elif not house_type:
+            for ht, orders in self.items():
+                for tn, _ in orders.items():
+                    if tn == tile_num:
+                        del self[ht][tn]
+                        if len(self[ht]) == 0:
+                            del self[ht]
+                        return
