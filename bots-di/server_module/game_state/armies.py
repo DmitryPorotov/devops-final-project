@@ -2,7 +2,7 @@ from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.house_type import HouseType
 
 
-class Armies(dict[int, list[MilitaryUnit]]):
+class Armies(dict[str, list[MilitaryUnit]]):
     def __init__(self, **kwargs):
         if kwargs is None:
             super().__init__()

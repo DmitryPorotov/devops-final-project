@@ -15,17 +15,17 @@ class App(containers.DeclarativeContainer):
         fname="logging.ini",
     )
 
-    game_manager = providers.ThreadSafeSingleton(
+    game_manager = providers.Singleton(
         GamesDataService
     )
 
-    redis_service = providers.ThreadSafeSingleton(
+    redis_service = providers.Singleton(
         RedisConnector,
         redis_host=redis_host,
         redis_port=redis_port,
         my_name=my_name
     )
-    events = providers.ThreadSafeSingleton(
+    events = providers.Singleton(
         EventSourcesService,
         redis_service=redis_service
     )
