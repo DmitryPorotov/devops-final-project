@@ -46,6 +46,7 @@ object Reactor {
           ReplyLoadGame(gameId, messageId)
 
         case MessageNewGame(userId, gameId, messageId) =>
+          // todo if game exists throw exception and ask for confirmation to rewrite it
           ReplyNewGame(gameId, games.size, messageId)
 
         case MessageGetStatus(userId, gameId, messageId) =>
