@@ -1,5 +1,7 @@
 from typing import Optional
 
+from param.ipython import message
+
 from DTO.actions.planning import ActionAddOrder, ActionOpenOrders
 from DTO.messages.messages import MessageGameAction
 from server_module.game_rules.game_rules import GameRules
@@ -70,7 +72,7 @@ class AddOrderReaction(BasePhaseReaction):
         return self._to_json(rnd_orders)
 
     def __build_one_reply(self, tile_num: str, order: Order):
-        json = super()._to_json()[0]
+        json = super()._to_json()
         json['player_action'] = {
             'actionType': 'addOrder',
             'houseType': self._house_type,
@@ -84,14 +86,17 @@ class AddOrderReaction(BasePhaseReaction):
         return (self.__build_one_reply(tn, o) for (tn, o) in orders.items())
 
     def finalizing_move_json(self, game_id) -> Optional[MessageGameAction[ActionOpenOrders]]:
-        return {
+        action: ActionOpenOrders = {
+            'actionType': 'openOrders',
+            'houseType': self._house_type,
+        }
+        message: MessageGameAction[ActionOpenOrders] = {
             'type': 'action',
             'userId': self._bot_id,
             'gameId': game_id,
             'messageId': str(uuid.uuid4()),
             'action': 'game_action',
-            'player_action': {
-                'actionType': 'openOrders',
-                'houseType': self._house_type,
-            }
+            'player_action': action,
         }
+
+        return message

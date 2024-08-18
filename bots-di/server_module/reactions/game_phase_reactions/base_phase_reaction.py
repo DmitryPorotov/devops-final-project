@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional
 
+from DTO.actions.all_actions import Action
 from DTO.messages.messages import MessageGameAction
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
@@ -22,16 +23,18 @@ class BasePhaseReaction:
         self._house_type = house_type
         self._bot_id = HouseToBotId.get_bot_id_by_house(self._house_type)
 
-    def get_actions(self) -> MessageGameAction:
+    def get_actions(self) -> list[MessageGameAction[Action]]:
         pass
     
     def finalizing_move_json(self, game_id) -> Optional[MessageGameAction]:
         return None
 
-    def _to_json(self, **kwargs) -> list[MessageGameAction]:
-        return [{
+    def _to_json(self, **kwargs) -> list[MessageGameAction] | MessageGameAction:
+        message: MessageGameAction = {
             'userId': self._bot_id,
             'gameId': self._game_id,
             'messageId': str(uuid.uuid4()),
             'action': 'game_action',
-        }]
+            'type': 'action'
+        }
+        return message

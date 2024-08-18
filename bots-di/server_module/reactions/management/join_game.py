@@ -15,11 +15,11 @@ class JoinGame:
                  events_service: EventSourcesService = Provide[App.events],
                  games_data: GamesDataService = Provide[App.game_manager],
                  redis: RedisConnector = Provide[App.redis_service]):
-        events_service.react_to_game_event_sources.message_join_game.subscribe(on_next=self.on_join_game)
+        events_service.react_to_game_event_sources.message_join_game.subscribe(on_next=self.on_joined_as)
         self._games_data = games_data
         self._redis = redis
 
-    def on_join_game(self, msg):
+    def on_joined_as(self, msg):
         data, game, worker, game_id = msg
         self._games_data.add_game(game_id, worker)
         for player in data['gameSettings']['players']:

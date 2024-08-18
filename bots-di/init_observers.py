@@ -3,12 +3,14 @@ from server_module.reactions.management.fill_with_bots import FillWithBots
 from server_module.reactions.management.get_game_state import GetGameState
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.management.join_game import JoinGame
+from server_module.reactions.management.new_or_reset_game import NewOrResetGame
 
 
 def init():
     FillWithBots()
     GetGameState()
     JoinGame()
+    NewOrResetGame()
     PhaseReact.init()
     ActionReact.init()
 

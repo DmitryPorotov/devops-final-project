@@ -15,7 +15,7 @@ class RavenChoosePutWildlingsCardOnTopOrBottomReaction(BasePhaseReaction):
 
     def _to_json(self):
         is_top = bool(random.randrange(0, 2))
-        json = super()._to_json()[0]
+        json = super()._to_json()
         json['player_action'] = {
             'actionType': 'ravenChoosePutWildlingsCardOnTopOrBottom',
             'houseType': self._house_type,

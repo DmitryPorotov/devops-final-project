@@ -1,6 +1,6 @@
 import json
 
-from reactivex import Observable, Subject, operators as op
+from reactivex import Subject, operators as op
 
 from DTO.messages.messages import Message
 from base_service import BaseService
@@ -15,9 +15,10 @@ class GameManagementEventSources:
 
 
 class ReactToGameEventSources:
-    message_join_game: Observable[Message]
-    message_get_game_state: Observable[Message]
-    message_start_game: Observable[Message]  # still not used, game starts when it's created, even before everyone joins
+    message_join_game: Subject[Message]
+    message_get_game_state: Subject[Message]
+    message_start_game: Subject[Message]  # still not used, game starts when it's created, even before everyone joins
+    message_create_game: Subject[Message]  # should not be used b/c game is created before it's filled with bots
 
 
 class EventSourcesService(BaseService):
@@ -52,6 +53,7 @@ class EventSourcesService(BaseService):
         self.game_management_event_sources.reset_game = Subject()
 
         def new_reset_game_handler(message: RedisMessage):
+            # todo this is not called for some reason
             if message['type'] == 'message':
                 data = json.loads(message['data'])
                 redis_service.unsubscribe('game' + data['gameId'])
@@ -59,9 +61,6 @@ class EventSourcesService(BaseService):
 
         redis_service.set_new_reset_game_handler(new_reset_game_handler)
 
-        self.react_to_game_event_sources.message_join_game = self.game_management_event_sources.react_to_game.pipe(
-            op.filter(lambda t: t[0]['action'] == 'join_game' and t[0]['type'] == 'action'),
-        )
 
         react_to_game_message_only = self.game_management_event_sources.react_to_game.pipe(
             op.map(lambda t: t[0]),
@@ -69,9 +68,17 @@ class EventSourcesService(BaseService):
         )
 
         self.react_to_game_event_sources.message_get_game_state = react_to_game_message_only.pipe(
-            op.filter(lambda t: t['action'] == 'get_game_state'),
+            op.filter(lambda m: m['action'] == 'get_game_state'),
         )
 
         self.react_to_game_action = react_to_game_message_only.pipe(
             op.filter(lambda m: m['action'] == "game_action")
+        )
+
+        self.react_to_game_event_sources.message_create_game = react_to_game_message_only.pipe(
+            op.filter(lambda m: m['action'] == 'create_game')
+        )
+
+        self.react_to_game_event_sources.message_join_game = self.game_management_event_sources.react_to_game.pipe(
+            op.filter(lambda t: t[0]['type'] == 'action' and t[0]['action'] == 'join_game'),
         )
