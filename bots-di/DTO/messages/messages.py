@@ -1,4 +1,4 @@
-from typing import TypedDict, TypeVar, Generic, Optional
+from typing import TypedDict, TypeVar, Generic, NotRequired
 
 from DTO.messages.reply import Reply
 
@@ -18,6 +18,6 @@ class MessageGameAction(TypedDict, Generic[_T]):
     messageId: str
     type: str
     action: str
-    player_action: Optional[_T]
-    reply: Optional[list[Reply[_T]]]
+    player_action: NotRequired[_T]
+    reply: NotRequired[list[Reply[_T]]]
 

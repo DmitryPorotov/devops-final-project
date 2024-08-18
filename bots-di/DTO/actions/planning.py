@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional
+from typing import TypedDict, NotRequired
 from server_module.game_state.military_unit import HouseType
 from server_module.game_state.order import Order
 
@@ -43,4 +43,4 @@ class ActionRavenGetWildlingsCard(TypedDict):
 class ActionOpenOrders(TypedDict):
     actionType: str  # = "openOrders"
     houseType: HouseType
-    orders: Optional[dict[str, dict[str, Order]]]
+    orders: NotRequired[dict[str, dict[str, Order]]]
