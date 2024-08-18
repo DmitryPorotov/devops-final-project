@@ -6,7 +6,22 @@
 </head>
 <body>
 <script>
+  let websock = null;
+  function send_create_game() {
+    websock.send(JSON.stringify({
+      type: 'action',
+      action: 'create_game',
+      lobbyId: 3,
+      isRandomHouses: false,
+      userId: 1,
+
+    }))
+  }
   function onClick() {
+    if (websock) {
+      send_create_game();
+      return
+    }
     fetch('http://127.0.0.1:3001/api/v1/auth/login', {
       method: "POST",
       headers: {
@@ -18,12 +33,12 @@
       })
     }).then(async (data) => {
       const user = await data.json();
-      const exampleSocket = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${user.token}`, "events");
-      exampleSocket.onmessage = (event) => {
+      websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${user.token}`, "events");
+      websock.onmessage = (event) => {
         console.log("message:" + event.data);
         const msg = JSON.parse(event.data);
         if (msg.action === 'create_game') {
-          exampleSocket.send(JSON.stringify({
+          websock.send(JSON.stringify({
             type: 'action',
             action: 'fill_with_bots',
             lobbyId: 3,
@@ -33,20 +48,13 @@
             }
           }))
         }
-        else if (msg.type === 'chat') {
-          exampleSocket.send(JSON.stringify({
-            type: 'action',
-            action: 'create_game',
-            lobbyId: 3,
-            isRandomHouses: false,
-            userId: 1,
-
-          }))
+        else if (msg.type === 'chat' && msg.body.type === 'create') {
+          send_create_game()
         }
       };
-      exampleSocket.onopen = (event) => {
+      websock.onopen = (event) => {
         console.log("on open: ", event);
-        exampleSocket.send(JSON.stringify({
+        websock.send(JSON.stringify({
           type: 'chat',
           lobbyId: 3,
           userId: 1,
