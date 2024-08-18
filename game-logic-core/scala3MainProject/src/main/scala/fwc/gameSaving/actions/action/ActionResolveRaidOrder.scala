@@ -7,7 +7,7 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveRaidOrder
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.game.gameRules
-import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileSea}
+import fwc.gameLoading.BoardTileType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -51,10 +51,10 @@ case class ActionResolveRaidOrder(
     then throw new ActionException(s"Tile ${targetTile.name} has no order")
     else targetOrderOpt.head
 
-    if sourceTile.tileType == BoardTileLand && targetTile.tileType == BoardTileSea
+    if sourceTile.tileType == BoardTileType.Land && targetTile.tileType == BoardTileType.Sea
     then throw new ActionException(s"Can not raid sea (${targetTile.name}) from land (${sourceTile.name})")
 
-    if sourceTile.tileType == BoardTilePort && targetTile.tileType == BoardTileLand
+    if sourceTile.tileType == BoardTileType.Port && targetTile.tileType == BoardTileType.Land
     then throw new ActionException(s"Can not raid land (${targetTile.name}) from port (${sourceTile.name})")
 
     if targetOrder._1 == houseType
@@ -76,7 +76,7 @@ case class ActionResolveRaidOrder(
         .removeOrder(sourceOrder._1, sourceTileNumber)
         .removeOrder(targetOrder._1, targetTileNumber)
     )
-    
+
     val newSubPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderRaid, houseType)
     updatedGameState.copy(
       subPhase = newSubPhase,

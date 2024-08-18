@@ -8,7 +8,7 @@ import fwc.game.board.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveMarchOrder, SubPhaseResolveSupportOrder}
 import fwc.game.planningPhase.OrderType
-import fwc.gameLoading.{BoardTileLand, BoardTilePort}
+import fwc.gameLoading.BoardTileType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -69,7 +69,7 @@ case class ActionResolveMarchOrder(
       val hasArmyLeftAtSourceTile = updatedArmies.contains(sourceTileNumber) || (gameRules.board(sourceTileNumber).homeOf == houseType)
       gameStateOrderRemoved.copy(
         subPhase =
-          if hasAttackerPowerToken && !hasArmyLeftAtSourceTile && game.gameRules.board(sourceTileNumber).tileType == BoardTileLand
+          if hasAttackerPowerToken && !hasArmyLeftAtSourceTile && game.gameRules.board(sourceTileNumber).tileType == BoardTileType.Land
           then SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber)
           else NextOrderFinder.nextSubPhase(gameStateOrderRemoved, OrderType.OrderMarch, houseType)
         ,
@@ -111,7 +111,7 @@ case class ActionResolveMarchOrder(
         )
       )
 
-      if hasAttackerPowerToken && hasNoArmyLeft && game.gameRules.board(sourceTileNumber).tileType == BoardTileLand
+      if hasAttackerPowerToken && hasNoArmyLeft && game.gameRules.board(sourceTileNumber).tileType == BoardTileType.Land
       then gameStateNoPhase.copy(subPhase = SubPhaseLeavePowerTokenAtTile(houseType, sourceTileNumber))
       else
         try {
@@ -136,9 +136,9 @@ case class ActionResolveMarchOrder(
 
   private def validateTargetTiles(sourceTileNumber: Int,
                                   targets: Map[Int, Seq[MilitaryUnit]]): Unit = {
-    if gameRules.board(sourceTileNumber).tileType == BoardTileLand
+    if gameRules.board(sourceTileNumber).tileType == BoardTileType.Land
     then targets.foreach((tn, mus: Seq[MilitaryUnit]) => {
-      if gameRules.board(tn).tileType != BoardTileLand
+      if gameRules.board(tn).tileType != BoardTileType.Land
       then throw new ActionException("All target board tiles should be on land")
       else if !hasPath(sourceTileNumber, tn)
       then throw new ActionException(s"There is no path from source tile ${gameRules.board(sourceTileNumber).name}" +
@@ -150,16 +150,16 @@ case class ActionResolveMarchOrder(
     }
     )
     else targets.foreach((tn, _) =>
-      if gameRules.board(tn).tileType == BoardTileLand
+      if gameRules.board(tn).tileType == BoardTileType.Land
       then throw new ActionException("All target board tiles should be on sea or in a port")
       else {
         val tile = gameRules.board(tn)
         if !tile.isNeighbourOf(sourceTileNumber)
         then throw new ActionException(s"There is no path from source tile ${gameRules.board(sourceTileNumber).name}" +
           s" to the target ${gameRules.board(tn).name}")
-        if tile.tileType == BoardTilePort
+        if tile.tileType == BoardTileType.Port
         then
-          val landConnectedToPort = tile.neighbourTiles.find(t => gameRules.board(t).tileType == BoardTileLand).head
+          val landConnectedToPort = tile.neighbourTiles.find(t => gameRules.board(t).tileType == BoardTileType.Land).head
           val armyOpt = gameState.armies.get(landConnectedToPort)
           if armyOpt.isEmpty && (gameRules.board(landConnectedToPort).homeOf != houseType)
           then throw new ActionException(s"Can not enter neutral port (${tile.name})")

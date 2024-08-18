@@ -3,7 +3,7 @@ package fwc.gameSaving.actions.action
 import fwc.game.board.{MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.{GameState, gameRules}
-import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileSea}
+import fwc.gameLoading.BoardTileType
 
 trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
   def hasPath(sourceTileNumber: TileNumber, targetTileNumber: TileNumber): Boolean = {
@@ -22,7 +22,7 @@ trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
                 army.head.nonEmpty
                   && army.head.head.house == houseType
                   && army.head.head.unitType == MilitaryUnitType.Ships
-                  && gameRules.board(cur).tileType != BoardTilePort
+                  && gameRules.board(cur).tileType != BoardTileType.Port
 
             if !visited.contains(cur) && hasShipAtSea
             then dfsRecursion(cur, visited :+ cur)
@@ -40,16 +40,16 @@ trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
 
   def getAllNeighboursBySea(sourceTileNumber: TileNumber): Seq[TileNumber] = {
     val sourceTile = gameRules.board(sourceTileNumber)
-    if sourceTile.tileType == BoardTileSea
-    then return sourceTile.neighbourTiles.filter(tn => gameRules.board(tn).tileType != BoardTileLand)
-    if sourceTile.tileType == BoardTilePort
-    then return sourceTile.neighbourTiles.filter(tn => gameRules.board(tn).tileType == BoardTileSea)
+    if sourceTile.tileType == BoardTileType.Sea
+    then return sourceTile.neighbourTiles.filter(tn => gameRules.board(tn).tileType != BoardTileType.Land)
+    if sourceTile.tileType == BoardTileType.Port
+    then return sourceTile.neighbourTiles.filter(tn => gameRules.board(tn).tileType == BoardTileType.Sea)
 
     def dfsRecursion(tileNum: TileNumber, visited: Seq[TileNumber]): Set[TileNumber] = {
       gameRules.board(tileNum).neighbourTiles.foldLeft(Set())(
         (acc, cur) =>
           val acc2 =
-            if gameRules.board(cur).tileType == BoardTileLand
+            if gameRules.board(cur).tileType == BoardTileType.Land
             then acc + cur
             else acc
           val army = gameState.armies.get(cur)
@@ -60,7 +60,7 @@ trait MarchRetreatTrait(gameState: GameState, houseType: HouseType) {
               army.head.nonEmpty
                 && army.head.head.house == houseType
                 && army.head.head.unitType == MilitaryUnitType.Ships
-                && gameRules.board(cur).tileType != BoardTilePort
+                && gameRules.board(cur).tileType != BoardTileType.Port
 
           if !visited.contains(cur) && hasShipAtSea
           then dfsRecursion(cur, visited :+ cur) ++ acc2

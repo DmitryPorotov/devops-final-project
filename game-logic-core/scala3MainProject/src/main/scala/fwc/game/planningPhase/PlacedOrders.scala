@@ -4,7 +4,7 @@ import fwc.game.board.TileNumber
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.{FWCException, gameRules}
 import fwc.game.houses.HouseType
-import fwc.gameLoading.{BoardTileLand, BoardTilePort, BoardTileType}
+import fwc.gameLoading.BoardTileType
 import ujson.Value
 
 import scala.util.Try
@@ -65,9 +65,9 @@ case class PlacedOrders(placedOrders: Map[HouseType, Map[TileNumber, Order]] = M
   def getSupportOrdersForTile(sourceTileNumber: TileNumber): Map[TileNumber, (HouseType, Order)] = {
     val sourceTile = gameRules.board(sourceTileNumber)
     val neighboursTileNumbers = sourceTile.neighbourTiles
-    val isRelevantTile = if sourceTile.tileType == BoardTileLand
-      then (t: BoardTileType) => t != BoardTilePort
-      else (t: BoardTileType) => t != BoardTileLand
+    val isRelevantTile = if sourceTile.tileType == BoardTileType.Land
+      then (t: BoardTileType) => t != BoardTileType.Port
+      else (t: BoardTileType) => t != BoardTileType.Land
     placedOrders.flatMap((houseType: HouseType, orders: Map[TileNumber, Order]) =>
       orders.foldLeft[Map[TileNumber, (HouseType, Order)]](Map())(
         (acc: Map[TileNumber, (HouseType, Order)], tnOrder: (TileNumber, Order)) =>

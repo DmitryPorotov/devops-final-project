@@ -3,7 +3,7 @@ package fwc.game.eventsPhase
 import fwc.game.board.{Armies, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.gameRules
-import fwc.gameLoading.BoardTilePort
+import fwc.gameLoading.BoardTileType
 
 object Taxes {
   def collectTaxes(armies: Armies, powerTokens: PowerTokens): PowerTokens = {
@@ -11,7 +11,7 @@ object Taxes {
       for (
         army <- armies;
         tile <- gameRules.board if army._1 == tile.number
-          && (tile.powerPoints > 0 || tile.tileType == BoardTilePort)
+          && (tile.powerPoints > 0 || tile.tileType == BoardTileType.Port)
           && army._2.head.house != HouseType.Neutral
       )
       yield (army._2.head.house, tile.number, if tile.powerPoints > 0 then tile.powerPoints else 1)

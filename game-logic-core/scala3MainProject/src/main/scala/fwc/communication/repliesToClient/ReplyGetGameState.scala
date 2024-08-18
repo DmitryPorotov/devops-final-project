@@ -24,7 +24,7 @@ case class ReplyGetGameState(
     json.value.addAll(Map(
       "gameRules" -> gameRules.toJson,
       "gameState" -> (
-        if userId < 0 then
+        if userId < 0 || userId == 1 then //todo check if admin somehow instead of "userId == 1" (maybe on webserver and send negative id)
           gameState.toJson
         else if gameSettings.isInputOnly && inputtingPlayer.nonEmpty then
           gameState.toJsonForInputtingPlayer(inputtingPlayer.head.forHouses)

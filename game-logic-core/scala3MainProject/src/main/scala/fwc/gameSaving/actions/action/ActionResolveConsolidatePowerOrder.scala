@@ -5,7 +5,7 @@ import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseCleanUpAfterRound, SubPhaseResolveConsolidatePowerOrder}
 import fwc.game.planningPhase.{Order, OrderType}
-import fwc.gameLoading.BoardTileSea
+import fwc.gameLoading.BoardTileType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction}
 import ujson.Value
 
@@ -22,7 +22,7 @@ case class ActionResolveConsolidatePowerOrder(
       (acc, tnToHouseOrder: (Int,(HouseType,Order))) =>
         val tile = gameRules.board(tnToHouseOrder._1)
         if tnToHouseOrder._2._2.orderType == OrderType.OrderConsolidatePower
-          && tile.tileType != BoardTileSea
+          && tile.tileType != BoardTileType.Sea
         then acc + (tnToHouseOrder._2._1 -> (acc.getOrElse(tnToHouseOrder._2._1, 0) + tile.powerPoints + 1))
         else acc
     )

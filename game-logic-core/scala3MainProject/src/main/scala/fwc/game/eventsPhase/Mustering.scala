@@ -3,7 +3,7 @@ package fwc.game.eventsPhase
 import fwc.game.{GameRules, GameState, gameRules}
 import fwc.game.board.*
 import fwc.game.houses.*
-import fwc.gameLoading.{BoardTile, BoardTileLand}
+import fwc.gameLoading.{BoardTile, BoardTileType}
 import enrichment.ExtSeq
 import fwc.game.board.TileNumber
 
@@ -138,7 +138,7 @@ object Mustering {
 
     commonChecks(militaryUnitToMuster, gameState.armies, musteringBoardTile)
 
-    if targetBoardTile.tileType == BoardTileLand
+    if targetBoardTile.tileType == BoardTileType.Land
     then throw new MusteringException("A ship must be mustered on a sea or in a port")
 
     val armyAtTargetTile = gameState.armies.getOrElse(musteringTargetTileNumber, Seq())
