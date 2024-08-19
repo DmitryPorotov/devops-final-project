@@ -40,6 +40,7 @@ class ResolveMarchOrderReaction(BasePhaseReaction):
 
     def __choose_target_tiles(self, source: int) -> dict[int, list[MilitaryUnit]]:
         # note: I'll do only 1 target for now
+        # todo: check supplies (maybe I should do a retry strategy instead)
         source_tile = self._game_rules.board[source]
         potential_targets = source_tile.neighbour_tiles if source_tile.tile_type is BoardTileType.SEA or source_tile.tile_type is BoardTileType.PORT else self.__find_reachable_targets(source_tile, [source], [])
 
@@ -49,13 +50,13 @@ class ResolveMarchOrderReaction(BasePhaseReaction):
         if source_tile.tile_type is BoardTileType.SEA:
             potential_targets = self.__filter_out_land(potential_targets)
 
-        random.shuffle(potential_targets)
+        idx = random.randrange(len(potential_targets))
         armies_at_source = list(self._game_state.armies[str(source)])
         armies_at_source = self.__filter_out_unmusterable(armies_at_source)
         num_to_send = random.randrange(1, len(armies_at_source) + 1)
         random.shuffle(armies_at_source)
         return {
-            potential_targets[0]: armies_at_source[:num_to_send]
+            potential_targets[idx]: armies_at_source[:num_to_send]
         }
 
     @staticmethod

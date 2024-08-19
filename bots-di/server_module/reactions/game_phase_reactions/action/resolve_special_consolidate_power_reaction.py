@@ -20,12 +20,11 @@ class ResolveSpecialConsolidatePowerReaction(BasePhaseReaction):
     def get_actions(self) -> list[MessageGameAction]:
         dont_muster = not bool(random.randrange(0, 2))
         tn, order = self.__find_order()
-        point_to_muster = self._game_rules.board[int(tn)].mustering_points
-        if dont_muster or not point_to_muster:
+        points_to_muster = self._game_rules.board[int(tn)].mustering_points
+        if dont_muster or not points_to_muster:
             return [self._to_json(tn)]
 
-        units_left_to_muster = self._game_state.armies.get_units_left_to_muster(self._game_rules, self._house_type)
-        if point_to_muster == 1:
+
 
 
     def __find_order(self) -> tuple[str, Order]:
@@ -34,7 +33,15 @@ class ResolveSpecialConsolidatePowerReaction(BasePhaseReaction):
                 return tn, o
 
 
-    def __find_possible_muster_units
+    def __find_possible_muster_units(self, points_to_muster: int, tile_num: str) -> MilitaryUnit:
+        units_left_to_muster = self._game_state.armies.get_units_left_to_muster(self._game_rules, self._house_type)
+        if points_to_muster == 1:
+            # find something to upgrade
+            pass
+        else:
+            # get unit for 2 points
+            pass
+
 
     def _to_json(self, tile_num: int, unit: Optional[MilitaryUnit] = None) -> MessageGameAction[ActionResolveSpecialConsolidatePower]:
         json: MessageGameAction[ActionResolveSpecialConsolidatePower] = super()._to_json()

@@ -1,7 +1,5 @@
 from typing import Optional
 
-from param.ipython import message
-
 from DTO.actions.planning import ActionAddOrder, ActionOpenOrders
 from DTO.messages.messages import MessageGameAction
 from server_module.game_rules.game_rules import GameRules
@@ -12,6 +10,7 @@ from server_module.game_state.order import Order
 import random
 import uuid
 
+from server_module.game_state.order_type import OrderType
 from server_module.game_state.track_type import TrackType
 from server_module.reactions.game_phase_reactions.base_phase_reaction import BasePhaseReaction
 
@@ -33,7 +32,7 @@ class AddOrderReaction(BasePhaseReaction):
         except KeyError:
             pass
 
-    def get_actions(self) -> list[MessageGameAction]:
+    def get_actions(self) -> list[MessageGameAction[ActionAddOrder]]:
         my_armies = self._game_state.armies.get_armies_by_house_type(self._house_type)
         my_placed_orders = self._game_state.placed_orders[self._house_type] if (self._house_type
                                                                                 in self._game_state.placed_orders) else {}
@@ -49,7 +48,7 @@ class AddOrderReaction(BasePhaseReaction):
         return self._get_random_orders(my_armies, my_placed_orders)
 
     def _get_random_orders(self,
-                           my_armies: dict[int, list[MilitaryUnit]],
+                           my_armies: dict[str, list[MilitaryUnit]],
                            my_placed_orders: dict[int, Order]) -> list[MessageGameAction[ActionAddOrder]]:
         armies_no_orders = {}
         for x in my_armies:
@@ -59,9 +58,19 @@ class AddOrderReaction(BasePhaseReaction):
         avail_orders = self._game_state.available_orders[self._house_type]
 
         flat_avail_orders = []
-        for t in avail_orders:
-            flat_avail_orders.extend(avail_orders[t])
-        random.shuffle(flat_avail_orders)
+
+        ## non-random
+        flat_avail_orders.extend(avail_orders[OrderType.MARCH])
+        flat_avail_orders.extend(avail_orders[OrderType.SUPPORT])
+        flat_avail_orders.extend(avail_orders[OrderType.CONSOLIDATE_POWER])
+        flat_avail_orders.extend(avail_orders[OrderType.DEFEND])
+        flat_avail_orders.extend(avail_orders[OrderType.RAID])
+
+        ## random
+        # for t in avail_orders:
+        #     flat_avail_orders.extend(avail_orders[t])
+        # random.shuffle(flat_avail_orders)
+
         rnd_orders = {}
         idx_rnd_order = 0
         idx_army_no_order = 0

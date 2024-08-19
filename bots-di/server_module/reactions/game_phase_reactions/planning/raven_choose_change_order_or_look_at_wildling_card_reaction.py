@@ -20,10 +20,10 @@ class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BasePhaseReaction):
 
     def _to_json(self) -> MessageGameAction[ActionRavenChooseChangeOrderOrLookAtWildlingCard]:
         json = super()._to_json()
-        random.shuffle(self.__raven_choices)
+        idx = random.randrange(len(self.__raven_choices))
         json['player_action'] = {
             'actionType': 'ravenChooseChangeOrderOrLookAtWildlingCard',
             'houseType': self._house_type,
-            'ravenChoice': self.__raven_choices[1]
+            'ravenChoice': self.__raven_choices[idx]
         }
         return json

@@ -29,8 +29,8 @@ class ResolveRaidOrderReaction(BasePhaseReaction):
         for tn, o in self._game_state.placed_orders[self._house_type].items():
             if o.order_type is OrderType.RAID:
                 raid_orders.append((tn, o))
-        random.shuffle(raid_orders)
-        return raid_orders[0]
+        idx = random.randrange(len(raid_orders))
+        return raid_orders[idx]
 
     def __choose_target_order(self, source: int, is_star: bool) -> int:
 
@@ -45,8 +45,8 @@ class ResolveRaidOrderReaction(BasePhaseReaction):
         if len(target_candidates) == 0:
             return source
         else:
-            random.shuffle(target_candidates)
-            return target_candidates[0][0]
+            idx = random.randrange(len(target_candidates))
+            return target_candidates[idx][0]
 
 
     @staticmethod
