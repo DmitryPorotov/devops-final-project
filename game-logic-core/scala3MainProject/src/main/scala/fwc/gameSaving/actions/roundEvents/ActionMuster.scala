@@ -37,22 +37,9 @@ case class ActionMuster(
         else Mustering.musterShips(fromTile, toTile.head, unitToMuster, gameState)
       else Mustering.musterGroundUnit(fromTile, unitToMuster, gameState, isUpgrade)
 
-    val updatedGameState = gameState.copy(
+    gameState.copy(
       armies = ar,
       usedMusteringPoints = usedMustPoints
-    )
-    
-    val fromBoardTile = gameRules.board(fromTile)
-    val newPhase =
-      if fromBoardTile.musteringPoints > usedMustPoints(fromBoardTile)
-      then SubPhaseMuster(houseType)
-      else {
-        val nextHouse = gameState.tracks.getNextHouseOnThrone(houseType)
-        ???
-      }
-
-    updatedGameState.copy(
-      newPhase
     )
   }
 
