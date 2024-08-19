@@ -38,7 +38,7 @@ object GameServer {
                 "action" -> "error",
                 "message" -> e.getMessage,
                 "type" -> "action",
-                "gameId" -> e.gameId,
+                "gameId" -> (if e.gameId != null then e.gameId else ujson.Null),
                 "userId" -> e.userId,
                 "messageId" -> e.messageId,
               ).render(fwc.jsonIndentation), true)
@@ -72,6 +72,7 @@ object GameServer {
         }
         catch
           case e: Exception =>
+            val a = 0
             (ujson.Obj(
                 "action" -> "error",
                 "message" -> e.getMessage,
