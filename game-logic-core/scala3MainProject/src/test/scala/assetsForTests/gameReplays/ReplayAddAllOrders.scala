@@ -18,7 +18,7 @@ object ReplayAddAllOrders extends App {
     initReplay,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "rose",
       "tileNumber" -> 38
     )
@@ -29,7 +29,7 @@ object ReplayAddAllOrders extends App {
     replay,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "wolf",
       "tileNumber" -> 3
     )
@@ -40,7 +40,7 @@ object ReplayAddAllOrders extends App {
     replay2,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "wolf",
       "tileNumber" -> 2
     )
@@ -51,7 +51,7 @@ object ReplayAddAllOrders extends App {
     replay3,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderConsolidatePower).toJson,
+      "order" -> Order(OrderType.ConsolidatePower).toJson,
       "houseType" -> "wolf",
       "tileNumber" -> 7
     )
@@ -62,7 +62,7 @@ object ReplayAddAllOrders extends App {
     replay4,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "moose",
       "tileNumber" -> 31
     )
@@ -73,7 +73,7 @@ object ReplayAddAllOrders extends App {
     replay5,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "moose",
       "tileNumber" -> 30
     )
@@ -84,7 +84,7 @@ object ReplayAddAllOrders extends App {
     replay6,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderConsolidatePower).toJson,
+      "order" -> Order(OrderType.ConsolidatePower).toJson,
       "houseType" -> "moose",
       "tileNumber" -> 40
     )
@@ -95,7 +95,7 @@ object ReplayAddAllOrders extends App {
     replay7,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "rose",
       "tileNumber" -> 44
     )
@@ -106,7 +106,7 @@ object ReplayAddAllOrders extends App {
     replay8,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderSupport).toJson,
+      "order" -> Order(OrderType.Support).toJson,
       "houseType" -> "rose",
       "tileNumber" -> 41
     )
@@ -117,7 +117,7 @@ object ReplayAddAllOrders extends App {
     replay9,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "lion",
       "tileNumber" -> 22
     )
@@ -128,7 +128,7 @@ object ReplayAddAllOrders extends App {
     replay10,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderSupport).toJson,
+      "order" -> Order(OrderType.Support).toJson,
       "houseType" -> "lion",
       "tileNumber" -> 21
     )
@@ -139,7 +139,7 @@ object ReplayAddAllOrders extends App {
     replay11,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "lion",
       "tileNumber" -> 27
     )
@@ -151,7 +151,7 @@ object ReplayAddAllOrders extends App {
     replay12,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "pufferfish",
       "tileNumber" -> 55
     )
@@ -162,7 +162,7 @@ object ReplayAddAllOrders extends App {
     replay13,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderSupport).toJson,
+      "order" -> Order(OrderType.Support).toJson,
       "houseType" -> "pufferfish",
       "tileNumber" -> 50
     )
@@ -173,7 +173,7 @@ object ReplayAddAllOrders extends App {
     replay14,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "pufferfish",
       "tileNumber" -> 54
     )
@@ -184,7 +184,7 @@ object ReplayAddAllOrders extends App {
     replay15,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderConsolidatePower).toJson,
+      "order" -> Order(OrderType.ConsolidatePower).toJson,
       "houseType" -> "kraken",
       "tileNumber" -> 17
     )
@@ -195,7 +195,7 @@ object ReplayAddAllOrders extends App {
     replay16,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderSupport).toJson,
+      "order" -> Order(OrderType.Support).toJson,
       "houseType" -> "kraken",
       "tileNumber" -> 15
     )
@@ -206,7 +206,7 @@ object ReplayAddAllOrders extends App {
     replay17,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "kraken",
       "tileNumber" -> 16
     )
@@ -217,7 +217,7 @@ object ReplayAddAllOrders extends App {
     replay18,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch, modifier = -1).toJson,
+      "order" -> Order(OrderType.March, modifier = -1).toJson,
       "houseType" -> "kraken",
       "tileNumber" -> 12
     )

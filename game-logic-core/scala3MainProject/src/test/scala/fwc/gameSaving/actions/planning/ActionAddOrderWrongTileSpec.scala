@@ -17,7 +17,7 @@ class ActionAddOrderWrongTileSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Wolf,
       Order(
-        OrderType.OrderMarch
+        OrderType.March
       ),
 
       5
@@ -27,7 +27,7 @@ class ActionAddOrderWrongTileSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Kraken,
       Order(
-        OrderType.OrderMarch
+        OrderType.March
       ),
       3
     ).doAction())
@@ -36,7 +36,7 @@ class ActionAddOrderWrongTileSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Kraken,
       Order(
-        OrderType.OrderMarch,
+        OrderType.March,
         true,
         1
       ),

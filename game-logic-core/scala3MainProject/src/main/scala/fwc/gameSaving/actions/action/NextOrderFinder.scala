@@ -52,28 +52,28 @@ object NextOrderFinder {
 
     val searchFunc = findRaidByType(flatOrders)
 
-    val raidHouseOrder = searchFunc(OrderType.OrderRaid, _._3.orderType == OrderType.OrderRaid, tempThroneTrack)
+    val raidHouseOrder = searchFunc(OrderType.Raid, _._3.orderType == OrderType.Raid, tempThroneTrack)
 
     if raidHouseOrder.nonEmpty
     then return raidHouseOrder
 
-    val marchOrderFilter = (t: (Int, HouseType, Order)) => t._3.orderType == OrderType.OrderMarch
+    val marchOrderFilter = (t: (Int, HouseType, Order)) => t._3.orderType == OrderType.March
 
-    val marchHouseOrder = if orderTypeToSearch == OrderType.OrderMarch
-    then searchFunc(OrderType.OrderMarch, marchOrderFilter, tempThroneTrack)
-    else searchFunc(OrderType.OrderMarch, marchOrderFilter, tracks(TrackType.Throne))
+    val marchHouseOrder = if orderTypeToSearch == OrderType.March
+    then searchFunc(OrderType.March, marchOrderFilter, tempThroneTrack)
+    else searchFunc(OrderType.March, marchOrderFilter, tracks(TrackType.Throne))
 
     if marchHouseOrder.nonEmpty
     then return marchHouseOrder
 
     val specialConsPowerOrderFilter = (t: (Int, HouseType, Order)) =>
-      t._3.orderType == OrderType.OrderConsolidatePower
+      t._3.orderType == OrderType.ConsolidatePower
       && t._3.isStar
       && gameRules.board(t._1).musteringPoints > 0
 
-    val consPowerHouseOrder = if orderTypeToSearch == OrderType.OrderConsolidatePower
-    then searchFunc(OrderType.OrderConsolidatePower, specialConsPowerOrderFilter, tempThroneTrack)
-    else searchFunc(OrderType.OrderConsolidatePower, specialConsPowerOrderFilter, tracks(TrackType.Throne))
+    val consPowerHouseOrder = if orderTypeToSearch == OrderType.ConsolidatePower
+    then searchFunc(OrderType.ConsolidatePower, specialConsPowerOrderFilter, tempThroneTrack)
+    else searchFunc(OrderType.ConsolidatePower, specialConsPowerOrderFilter, tracks(TrackType.Throne))
 
     consPowerHouseOrder
   }
@@ -97,9 +97,9 @@ object NextOrderFinder {
 
   private def buildSubPhase(houseType: HouseType, orderType: OrderType): SubPhase = {
     orderType match
-      case OrderType.OrderRaid => SubPhaseResolveRaidOrder(houseType)
-      case OrderType.OrderMarch => SubPhaseResolveMarchOrder(houseType)
-      case OrderType.OrderConsolidatePower => SubPhaseResolveSpecialConsolidatePower(houseType)
+      case OrderType.Raid => SubPhaseResolveRaidOrder(houseType)
+      case OrderType.March => SubPhaseResolveMarchOrder(houseType)
+      case OrderType.ConsolidatePower => SubPhaseResolveSpecialConsolidatePower(houseType)
       case other => throw new FWCException(s"Invalid order type ${other.toString}")
   }
 }

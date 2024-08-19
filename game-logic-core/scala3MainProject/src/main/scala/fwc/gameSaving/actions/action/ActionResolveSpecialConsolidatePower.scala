@@ -2,19 +2,23 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.{Armies, MilitaryUnit, TileNumber}
-import fwc.game.eventsPhase.Mustering
+import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType, TileNumber}
+import fwc.game.eventsPhase.{Mustering, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.SubPhaseResolveSpecialConsolidatePower
 import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
+import scala.util.Try
+
 case class ActionResolveSpecialConsolidatePower(
                                                  gameState: GameState,
                                                  houseType: HouseType,
-                                                 tileNumber: TileNumber,
-                                                 unit: MilitaryUnit
+                                                 unitToMuster: Option[MilitaryUnit],
+                                                 fromTile: TileNumber,
+                                                 toTile: Option[TileNumber],
+                                                 isUpgrade: Boolean
                                                )
   extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
@@ -24,18 +28,18 @@ case class ActionResolveSpecialConsolidatePower(
     if gameState.subPhase.asInstanceOf[SubPhaseResolveSpecialConsolidatePower].houseType != houseType
     then throw new ActionException("Wrong house")
 
-    val orderOpt = gameState.placedOrders.getOrderByTileNumber(tileNumber)
+    val orderOpt = gameState.placedOrders.getOrderByTileNumber(fromTile)
     val order =
       if orderOpt.isEmpty
-      then throw new ActionException(s"There is no order at tile $tileNumber")
+      then throw new ActionException(s"There is no order at tile $fromTile")
       else orderOpt.head
 
-    if order._1 != houseType || order._2.orderType != OrderType.OrderConsolidatePower || !order._2.isStar
-    then throw new ActionException(s"There is no special consolidate power order of house $houseType at tile $tileNumber")
+    if order._1 != houseType || order._2.orderType != OrderType.ConsolidatePower || !order._2.isStar
+    then throw new ActionException(s"There is no special consolidate power order of house $houseType at tile $fromTile")
 
-    val tile = gameRules.board(tileNumber)
+    val tile = gameRules.board(fromTile)
 
-    val updatedPlacedOrders = gameState.placedOrders.removeOrder(houseType, tileNumber)
+    val updatedPlacedOrders = gameState.placedOrders.removeOrder(houseType, fromTile)
 
     val updatedGameState =
       gameState.copy(
@@ -44,10 +48,10 @@ case class ActionResolveSpecialConsolidatePower(
 
     val updatedGameState2 =
       updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderConsolidatePower, houseType)
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.ConsolidatePower, houseType)
       )
 
-    if unit == null
+    if unitToMuster.isEmpty
     then updatedGameState2.copy(
       powerTokens = gameState.powerTokens.addTokens(
         houseType,
@@ -55,9 +59,16 @@ case class ActionResolveSpecialConsolidatePower(
         gameState.armies)
     )
     else {
-      val (armies: Armies, _) = Mustering.musterGroundUnit(tileNumber, unit, updatedGameState2)
+      val (ar: Armies, usedMustPoints: UsedMusteringPoints) =
+        if unitToMuster.head.unitType == MilitaryUnitType.Ships
+        then 
+          if toTile.isEmpty
+          then throw new ActionException("toTile should not be empty")
+          else Mustering.musterShips(fromTile, toTile.head, unitToMuster.head, gameState)
+        else Mustering.musterGroundUnit(fromTile, unitToMuster.head, gameState, isUpgrade)
       updatedGameState2.copy(
-        armies = armies
+        armies = ar,
+        usedMusteringPoints = usedMustPoints,
       )
     }
   }
@@ -65,8 +76,10 @@ case class ActionResolveSpecialConsolidatePower(
   override def toJson: Value = ujson.Obj(
     Action.actionTypeJsonKey -> "resolveSpecialConsolidatePower",
     "houseType" -> houseType.toString,
-    "tileNumber" -> tileNumber,
-    "unit" -> unit.toJson
+    "fromTile" -> fromTile,
+    "unitToMuster" -> (if unitToMuster.nonEmpty then unitToMuster.head.toJson else ujson.Null),
+    "toTile" -> (if toTile.nonEmpty then toTile.head else ujson.Null),
+    "isUpgrade" -> isUpgrade
   )
 }
 
@@ -75,7 +88,9 @@ object ActionResolveSpecialConsolidatePower extends JsonParsableAction {
     ActionResolveSpecialConsolidatePower(
       gameState,
       HouseType.fromString(json("houseType").str),
-      json("tileNumber").num.toInt,
-      MilitaryUnit.fromJson(json("unit"))
+      Try(Some(MilitaryUnit.fromJson(json("unitToMuster").obj))).getOrElse(None),
+      json("fromTile").num.toInt,
+      Try(Some(json("toTile").num.toInt)).getOrElse(None),
+      json("isUpgrade").bool
     )
 }

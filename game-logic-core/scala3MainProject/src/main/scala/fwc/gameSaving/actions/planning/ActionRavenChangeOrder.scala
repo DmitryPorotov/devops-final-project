@@ -34,7 +34,7 @@ case class ActionRavenChangeOrder(
     else throw new ActionException(s"There is no order at ${gameRules.board(tileNumber).name} ($tileNumber)")
 
     val newPhase = NextOrderFinder.nextSubPhase(
-      newGameState, OrderType.OrderRaid
+      newGameState, OrderType.Raid
     )
 
     ActionAddOrder(newGameState, houseType, order, tileNumber).doPlaceOrder().copy(

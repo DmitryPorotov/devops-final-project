@@ -1,6 +1,12 @@
 from DTO.phases.all_phases import SubPhase
+from server_module.reactions.game_phase_reactions.action.leave_power_token_at_tile_reaction import \
+    LeavePowerTokenAtTileReaction
+from server_module.reactions.game_phase_reactions.action.resolve_consolidate_power_order_reaction import \
+    ResolveConsolidatePowerOrderReaction
 from server_module.reactions.game_phase_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
 from server_module.reactions.game_phase_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
+from server_module.reactions.game_phase_reactions.action.resolve_special_consolidate_power_reaction import \
+    ResolveSpecialConsolidatePowerReaction
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.game_phase_reactions.planning.add_order_reaction import AddOrderReaction
 from server_module.reactions.game_phase_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
@@ -10,8 +16,7 @@ from server_module.reactions.game_phase_reactions.planning.raven_choose_put_wild
     RavenChoosePutWildlingsCardOnTopOrBottomReaction
 from server_module.reactions.game_phase_reactions.planning.raven_get_wildlings_card_reaction import \
     RavenGetWildlingsCardReaction
-
-
+from utils_ import print_file_lineno_error
 
 switcher_obj = {
     'addOrder':AddOrderReaction,
@@ -21,11 +26,15 @@ switcher_obj = {
     'ravenChangeOrder': RavenChangeOrderReaction,
     'resolveRaidOrder': ResolveRaidOrderReaction,
     'resolveMarchOrder': ResolveMarchOrderReaction,
+    'leavePowerTokenAtTile': LeavePowerTokenAtTileReaction,
+    'resolveConsolidatePowerOrder': ResolveConsolidatePowerOrderReaction,
+    'resolveSpecialConsolidatePower': ResolveSpecialConsolidatePowerReaction
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):
     try:
         PhaseReact.react(switcher_obj[phase['subPhase']], game_id, phase)
     except KeyError as e:
-        print("Module: " + __name__ + " " + str(phase))
+        print_file_lineno_error(e)
+
         raise e

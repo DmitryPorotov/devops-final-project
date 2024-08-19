@@ -1,11 +1,14 @@
 package fwc.gameSaving.actions.roundEvents
 
 import fwc.JsonSerializable
-import fwc.game.GameState
+import fwc.game.board.TrackType
+import fwc.game.{GameState, gameRules}
 import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.eventsPhase.{Mustering, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
+import fwc.game.planningPhase.OrderType
+import fwc.gameSaving.actions.action.NextOrderFinder
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -32,11 +35,24 @@ case class ActionMuster(
       then if toTile.isEmpty
         then throw new ActionException("toTile should not be empty")
         else Mustering.musterShips(fromTile, toTile.head, unitToMuster, gameState)
-      else Mustering.musterShips(fromTile, toTile.head, unitToMuster, gameState)
+      else Mustering.musterGroundUnit(fromTile, unitToMuster, gameState, isUpgrade)
 
-    gameState.copy(
+    val updatedGameState = gameState.copy(
       armies = ar,
       usedMusteringPoints = usedMustPoints
+    )
+    
+    val fromBoardTile = gameRules.board(fromTile)
+    val newPhase =
+      if fromBoardTile.musteringPoints > usedMustPoints(fromBoardTile)
+      then SubPhaseMuster(houseType)
+      else {
+        val nextHouse = gameState.tracks.getNextHouseOnThrone(houseType)
+        ???
+      }
+
+    updatedGameState.copy(
+      newPhase
     )
   }
 

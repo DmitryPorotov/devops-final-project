@@ -84,7 +84,7 @@ case class ActionResolveCardWolf0(
     val newPhase =
       if minLosses > 0
       then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepCombatCleanUp, PhaseAction)
-      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.winner.head)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.winner.head)
 
     gameState.copy(
       armies = updatedArmies,

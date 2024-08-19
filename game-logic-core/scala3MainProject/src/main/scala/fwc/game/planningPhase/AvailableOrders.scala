@@ -51,7 +51,7 @@ case class AvailableOrders(
   }
 
   def disableOrderType(orderType: OrderType): AvailableOrders = {
-    if (orderType == OrderType.OrderMarch)
+    if (orderType == OrderType.March)
       throw new FWCException("cannot disable all march orders")
       
     AvailableOrders(
@@ -66,7 +66,7 @@ case class AvailableOrders(
       this.orders.map((ht: HouseType, orders: Map[OrderType, Seq[Order]]) => {
         ht -> (
           orders
-            + (OrderType.OrderMarch -> orders(OrderType.OrderMarch).filter(!_.isStar))
+            + (OrderType.March -> orders(OrderType.March).filter(!_.isStar))
           ) 
       })
     )

@@ -31,7 +31,7 @@ case class ActionRavenChoosePutWildlingsCardOnTopOrBottom(
       val newWildlingsCards = gameState.boardCards.wildlings.tail appended gameState.boardCards.wildlings.head
       
       gameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid),
+        subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.Raid),
         boardCards = gameState.boardCards.copy(
           wildlings = newWildlingsCards
         ),

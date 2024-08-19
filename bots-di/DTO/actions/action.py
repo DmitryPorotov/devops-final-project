@@ -1,4 +1,5 @@
-from typing import TypedDict
+from typing import TypedDict, Optional
+
 from server_module.game_state.military_unit import HouseType, MilitaryUnit
 from server_module.game_state.track_type import TrackType
 
@@ -121,7 +122,7 @@ class ActionResolveSpecialConsolidatePower(TypedDict):
     actionType: str  # = "resolveSpecialConsolidatePower"
     houseType: HouseType
     tileNumber: int
-    unit: MilitaryUnit
+    unit: Optional[MilitaryUnit]
 
 
 class ActionSetTidesOfBattleCards(TypedDict):
@@ -139,7 +140,6 @@ class ActionKillUnitsAfterBattle(TypedDict):
 class ActionLeavePowerTokenAtTile(TypedDict):
     actionType: str  # = "leavePowerTokenAtTile"
     houseType: HouseType
-    tileNumber: int
     doLeave: bool
 
 

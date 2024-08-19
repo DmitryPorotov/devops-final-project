@@ -26,7 +26,7 @@ case class ActionResolveRaidOrder(
 
     val sourceOrderOpt = gameState.placedOrders.getOrderByTileNumber(sourceTileNumber)
     val sourceOrder = if sourceOrderOpt.isEmpty
-      || sourceOrderOpt.head._2.orderType != OrderType.OrderRaid
+      || sourceOrderOpt.head._2.orderType != OrderType.Raid
       || sourceOrderOpt.head._1 != houseType
     then throw new ActionException(s"There is no raid order of house \"$houseType\" in the source tile")
     else sourceOrderOpt.head
@@ -40,7 +40,7 @@ case class ActionResolveRaidOrder(
         placedOrders = gameState.placedOrders.removeOrder(houseType, sourceTileNumber)
       )
       return updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderRaid, houseType)
+        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.Raid, houseType)
       )
     else if !sourceTile.isNeighbourOf(targetTile)
     then throw new ActionException(s"Tile ${sourceTile.name} is not a not a neighbour of ${targetTile.name}")
@@ -60,13 +60,13 @@ case class ActionResolveRaidOrder(
     if targetOrder._1 == houseType
     then throw new ActionException("Can not remove own order")
 
-    if targetOrder._2.orderType == OrderType.OrderMarch
+    if targetOrder._2.orderType == OrderType.March
     then throw new ActionException("Can not remove a march order")
 
-    if targetOrder._2.orderType == OrderType.OrderDefend && !sourceOrder._2.isStar
+    if targetOrder._2.orderType == OrderType.Defend && !sourceOrder._2.isStar
     then throw new ActionException("Can not remove a defend order using non-special raid order")
 
-    val newPowerTokens = if targetOrder._2.orderType == OrderType.OrderConsolidatePower
+    val newPowerTokens = if targetOrder._2.orderType == OrderType.ConsolidatePower
     then gameState.powerTokens.transferOneToken(targetOrder._1, houseType, gameState.armies)
     else gameState.powerTokens
 
@@ -77,7 +77,7 @@ case class ActionResolveRaidOrder(
         .removeOrder(targetOrder._1, targetTileNumber)
     )
 
-    val newSubPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.OrderRaid, houseType)
+    val newSubPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.Raid, houseType)
     updatedGameState.copy(
       subPhase = newSubPhase,
     )

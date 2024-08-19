@@ -10,15 +10,15 @@ import java.nio.file.{Files, Paths}
 object OneOrderLeftToAdd extends App {
   val initialGameState = fwc.game.initializeGameState()
   val orderDefend = Order(
-    OrderType.OrderDefend,
+    OrderType.Defend,
     modifier = 1
   )
-  val orderMarch = Order(OrderType.OrderMarch)
+  val orderMarch = Order(OrderType.March)
   var gameState = ActionAddOrder(initialGameState, HouseType.Lion, orderDefend, 21).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Lion, orderDefend, 22).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Lion, orderMarch, 27).doAction()
 
-  gameState = ActionAddOrder(gameState, HouseType.Kraken, Order(OrderType.OrderConsolidatePower), 15).doAction()
+  gameState = ActionAddOrder(gameState, HouseType.Kraken, Order(OrderType.ConsolidatePower), 15).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderDefend, 16).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderDefend, 17).doAction()
   gameState = ActionAddOrder(gameState, HouseType.Kraken, orderMarch, 12).doAction()

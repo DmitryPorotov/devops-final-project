@@ -35,7 +35,7 @@ case class ActionResolveCardMoose3(
         else gameState.discardedHouseCards + (loserHouse -> (gameState.discardedHouseCards(loserHouse) :+ cardCode))
 
     gameState.copy(
-      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.attackerHouse),
+      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.attackerHouse),
       combat = null,
       discardedHouseCards = updatedDiscardedHouseCards.resetDecksAfterCombat(updatedCombat)
     )

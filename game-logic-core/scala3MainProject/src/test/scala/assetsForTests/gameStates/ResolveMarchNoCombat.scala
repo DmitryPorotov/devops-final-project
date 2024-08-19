@@ -37,8 +37,8 @@ object ResolveMarchNoCombat extends App {
         )
       )
     ),
-    placedOrders = initialGameState.placedOrders.placeOrder(HouseType.PufferFish, 54, Order(OrderType.OrderMarch), 2),
-    availableOrders = initialGameState.availableOrders.useOrder(HouseType.PufferFish, Order(OrderType.OrderMarch))
+    placedOrders = initialGameState.placedOrders.placeOrder(HouseType.PufferFish, 54, Order(OrderType.March), 2),
+    availableOrders = initialGameState.availableOrders.useOrder(HouseType.PufferFish, Order(OrderType.March))
   )
 
   Files.write(Paths.get("saves/forUnitTests/ResolveMarchNoCombat.json"), gameState.toJsonString.getBytes(StandardCharsets.UTF_8))

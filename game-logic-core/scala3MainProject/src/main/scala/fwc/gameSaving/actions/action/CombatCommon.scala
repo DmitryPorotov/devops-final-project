@@ -73,7 +73,7 @@ object CombatCommon {
         acc + gameState.armies(cur).foldLeft(0)(sumUnitStrength)
     )
 
-    val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, gameState.combat.attackerHouse)
+    val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.attackerHouse)
     if attackingArmyStr >= gameState.combat.defenderArmy.head.garrisonDefensePoints
     then
       val armiesWithoutNeutralGarrison = gameState.armies - tileNumberUnderAttack

@@ -1,3 +1,4 @@
+import logging
 import uuid
 from typing import Optional
 
@@ -22,6 +23,9 @@ class BasePhaseReaction:
         self._game_rules = game_rules
         self._house_type = house_type
         self._bot_id = HouseToBotId.get_bot_id_by_house(self._house_type)
+        self.logger = logging.getLogger(
+            f"{__name__}.{self.__class__.__name__}",
+        )
 
     def get_actions(self) -> list[MessageGameAction[Action]]:
         pass

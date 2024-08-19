@@ -122,7 +122,7 @@ case class ActionCleanUpAfterCombat(
           loserDiscardedCards.size < 7
         }
       then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, combat.attackerHouse)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.March, combat.attackerHouse)
 
     gameState.copy(
       subPhase = newPhase,

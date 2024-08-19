@@ -17,7 +17,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Wolf,
       Order(
-        OrderType.OrderMarch
+        OrderType.March
       ),
       3
     ).doAction()
@@ -25,7 +25,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameStateAfter,
       HouseType.Wolf,
       Order(
-        OrderType.OrderMarch,
+        OrderType.March,
         modifier = -1
       ),
       7
@@ -34,7 +34,7 @@ class ActionAddOrderSpec extends AnyFlatSpec with should.Matchers {
       gameStateAfter2,
       HouseType.Wolf,
       Order(
-        OrderType.OrderMarch,
+        OrderType.March,
         true,
         1
       ),

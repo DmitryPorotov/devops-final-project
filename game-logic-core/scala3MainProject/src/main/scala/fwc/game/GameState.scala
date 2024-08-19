@@ -46,7 +46,7 @@ case class GameState(
           else
             houseType -> orders.map(
               (tileNum: TileNumber, order: Order) =>
-                tileNum -> Order(OrderType.OrderConsolidatePower)
+                tileNum -> Order(OrderType.ConsolidatePower)
             )
         ))
       else placedOrders
@@ -93,7 +93,7 @@ case class GameState(
             else
               houseType -> orders.map(
                 (tileNum: TileNumber, order: Order) =>
-                  tileNum -> Order(OrderType.OrderConsolidatePower)
+                  tileNum -> Order(OrderType.ConsolidatePower)
               )
         ))
       else placedOrders

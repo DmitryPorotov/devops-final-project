@@ -25,9 +25,9 @@ case class ActionSteelBladeChooseDisableMarchOrDefend(
 
     val newPhase =
       if choice == EventCardChoiceType.ChoiceA
-      then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderDefend)
+      then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.Defend)
       else if choice == EventCardChoiceType.ChoiceB
-        then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderMarch)
+        then SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.March)
         else SubPhaseAddOrder(HouseType.getSeqOfAll)
 
     gameState.copy(newPhase)

@@ -16,7 +16,7 @@ case class ActionDisableOrder(
 
 
     val updatedAvailAbleOrders =
-      if orderType == OrderType.OrderMarch
+      if orderType == OrderType.March
       then gameState.availableOrders.disableMarchPlusOneOrder()
       else gameState.availableOrders.disableOrderType(orderType)
 

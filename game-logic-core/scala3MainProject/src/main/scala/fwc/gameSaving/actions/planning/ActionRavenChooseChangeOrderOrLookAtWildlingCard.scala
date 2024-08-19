@@ -27,7 +27,7 @@ case class ActionRavenChooseChangeOrderOrLookAtWildlingCard(
       ravenChoiceType match
         case _: RavenChoiceType.ChangeOrder.type => SubPhaseRavenChangeOrder(houseType)
         case _: RavenChoiceType.LookAtWildlingsCard.type => SubPhaseRavenGetWildlingsCard(gameState.tracks.ravenOwner)
-        case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderType.OrderRaid)
+        case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderType.Raid)
 
     gameState.copy(
       subPhase = newPhase

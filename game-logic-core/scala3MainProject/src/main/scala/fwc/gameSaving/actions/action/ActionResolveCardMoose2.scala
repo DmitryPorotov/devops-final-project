@@ -45,7 +45,7 @@ case class ActionResolveCardMoose2(
     val newPhase =
       if updatedCombat.loserCard.exists(_.isMoose3)
       then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, updatedCombat.attackerHouse)
+      else NextOrderFinder.nextSubPhase(gameState, OrderType.March, updatedCombat.attackerHouse)
 
     gameState.copy(
       subPhase = newPhase,

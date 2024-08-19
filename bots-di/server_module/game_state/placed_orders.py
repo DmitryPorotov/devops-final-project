@@ -22,7 +22,8 @@ class PlacedOrders(dict[HouseType, dict[str, Order]]):
         else:
             self[house] = {tile_num: order}
 
-    def remove_order(self, tile_num: str, house_type: HouseType = None):
+    def remove_order(self, tile_num: str | int, house_type: HouseType = None):
+        tile_num = str(tile_num)
         if house_type and house_type in self and tile_num in self[house_type]:
             del self[house_type][tile_num]
             if len(self[house_type]) == 0:

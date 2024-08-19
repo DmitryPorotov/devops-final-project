@@ -32,11 +32,11 @@ object EventCards {
     card3.code match
       case 0 => SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, false)
       case 1 => SubPhaseChooseDisableMarchPlus1OrDefendOrders(steelBladeOwner)
-      case 2 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderMarch)
-      case 3 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderSupport)
-      case 4 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderDefend)
-      case 5 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderConsolidatePower)
-      case 6 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.OrderRaid)
+      case 2 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.March)
+      case 3 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.Support)
+      case 4 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.Defend)
+      case 5 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.ConsolidatePower)
+      case 6 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.Raid)
       case c => throw new ActionException(s"Unknown card code $c for deck 3")
 
   def fallThroughFromDeck1(

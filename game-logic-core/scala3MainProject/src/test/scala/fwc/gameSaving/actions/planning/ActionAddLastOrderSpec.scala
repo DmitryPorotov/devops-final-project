@@ -18,7 +18,7 @@ class ActionAddLastOrderSpec extends AnyFlatSpec with should.Matchers {
       gameState,
       HouseType.Wolf,
       Order(
-        OrderType.OrderMarch
+        OrderType.March
       ),
       2
     )

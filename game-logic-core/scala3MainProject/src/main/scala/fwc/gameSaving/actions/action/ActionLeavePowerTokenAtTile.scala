@@ -12,15 +12,17 @@ import ujson.Value
 case class ActionLeavePowerTokenAtTile(
                                         gameState: GameState,
                                         houseType: HouseType,
-                                        tileNumber: TileNumber,
                                         doLeave: Boolean
                                       ) extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
     if !gameState.subPhase.isInstanceOf[SubPhaseLeavePowerTokenAtTile]
     then throw new ActionException("Wrong phase")
 
-    if gameState.subPhase.asInstanceOf[SubPhaseLeavePowerTokenAtTile].houseType != houseType
+    val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseLeavePowerTokenAtTile]
+    if currentPhase.houseType != houseType
     then throw new ActionException("Wrong house")
+
+    val tileNumber = currentPhase.tileNumber
 
     val updatedGameState =
       if doLeave
@@ -37,7 +39,7 @@ case class ActionLeavePowerTokenAtTile(
     try {
       val updatedSubPhase =
         if gameState.combat == null
-        then NextOrderFinder.nextSubPhase(gameState, OrderType.OrderMarch, houseType)
+        then NextOrderFinder.nextSubPhase(gameState, OrderType.March, houseType)
         else CombatCommon.getNewSubPhaseForMarchSupport(
           updatedGameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum),
           gameState.tracks(TrackType.Throne),
@@ -56,7 +58,6 @@ case class ActionLeavePowerTokenAtTile(
   override def toJson: Value = ujson.Obj(
     Action.actionTypeJsonKey -> "leavePowerTokenAtTile",
     "houseType" -> ujson.Str(houseType.toString),
-    "tileNumber" -> ujson.Num(tileNumber),
     "doLeave" -> doLeave
   )
 }
@@ -66,7 +67,6 @@ object ActionLeavePowerTokenAtTile extends JsonParsableAction {
     ActionLeavePowerTokenAtTile(
       gameState,
       HouseType.fromString(json("houseType").str),
-      json("tileNumber").num.toInt,
       json("doLeave").bool
     )
 

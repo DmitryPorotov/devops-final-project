@@ -158,7 +158,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
   }
 
   private def getDefenderOrderStrength(houseCard: HouseCard, order: Order): Int = {
-    if order == null || order.orderType != OrderType.OrderDefend
+    if order == null || order.orderType != OrderType.Defend
     then 0
     else
       if houseCard != null && houseCard.isWolf6
@@ -281,7 +281,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
         if gameState.combat.defenderHouse == HouseType.Wolf
           && order.nonEmpty
           && order.head._1 == HouseType.Wolf
-          && order.head._2.orderType == OrderType.OrderDefend
+          && order.head._2.orderType == OrderType.Defend
         then order.head._2.modifier
         else 0
       case HouseCard(HouseType.Moose, 0, _, _, _, _, _) =>

@@ -48,7 +48,7 @@ case class ActionResolveCardRose4(
     val updatedPlacedOrders = gameState.placedOrders.removeOrder(houseOrder._1, tileNumber)
 
     val updatedCombat2 =
-      if houseOrder._2.orderType == OrderType.OrderSupport
+      if houseOrder._2.orderType == OrderType.Support
       then
         if isAttackerAction
         then updatedCombat.copy(defenderSupport = updatedCombat.defenderSupport.filter(_ != tileNumber))

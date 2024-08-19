@@ -21,7 +21,7 @@ case class ActionResolveConsolidatePowerOrder(
     val taxes = m.foldLeft(Map[HouseType, Int]())(
       (acc, tnToHouseOrder: (Int,(HouseType,Order))) =>
         val tile = gameRules.board(tnToHouseOrder._1)
-        if tnToHouseOrder._2._2.orderType == OrderType.OrderConsolidatePower
+        if tnToHouseOrder._2._2.orderType == OrderType.ConsolidatePower
           && tile.tileType != BoardTileType.Sea
         then acc + (tnToHouseOrder._2._1 -> (acc.getOrElse(tnToHouseOrder._2._1, 0) + tile.powerPoints + 1))
         else acc

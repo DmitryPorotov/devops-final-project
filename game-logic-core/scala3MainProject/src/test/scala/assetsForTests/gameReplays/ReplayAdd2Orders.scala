@@ -19,7 +19,7 @@ object ReplayAdd2Orders extends App {
     replay,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "rose",
       "tileNumber" -> 38
     )
@@ -30,7 +30,7 @@ object ReplayAdd2Orders extends App {
     replay1,
     ujson.Obj(
       "actionType" -> "addOrder",
-      "order" -> Order(OrderType.OrderMarch).toJson,
+      "order" -> Order(OrderType.March).toJson,
       "houseType" -> "wolf",
       "tileNumber" -> 3
     )

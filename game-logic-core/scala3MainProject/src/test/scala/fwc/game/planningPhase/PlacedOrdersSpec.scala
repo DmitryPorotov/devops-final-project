@@ -11,8 +11,8 @@ class PlacedOrdersSpec extends AnyFlatSpec with should.Matchers {
     val po = PlacedOrders(
       Map(
         HouseType.Wolf -> Map(
-          1 -> Order(OrderType.OrderMarch),
-          2 -> Order(OrderType.OrderRaid)
+          1 -> Order(OrderType.March),
+          2 -> Order(OrderType.Raid)
         )
       )
     )

@@ -7,6 +7,7 @@ import fwc.game.gameRules
 
 
 case class UsedMusteringPoints(points: Map[BoardTile, Int] = Map()) extends JsonSerializable {
+  export points.{apply, getOrElse}
   def toJson: ujson.Value = {
     ujson.Obj(
       upickle.core.LinkedHashMap(
@@ -16,7 +17,7 @@ case class UsedMusteringPoints(points: Map[BoardTile, Int] = Map()) extends Json
       )
     )
   }
-
+  
 }
 
 object UsedMusteringPoints extends JsonParsable {
