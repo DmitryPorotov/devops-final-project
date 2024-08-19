@@ -1,5 +1,6 @@
 package fwc.game.board
 
+import fwc.game.board.TrackType
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.houses.HouseType
 import fwc.gameLoading.BoardStart
@@ -39,6 +40,16 @@ case class Tracks(private val tracks: Map[TrackType, Seq[HouseType]]) extends Js
     copy(
       tracks + (trackType -> (tracks(trackType).filter(_ != houseType) appended houseType))
     )
+  }
+  
+  def getNextHouseOnThrone(houseType: HouseType): HouseType = {
+    @tailrec
+    def getNext(houseType: HouseType, houses: Seq[HouseType]): HouseType = {
+      if houses.size == 1 then tracks(TrackType.Throne).head
+      if houses.head == houseType then houses.tail.head
+      else getNext(houseType, houses.tail)
+    }
+    getNext(houseType, tracks(TrackType.Throne))
   }
 
   def getHighestTracks(houseType: HouseType): Seq[TrackType] = {
