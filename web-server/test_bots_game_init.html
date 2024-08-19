@@ -7,6 +7,7 @@
 <body>
 <script>
   let websock = null;
+  let token = null;
   function send_create_game() {
     websock.send(JSON.stringify({
       type: 'action',
@@ -17,12 +18,8 @@
 
     }))
   }
-  function onClick() {
-    if (websock) {
-      send_create_game();
-      return
-    }
-    fetch('http://127.0.0.1:3001/api/v1/auth/login', {
+  function doFetch() {
+    return fetch('http://127.0.0.1:3001/api/v1/auth/login', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,8 +28,17 @@
         email: 'a@b.com',
         password: "12345678"
       })
-    }).then(async (data) => {
+    })
+  }
+
+  function onClick() {
+    if (websock) {
+      send_create_game();
+      return
+    }
+    doFetch().then(async (data) => {
       const user = await data.json();
+      token = user.token;
       websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${user.token}`, "events");
       websock.onmessage = (event) => {
         console.log("message:" + event.data);
@@ -70,15 +76,25 @@
     });
   }
   function onGetState() {
-    if (!websock) {
-      onClick()
+    function getState(id) {
+      fetch('http://127.0.0.1:3001/api/v1/admin/games/' + id, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+        },
+      }).then(async (msg)=> {
+        const json = await msg.json();
+        document.getElementById('game_state').value =
+              JSON.stringify(json.gameState, null,  2)
+      })
+
     }
-    websock.send(JSON.stringify({
-      type: 'action',
-      action: 'get_game_state',
-      lobbyId: 3,
-      userId: 1,
-    }))
+    if (!token) doFetch().then(async (data) => {
+      const user = await data.json();
+      token = user.token;
+      getState(3)
+    });
+    else getState(3)
   }
 </script>
   <header>
