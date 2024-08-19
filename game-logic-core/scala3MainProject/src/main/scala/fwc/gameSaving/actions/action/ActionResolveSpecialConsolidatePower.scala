@@ -46,13 +46,11 @@ case class ActionResolveSpecialConsolidatePower(
         placedOrders = updatedPlacedOrders
       )
 
-    val updatedGameState2 =
-      updatedGameState.copy(
-        subPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.ConsolidatePower, houseType)
-      )
-
+    val newPhase = NextOrderFinder.nextSubPhase(updatedGameState, OrderType.ConsolidatePower, houseType)
+    
     if unitToMuster.isEmpty
-    then updatedGameState2.copy(
+    then updatedGameState.copy(
+      subPhase = newPhase,
       powerTokens = gameState.powerTokens.addTokens(
         houseType,
         1 + tile.powerPoints,
@@ -66,9 +64,10 @@ case class ActionResolveSpecialConsolidatePower(
           then throw new ActionException("toTile should not be empty")
           else Mustering.musterShips(fromTile, toTile.head, unitToMuster.head, gameState)
         else Mustering.musterGroundUnit(fromTile, unitToMuster.head, gameState, isUpgrade)
-      updatedGameState2.copy(
+      updatedGameState.copy(
         armies = ar,
         usedMusteringPoints = usedMustPoints,
+        subPhase = if gameRules.board(fromTile).musteringPoints > usedMustPoints(tile) then updatedGameState.subPhase else newPhase 
       )
     }
   }
