@@ -23,7 +23,7 @@ case class ActionResolveSupportOrder(
     val supportingTiles = tileNumbers.map(tn => gameRules.board(tn))
 
     val currentSubPhase = gameState.subPhase.asInstanceOf[SubPhaseResolveSupportOrder]
-    if currentSubPhase.houseType == fromHouseType
+    if currentSubPhase.houseType != fromHouseType
     then throw new ActionException(s"House $fromHouseType has no support orders in near ${targetTile.name}")
 
     if toHouseType == HouseType.Neutral
