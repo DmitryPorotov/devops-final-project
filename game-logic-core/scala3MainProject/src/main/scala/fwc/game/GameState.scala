@@ -138,6 +138,7 @@ case class GameState(
           "placedOrders" -> placedOrders.toJson,
           "availableOrders" -> availableOrders.toJson,
           "bids" -> bids.toJson,
+          "combat" -> (if combat == null then ujson.Null else combat.toJson)
         )
       )
     )
