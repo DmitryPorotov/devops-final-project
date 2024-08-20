@@ -127,6 +127,7 @@ object ReactionGameAction {
       case _: SubPhaseCollectTaxes => ActionCollectTaxes(gameState)
       case s: SubPhaseDisableOrder => ActionDisableOrder(gameState, s.orderType)
       case _: SubPhaseCleanUpAfterRound => ActionCleanUpAfterRound(gameState, isRandom)
+      case _: SubPhaseRecalculateSupplies => ActionRecalculateSupplies(gameState)
 //      case _ => throw new RuntimeException("SubPhase " + subPhase + " has no matching action.")
 
 
