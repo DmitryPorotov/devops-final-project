@@ -37,8 +37,14 @@ case class ActionChooseHouseCard(
     val updatedCombat = gameState.combat.addHouseCard(houseCard)
 
     val newPhase =
-      if updatedCombat.attackerCard == null || updatedCombat.defenderCard == null
-      then gameState.subPhase
+      if updatedCombat.attackerCard == null 
+      then gameState.subPhase.asInstanceOf[SubPhaseChooseHouseCard].copy(
+        houseTypes = Seq(updatedCombat.attackerHouse)
+      )
+      else if  updatedCombat.defenderCard == null 
+      then  gameState.subPhase.asInstanceOf[SubPhaseChooseHouseCard].copy(
+          houseTypes = Seq(updatedCombat.defenderHouse)
+        )
       else getNewSubPhase(updatedCombat)
 
     gameState.copy(
