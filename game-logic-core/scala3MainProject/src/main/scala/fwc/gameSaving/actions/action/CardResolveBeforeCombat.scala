@@ -13,10 +13,7 @@ object CardResolveBeforeCombat {
                                         combat: Combat,
                                         krakenTokens: Int
                                       ): (Boolean, Combat, SubPhase) = {
-    val tmp = CardResolve.validateAndGetCombat(subPhase, houseType, combat)
-
-    val isAttackerAction_ = tmp._1
-    val updatedCombat = tmp._2
+    val (isAttackerAction_, updatedCombat) = CardResolve.validateAndGetCombat(subPhase, houseType, combat)
 
     val cardPhase =
       if (isAttackerAction_ && !updatedCombat.defenderCardResolved) ||
