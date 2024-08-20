@@ -81,8 +81,8 @@ object GameServer {
               )
               .render(fwc.jsonIndentation), true)
       if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (
-        if reply.length > 1000 && !isError 
-        then reply.substring(0, 1000) 
+        if reply.length > 1500 && !isError
+        then reply.substring(0, 1500)
         else reply
         ) + "'")
       if !isShuttingDown then 
