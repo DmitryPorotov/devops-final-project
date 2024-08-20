@@ -3,6 +3,7 @@ from typing import Optional
 from DTO.actions.all_actions import Action
 from DTO.actions.planning import ActionRavenChooseChangeOrderOrLookAtWildlingCard
 from DTO.messages.messages import MessageGameAction
+from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
@@ -11,8 +12,8 @@ import random
 
 
 class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BasePhaseReaction):
-    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules):
-        super().__init__(game_id, house_type, game_state, game_rules)
+    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
+        super().__init__(game_id, house_type, game_state, game_rules, phase)
         self.__raven_choices = ['nothing', 'changeOrder', 'lookAtWildlingsCard']
 
     def get_actions(self) -> list[MessageGameAction[ActionRavenChooseChangeOrderOrLookAtWildlingCard]]:

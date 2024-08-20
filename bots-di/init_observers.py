@@ -1,4 +1,5 @@
 from server_module.reactions.game_action_reactions.action_react import ActionReact
+from server_module.reactions.management.error_retry_handler import ErrorRetryHandler
 from server_module.reactions.management.fill_with_bots import FillWithBots
 from server_module.reactions.management.get_game_state import GetGameState
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
@@ -13,6 +14,7 @@ def init():
     NewOrResetGame()
     PhaseReact.init()
     ActionReact.init()
+    ErrorRetryHandler()
 
 
 def imports():

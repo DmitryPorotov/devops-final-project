@@ -2,6 +2,7 @@ import random
 
 from DTO.actions.action import ActionResolveMarchOrder
 from DTO.messages.messages import MessageGameAction
+from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.board_tile import BoardTile
 from server_module.game_rules.board_tile_type import BoardTileType
 from server_module.game_rules.game_rules import GameRules
@@ -14,8 +15,8 @@ from utils_ import print_file_lineno_error
 
 
 class ResolveMarchOrderReaction(BasePhaseReaction):
-    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules):
-        super().__init__(game_id, house_type, game_state, game_rules)
+    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
+        super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionResolveMarchOrder]]:
         try:
@@ -41,23 +42,29 @@ class ResolveMarchOrderReaction(BasePhaseReaction):
     def __choose_target_tiles(self, source: int) -> dict[int, list[MilitaryUnit]]:
         # note: I'll do only 1 target for now
         # todo: check supplies (maybe I should do a retry strategy instead)
-        source_tile = self._game_rules.board[source]
-        potential_targets = source_tile.neighbour_tiles if source_tile.tile_type is BoardTileType.SEA or source_tile.tile_type is BoardTileType.PORT else self.__find_reachable_targets(source_tile, [source], [])
+        try:
+            source_tile = self._game_rules.board[source]
+            potential_targets = source_tile.neighbour_tiles if source_tile.tile_type is BoardTileType.SEA or source_tile.tile_type is BoardTileType.PORT else self.__find_reachable_targets(source_tile, [source], [])
 
-        if len(potential_targets) > 1:
-            potential_targets = potential_targets[1:]
+            if source_tile.tile_type is BoardTileType.LAND:
+                potential_targets = potential_targets[1:]
 
-        if source_tile.tile_type is BoardTileType.SEA:
-            potential_targets = self.__filter_out_land(potential_targets)
+            if source_tile.tile_type is BoardTileType.SEA:
+                potential_targets = self.__filter_out_land(potential_targets)
 
-        idx = random.randrange(len(potential_targets))
-        armies_at_source = list(self._game_state.armies[str(source)])
-        armies_at_source = self.__filter_out_unmusterable(armies_at_source)
-        num_to_send = random.randrange(1, len(armies_at_source) + 1)
-        random.shuffle(armies_at_source)
-        return {
-            potential_targets[idx]: armies_at_source[:num_to_send]
-        }
+            if len(potential_targets) == 0:
+                return { }
+
+            idx = random.randrange(len(potential_targets))
+            armies_at_source = list(self._game_state.armies[str(source)])
+            armies_at_source = self.__filter_out_unmusterable(armies_at_source)
+            num_to_send = random.randrange(1, len(armies_at_source) + 1)
+            random.shuffle(armies_at_source)
+            return {
+                potential_targets[idx]: armies_at_source[:num_to_send]
+            }
+        except Exception as e:
+            print_file_lineno_error(e)
 
     @staticmethod
     def __filter_out_unmusterable(armies: list[MilitaryUnit]):

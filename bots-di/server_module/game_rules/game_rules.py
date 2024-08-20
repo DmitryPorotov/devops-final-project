@@ -1,7 +1,7 @@
 from server_module.game_rules.board_cards import BoardCards
 from server_module.game_rules.board_tile import BoardTile
 from server_module.game_rules.military_unit_info import MilitaryUnitInfo
-from server_module.game_state.house_card import HouseCard
+import server_module.game_state.house_card as house_card
 from server_module.game_state.military_unit_type import MilitaryUnitType
 from server_module.game_state.order import Order
 from server_module.game_state.order_type import OrderType
@@ -16,7 +16,7 @@ class GameRules:
             max_armies: dict[MilitaryUnitType, int],
             board_cards: BoardCards,
             loaded_orders: dict[OrderType, list[Order]],
-            house_cards: list[HouseCard],
+            house_cards,  # type: list[house_card.HouseCard]
             military_units: dict[MilitaryUnitType, MilitaryUnitInfo]
     ):
         self.board = board
@@ -37,7 +37,7 @@ class GameRules:
             {MilitaryUnitType.from_str(mut): num for mut, num in json['maxArmies'].items()},
             BoardCards.from_json(json['boardCards']),
             {OrderType.from_str(ot): list(Order.from_json(o) for o in od) for ot, od in json['loadedOrders'].items()},
-            list(HouseCard.from_json(hc) for hc in json['houseCards']),
+            list(house_card.HouseCard.from_json(hc) for hc in json['houseCards']),
             {MilitaryUnitType.from_str(mut): MilitaryUnitInfo.from_json(mui) for mut, mui in json['militaryUnits'].items()}
         )
 

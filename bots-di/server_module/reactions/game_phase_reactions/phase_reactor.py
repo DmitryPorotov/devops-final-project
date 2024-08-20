@@ -1,5 +1,7 @@
 from DTO.phases.all_phases import SubPhase
 from server_module.reactions.game_phase_reactions.action.choose_house_card_reaction import ChooseHouseCardReaction
+from server_module.reactions.game_phase_reactions.action.get_tides_of_battle_cards_reaction import \
+    GetTidesOfBattleCardsReaction
 from server_module.reactions.game_phase_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
 from server_module.reactions.game_phase_reactions.action.resolve_consolidate_power_order_reaction import \
@@ -10,6 +12,8 @@ from server_module.reactions.game_phase_reactions.action.resolve_special_consoli
     ResolveSpecialConsolidatePowerReaction
 from server_module.reactions.game_phase_reactions.action.resolve_support_order_reaction import \
     ResolveSupportOrderReaction
+from server_module.reactions.game_phase_reactions.action.set_tides_of_battle_cards_reaction import \
+    SetTidesOfBattleCardsReaction
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.game_phase_reactions.planning.add_order_reaction import AddOrderReaction
 from server_module.reactions.game_phase_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
@@ -34,6 +38,8 @@ switcher_obj = {
     'resolveSpecialConsolidatePower': ResolveSpecialConsolidatePowerReaction,
     'chooseHouseCard': ChooseHouseCardReaction,
     'resolveSupportOrder': ResolveSupportOrderReaction,
+    'getTidesOfBattleCards': GetTidesOfBattleCardsReaction,
+    'setTidesOfBattleCards': SetTidesOfBattleCardsReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

@@ -9,12 +9,14 @@ from containers_module import App
 from events_service import EventSourcesService
 from redis_service import RedisConnector
 from server_module.games_data_service import GamesDataService
+from server_module.reactions.game_action_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
 from server_module.reactions.game_action_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
 from server_module.reactions.game_action_reactions.planning.open_orders_reaction import OpenOrdersReaction
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 switch_obj = {
-    'resolveRaidOrder': ResolveRaidOrderReaction
+    'resolveRaidOrder': ResolveRaidOrderReaction,
+    'resolveMarchOrder': ResolveMarchOrderReaction,
 }
 
 

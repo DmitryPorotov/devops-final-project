@@ -80,6 +80,7 @@ class ActionChooseHouseCard(TypedDict):
 class ActionResolveCardLion5(TypedDict):
     actionType: str  # = "resolveCardLion5"
     houseType: HouseType
+    doCancelCard: bool
 
 
 class ActionResolveSupportOrder(TypedDict):

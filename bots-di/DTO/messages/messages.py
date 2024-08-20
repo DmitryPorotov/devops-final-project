@@ -21,3 +21,5 @@ class MessageGameAction(TypedDict, Generic[_T]):
     player_action: NotRequired[_T]
     reply: NotRequired[list[Reply[_T]]]
 
+class ErrorMessage(TypedDict, Message):
+    originalMessage: MessageGameAction[_T]

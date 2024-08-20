@@ -19,6 +19,7 @@ class ReactToGameEventSources:
     message_get_game_state: Subject[Message]
     message_start_game: Subject[Message]  # still not used, game starts when it's created, even before everyone joins
     message_create_game: Subject[Message]  # should not be used b/c game is created before it's filled with bots
+    message_error: Subject[Message]
 
 
 class EventSourcesService(BaseService):
@@ -64,7 +65,7 @@ class EventSourcesService(BaseService):
 
         react_to_game_message_only = self.game_management_event_sources.react_to_game.pipe(
             op.map(lambda t: t[0]),
-            op.filter(lambda t: t['type'] == 'action')
+            op.filter(lambda t: t['type'] == 'action'),
         )
 
         self.react_to_game_event_sources.message_get_game_state = react_to_game_message_only.pipe(
@@ -72,13 +73,17 @@ class EventSourcesService(BaseService):
         )
 
         self.react_to_game_action = react_to_game_message_only.pipe(
-            op.filter(lambda m: m['action'] == "game_action")
+            op.filter(lambda m: m['action'] == "game_action"),
         )
 
         self.react_to_game_event_sources.message_create_game = react_to_game_message_only.pipe(
-            op.filter(lambda m: m['action'] == 'create_game')
+            op.filter(lambda m: m['action'] == 'create_game'),
         )
 
         self.react_to_game_event_sources.message_join_game = self.game_management_event_sources.react_to_game.pipe(
             op.filter(lambda t: t[0]['type'] == 'action' and t[0]['action'] == 'join_game'),
+        )
+
+        self.react_to_game_event_sources.message_error = react_to_game_message_only.pipe(
+            op.filter(lambda m: m['action'] == 'error'),
         )

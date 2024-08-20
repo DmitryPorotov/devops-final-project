@@ -11,6 +11,7 @@ from server_module.game_state.house_type import HouseType
 from server_module.games_data_service import GamesDataService, GameHandle
 from server_module.reactions.game_phase_reactions.base_phase_reaction import BasePhaseReaction
 from server_module.reactions.game_phase_reactions.no_reply_needed_exception import NoReplyNeedException
+from utils_ import print_file_lineno_error
 
 
 class PhaseReact:
@@ -28,7 +29,7 @@ class PhaseReact:
         )
 
     @staticmethod
-    def react(phase_cls: Type[BasePhaseReaction],
+    def react(phase_reaction_cls: Type[BasePhaseReaction],
               game_id: str,
               sub_phase: SubPhase,
               ):
@@ -37,7 +38,7 @@ class PhaseReact:
             if isinstance(sub_phase['houseTypes'], list):
                 for h in sub_phase['houseTypes']:
                     if h in game.houses:
-                        PhaseReact.__act_on_house(game_id, game, h, phase_cls)
+                        PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
             elif isinstance(sub_phase['houseTypes'], dict):  # type: dict[HouseType, int]
                 # note this is for bidding
                 pass
@@ -45,17 +46,17 @@ class PhaseReact:
                 raise RuntimeError("houseTypes should be list or dict.")
         elif 'houseType' in sub_phase:
             if sub_phase['houseType'] in game.houses:
-                PhaseReact.__act_on_house(game_id, game, sub_phase['houseType'], phase_cls)
+                PhaseReact.__act_on_house(game_id, game, sub_phase['houseType'], phase_reaction_cls, sub_phase)
         else:
             warning = 'sub_phase has neither "houseTypes" nor "houseType". ' + str(sub_phase)
             logging.warning(warning)
             raise RuntimeWarning(warning)
 
     @staticmethod
-    def __act_on_house(game_id: str, game: GameHandle, h: str, phase_cls: Type[BasePhaseReaction]):
+    def __act_on_house(game_id: str, game: GameHandle, house_name: str, phase_cls: Type[BasePhaseReaction], sub_phase: SubPhase):
         try:
-            house = HouseType[h.upper()]
-            reaction_handler = phase_cls(game_id, house, game.state, PhaseReact.game_data.game_rules)
+            house = HouseType[house_name.upper()]
+            reaction_handler = phase_cls(game_id, house, game.state, PhaseReact.game_data.game_rules, sub_phase)
             try:
                 json_like_arr = reaction_handler.get_actions()
                 for m in json_like_arr:
@@ -66,4 +67,4 @@ class PhaseReact:
             except NoReplyNeedException:
                 pass
         except Exception as e:
-            print(e)
+            print_file_lineno_error(e)

@@ -2,6 +2,7 @@ from typing import Optional
 
 from DTO.actions.planning import ActionAddOrder, ActionOpenOrders
 from DTO.messages.messages import MessageGameAction
+from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
@@ -16,8 +17,8 @@ from server_module.reactions.game_phase_reactions.base_phase_reaction import Bas
 
 
 class AddOrderReaction(BasePhaseReaction):
-    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules):
-        super().__init__(game_id, house_type, game_state, game_rules)
+    def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
+        super().__init__(game_id, house_type, game_state, game_rules, phase)
         self._total_stars = self._game_rules.get_total_num_stars_by_court_position(
             self._game_state.tracks[TrackType('court')].index(self._house_type)
         )

@@ -3,6 +3,7 @@ from typing import Optional, Callable, TypedDict
 
 from redis.client import PubSubWorkerThread
 from base_service import BaseService
+from utils_ import print_file_lineno_error
 
 
 class RedisMessage(TypedDict):
@@ -30,7 +31,7 @@ class RedisConnector(BaseService):
         self._pubsub.psubscribe(**{'new_game.*': self._on_game_reset})
 
         def ex_handler(ex, arg1, arg2):
-            print("module " + __name__ + " error " + str(ex), arg1, arg2)
+            print_file_lineno_error(ex)
             self.logger.critical("Exception in Redis", exc_info=ex, stack_info=True, stacklevel=3)
 
         self._thread = self._pubsub.run_in_thread(sleep_time=.001, exception_handler=ex_handler)

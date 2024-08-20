@@ -4,6 +4,7 @@ from typing import Optional
 
 from DTO.actions.all_actions import Action
 from DTO.messages.messages import MessageGameAction
+from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
@@ -17,11 +18,13 @@ class BasePhaseReaction:
             house_type: HouseType,
             game_state: GameState,
             game_rules: GameRules,
+            phase: SubPhase,
     ):
         self._game_id = game_id
         self._game_state = game_state
         self._game_rules = game_rules
         self._house_type = house_type
+        self._phase = phase
         self._bot_id = HouseToBotId.get_bot_id_by_house(self._house_type)
         self.logger = logging.getLogger(
             f"{__name__}.{self.__class__.__name__}",
