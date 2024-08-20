@@ -4,7 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
+import fwc.game.phases.actionSubPhases.{SubPhaseGetTidesOfBattleCards, SubPhaseResolveHouseCard}
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import ujson.Value
 
@@ -20,10 +20,14 @@ case class ActionResolveCardKraken6(
       gameState.combat,
       gameState.powerTokens(HouseType.Kraken)
     )
+    val updatedPhase2 =
+      updatedPhase match
+        case card: SubPhaseResolveHouseCard if card.houseType == HouseType.Kraken => SubPhaseGetTidesOfBattleCards(Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse))
+        case _ => updatedPhase
 
     if newCardCode < 0
     then gameState.copy(
-      subPhase = updatedPhase,
+      subPhase = updatedPhase2,
       combat = updatedCombat
     )
     else
@@ -43,7 +47,7 @@ case class ActionResolveCardKraken6(
         else updatedCombat.copy(defenderCard = newKrakenCard)
 
       gameState.copy(
-        subPhase = updatedPhase,
+        subPhase = updatedPhase2,
         combat = updatedCombat2,
         powerTokens = updatedPowerTokens,
         discardedHouseCards = updatedDisCards
