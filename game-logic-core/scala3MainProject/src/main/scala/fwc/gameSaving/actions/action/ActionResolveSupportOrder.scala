@@ -31,14 +31,15 @@ case class ActionResolveSupportOrder(
 
     supportingTiles.foreach(
       tn =>
-        if !currentSubPhase.tilesNumbers.contains(tn)
+        if !currentSubPhase.tilesNumbers.contains(tn.number)
         then throw new ActionException(s"Tile ${tn.name} has no support order")
     )
 
     val supportOrdersFromHouse = gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
-      .foldLeft(Seq())(
+      .foldLeft(Seq[TileNumber]())(
         (acc: Seq[Int], tnHouseOrder: (TileNumber, (HouseType, Order))) =>
-          if tnHouseOrder._2 == fromHouseType
+          val (ht, _) = tnHouseOrder._2
+          if ht == fromHouseType
           then acc :+ tnHouseOrder._1
           else acc
       )
