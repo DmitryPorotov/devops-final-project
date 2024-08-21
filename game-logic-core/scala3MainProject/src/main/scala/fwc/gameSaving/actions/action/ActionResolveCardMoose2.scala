@@ -21,6 +21,11 @@ case class ActionResolveCardMoose2(
     if !gameState.combat.winnerCard.exists(_.isMoose2)
     then throw new ActionException("This phase is for moose 2")
 
+    if tileNumber < 0 then return gameState.copy(
+      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, updatedCombat.attackerHouse),
+      combat = null
+    )
+    
     if  updatedCombat.defenderTileNum != tileNumber ||
       {
         if isAttackerAction
@@ -42,19 +47,11 @@ case class ActionResolveCardMoose2(
 
     val updatedArmies = gameState.armies + (tileNumber -> army)
 
-    val newPhase =
-      if updatedCombat.loserCard.exists(_.isMoose3)
-      then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderType.March, updatedCombat.attackerHouse)
-
     gameState.copy(
-      subPhase = newPhase,
+      subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, updatedCombat.attackerHouse),
       armies = updatedArmies,
-      combat = if newPhase.isInstanceOf[SubPhaseResolveHouseCard] then gameState.combat else null,
-      discardedHouseCards =
-        if newPhase.isInstanceOf[SubPhaseResolveHouseCard]
-        then gameState.discardedHouseCards
-        else gameState.discardedHouseCards.resetDecksAfterCombat(updatedCombat)
+      combat = null,
+      discardedHouseCards = gameState.discardedHouseCards.resetDecksAfterCombat(updatedCombat)
     )
   }
 
