@@ -64,15 +64,17 @@ case class ActionResolveCardWolf0(
 
     val minLosses = possibleRetreatTilesWithLosses.foldLeft(Int.MaxValue)(
       (acc, cur) =>
-        if cur._2 < acc
-        then cur._2
+        val (_, loss) = cur
+        if loss < acc
+        then loss
         else acc
     )
 
     val tilesWithMinLosses = possibleRetreatTilesWithLosses.foldLeft(Seq[Int]())(
       (acc, cur) =>
-        if cur._2 == minLosses
-        then acc :+ cur._1
+        val (tn, loss) = cur
+        if loss == minLosses
+        then acc :+ tn
         else acc
     )
 
