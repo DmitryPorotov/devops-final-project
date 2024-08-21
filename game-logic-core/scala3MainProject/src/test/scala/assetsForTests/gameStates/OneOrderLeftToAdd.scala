@@ -1,8 +1,8 @@
 package assetsForTests.gameStates
 
+import fwc.game.actions.planning.ActionAddOrder
 import fwc.game.houses.*
 import fwc.game.planningPhase.{Order, OrderType}
-import fwc.gameSaving.actions.planning.ActionAddOrder
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}

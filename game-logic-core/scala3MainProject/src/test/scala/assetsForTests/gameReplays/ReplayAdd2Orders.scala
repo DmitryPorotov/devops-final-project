@@ -2,9 +2,9 @@ package assetsForTests.gameReplays
 
 import assetsForTests.gameReplays.InitialReplayServerSideRandom.gameReplay
 import fwc.communication.reactions.ReactionGameAction
+import fwc.game.actions.planning.ActionAddOrder
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameSaving.GameReplay
-import fwc.gameSaving.actions.planning.ActionAddOrder
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}

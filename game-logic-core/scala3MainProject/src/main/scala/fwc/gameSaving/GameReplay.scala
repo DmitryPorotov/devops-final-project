@@ -2,8 +2,8 @@ package fwc.gameSaving
 
 import fwc.{GameSettings, JsonParsable, JsonSerializable}
 import fwc.game.GameState
+import fwc.game.actions.Action
 import fwc.game.eventsPhase.cards.BoardCards
-import fwc.gameSaving.actions.Action
 import ujson.Value
 
 case class GameReplay(

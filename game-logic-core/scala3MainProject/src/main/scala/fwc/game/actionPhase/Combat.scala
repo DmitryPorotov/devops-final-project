@@ -1,5 +1,6 @@
 package fwc.game.actionPhase
 
+import fwc.game.actions.ActionException
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.board.MilitaryUnit
 import fwc.game.board.TileNumber
@@ -7,7 +8,6 @@ import fwc.game.houses.HouseType
 import fwc.game.planningPhase.Order
 import fwc.gameLoading.{HouseCard, TidesOfBattleCard}
 import fwc.game.gameRules
-import fwc.gameSaving.actions.ActionException
 import ujson.Value
 
 import scala.collection.mutable

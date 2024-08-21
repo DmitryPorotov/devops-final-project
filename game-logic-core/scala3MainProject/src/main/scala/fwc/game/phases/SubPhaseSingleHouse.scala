@@ -4,8 +4,8 @@ import fwc.game.houses.HouseType
 import ujson.Value
 
 trait SubPhaseSingleHouse(
-                           houseType: HouseType,
-                           mainPhase: MainPhase
+                           val houseType: HouseType,
+                           val mainPhase: MainPhase
                          ) extends SubPhase {
   override def toJson: Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,

@@ -5,8 +5,8 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseSingleHouse}
 
 case class SubPhaseRetreatUnitsAfterBattle(
-                                            houseType: HouseType,
-                                            mainPhase: MainPhase = PhaseAction
+                                            override val houseType: HouseType,
+                                            override val mainPhase: MainPhase = PhaseAction
                                           ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
     houseType, mainPhase
   ) {

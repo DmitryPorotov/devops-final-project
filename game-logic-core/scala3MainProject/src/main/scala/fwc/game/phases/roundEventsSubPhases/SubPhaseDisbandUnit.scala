@@ -1,15 +1,15 @@
 package fwc.game.phases.roundEventsSubPhases
 
+import fwc.game.actions.roundEvents.UnitDisbandNextStepType
 import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseSingleHouse}
-import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepType
 import ujson.Value
 
 
 case class SubPhaseDisbandUnit(
-                                houseType: HouseType,
+                                override val houseType: HouseType,
                                 nextStep: UnitDisbandNextStepType,
-                                mainPhase: MainPhase = PhaseRoundEvents
+                                override val mainPhase: MainPhase = PhaseRoundEvents
                               ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
     houseType, mainPhase
   ) {

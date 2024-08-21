@@ -1,12 +1,12 @@
 package fwc.gameSaving.actions.action.ActionResolveMarchOrderTests
 
 import fwc.game.GameState
+import fwc.game.actions.action.ActionResolveMarchOrder
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType}
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveConsolidatePowerOrder}
 import fwc.gameLoading
-import fwc.gameSaving.actions.action.ActionResolveMarchOrder
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
 

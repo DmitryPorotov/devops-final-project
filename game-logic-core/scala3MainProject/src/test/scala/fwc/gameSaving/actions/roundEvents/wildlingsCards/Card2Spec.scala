@@ -1,6 +1,7 @@
 package fwc.gameSaving.actions.roundEvents.wildlingsCards
 
 import fwc.game.actionPhase.DiscardedHouseCards
+import fwc.game.actions.roundEvents.wildlingsCards.Card2
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseWildlingsCard
 import org.scalatest.flatspec.*

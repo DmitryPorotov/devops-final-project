@@ -1,5 +1,6 @@
 package fwc.game.phases
 
+import fwc.game.actions.roundEvents.UnitDisbandNextStepType
 import fwc.game.board.TrackType
 import fwc.game.gameRules
 import fwc.game.houses.HouseType
@@ -8,7 +9,6 @@ import fwc.game.phases.actionSubPhases.*
 import fwc.game.phases.planningSubPhases.*
 import fwc.game.phases.roundEventsSubPhases.*
 import fwc.game.planningPhase.OrderType
-import fwc.gameSaving.actions.roundEvents.UnitDisbandNextStepType
 import ujson.Value
 
 import scala.util.Try
@@ -49,6 +49,9 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfSingleHouse(json)
         val cardCode = json("cardCode").num.toInt
         SubPhaseResolveHouseCard(f._1, cardCode, f._2)
+      case "resolveCardRose2" =>
+        val (ht, mp) = getFieldsOfSingleHouse(json)
+        SubPhaseResolveCardRose2(ht, mp)
       case "resolveMarchOrder" =>
         val f = getFieldsOfSingleHouse(json)
         SubPhaseResolveMarchOrder(f._1, f._2)

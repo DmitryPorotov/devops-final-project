@@ -5,9 +5,9 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseSingleHouse}
 
 case class SubPhaseResolveSupportOrder(
-                                        houseType: HouseType,
+                                        override val houseType: HouseType,
                                         tilesNumbers: Seq[Int],
-                                        mainPhase: MainPhase = PhaseAction
+                                        override val mainPhase: MainPhase = PhaseAction
                                       ) extends SubPhase(mainPhase) with SubPhaseSingleHouse (
   houseType, mainPhase
   ) {

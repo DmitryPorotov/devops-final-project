@@ -7,9 +7,9 @@ import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseMultipleH
 import ujson.Value
 
 case class SubPhaseResolveTiesAfterBiddingOnTracks(
-                                                    houseType: HouseType,
+                                                    override val houseType: HouseType,
                                                     trackType: TrackType,
-                                                    mainPhase: MainPhase = PhaseRoundEvents
+                                                    override val mainPhase: MainPhase = PhaseRoundEvents
                                                   )
   extends SubPhase(mainPhase) with SubPhaseSingleHouse(houseType, mainPhase) {
 

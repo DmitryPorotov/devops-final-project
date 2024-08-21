@@ -4,8 +4,8 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseSingleHouse}
 
 case class SubPhaseWildlingsChooseTrackToBeFirstAt(
-                                               houseType: HouseType,
-                                               mainPhase: MainPhase = PhaseRoundEvents
+                                                    override val houseType: HouseType,
+                                                    override val mainPhase: MainPhase = PhaseRoundEvents
                                              )
   extends SubPhase(mainPhase) with SubPhaseSingleHouse(houseType, mainPhase) {
 

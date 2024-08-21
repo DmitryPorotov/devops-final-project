@@ -1,11 +1,11 @@
 package fwc.gameSaving.actions.planning
 
 import fwc.game.GameState
+import fwc.game.actions.planning.ActionAddOrder
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading
-import fwc.gameSaving.actions.planning.ActionAddOrder
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

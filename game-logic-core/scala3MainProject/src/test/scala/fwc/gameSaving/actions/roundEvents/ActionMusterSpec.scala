@@ -1,5 +1,6 @@
 package fwc.gameSaving.actions.roundEvents
 
+import fwc.game.actions.roundEvents.ActionMuster
 import fwc.game.houses.HouseType
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*

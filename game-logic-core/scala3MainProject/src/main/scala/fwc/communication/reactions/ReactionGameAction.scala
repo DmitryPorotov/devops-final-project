@@ -4,15 +4,15 @@ import fwc.{GameSettings, JsonSerializable, PlayerInputting}
 import fwc.game.phases.*
 import fwc.game.phases.actionSubPhases.*
 import fwc.game.actionPhase.*
+import fwc.game.actions.action.*
+import fwc.game.actions.{Action, ActionSetCard, PlayerAction}
+import fwc.game.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
+import fwc.game.actions.roundEvents.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseRavenGetWildlingsCard}
 import fwc.game.phases.roundEventsSubPhases.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.gameSaving.GameReplay
-import fwc.gameSaving.actions.action.*
-import fwc.gameSaving.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
-import fwc.gameSaving.actions.roundEvents.*
-import fwc.gameSaving.actions.{Action, ActionSetCard, PlayerAction}
 
 import scala.util.boundary
 import scala.annotation.tailrec
@@ -88,9 +88,9 @@ object ReactionGameAction {
         )
         else (updatedGameReplay, updatedReply)
 
-      case phaseNoHouse: SubPhasePassive => loop(
+      case phasePassive: SubPhasePassive => loop(
         matchSubPhaseToAction(
-          phaseNoHouse,
+          phasePassive,
           updatedGameState,
           gameReplay.gameSettings.isRandomEventsServerSide
         ),
@@ -128,6 +128,7 @@ object ReactionGameAction {
       case s: SubPhaseDisableOrder => ActionDisableOrder(gameState, s.orderType)
       case _: SubPhaseCleanUpAfterRound => ActionCleanUpAfterRound(gameState, isRandom)
       case _: SubPhaseRecalculateSupplies => ActionRecalculateSupplies(gameState)
+      case s: SubPhaseResolveCardRose2 => ActionResolveCardRose2(gameState, s.houseType)
 //      case _ => throw new RuntimeException("SubPhase " + subPhase + " has no matching action.")
 
 

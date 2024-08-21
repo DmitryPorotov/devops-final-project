@@ -1,10 +1,10 @@
 package fwc.gameSaving.actions.action.ActionResolveMarchOrderTests
 
 import fwc.game.GameState
+import fwc.game.actions.action.ActionResolveMarchOrder
 import fwc.game.board.{Armies, MilitaryUnit, MilitaryUnitType}
 import fwc.game.houses.HouseType
 import fwc.gameLoading
-import fwc.gameSaving.actions.action.ActionResolveMarchOrder
 import org.scalatest.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
