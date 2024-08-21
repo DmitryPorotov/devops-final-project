@@ -2,7 +2,7 @@ package fwc.gameSaving.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.actionPhase.{CardCode, isValid}
+import fwc.game.actionPhase.CardCode
 import fwc.game.houses.HouseType
 import fwc.game.planningPhase.OrderType
 import fwc.gameSaving.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
@@ -20,7 +20,7 @@ case class ActionResolveCardMoose3(
     if !gameState.combat.winnerCard.exists(_.isLion1)
     then throw new ActionException("This phase is for moose 2")
 
-    if !cardCode.isValid
+    if cardCode >= 7
     then throw new ActionException("Card code is invalid")
 
     val loserHouse = gameState.combat.loser.head
