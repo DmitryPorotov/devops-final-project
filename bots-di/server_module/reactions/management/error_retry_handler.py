@@ -2,9 +2,10 @@ from dependency_injector.wiring import Provide, inject
 
 from DTO.messages.messages import ErrorMessage
 from DTO.actions.all_actions import Action, ActionResolveMarchOrder
-from DTO.phases.phases import SubPhaseResolveMarchOrder
+from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard
 from containers_module import App
 from events_service import EventSourcesService
+from server_module.game_state.house_type import HouseType
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 
@@ -21,10 +22,19 @@ class ErrorRetryHandler:
             if pa['actionType'] == 'resolveMarchOrder':
                 sp = self.__rebuild_resolve_march_phase(pa)
                 react_to_phase(game_id, sp)
+            elif pa['actionType'] == 'resolveCardWolf0':
+                sp1: SubPhaseResolveHouseCard = {
+                    "mainPhase": "phaseAction",
+                    'subPhase': 'resolveHouseCard',
+                    'cardCode': 0,
+                    'houseType': HouseType.WOLF
+                }
+                react_to_phase(game_id, sp1)
             else:
                 pass
 
-    def __rebuild_resolve_march_phase(self, action: ActionResolveMarchOrder) -> SubPhaseResolveMarchOrder:
+    @staticmethod
+    def __rebuild_resolve_march_phase(action: ActionResolveMarchOrder) -> SubPhaseResolveMarchOrder:
          phase: SubPhaseResolveMarchOrder = {
              'mainPhase': 'phaseAction',
              'subPhase': 'resolveMarchOrder',

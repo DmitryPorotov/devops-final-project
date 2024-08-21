@@ -96,18 +96,53 @@
     });
     else getState(3)
   }
+  function save() {
+    let name = document.getElementById('save-name').value.trim();
+    name = name ? name : "name";
+    fetch('http://127.0.0.1:3001/api/v1/admin/games/' + 3, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Content-type": "application/json",
+      },
+      body: `{"name":"${name}"}`
+    })
+  }
 </script>
-  <header>
-    <h1>Start bots only game</h1>
-    <button onclick="onClick()">Start</button>
-    <div>
+<style>
+  .container {
+    align-items: flex-start;
+    margin-right: 1rem;
+  }
+  .container:last-child {
+    margin-right: 0;
+  }
+  .start {
+    max-width: 150px;
+  }
+</style>
+  <header style="display: flex">
+    <div class="container start">
+      <h1>Start bots only game</h1>
+      <button onclick="onClick()">Start</button>
+    </div>
+    <div class="container">
       <h2>Get game state</h2>
       <button onclick="onGetState()">Get</button>
+      <section>
+        <h2>Game state:</h2>
+        <textarea id="game_state"></textarea>
+      </section>
+    </div>
+    <div class="container">
+      <h2>Save game</h2>
+      <input id="save-name" type="text">
+      <button onclick="save()">Save</button>
+    </div>
+    <div class="container">
+
     </div>
   </header>
-  <section>
-    <h2>Game state</h2>
-    <textarea id="game_state"></textarea>
-  </section>
+
 </body>
 </html>

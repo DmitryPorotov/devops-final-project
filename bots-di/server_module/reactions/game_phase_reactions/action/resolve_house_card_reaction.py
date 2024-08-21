@@ -17,8 +17,6 @@ from server_module.reactions.game_phase_reactions.action.house_card_reactions.re
     ResolveCardMoose3Reaction
 from server_module.reactions.game_phase_reactions.action.house_card_reactions.resolve_card_pufferfish0_reaction import \
     ResolveCardPufferfish0Reaction
-from server_module.reactions.game_phase_reactions.action.house_card_reactions.resolve_card_rose2_reaction import \
-    ResolveCardRose2Reaction
 from server_module.reactions.game_phase_reactions.action.house_card_reactions.resolve_card_rose4_reaction import \
     ResolveCardRose4Reaction
 from server_module.reactions.game_phase_reactions.action.house_card_reactions.resolve_card_wolf0_reaction import \
@@ -38,7 +36,6 @@ class ResolveHouseCardReaction(BasePhaseReaction):
             'wolf0': ResolveCardWolf0Reaction,
             'kraken6': ResolveCardKraken6Reaction,
             'pufferfish0': ResolveCardPufferfish0Reaction,
-            'rose2': ResolveCardRose2Reaction,
             'rose4': ResolveCardRose4Reaction,
         }
 

@@ -6,6 +6,7 @@ from server_module.reactions.game_phase_reactions.action.leave_power_token_at_ti
     LeavePowerTokenAtTileReaction
 from server_module.reactions.game_phase_reactions.action.resolve_consolidate_power_order_reaction import \
     ResolveConsolidatePowerOrderReaction
+from server_module.reactions.game_phase_reactions.action.resolve_house_card_reaction import ResolveHouseCardReaction
 from server_module.reactions.game_phase_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
 from server_module.reactions.game_phase_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
 from server_module.reactions.game_phase_reactions.action.resolve_special_consolidate_power_reaction import \
@@ -40,6 +41,7 @@ switcher_obj = {
     'resolveSupportOrder': ResolveSupportOrderReaction,
     'getTidesOfBattleCards': GetTidesOfBattleCardsReaction,
     'setTidesOfBattleCards': SetTidesOfBattleCardsReaction,
+    'resolveHouseCard': ResolveHouseCardReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):
