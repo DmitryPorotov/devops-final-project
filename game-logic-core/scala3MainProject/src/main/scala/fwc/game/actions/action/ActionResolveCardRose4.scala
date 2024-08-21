@@ -3,7 +3,7 @@ package fwc.game.actions.action
 import fwc.JsonSerializable
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.{GameState, gameRules}
-import fwc.game.board.TileNumber
+import fwc.game.board.{TileNumber, isValid}
 import fwc.game.houses.HouseType
 import fwc.game.planningPhase.OrderType
 import ujson.Value
@@ -21,6 +21,15 @@ case class ActionResolveCardRose4(
       gameState.powerTokens(HouseType.Kraken)
     )
 
+    if tileNumber < 0
+    then return gameState.copy(
+      subPhase = updatedPhase,
+      combat = updatedCombat
+    )
+
+    if !tileNumber.isValid
+    then throw new ActionException(s"Tile number '$tileNumber' is not valid. Valid tile numbers are 0 to 57.")
+
     val tileToRemoveOrder = gameRules.board(tileNumber)
     val tileUnderAttack = gameRules.board(gameState.combat.defenderTileNum)
     if !tileToRemoveOrder.isNeighbourOf(tileUnderAttack)
@@ -29,7 +38,7 @@ case class ActionResolveCardRose4(
 
 
     val houseOrderOpt = gameState.placedOrders.getOrderByTileNumber(tileNumber)
-    val houseOrder =
+    val (house, order) =
       if houseOrderOpt.nonEmpty
       then houseOrderOpt.head
       else throw new ActionException(s"${tileToRemoveOrder.name} ($tileNumber) has no order")
@@ -37,18 +46,18 @@ case class ActionResolveCardRose4(
 
     if isAttackerAction
     then
-      if houseOrder._1 != gameState.combat.defenderHouse
+      if house != gameState.combat.defenderHouse
       then throw new ActionException(s"The order in ${tileToRemoveOrder.name} ($tileNumber) " +
         s"is not your opponent's (${gameState.combat.defenderHouse}) order")
     else
-      if houseOrder._1 != gameState.combat.attackerHouse
+      if house != gameState.combat.attackerHouse
       then throw new ActionException(s"The order in ${tileToRemoveOrder.name} ($tileNumber) " +
         s"is not your opponent's (${gameState.combat.attackerHouse}) order")
 
-    val updatedPlacedOrders = gameState.placedOrders.removeOrder(houseOrder._1, tileNumber)
+    val updatedPlacedOrders = gameState.placedOrders.removeOrder(house, tileNumber)
 
     val updatedCombat2 =
-      if houseOrder._2.orderType == OrderType.Support
+      if order.orderType == OrderType.Support
       then
         if isAttackerAction
         then updatedCombat.copy(defenderSupport = updatedCombat.defenderSupport.filter(_ != tileNumber))
