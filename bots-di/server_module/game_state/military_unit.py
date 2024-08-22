@@ -21,7 +21,7 @@ class MilitaryUnit(dict[str, HouseType | MilitaryUnitType | bool | int]):
         self.garrison_defence_points = garrison_defence_points
 
     @classmethod
-    def from_json(cls, json):
+    def from_json(cls, json) -> "MilitaryUnit":
         return cls(
             HouseType[json['house'].upper()],
             MilitaryUnitType.from_str(json['type']),

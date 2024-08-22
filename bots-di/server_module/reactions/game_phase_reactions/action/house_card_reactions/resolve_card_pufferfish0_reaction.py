@@ -16,7 +16,7 @@ class ResolveCardPufferfish0Reaction(BasePhaseReaction):
 
     def _to_json(self) -> MessageGameAction[ActionResolveCardPufferfish0]:
         tracks = [TrackType.THRONE, TrackType.THRONE, TrackType.FIEFDOMS, TrackType.COURT,]
-        idx = randrange(4)
+        idx = randrange(len(tracks))
         json: MessageGameAction[ActionResolveCardPufferfish0] = super()._to_json()
         action: ActionResolveCardPufferfish0 = {
             "houseType": self._house_type,

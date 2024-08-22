@@ -13,7 +13,8 @@ class PlacedOrders(dict[HouseType, dict[str, Order]]):
                     orders[tile_num] = Order.from_json(o)
                 self[HouseType[ht.upper()]] = orders
 
-    def place_order(self, house: HouseType, tile_num: int, order: Order, pos_on_cour_track: int):
+    def place_order(self, house: HouseType, tile_num: int | str, order: Order, pos_on_cour_track: int):
+        tile_num = str(tile_num)
         if house in self:
             if tile_num in self[house]:
                 raise Exception("There is an order on this tile {:d} already".format(tile_num))

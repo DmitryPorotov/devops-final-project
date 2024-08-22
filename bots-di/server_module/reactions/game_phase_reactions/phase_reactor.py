@@ -1,5 +1,10 @@
 from DTO.phases.all_phases import SubPhase
+from server_module.reactions.game_phase_reactions.action.calculate_combat_outcome_reaction import \
+    CalculateCombatOutcomeReaction
 from server_module.reactions.game_phase_reactions.action.choose_house_card_reaction import ChooseHouseCardReaction
+from server_module.reactions.game_phase_reactions.action.choose_to_use_valyrian_steel_blade_reaction import \
+    ChooseToUseValyrianSteelBladeReaction
+from server_module.reactions.game_phase_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
 from server_module.reactions.game_phase_reactions.action.get_tides_of_battle_cards_reaction import \
     GetTidesOfBattleCardsReaction
 from server_module.reactions.game_phase_reactions.action.leave_power_token_at_tile_reaction import \
@@ -13,6 +18,8 @@ from server_module.reactions.game_phase_reactions.action.resolve_special_consoli
     ResolveSpecialConsolidatePowerReaction
 from server_module.reactions.game_phase_reactions.action.resolve_support_order_reaction import \
     ResolveSupportOrderReaction
+from server_module.reactions.game_phase_reactions.action.retreat_units_after_battle_reaction import \
+    RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.action.set_tides_of_battle_cards_reaction import \
     SetTidesOfBattleCardsReaction
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
@@ -42,6 +49,10 @@ switcher_obj = {
     'getTidesOfBattleCards': GetTidesOfBattleCardsReaction,
     'setTidesOfBattleCards': SetTidesOfBattleCardsReaction,
     'resolveHouseCard': ResolveHouseCardReaction,
+    'chooseToUseValyrianSteelBlade': ChooseToUseValyrianSteelBladeReaction,
+    'cleanUpAfterRound': CleanUpAfterRoundReaction,
+    'calculateCombatOutcome': CalculateCombatOutcomeReaction,
+    'retreatUnitsAfterBattle': RetreatUnitsAfterBattleReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

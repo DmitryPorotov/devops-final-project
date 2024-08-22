@@ -43,7 +43,7 @@ class Combat:
         self.combat_outcome = combat_outcome
 
     @classmethod
-    def from_json(cls, json):
+    def from_json(cls, json) -> "Combat":
         attacker_house = HouseType[json['attackerHouse'].upper()]
         defender_house = HouseType[json['defenderHouse'].upper()]
         return cls(

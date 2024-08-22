@@ -142,6 +142,7 @@ class ActionLeavePowerTokenAtTile(TypedDict):
     actionType: str  # = "leavePowerTokenAtTile"
     houseType: HouseType
     doLeave: bool
+    tileNumber: int
 
 
 class ActionResolveMarchOrder(TypedDict):
