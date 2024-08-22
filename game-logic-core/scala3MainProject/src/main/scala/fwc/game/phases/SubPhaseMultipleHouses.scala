@@ -1,10 +1,11 @@
 package fwc.game.phases
 
 import fwc.game.houses.HouseType
+import fwc.game.phases.MainPhase.Planning
 
 trait SubPhaseMultipleHouses(
                               houseTypes: Seq[HouseType],
-                              mainPhase: MainPhase = PhasePlanning
+                              mainPhase: MainPhase = Planning
                             ) extends SubPhase {
   def toJson: ujson.Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,

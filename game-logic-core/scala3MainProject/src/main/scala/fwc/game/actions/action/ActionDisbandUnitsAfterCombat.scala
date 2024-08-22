@@ -10,7 +10,7 @@ import ujson.Value
 import enrichment.ExtSeq
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.actions.roundEvents.UnitDisbandNextStepCombatCleanUp
-import fwc.game.phases.PhaseAction
+import fwc.game.phases.MainPhase
 import fwc.game.planningPhase.OrderType
 
 case class ActionDisbandUnitsAfterCombat(
@@ -24,7 +24,7 @@ case class ActionDisbandUnitsAfterCombat(
 
     val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseDisbandUnit]
     
-    if currentPhase.nextStep != UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != PhaseAction
+    if currentPhase.nextStep != UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != MainPhase.Action
     then throw new ActionException("Wrong phase")
 
     if currentPhase.houseType != houseType
@@ -49,7 +49,7 @@ case class ActionDisbandUnitsAfterCombat(
     val newPhase =
       if toConsolidate2(houseType).isEmpty
       then NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.winner.head)
-      else SubPhaseDisbandUnit(houseType, UnitDisbandNextStepCombatCleanUp, PhaseAction)
+      else SubPhaseDisbandUnit(houseType, UnitDisbandNextStepCombatCleanUp, MainPhase.Action)
 
     gameState.copy(
       subPhase = newPhase,

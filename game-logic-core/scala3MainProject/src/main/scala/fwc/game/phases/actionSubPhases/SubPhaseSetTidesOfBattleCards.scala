@@ -2,7 +2,7 @@ package fwc.game.phases.actionSubPhases
 
 import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhaseSingleHouse}
+import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhaseSingleHouse}
 import fwc.gameLoading.TidesOfBattleCard
 import ujson.Value
 
@@ -10,7 +10,7 @@ case class SubPhaseSetTidesOfBattleCards(
                                           houseTypes: Seq[HouseType],
                                           attackerCard: Option[Int] = None,
                                           defenderCard: Option[Int] = None,
-                                          mainPhase: MainPhase = PhaseAction
+                                          mainPhase: MainPhase = MainPhase.Action
                                         ) extends SubPhase(mainPhase)
   with SubPhasePassive (mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase) {

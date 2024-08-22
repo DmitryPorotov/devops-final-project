@@ -6,7 +6,7 @@ import ujson.Value
 
 case class SubPhaseAutoKillUnitsAfterBattle(
                                              houseTypes: Seq[HouseType],
-                                             mainPhase: MainPhase = PhaseAction
+                                             mainPhase: MainPhase = MainPhase.Action
                                            ) extends SubPhase(mainPhase)
   with SubPhasePassive(mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase)

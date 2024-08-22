@@ -1,13 +1,13 @@
 package fwc.game.phases.roundEventsSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseRoundEvents, SubPhase, SubPhaseMultipleHouses}
+import fwc.game.phases.*
 import ujson.Value
 
 case class SubPhaseResolveTiesAfterBiddingOnWildlings(
                                                        houseTypes: Seq[HouseType],
                                                        isWinner: Boolean,
-                                                       mainPhase: MainPhase = PhaseRoundEvents
+                                                       mainPhase: MainPhase = MainPhase.RoundEvents
                                                      ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {

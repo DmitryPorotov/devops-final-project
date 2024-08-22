@@ -1,11 +1,11 @@
 package fwc.game.phases.planningSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhasePassive, SubPhaseRandom, SubPhaseSingleHouse}
+import fwc.game.phases.*
 
 case class SubPhaseRavenGetWildlingsCard(
                                           override val houseType: HouseType,
-                                          override val mainPhase: MainPhase = PhaseAction
+                                          override val mainPhase: MainPhase = MainPhase.Action
                                         )
  extends SubPhase(mainPhase) 
    with SubPhasePassive(mainPhase)

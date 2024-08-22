@@ -1,13 +1,13 @@
 package fwc.game.phases.actionSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseSingleHouse}
+import fwc.game.phases.{MainPhase, SubPhase, SubPhaseSingleHouse}
 import ujson.Value
 
 case class SubPhaseChooseHouseCardAfterLion5(
                                               override val houseType: HouseType,
                                               bannedCardCode: Int,
-                                              override val mainPhase: MainPhase = PhaseAction
+                                              override val mainPhase: MainPhase = MainPhase.Action
                                             ) extends SubPhase(mainPhase) with SubPhaseSingleHouse (
   houseType, mainPhase
 ) {

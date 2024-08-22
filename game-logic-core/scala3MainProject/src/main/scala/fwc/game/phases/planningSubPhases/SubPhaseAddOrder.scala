@@ -3,11 +3,11 @@ package fwc.game.phases.planningSubPhases
 import fwc.JsonSerializable
 import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhasePlanning, SubPhase, SubPhaseMultipleHouses}
+import fwc.game.phases.*
 
 case class SubPhaseAddOrder(
                              houseTypes: Seq[HouseType],
-                             mainPhase: MainPhase = PhasePlanning
+                             mainPhase: MainPhase = MainPhase.Planning
                            ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses (
   houseTypes, mainPhase
 ) {

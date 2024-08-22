@@ -6,7 +6,7 @@ import fwc.game.{GameState, gameRules}
 import fwc.game.board.{MilitaryUnit, TileNumber, TrackType}
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
-import fwc.game.phases.PhaseRoundEvents
+import fwc.game.phases.MainPhase
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.phases.roundEventsSubPhases.SubPhaseDisbandUnit
 import ujson.Value
@@ -24,7 +24,7 @@ case class ActionDisbandUnitDueToSupplies(
 
     val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseDisbandUnit]
 
-    if currentPhase.nextStep == UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != PhaseRoundEvents
+    if currentPhase.nextStep == UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != MainPhase.RoundEvents
     then throw new ActionException("Wrong phase")
 
     if currentPhase.houseType != houseType

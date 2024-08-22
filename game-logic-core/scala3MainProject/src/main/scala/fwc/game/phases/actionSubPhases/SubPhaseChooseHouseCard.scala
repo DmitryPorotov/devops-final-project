@@ -2,11 +2,11 @@ package fwc.game.phases.actionSubPhases
 
 import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseMultipleHouses}
+import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses}
 
 case class SubPhaseChooseHouseCard(
                                   houseTypes: Seq[HouseType],
-                                  mainPhase: MainPhase = PhaseAction
+                                  mainPhase: MainPhase = MainPhase.Action
                                  )extends SubPhase(mainPhase) with SubPhaseMultipleHouses (
    houseTypes,
    mainPhase

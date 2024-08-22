@@ -2,7 +2,7 @@ package fwc.game.phases.roundEventsSubPhases
 
 import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseMultipleHouses}
+import fwc.game.phases.*
 import ujson.Value
 
 case class SubPhaseWildlingsCard(
@@ -10,7 +10,7 @@ case class SubPhaseWildlingsCard(
                                   loserWinnerHouse: HouseType,
                                   cardCode: Int,
                                   isWin: Boolean,
-                                  mainPhase: MainPhase = PhaseAction
+                                  mainPhase: MainPhase = MainPhase.RoundEvents
                                ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {

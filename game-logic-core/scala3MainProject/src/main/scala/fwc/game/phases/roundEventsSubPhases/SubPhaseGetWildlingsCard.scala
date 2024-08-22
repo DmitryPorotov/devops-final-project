@@ -1,12 +1,12 @@
 package fwc.game.phases.roundEventsSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, PhaseAction, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhaseRandom}
+import fwc.game.phases.*
 
 case class SubPhaseGetWildlingsCard(
                                     houseTypes: Seq[HouseType],
                                      subPhaseWildlingsCard: SubPhaseWildlingsCard,
-                                     mainPhase: MainPhase = PhaseAction
+                                     mainPhase: MainPhase = MainPhase.RoundEvents
                                    )
  extends SubPhase(mainPhase) 
    with SubPhasePassive(mainPhase) 
