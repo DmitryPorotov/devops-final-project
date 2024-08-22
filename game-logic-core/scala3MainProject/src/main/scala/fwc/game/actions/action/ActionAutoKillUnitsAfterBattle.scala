@@ -6,7 +6,7 @@ import fwc.game.actionPhase.Combat
 import fwc.game.actions.{Action, JsonParsableAction, PlayerAction}
 import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
+import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseCleanUpAfterCombat, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import ujson.Value
 
 case class ActionAutoKillUnitsAfterBattle(
@@ -39,11 +39,26 @@ case class ActionAutoKillUnitsAfterBattle(
       gameState.copy(
         combat = updatedCombat2,
         subPhase =
-          if updatedCombat2.winner.contains(updatedCombat2.defenderHouse)
-          then SubPhaseAutoRetreatAfterBattle(updatedCombat2.attackerHouse)
-          else if updatedCombat2.winnerCard.exists(_.isWolf0) 
-          then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
-            else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
+          if updatedCombat2.winner.contains(updatedCombat2.defenderHouse) 
+          then {
+            if updatedCombat2.attackerArmy.nonEmpty 
+            then {
+              if updatedCombat2.winnerCard.exists(_.isWolf0) 
+              then
+                SubPhaseResolveHouseCard(HouseType.Wolf, 0)
+               else SubPhaseAutoRetreatAfterBattle(updatedCombat2.attackerHouse)
+            }
+            else SubPhaseCleanUpAfterCombat(Seq(updatedCombat2.attackerHouse, updatedCombat2.defenderHouse))
+          }
+          else {
+            if updatedCombat2.defenderArmy.nonEmpty 
+            then {
+              if updatedCombat2.winnerCard.exists(_.isWolf0) 
+              then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
+              else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
+            }
+            else SubPhaseCleanUpAfterCombat(Seq(updatedCombat2.attackerHouse, updatedCombat2.defenderHouse))
+          }
       )
 
   }
