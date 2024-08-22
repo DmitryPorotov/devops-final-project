@@ -29,6 +29,7 @@ services:
     profiles:
       - dev
       - multi
+      - infra
     image: "node:18"
     ports: 
       - "3001:80"
@@ -36,7 +37,7 @@ services:
     volumes:
       - "./web-server:/web-server"
     working_dir: "/web-server"
-    command: ["npx", "nest", "start", "--debug=0.0.0.0:9229", "--watch"]
+    command: "npx nest start --debug=0.0.0.0:9229 --watch"
     depends_on:
       - mysql
       - redis
@@ -58,7 +59,7 @@ services:
     volumes:
       - "./web-server:/web-server"
     working_dir: "/web-server"
-    command: [ "npx", "nest", "start", "--debug=0.0.0.0:9229", "--watch" ]
+    command: "npx nest start --debug=0.0.0.0:9229 --watch"
     depends_on:
       - mysql
       - redis
@@ -80,7 +81,7 @@ services:
     volumes:
       - "./front-login:/front-login"
     working_dir: "/front-login"
-    command: ["npm", "run", "start", "--debug=0.0.0.0:9228"]
+    command: "npm run start --debug=0.0.0.0:9228"
     networks:
       - net1
   worker:
@@ -94,7 +95,7 @@ services:
       - REDIS_HOST=redis
       - WORKER_NAME=worker1
       - ENVIRONMENT=dev
-    command: ["sbt", "run", "--", "-Xrs"]
+    command: "sbt run -- -Xrs"
     networks:
       - net1
     depends_on:
