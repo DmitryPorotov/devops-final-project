@@ -30,7 +30,7 @@ object GameServer {
       if isShuttingDown then return 
       val replyTo = channel.split('.')(1) + "." + workerName
       if !isProd then println(" [x] Received from " + channel + "\n '" + message + "'")
-      val (reply, isError) = 
+      val (reply, needsCropping) =
         try {
           Try[(Message, ujson.Value)](Message.parse(message)) match
             case Failure(e: FWCException) =>
@@ -44,8 +44,10 @@ object GameServer {
               ).render(fwc.jsonIndentation), true)
             case Failure(e) => throw e
             case Success((msg: Message, json: ujson.Value)) =>
-              Try[String](Reactor(msg, json)) match
-                case Success(s) => (s, false)
+              Try[ujson.Value](Reactor(msg, json)) match
+                case Success(j) =>
+                  val doCrop = j.obj("action").str.equals("get_game_state")
+                  (j.render(fwc.jsonIndentation), doCrop)
                 case Failure(e: FWCException) =>
                   val errJson = ujson.Obj(
                     "action" -> "error",
@@ -57,7 +59,7 @@ object GameServer {
                     errJson.value.addOne("gameId" -> e.gameId)
                   if e.userId != -1 then
                     errJson.value.addOne("userId" -> e.userId)
-                  (errJson.render(fwc.jsonIndentation), true)
+                  (errJson.render(fwc.jsonIndentation), false)
                 case Failure(e: RestoreGamesException) =>
                   e.games.foreach(gId => {
                     val gameReplayStr = jedisCache.get("game_save_" + gId)
@@ -67,7 +69,7 @@ object GameServer {
                   (ujson.Obj(
                     "action" -> "restore_games",
                     "messageId" -> e.messageId
-                  ).render(fwc.jsonIndentation), true)
+                  ).render(fwc.jsonIndentation), false)
                 case Failure(e) => throw e
         }
         catch
@@ -81,8 +83,8 @@ object GameServer {
               )
               .render(fwc.jsonIndentation), true)
       if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (
-        if reply.length > 1500 && !isError
-        then reply.substring(0, 1500)
+        if reply.length > 500 && needsCropping
+        then reply.substring(0, 500)
         else reply
         ) + "'")
       if !isShuttingDown then 

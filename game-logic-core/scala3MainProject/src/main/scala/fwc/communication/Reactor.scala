@@ -19,7 +19,7 @@ object Reactor {
     else throw new RuntimeException(s"Game id '$id' does not exist.")
   }
 
-  def apply(msg: Message, json: ujson.Value): String = {
+  def apply(msg: Message, json: ujson.Value): ujson.Value = {
     Try[Reply] {
       msg match
         case MessageGameAction(userId, gameId, gameAction, messageId) =>
@@ -85,9 +85,9 @@ object Reactor {
           throw new RestoreGamesException(games, messageId)
     } match
       case Success(reply: Reply) =>
-        reply.toJsonString
+        reply.toJson
       case Failure(e: FWCException) =>
-        ReplyError(msg.userId, msg.gameId, e.getMessage, json, msg.messageId).toJsonString
+        ReplyError(msg.userId, msg.gameId, e.getMessage, json, msg.messageId).toJson
       case Failure(e) => throw e
   }
   
