@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import NoWorkersException from "./NoWorkersException";
 
 @Injectable()
 class GameTransferService {
@@ -21,7 +22,7 @@ class GameTransferService {
         return new Promise<Map<string, {id: string, uuid: string}[]>>((resolve, reject) => {
             setTimeout(() => {
                 if (!this.workerReplies.length) {
-                    reject("Error. No workers to transfer games to.")
+                    reject(new NoWorkersException("Error. No workers to transfer games to."))
                 }
                 const numberOfGamesToTransfer = Object.keys(games).length;
                 const numberOfGamesAtWorkers =

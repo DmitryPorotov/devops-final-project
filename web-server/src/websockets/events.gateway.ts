@@ -13,6 +13,7 @@ import constants from "../constants";
 import {sleep} from "../common/utilities";
 import SystemMessageService from "./system-message.service";
 import {env} from 'process'
+import NoWorkersException from "../redis/NoWorkersException";
 
 
 
@@ -53,11 +54,11 @@ export class EventsGateway implements OnGatewayConnection{
         }
         this.logger.debug(`User ${user.id} - ${user.email} connected to the websocket`);
         client.user = user;
-        client.addListener('message', (data) => {
+        client.addListener('message', async (data) => {
             const strMessage = data.toString();
             this.logger.debug(`User ${user.id} - ${user.email} sent: ${strMessage}`);
             try {
-                this.websocketService.handleMessage(client, JSON.parse(strMessage));
+                await this.websocketService.handleMessage(client, JSON.parse(strMessage));
             }
             catch (e) {
                 this.logger.debug('in catch', e);
@@ -71,6 +72,9 @@ export class EventsGateway implements OnGatewayConnection{
                             }
                         }))
                     }
+                }
+                else if (e instanceof NoWorkersException) {
+                    this.logger.error(e);
                 }
                 else throw e;
             }
