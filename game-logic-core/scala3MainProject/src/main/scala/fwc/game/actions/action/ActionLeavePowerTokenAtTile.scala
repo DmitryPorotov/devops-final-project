@@ -12,7 +12,8 @@ import ujson.Value
 case class ActionLeavePowerTokenAtTile(
                                         gameState: GameState,
                                         houseType: HouseType,
-                                        doLeave: Boolean
+                                        doLeave: Boolean,
+                                        tileNumber: TileNumber,
                                       ) extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
     if !gameState.subPhase.isInstanceOf[SubPhaseLeavePowerTokenAtTile]
@@ -58,7 +59,8 @@ case class ActionLeavePowerTokenAtTile(
   override def toJson: Value = ujson.Obj(
     Action.actionTypeJsonKey -> "leavePowerTokenAtTile",
     "houseType" -> ujson.Str(houseType.toString),
-    "doLeave" -> doLeave
+    "doLeave" -> doLeave,
+    "tileNumber" -> tileNumber,
   )
 }
 
@@ -67,7 +69,8 @@ object ActionLeavePowerTokenAtTile extends JsonParsableAction {
     ActionLeavePowerTokenAtTile(
       gameState,
       HouseType.fromString(json("houseType").str),
-      json("doLeave").bool
+      json("doLeave").bool,
+      json("tileNumber").num.toInt,
     )
 
 }
