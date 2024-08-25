@@ -16,18 +16,18 @@ class ResolveMarchOrderReaction(BaseActionReaction):
         pa: ActionResolveMarchOrder = self._reply['player_action']
         is_combat = 'combat' in self._reply
         source_tn = str(pa['sourceTileNumber'])
-        for tn, mus_json in pa['targets']:
-            mus: list[MilitaryUnit] = [*(MilitaryUnit.from_json(j) for j in mus_json)]
-            subtract_army(self._game_state.armies[source_tn], mus)
+        for tn, mil_units_json in pa['targets'].items():
+            mil_units: list[MilitaryUnit] = [*(MilitaryUnit.from_json(j) for j in mil_units_json)]
+            subtract_army(self._game_state.armies[source_tn], mil_units)
             if not self._game_state.armies[source_tn]:
                 del self._game_state.armies[source_tn]
             if not is_combat:
                 if tn in self._game_state.armies:
                     for i, mu in enumerate(self._game_state.armies[tn]):
-                        if mu.unit_type is MilitaryUnitType.POWER_TOKEN and mu.house != mus[0].house:
+                        if mu.unit_type is MilitaryUnitType.POWER_TOKEN and mu.house != mil_units[0].house:
                             self._game_state.armies[tn].pop(i)
-                    self._game_state.armies[tn].extend(mus)
+                    self._game_state.armies[tn].extend(mil_units)
                 else:
-                    self._game_state.armies[tn] = mus
+                    self._game_state.armies[tn] = mil_units
         if is_combat:
             self._game_state.combat = Combat.from_json(self._reply['combat'])
