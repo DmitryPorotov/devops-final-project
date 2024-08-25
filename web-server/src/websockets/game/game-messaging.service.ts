@@ -9,9 +9,9 @@ import {CreateGame} from "./actions/create-game";
 import {RelayMessageToGame} from "./actions/relay-message-to-game";
 import NoGameInRedisCacheError from "../../redis/NoGameInRedisCacheError";
 import {LobbyClients} from "../lobby-clients.interface";
-import {v4 as uuid} from 'uuid'
 import MessageResendService from "../../redis/message-resend.service";
 import {FillWithBots} from "./actions/fill-with-bots";
+import {randomUUID} from "crypto";
 
 @Injectable()
 class GameMessagingService {
@@ -39,7 +39,7 @@ class GameMessagingService {
         }
         else {
             if (!message.messageId) {
-                message.messageId = uuid();
+                message.messageId = randomUUID();
             }
             this.messageResendService.registerMessageToResend(message);
             handler = new RelayMessageToGame(this.lobbies, this.workerRelayService);

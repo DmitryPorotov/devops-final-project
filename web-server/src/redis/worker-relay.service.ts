@@ -4,9 +4,8 @@ import RedisCacheStorage from "./redis.cache-storage"
 import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
 import {WorkerMessageInterface} from "../websockets/messages/worker-message.interface";
 import GameTransferService from "./game-transfer.service";
-import {v4 as uuid} from 'uuid'
 import MessageResendService from "./message-resend.service";
-import {MessageInterface} from "../websockets/messages/message.interface";
+import {randomUUID} from "crypto";
 
 @Injectable()
 class WorkerRelayService {
@@ -65,14 +64,14 @@ class WorkerRelayService {
             userId: -1,
             gameId: this.fakeGameIdForTransfer + "",
             action: 'new_game',
-            messageId: uuid()
+            messageId: randomUUID()
         }));
         const toSendToWorkers = await this.gameTransferService.transferGames(workerGames);
         toSendToWorkers.forEach((val, workerName) => {
             this.redisPubSub.publishToWorker(workerName, JSON.stringify({
                 userId: -1,
                 action: "restore_games",
-                messageId: uuid(),
+                messageId: randomUUID(),
                 games: val.map(g => g.uuid)
             }));
             val.forEach(g => {
