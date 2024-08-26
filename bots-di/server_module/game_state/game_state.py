@@ -1,5 +1,6 @@
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.armies import Armies
+from server_module.game_state.dominance_tokens_usage import DominanceTokensUsage
 from server_module.game_state.placed_orders import PlacedOrders
 from server_module.game_state.tracks import Tracks
 from server_module.game_state.supplies import Supplies
@@ -19,6 +20,7 @@ class GameState:
             supplies: Supplies,
             discarded_house_cards: DiscardedHouseCards,
             power_tokens: PowerTokens,
+            dominance_tokens_usage: DominanceTokensUsage,
             used_mustering_points: UsedMusteringPoints,
             available_orders: AvailableOrders,
             combat: Combat,
@@ -31,6 +33,7 @@ class GameState:
         self.supplies = supplies 
         self.discarded_house_cards = discarded_house_cards 
         self.power_tokens = power_tokens
+        self.dominance_tokens_usage = dominance_tokens_usage
         self.used_mustering_points = used_mustering_points 
         self.available_orders = available_orders
         self.combat = combat 
@@ -48,6 +51,7 @@ class GameState:
             Supplies(**json['supplies']),
             DiscardedHouseCards(**json['discardedHouseCards']),
             PowerTokens(**json['powerTokens']),
+            json['dominanceTokensUsage'],
             UsedMusteringPoints(**json['usedMusteringPoints']),
             available_orders,
             Combat.from_json(json['combat']) if ('combat' in json and json['combat'] is not None) else None,

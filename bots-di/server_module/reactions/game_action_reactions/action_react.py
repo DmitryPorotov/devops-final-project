@@ -11,6 +11,8 @@ from redis_service import RedisConnector
 from server_module.games_data_service import GamesDataService
 from server_module.reactions.game_action_reactions.action.calculate_combat_outcome_reaction import \
     CalculateCombatOutcomeReaction
+from server_module.reactions.game_action_reactions.action.clean_up_after_combat_reaction import \
+    CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
 from server_module.reactions.game_action_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
@@ -23,6 +25,8 @@ switch_obj = {
     'resolveMarchOrder': ResolveMarchOrderReaction,
     'leavePowerTokenAtTile': LeavePowerTokenAtTileReaction,
     'calculateCombatOutcome': CalculateCombatOutcomeReaction,
+    'cleanUpAfterCombat': CleanUpAfterCombatReaction,
+
 }
 
 
