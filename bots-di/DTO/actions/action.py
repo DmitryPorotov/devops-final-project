@@ -50,9 +50,15 @@ class ActionRefreshTidesOfBattleDeck(TypedDict):
     actionType: str  # = "refreshTidesOfBattleDeck"
     newCards: list[int]
 
+class AfterCombatStateJson(TypedDict):
+    armies: dict
+    discardedHouseCards: dict
+    placedOrders: dict
+    powerTokens: dict
 
 class ActionCleanUpAfterCombat(TypedDict):
     actionType: str  # = "cleanUpAfterCombat"
+    state: AfterCombatStateJson
 
 
 class ActionResolveCardKraken6(TypedDict):

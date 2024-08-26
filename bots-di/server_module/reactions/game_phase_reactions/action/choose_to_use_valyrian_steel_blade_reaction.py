@@ -16,6 +16,8 @@ class ChooseToUseValyrianSteelBladeReaction(BasePhaseReaction):
     def get_actions(self) -> list[MessageGameAction[ActionUseValyrianSteelBlade]]:
         choices = ['nothing', 'nothing', 'plusOne', 'changeTOBCard']
         idx = randrange(len(choices))
+        if self._game_state.dominance_tokens_usage['valyrianSword']:
+            idx = 0
         return [self._to_json(choices[idx])]
 
     def _to_json(self, choice: str) -> MessageGameAction[ActionUseValyrianSteelBlade]:
