@@ -112,7 +112,7 @@ case class ActionCleanUpAfterCombat(
         else footmenExistsFunc(combat.defenderArmy, combat.defenderSupport)
           && hasAvailableMooseKnightsFunc()
       }
-      then SubPhaseResolveHouseCard(HouseType.Moose, 2)
+      then SubPhaseResolveHouseCard(HouseType.Moose, 2) // todo looks like there is an infinite loop here (jvm crashes)
       else if combat.winnerCard.exists(_.isLion1)
       then SubPhaseResolveHouseCard(HouseType.Lion, 1)
       else if (combat.winnerCard.exists(_.isMoose3) || combat.loserCard.exists(_.isMoose3))

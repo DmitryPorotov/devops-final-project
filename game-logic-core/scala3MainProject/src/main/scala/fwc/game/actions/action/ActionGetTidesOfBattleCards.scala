@@ -21,15 +21,19 @@ case class ActionGetTidesOfBattleCards(
       try {
         val (card1, boardCards1) = gameState.boardCards.dequeueTidesOfBattleCard()
         gameState.copy(
-          subPhase =
+          subPhase = {
             if gameState.subPhase.isInstanceOf[SubPhaseGetTidesOfBattleCards]
             then SubPhaseSetTidesOfBattleCards(
               HouseType.getSeqOfAll,
               Some(card1.code)
             )
-            else gameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards].copy(
-              defenderCard = Some(card1.code)
-            )
+            else {
+              val phase = gameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
+              if phase.defenderCard.isEmpty
+              then phase.copy(defenderCard = Some(card1.code))
+              else phase.copy(attackerCard = Some(card1.code))
+            }
+          }
           ,
           boardCards = boardCards1
         )

@@ -6,7 +6,7 @@ import fwc.game.actionPhase.{CombatOutcome, ValyrianSteelBladeChoiceType}
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.board.DominanceTokenValyrianSword
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseGetTidesOfBattleCards}
+import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseGetTidesOfBattleCards, SubPhaseSetTidesOfBattleCards}
 import ujson.Value
 
 case class ActionUseValyrianSteelBlade(
@@ -45,15 +45,21 @@ case class ActionUseValyrianSteelBlade(
           0
         )
       )
-      else
+      else if choice == ValyrianSteelBladeChoiceType.ChangeTOBCard
+      then
         if isAttackerAction
         then gameState.combat.copy(attackerTidesOfBattle = null)
         else gameState.combat.copy(defenderTidesOfBattle = null)
+      else gameState.combat
 
     val newPhase =
       if choice == ValyrianSteelBladeChoiceType.Nothing || choice == ValyrianSteelBladeChoiceType.PlusOne
       then SubPhaseCalculateCombatOutcome(Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse))
-      else SubPhaseGetTidesOfBattleCards(Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse))
+      else SubPhaseSetTidesOfBattleCards(
+        Seq(updatedCombat.attackerHouse, updatedCombat.defenderHouse),
+        attackerCard = if updatedCombat.attackerTidesOfBattle == null then None else Some(updatedCombat.attackerTidesOfBattle.code),
+        defenderCard = if updatedCombat.defenderTidesOfBattle == null then None else Some(updatedCombat.defenderTidesOfBattle.code),
+      )
 
     gameState.copy(
       subPhase = newPhase,

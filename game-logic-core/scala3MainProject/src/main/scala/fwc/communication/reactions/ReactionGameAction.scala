@@ -115,7 +115,7 @@ object ReactionGameAction {
         else ActionSetEventCards(gameState, s.card1.head, s.card2.head, s.card3.head)
       case _: SubPhaseGetTidesOfBattleCards => ActionGetTidesOfBattleCards(gameState, isRandom)
       case s: SubPhaseSetTidesOfBattleCards =>
-        if s.defenderCard.isEmpty
+        if s.defenderCard.isEmpty || s.attackerCard.isEmpty
         then ActionGetTidesOfBattleCards(gameState, isRandom)
         else ActionSetTidesOfBattleCards(gameState, s.attackerCard.head, s.defenderCard.head)
       case _: SubPhaseGetWildlingsCard => ActionGetWildlingsCard(gameState, isRandom)
