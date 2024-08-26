@@ -6,6 +6,7 @@ import fwc.game.houses.*
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.{HouseCard, TidesOfBattleCard}
 
+// todo write unit tests for this class
 class CombatOutcomeCalculator(gameState: GameState) {
   extension (ht1: HouseType)
     def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =

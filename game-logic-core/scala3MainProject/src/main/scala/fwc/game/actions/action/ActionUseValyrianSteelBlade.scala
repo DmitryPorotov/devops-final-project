@@ -6,7 +6,7 @@ import fwc.game.actionPhase.{CombatOutcome, ValyrianSteelBladeChoiceType}
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.board.DominanceTokenValyrianSword
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseGetTidesOfBattleCards, SubPhaseSetTidesOfBattleCards}
+import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseSetTidesOfBattleCards}
 import ujson.Value
 
 case class ActionUseValyrianSteelBlade(
