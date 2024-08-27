@@ -4,7 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.actionPhase.DominanceTokensUsage
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.actions.action.NextOrderFinder
-import fwc.game.board.{DominanceTokenMessengerRaven, TileNumber}
+import fwc.game.board.{DominanceTokenType, TileNumber}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChangeOrder
 import fwc.game.planningPhase.{Order, OrderType}
@@ -40,7 +40,7 @@ case class ActionRavenChangeOrder(
     ActionAddOrder(newGameState, houseType, order, tileNumber).doPlaceOrder().copy(
       subPhase = newPhase,
       dominanceTokensUsage = DominanceTokensUsage(
-        newGameState.dominanceTokensUsage.usage + (DominanceTokenMessengerRaven -> true)
+        newGameState.dominanceTokensUsage.usage + (DominanceTokenType.MessengerRaven -> true)
       )
     )
   }

@@ -4,7 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.{CombatOutcome, ValyrianSteelBladeChoiceType}
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
-import fwc.game.board.DominanceTokenValyrianSword
+import fwc.game.board.DominanceTokenType
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseCalculateCombatOutcome, SubPhaseChooseToUseValyrianSteelBlade, SubPhaseSetTidesOfBattleCards}
 import ujson.Value
@@ -26,12 +26,12 @@ case class ActionUseValyrianSteelBlade(
     if gameState.tracks.steelBladeOwner != houseType
     then throw new ActionException(s"House $houseType has no Valyrian Steel Blade")
 
-    if gameState.dominanceTokensUsage(DominanceTokenValyrianSword)
+    if gameState.dominanceTokensUsage(DominanceTokenType.ValyrianSword)
     then throw new ActionException(s"Valyrian Steel Blade was already used this round")
 
     val updatedUsage =
       if choice != ValyrianSteelBladeChoiceType.Nothing
-      then gameState.dominanceTokensUsage + (DominanceTokenValyrianSword -> true)
+      then gameState.dominanceTokensUsage + (DominanceTokenType.ValyrianSword -> true)
       else gameState.dominanceTokensUsage
 
     val updatedCombat =

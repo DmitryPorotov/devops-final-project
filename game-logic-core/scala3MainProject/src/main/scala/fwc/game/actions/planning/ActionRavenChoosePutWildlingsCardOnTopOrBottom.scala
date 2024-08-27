@@ -5,7 +5,7 @@ import fwc.game.GameState
 import fwc.game.actionPhase.DominanceTokensUsage
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.actions.action.NextOrderFinder
-import fwc.game.board.DominanceTokenMessengerRaven
+import fwc.game.board.DominanceTokenType
 import fwc.game.eventsPhase.cards.BoardCards
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseRavenChoosePutWildlingsCardOnTopOrBottom
@@ -36,7 +36,7 @@ case class ActionRavenChoosePutWildlingsCardOnTopOrBottom(
           wildlings = newWildlingsCards
         ),
         dominanceTokensUsage = DominanceTokensUsage(
-          gameState.dominanceTokensUsage.usage + (DominanceTokenMessengerRaven -> true)
+          gameState.dominanceTokensUsage.usage + (DominanceTokenType.MessengerRaven -> true)
         )
       )
     }

@@ -4,17 +4,19 @@ import fwc.game.FWCException
 
 sealed trait DominanceTokenType
 
-case object DominanceTokenValyrianSword extends DominanceTokenType {
-  override def toString: String = "valyrianSword"
-}
 
-case object DominanceTokenMessengerRaven extends DominanceTokenType {
-  override def toString: String = "messengerRaven"
-}
 
 object DominanceTokenType {
+  case object ValyrianSword extends DominanceTokenType {
+    override def toString: String = "valyrianSword"
+  }
+
+  case object MessengerRaven extends DominanceTokenType {
+    override def toString: String = "messengerRaven"
+  }
+  
   def fromString(str: String): DominanceTokenType = str match
-    case "valyrianSword" => DominanceTokenValyrianSword
-    case "messengerRaven" => DominanceTokenMessengerRaven
+    case "valyrianSword" => ValyrianSword
+    case "messengerRaven" => MessengerRaven
     case s => throw new FWCException(s"Unknown DominanceTokenType string $s")
 }
