@@ -10,7 +10,7 @@ case class MessageGameAction(
                             ) extends Message(userId: Int, gameId: String, messageId: String) {
   override def toJson: Obj = 
     super.toJson.value.addPairs(
-      "action" -> "player_action",
-      "game_action" -> gameAction
+      "action" -> "game_action",
+      "player_action" -> gameAction
     )
 }
