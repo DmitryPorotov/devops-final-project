@@ -1,14 +1,14 @@
 package fwc.game.actionPhase
 
 import fwc.{JsonParsable, JsonSerializable}
-import fwc.game.board.{DominanceTokenMessengerRaven, DominanceTokenType, DominanceTokenValyrianSword}
+import fwc.game.board.DominanceTokenType
 import ujson.Value
 
 import scala.annotation.targetName
 
 case class DominanceTokensUsage(usage: Map[DominanceTokenType, Boolean] = Map(
-  DominanceTokenValyrianSword->false,
-  DominanceTokenMessengerRaven->false
+  DominanceTokenType.ValyrianSword->false,
+  DominanceTokenType.MessengerRaven->false
 )) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj(
