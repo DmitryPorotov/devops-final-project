@@ -82,6 +82,8 @@ object Action extends JsonParsableAction {
       case "wildlingsUpgradeKnights" => ActionWildlingsUpgradeKnights.fromJson(gameState, json)
       case "wildlingsChooseTrackToBeFirstAt" => ActionWildlingsChooseTrackToBeFirstAt.fromJson(gameState, json)
       case "wildlingsChooseTrackToBeLastAt" => ActionWildlingsChooseTrackToBeLastAt.fromJson(gameState, json)
+      case "autoKillUnitsAfterBattle" => ActionAutoKillUnitsAfterBattle.fromJson(gameState, json)
+      case "autoRetreatAfterBattle" => ActionAutoRetreatAfterBattle.fromJson(gameState, json)
 
   }
 }
