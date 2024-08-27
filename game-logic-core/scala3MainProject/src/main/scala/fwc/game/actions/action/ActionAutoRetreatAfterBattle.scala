@@ -12,15 +12,13 @@ case class ActionAutoRetreatAfterBattle(
                                        ) extends Action(gameState) with JsonSerializable:
   override def doAction(): GameState =
     val (updatedGameState1, attackerLost) = autoRetreatAttacker(gameState)
-    if attackerLost then
-      updatedGameState1
-    else if updatedGameState1.combat.defenderArmy.count(_.unitType.canRetreat) > 0 then
+    if attackerLost || (!attackerLost && updatedGameState1.combat.defenderArmy.count(_.unitType.canRetreat) == 0) then
       updatedGameState1.copy(
-        subPhase = SubPhaseRetreatUnitsAfterBattle(updatedGameState1.combat.defenderHouse)
+        subPhase = SubPhaseCleanUpAfterCombat(Seq(updatedGameState1.combat.attackerHouse, updatedGameState1.combat.defenderHouse))
       )
     else
       updatedGameState1.copy(
-        subPhase = SubPhaseCleanUpAfterCombat(Seq(updatedGameState1.combat.attackerHouse, updatedGameState1.combat.defenderHouse))
+        subPhase = SubPhaseRetreatUnitsAfterBattle(updatedGameState1.combat.defenderHouse)
       )
 
 
@@ -33,7 +31,7 @@ case class ActionAutoRetreatAfterBattle(
       (gameState.copy(
        armies = gameState.armies + (
          gameState.combat.attackerTileNum ->
-           (gameState.armies.getOrElse(gameState.combat.attackerTileNum, Seq()) ++ gameState.combat.attackerArmy.filter(_.unitType.canRetreat))
+           (gameState.armies.getOrElse(gameState.combat.attackerTileNum, Seq()) ++ gameState.combat.attackerArmy.filter(_.unitType.canRetreat).map(mu => mu.copy(isDefeated = true)))
          )
       ), true)
     else (gameState, false)
