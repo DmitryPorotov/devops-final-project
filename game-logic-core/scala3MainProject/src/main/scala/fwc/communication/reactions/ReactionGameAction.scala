@@ -205,6 +205,10 @@ object ReactionGameAction {
           then
             json.obj.addOne("orders" -> updatedGameState.placedOrders.toJson)
           buildMessageToAll(json)
+        case a: ActionRecalculateSupplies => 
+          val json = a.toJson
+          json.obj.addOne("supplies" -> updatedGameState.supplies.toJson)
+          buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then
       val updatedCombat =

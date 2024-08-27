@@ -90,6 +90,7 @@ class ActionSteelBladeChooseDisableMarchOrDefend(TypedDict):
 
 class ActionRecalculateSupplies(TypedDict):
     actionType: str  # = "recalculateSupplies"
+    supplies: dict
 
 
 class ActionWildlingsDiscardHouseCard(TypedDict):
