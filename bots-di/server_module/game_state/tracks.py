@@ -12,3 +12,6 @@ class Tracks(dict[TrackType, list[HouseType]]):
                 for i in range(len(kwargs[tt])):
                     track.append(HouseType[kwargs[tt][i].upper()])
                 self[TrackType[tt.upper()]] = track
+
+    def get_1st_on_track(self, track: TrackType):
+        return self[track][0]

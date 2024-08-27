@@ -1,2 +1,0 @@
-class CleanUpAfterCombatReaction:
-    pass

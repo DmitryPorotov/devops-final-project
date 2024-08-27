@@ -1,8 +1,9 @@
 from dependency_injector.wiring import Provide, inject
 
+from DTO.actions.action import ActionRetreatUnitsAfterBattle
 from DTO.messages.messages import ErrorMessage
 from DTO.actions.all_actions import Action, ActionResolveMarchOrder
-from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard
+from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.game_state.house_type import HouseType
@@ -30,6 +31,14 @@ class ErrorRetryHandler:
                     'houseType': HouseType.WOLF
                 }
                 react_to_phase(game_id, sp1)
+            elif pa['actionType'] == 'retreatUnitsAfterBattle':
+                pa2: ActionRetreatUnitsAfterBattle = pa
+                sp2: SubPhaseRetreatUnitsAfterBattle = {
+                    "mainPhase": "phaseAction",
+                    "subPhase": "retreatUnitsAfterBattle",
+                    "houseType": pa2["houseType"],
+                }
+                react_to_phase(game_id, sp2)
             else:
                 pass
 

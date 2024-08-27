@@ -7,7 +7,7 @@ from server_module.reactions.game_phase_reactions.base_phase_reaction import Bas
 from server_module.reactions.game_phase_reactions.no_reply_needed_exception import NoReplyNeedException
 
 #todo replace with NoActionNeededReaction later
-class CalculateCombatOutcomeReaction(BasePhaseReaction):
+class AutoRetreatAfterBattleReaction(BasePhaseReaction):
     def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
