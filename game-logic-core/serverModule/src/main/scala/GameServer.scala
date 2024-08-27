@@ -40,8 +40,8 @@ object GameServer {
                 "type" -> "action",
                 "gameId" -> (if e.gameId != null then e.gameId else ujson.Null),
                 "userId" -> e.userId,
-                "messageId" -> e.messageId,
-              ).render(fwc.jsonIndentation), true)
+                "messageId" -> (if e.messageId != null then e.messageId else ujson.Null),
+              ).render(fwc.jsonIndentation), false)
             case Failure(e) => throw e
             case Success((msg: Message, json: ujson.Value)) =>
               Try[ujson.Value](Reactor(msg, json)) match
@@ -81,7 +81,7 @@ object GameServer {
                 "type" -> "action",
                 "trace" -> ujson.Arr.from(e.getStackTrace.map(_.toString)),
               )
-              .render(fwc.jsonIndentation), true)
+              .render(fwc.jsonIndentation), false)
       if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (
         if reply.length > 500 && needsCropping
         then reply.substring(0, 500)
