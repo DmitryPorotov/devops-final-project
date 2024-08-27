@@ -10,6 +10,7 @@ import fwc.game.planningPhase.OrderType
 import ujson.Value
 
 import scala.collection.immutable.Seq
+import scala.util.Try
 
 case class ActionCleanUpAfterCombat(
                                      gameState: GameState,
@@ -73,9 +74,9 @@ case class ActionCleanUpAfterCombat(
         then acc + 1
         else acc
     ) + {
-      if updatedArmies
-        .getOrElse(gameRules.board.find(_.homeOf == combat.winner.head).head.number, Seq())
-        .isEmpty
+      if Try[Seq[MilitaryUnit]] {
+        updatedArmies(gameRules.board.find(_.homeOf == combat.winner.head).head.number)
+      } .getOrElse(Seq()).isEmpty
       then 1
       else 0
     }
