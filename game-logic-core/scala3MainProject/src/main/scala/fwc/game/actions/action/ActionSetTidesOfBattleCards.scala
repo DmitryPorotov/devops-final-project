@@ -2,6 +2,7 @@ package fwc.game.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.actions.{Action, ActionException, ActionSetCard, JsonParsableAction}
+import fwc.game.board.DominanceTokenType
 import fwc.game.{GameState, gameRules}
 import fwc.game.eventsPhase.cards.TidesOfBattleDeckEmptyException
 import fwc.game.houses.HouseType
@@ -30,7 +31,7 @@ case class ActionSetTidesOfBattleCards(
         else None
 
     val newSubPhase =
-      if houseWithSteelBlade.nonEmpty
+      if houseWithSteelBlade.nonEmpty && !gameState.dominanceTokensUsage(DominanceTokenType.ValyrianSword)
       then SubPhaseChooseToUseValyrianSteelBlade(houseWithSteelBlade.head)
       else SubPhaseCalculateCombatOutcome(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
 
