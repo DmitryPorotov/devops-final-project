@@ -18,7 +18,7 @@
 
     }))
   }
-  function doFetch() {
+  function doLogin() {
     return fetch('http://127.0.0.1:3001/api/v1/auth/login', {
       method: "POST",
       headers: {
@@ -31,48 +31,52 @@
     })
   }
 
+  function makeWebSock() {
+    websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${token}`, "events");
+    websock.onmessage = (event) => {
+      console.log("message:" + event.data);
+      const msg = JSON.parse(event.data);
+      if (msg.action === 'create_game' || msg.action === 'load') {
+        websock.send(JSON.stringify({
+          type: 'action',
+          action: 'fill_with_bots',
+          lobbyId: 3,
+          userId: 1,
+          player_action: {
+            houseTypes :[ "lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
+          }
+        }))
+      }
+      else if (msg.type === 'chat' && msg.body.type === 'create') {
+        send_create_game()
+      }
+      else if (msg.action === 'get_game_state') {
+        document.getElementById('game_state').value = JSON.stringify(msg.gameState, null,  2)
+      }
+    };
+    websock.onopen = (event) => {
+      console.log("on open: ", event);
+      websock.send(JSON.stringify({
+        type: 'chat',
+        lobbyId: 3,
+        userId: 1,
+        body: {
+          type: 'create'
+        }
+
+      }))
+    };
+  }
+
   function onClick() {
     if (websock) {
       send_create_game();
       return
     }
-    doFetch().then(async (data) => {
+    doLogin().then(async (data) => {
       const user = await data.json();
       token = user.token;
-      websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${user.token}`, "events");
-      websock.onmessage = (event) => {
-        console.log("message:" + event.data);
-        const msg = JSON.parse(event.data);
-        if (msg.action === 'create_game') {
-          websock.send(JSON.stringify({
-            type: 'action',
-            action: 'fill_with_bots',
-            lobbyId: 3,
-            userId: 1,
-            player_action: {
-              houseTypes :[ "lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
-            }
-          }))
-        }
-        else if (msg.type === 'chat' && msg.body.type === 'create') {
-          send_create_game()
-        }
-        else if (msg.action === 'get_game_state') {
-          document.getElementById('game_state').value = JSON.stringify(msg.gameState, null,  2)
-        }
-      };
-      websock.onopen = (event) => {
-        console.log("on open: ", event);
-        websock.send(JSON.stringify({
-          type: 'chat',
-          lobbyId: 3,
-          userId: 1,
-          body: {
-            type: 'create'
-          }
-
-        }))
-      };
+      makeWebSock();
     });
   }
   function onGetState() {
@@ -89,7 +93,7 @@
       })
 
     }
-    if (!token) doFetch().then(async (data) => {
+    if (!token) doLogin().then(async (data) => {
       const user = await data.json();
       token = user.token;
       getState(3)
@@ -99,7 +103,7 @@
   function save() {
     let name = document.getElementById('save-name').value.trim();
     name = name ? name : "name";
-    fetch('http://127.0.0.1:3001/api/v1/admin/games/' + 3, {
+    fetch('http://127.0.0.1:3001/api/v1/admin/games/3', {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + token,
@@ -107,6 +111,56 @@
       },
       body: `{"name":"${name}"}`
     })
+  }
+  function onListSaves() {
+    if (!token) doLogin().then(async (data) => {
+      const user = await data.json();
+      token = user.token;
+      makeWebSock();
+      getSaves()
+    });
+    else getSaves();
+
+    function getSaves() {
+      fetch('http://127.0.0.1:3001/api/v1/admin/games/-1/saves', {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-type": "application/json",
+        },
+      }).then(async data => {
+        const json = await data.json();
+        const select = document.getElementById('saved_games');
+        select.innerHTML = '';
+        for (const save of json.saves) {
+          /**
+           * @type {HTMLElement | HTMLOptionElement}
+           */
+          const opt = document.createElement('option');
+          opt.value = save;
+          opt.innerText = save;
+          select.appendChild(opt);
+        }
+      })
+
+    }
+  }
+  function loadGame() {
+    /**
+     * @type {HTMLSelectElement}
+     */
+    const select = document.getElementById('saved_games');
+    const selectedGame = select.value;
+    if (selectedGame) {
+      fetch('http://127.0.0.1:3001/api/v1/admin/games/3/load', {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-type": "application/json",
+        },
+        body: `{"name":"${selectedGame}"}`
+      })
+    }
   }
 </script>
 <style>
@@ -140,7 +194,12 @@
       <button onclick="save()">Save</button>
     </div>
     <div class="container">
-
+      <h2>Load game</h2>
+      <button onclick="onListSaves()">List Saves</button>
+      <div>
+      <select id="saved_games"></select>
+      </div>
+      <button onclick="loadGame()">Load</button>
     </div>
   </header>
 
