@@ -19,6 +19,7 @@ export class UsersSeeder implements Seeder {
         user.password = await bcrypt.hash('12345678', constants.HASH_SALT_ROUNDS);
         user.name = 'user1';
         user.isEnabled = true;
+        user.isAdmin = true;
 
         const user2 = new User();
         user2.email = 'b@b.com';
