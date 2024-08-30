@@ -15,6 +15,8 @@ from server_module.reactions.game_phase_reactions.action.resolve_support_order_r
 from server_module.reactions.game_phase_reactions.action.retreat_units_after_battle_reaction import \
     RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.no_action_needed_reaction import NoActionNeededReaction
+from server_module.reactions.game_phase_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
+    ResolveTiesAfterBiddingOnTracksReaction
 from server_module.reactions.game_phase_reactions.round_events.choose_disable_march_plus1_or_defend_orders_reaction import \
     ChooseDisableMarchPlus1OrDefendOrdersReaction
 from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
@@ -29,6 +31,7 @@ from server_module.reactions.game_phase_reactions.round_events.choose_tracks_bid
 from server_module.reactions.game_phase_reactions.round_events.choose_update_supply_or_muster_reaction import \
     ChooseUpdateSupplyOrMusterReaction
 from server_module.reactions.game_phase_reactions.round_events.tracks_bids_reaction import TracksBidsReaction
+from server_module.reactions.game_phase_reactions.round_events.wildlings_bids_reaction import WildlingsBidsReaction
 from utils_ import print_file_lineno_error
 
 switcher_obj = {
@@ -60,12 +63,15 @@ switcher_obj = {
     'chooseTracksBidsOrCollectTaxes': RavenChooseTrackBidsOrCollectTaxesReaction,
     'recalculateSupplies': NoActionNeededReaction,
     'tracksBids': TracksBidsReaction,
+    'wildlingsBids': WildlingsBidsReaction,
+    'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):
     try:
         PhaseReact.react(switcher_obj[phase['subPhase']], game_id, phase)
     except KeyError as e:
+        print('Unimplemented phase {}'.format(phase['subPhase']))
         print_file_lineno_error(e)
 
         raise e
