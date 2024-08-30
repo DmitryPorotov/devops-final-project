@@ -22,7 +22,7 @@ class TracksBidsReaction(BasePhaseReaction):
         json = super()._to_json()
         action: ActionTrackBids = {
             'houseType': self._house_type,
-            'actionType': 'actionType',
+            'actionType': 'trackBids',
             'bid': num_tokens
         }
         json['player_action'] = action
