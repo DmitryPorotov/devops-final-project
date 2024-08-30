@@ -8,7 +8,7 @@ import org.scalatest.matchers.*
 
 import scala.io.Source.fromFile
 
-class KrakenCard4CombatOutcome  extends AnyFlatSpec with should.Matchers  {
+class KrakenCard4CombatOutcome extends AnyFlatSpec with should.Matchers  {
   "Calculating combat outcome with kraken card number 4" should "not cause an infinite loop" in {
 
     val source = fromFile("saves/forIntegration/3--kraken4card--2024-08-27T09-14-00.json")
