@@ -128,6 +128,7 @@ object ReactionGameAction {
       case _: SubPhaseCleanUpAfterRound => ActionCleanUpAfterRound(gameState, isRandom)
       case _: SubPhaseRecalculateSupplies => ActionRecalculateSupplies(gameState)
       case s: SubPhaseResolveCardRose2 => ActionResolveCardRose2(gameState, s.houseType)
+      case s: SubPhaseOpenTrackBids => ActionOpenTrackBids(gameState, gameState.bids)
 //      case _ => throw new RuntimeException("SubPhase " + subPhase + " has no matching action.")
 
 
@@ -172,7 +173,11 @@ object ReactionGameAction {
             "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState)
           )
         )
-        case _: ActionCleanUpAfterRound => buildMessageToAll(ActionCleanUpAfterRound.buildMessage(updatedGameState))
+        case a: ActionCleanUpAfterRound => buildMessageToAll(
+          a.toJson.obj.addAll(
+            ActionCleanUpAfterRound.buildMessage(updatedGameState).obj
+          )
+        )
         case a: ActionGetTidesOfBattleCards =>
           val sp = updatedGameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
           if sp.defenderCard.isEmpty
@@ -208,6 +213,10 @@ object ReactionGameAction {
         case a: ActionRecalculateSupplies => 
           val json = a.toJson
           json.obj.addOne("supplies" -> updatedGameState.supplies.toJson)
+          buildMessageToAll(json)
+        case a: ActionTrackBids =>
+          val json = a.toJson
+          json.obj("bid") = -1
           buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then
