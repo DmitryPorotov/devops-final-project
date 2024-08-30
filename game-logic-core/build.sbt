@@ -40,7 +40,7 @@ lazy val serverModule = project
     version := "0.1.0-SNAPSHOT",
     libraryDependencies ++=Seq(
       "com.lihaoyi" %% "upickle" % "3.3.1",
-      "redis.clients" % "jedis" % "5.1.3",
+      "redis.clients" % "jedis" % "5.1.5",
     ),
   ) dependsOn scala3MainProject
 
