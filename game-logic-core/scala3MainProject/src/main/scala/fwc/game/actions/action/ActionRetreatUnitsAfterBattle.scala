@@ -39,7 +39,7 @@ case class ActionRetreatUnitsAfterBattle(
           )
         )
       else
-        val possibleTilesToRetreat = getAllNeighboursBySea(targetTileNumber).filter(
+        val possibleTilesToRetreat = getAllNeighboursBySea(gameState.combat.defenderTileNum).filter(
           tn =>
             tn != gameState.combat.attackerTileNum
             && tn != gameState.combat.defenderTileNum
