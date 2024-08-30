@@ -202,6 +202,9 @@ object SubPhase extends JsonParsable {
       case "autoRetreatAfterBattle" =>
         val (ht, mp) = getFieldsOfSingleHouse(json)
         SubPhaseAutoRetreatAfterBattle(ht, mp)
+      case "openTrackBids" =>
+        val trackType = TrackType.fromString(json("trackType").str)
+        SubPhaseOpenTrackBids(trackType, getFieldsOfNoHouse(json))
   }
 
 

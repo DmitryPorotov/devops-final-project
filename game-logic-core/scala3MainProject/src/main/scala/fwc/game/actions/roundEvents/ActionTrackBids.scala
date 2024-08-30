@@ -5,7 +5,7 @@ import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerActi
 import fwc.game.eventsPhase.Bids
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
-import fwc.game.phases.roundEventsSubPhases.{SubPhaseResolveTiesAfterBiddingOnTracks, SubPhaseTracksBids}
+import fwc.game.phases.roundEventsSubPhases.{SubPhaseOpenTrackBids, SubPhaseResolveTiesAfterBiddingOnTracks, SubPhaseTracksBids}
 import ujson.Value
 
 case class ActionTrackBids(
@@ -32,37 +32,13 @@ case class ActionTrackBids(
 
     val isBiddingFinished = updatedBids.size >= 6
 
-    val doResolveTies =
-      if isBiddingFinished
-      then updatedBids.foldLeft(Set())(
-        (acc, htBid: (HouseType, Int)) =>
-          acc + htBid._2
-      ).size != 6
-      else false
-
-    val updatedTracks =
-      if doResolveTies
-      then gameState.tracks
-      else gameState.tracks +
-        (currentPhase.trackType -> updatedBids.toSeq.view.sortWith((a, b) => b._2 < a._2).map(_._1).toSeq)
-
-
     val newPhase =
       if !isBiddingFinished
       then SubPhaseTracksBids(currentPhase.houseTypes.filter(_ != houseType), currentPhase.trackType)
-      else
-        if doResolveTies
-        then SubPhaseResolveTiesAfterBiddingOnTracks(gameState.tracks.throneOwner, currentPhase.trackType)
-        else EventCards.bidsFallThroughFromThrone(
-          currentPhase.trackType,
-          gameState.boardCards.roundEvents3.head,
-          gameState.tracks.steelBladeOwner
-        )
+      else SubPhaseOpenTrackBids(currentPhase.trackType)
 
     gameState.copy(
       subPhase = newPhase,
-      tracks = updatedTracks,
-      bids = if isBiddingFinished && !doResolveTies then Bids() else updatedBids,
       powerTokens = updatedPowerTokens
     )
   }
