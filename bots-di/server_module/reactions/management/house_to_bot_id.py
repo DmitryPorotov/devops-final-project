@@ -16,7 +16,7 @@ class HouseToBotId(IntEnum):
         return HouseToBotId[str(house.upper())].value
 
     @classmethod
-    def get_house_by_bot_id(cls, id: int):
+    def get_house_by_bot_id(cls, id_: int):
         for k in cls:
-            if int(k) == id:
+            if int(k) == id_:
                 return k
