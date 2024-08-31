@@ -15,6 +15,7 @@ from server_module.reactions.game_phase_reactions.action.resolve_support_order_r
 from server_module.reactions.game_phase_reactions.action.retreat_units_after_battle_reaction import \
     RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.no_action_needed_reaction import NoActionNeededReaction
+from server_module.reactions.game_phase_reactions.round_events.muster_reaction import MusterReaction
 from server_module.reactions.game_phase_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
     ResolveTiesAfterBiddingOnTracksReaction
 from server_module.reactions.game_phase_reactions.round_events.choose_disable_march_plus1_or_defend_orders_reaction import \
@@ -30,6 +31,8 @@ from server_module.reactions.game_phase_reactions.round_events.choose_tracks_bid
     RavenChooseTrackBidsOrCollectTaxesReaction
 from server_module.reactions.game_phase_reactions.round_events.choose_update_supply_or_muster_reaction import \
     ChooseUpdateSupplyOrMusterReaction
+from server_module.reactions.game_phase_reactions.round_events.resolve_ties_after_bidding_on_wildlings_reaction import \
+    ResolveTiesAfterBiddingOnWildlingsReaction
 from server_module.reactions.game_phase_reactions.round_events.tracks_bids_reaction import TracksBidsReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_bids_reaction import WildlingsBidsReaction
 from utils_ import print_file_lineno_error
@@ -65,6 +68,10 @@ switcher_obj = {
     'tracksBids': TracksBidsReaction,
     'wildlingsBids': WildlingsBidsReaction,
     'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
+    'resolveTiesAfterBiddingOnWildlings': ResolveTiesAfterBiddingOnWildlingsReaction,
+    'getEventCards': NoActionNeededReaction,
+    'setEventCards': NoActionNeededReaction,
+    'muster': MusterReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

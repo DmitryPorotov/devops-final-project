@@ -17,7 +17,7 @@ class ResolveCardMoose3Reaction(BasePhaseReaction):
         json: MessageGameAction[ActionResolveCardMoose3] = super()._to_json()
         action: ActionResolveCardMoose3 = {
             "houseType": self._house_type,
-            "actionType": 'resolveCardMoose2',
+            "actionType": 'resolveCardMoose3',
             "cardCode":  self.__get_card_code()
         }
         json['player_action'] = action

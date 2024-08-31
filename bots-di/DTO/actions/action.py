@@ -59,6 +59,7 @@ class AfterCombatStateJson(TypedDict):
 class ActionCleanUpAfterCombat(TypedDict):
     actionType: str  # = "cleanUpAfterCombat"
     state: AfterCombatStateJson
+    doCardResolve: bool
 
 
 class ActionResolveCardKraken6(TypedDict):

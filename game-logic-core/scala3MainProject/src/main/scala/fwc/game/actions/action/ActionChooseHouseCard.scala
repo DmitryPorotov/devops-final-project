@@ -64,10 +64,10 @@ case class ActionChooseHouseCard(
       gameState.powerTokens(combat.defenderHouse)
     )
 
-    if attackerP != null && attackerP.asInstanceOf[SubPhaseResolveHouseCard].cardCode == 5 && attackerP.houseType == HouseType.Lion
+    if attackerP != null && attackerP.isInstanceOf[SubPhaseResolveHouseCard] && attackerP.asInstanceOf[SubPhaseResolveHouseCard].cardCode == 5 && attackerP.houseType == HouseType.Lion
     then return attackerP
 
-    if defenderP != null && defenderP.asInstanceOf[SubPhaseResolveHouseCard].cardCode == 5 && defenderP.houseType == HouseType.Lion
+    if defenderP != null && attackerP.isInstanceOf[SubPhaseResolveHouseCard] && defenderP.asInstanceOf[SubPhaseResolveHouseCard].cardCode == 5 && defenderP.houseType == HouseType.Lion
     then return defenderP
 
     if attackerP != null

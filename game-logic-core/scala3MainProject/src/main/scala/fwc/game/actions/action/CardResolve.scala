@@ -4,7 +4,7 @@ import fwc.game.actionPhase.Combat
 import fwc.game.actions.ActionException
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
-import fwc.game.phases.actionSubPhases.SubPhaseResolveHouseCard
+import fwc.game.phases.actionSubPhases.{SubPhaseResolveCardRose2, SubPhaseResolveHouseCard}
 
 object CardResolve {
   def validateAndGetCombat(
@@ -12,11 +12,13 @@ object CardResolve {
                                         houseType: HouseType,
                                         combat: Combat
                                       ): (Boolean, Combat) = {
-    if !subPhase.isInstanceOf[SubPhaseResolveHouseCard]
+    if !subPhase.isInstanceOf[SubPhaseResolveHouseCard] && !subPhase.isInstanceOf[SubPhaseResolveCardRose2]
     then throw new ActionException("Wrong phase")
 
-    if subPhase.asInstanceOf[SubPhaseResolveHouseCard].houseType != houseType
-    then throw new ActionException("Wrong house")
+    subPhase match
+      case card: SubPhaseResolveHouseCard if card.houseType != houseType => throw new ActionException("Wrong house")
+      case card: SubPhaseResolveCardRose2 if card.houseType != houseType => throw new ActionException("Wrong house")
+      case _ =>
 
     val isAttackerAction_ = isAttackerAction(houseType, combat)
 

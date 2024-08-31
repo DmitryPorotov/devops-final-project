@@ -48,7 +48,7 @@ object CombatCommon {
       => if krakenPowerTokens > 1
           then SubPhaseResolveHouseCard(HouseType.Kraken, 6)
           else null
-          case HouseCard(HouseType.Rose, 2, _, _, _, _, _)
+      case HouseCard(HouseType.Rose, 2, _, _, _, _, _)
       => SubPhaseResolveCardRose2(HouseType.Rose)
       case HouseCard(HouseType.Rose, 4, _, _, _, _, _)
       => SubPhaseResolveHouseCard(HouseType.Rose, 4)

@@ -1,3 +1,4 @@
+from server_module.game_rules.board import Board
 from server_module.game_rules.board_cards import BoardCards
 from server_module.game_rules.board_tile import BoardTile
 from server_module.game_rules.military_unit_info import MilitaryUnitInfo
@@ -10,7 +11,7 @@ from server_module.game_state.order_type import OrderType
 class GameRules:
     def __init__(
             self,
-            board: list[BoardTile],
+            board: Board,
             kings_court_stars: list[int],
             supply_usage: list[list[int]],
             max_armies: dict[MilitaryUnitType, int],
@@ -31,7 +32,7 @@ class GameRules:
     @classmethod
     def from_json(cls, json):
         return cls(
-            list(BoardTile.from_json(bt) for bt in json['board']),
+            Board(*json['board']),
             json['kingsCourtStars'],
             json['supplyUsage'],
             {MilitaryUnitType.from_str(mut): num for mut, num in json['maxArmies'].items()},

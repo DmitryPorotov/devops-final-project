@@ -90,7 +90,7 @@ case class ActionResolveCardWolf0(
 
     gameState.copy(
       armies = updatedArmies,
-      combat = updatedCombat,
+      combat = null,
       subPhase = newPhase
     )
   }

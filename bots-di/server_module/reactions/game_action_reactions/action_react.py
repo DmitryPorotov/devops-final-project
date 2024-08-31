@@ -11,6 +11,8 @@ from redis_service import RedisConnector
 from server_module.games_data_service import GamesDataService
 from server_module.reactions.game_action_reactions.action.calculate_combat_outcome_reaction import \
     CalculateCombatOutcomeReaction
+from server_module.reactions.game_action_reactions.action.clean_up_after_combat_house_card_reaction import \
+    CleanUpAfterCombatReactionHouseCard
 from server_module.reactions.game_action_reactions.action.clean_up_after_combat_reaction import \
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
@@ -28,7 +30,10 @@ switch_obj = {
     'leavePowerTokenAtTile': LeavePowerTokenAtTileReaction,
     'calculateCombatOutcome': CalculateCombatOutcomeReaction,
     'cleanUpAfterCombat': CleanUpAfterCombatReaction,
-
+    'resolveCardLion1': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardMoose2': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardMoose3': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
 }
 
 

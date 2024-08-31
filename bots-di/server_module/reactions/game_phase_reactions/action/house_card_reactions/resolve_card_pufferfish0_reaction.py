@@ -20,7 +20,7 @@ class ResolveCardPufferfish0Reaction(BasePhaseReaction):
         json: MessageGameAction[ActionResolveCardPufferfish0] = super()._to_json()
         action: ActionResolveCardPufferfish0 = {
             "houseType": self._house_type,
-            "actionType": 'resolveCardMoose2',
+            "actionType": 'resolveCardPufferfish0',
             "trackType": tracks[idx]
         }
         json['player_action'] = action

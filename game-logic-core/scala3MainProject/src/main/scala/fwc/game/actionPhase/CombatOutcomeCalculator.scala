@@ -12,7 +12,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
     def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =
       ht1.isHigherOnTrack(gameState.tracks(TrackType.Throne))(ht2)
 
-    def isHigherOnFiefdomsTrackThan(ht2: HouseType): Boolean =
+    private def isHigherOnFiefdomsTrackThan(ht2: HouseType): Boolean =
       ht1.isHigherOnTrack(gameState.tracks(TrackType.Fiefdoms))(ht2)
 
   def calculate(): CombatOutcome = {

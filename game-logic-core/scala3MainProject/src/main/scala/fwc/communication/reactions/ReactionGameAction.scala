@@ -169,8 +169,11 @@ object ReactionGameAction {
           )
         )
         case a: ActionCleanUpAfterCombat => buildMessageToAll(
-          a.toJson.obj.addOne(
-            "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState)
+          a.toJson.obj.addAll(
+            ujson.Obj(
+              "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState),
+              "doCardResolve" -> (updatedGameState.combat != null)
+            ).obj
           )
         )
         case a: ActionCleanUpAfterRound => buildMessageToAll(

@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional
+from typing import TypedDict, Optional, NotRequired
 from server_module.game_state.military_unit import HouseType, MilitaryUnit
 
 
@@ -38,7 +38,7 @@ class ActionResolveTiesAfterBiddingOnTracks(TypedDict):
 class ActionResolveTiesAfterBiddingOnWildlings(TypedDict):
     actionType: str  # = "resolveTiesAfterBiddingOnWildlings"
     houseType: HouseType
-    winnerLoser: str
+    winnerLoser: HouseType
 
 
 class ActionTrackBids(TypedDict):
@@ -63,7 +63,7 @@ class ActionMuster(TypedDict):
     houseType: HouseType
     unitToMuster: MilitaryUnit
     fromTile: int
-    toTile: Optional[int]
+    toTile: NotRequired[int]
 
 
 class ActionWildlingsBids(TypedDict):

@@ -10,6 +10,7 @@ from redis_service import RedisConnector
 from server_module.game_state.house_type import HouseType
 from server_module.games_data_service import GamesDataService, GameHandle
 from server_module.reactions.game_phase_reactions.base_phase_reaction import BasePhaseReaction
+from server_module.reactions.game_phase_reactions.multi_house_reaction import MultiHouseReaction
 from server_module.reactions.game_phase_reactions.no_reply_needed_exception import NoReplyNeedException
 from utils_ import print_file_lineno_error
 
@@ -17,6 +18,7 @@ from utils_ import print_file_lineno_error
 class PhaseReact:
     game_data: Optional[GamesDataService] = None
     redis: Optional[RedisConnector] = None
+    multi_house_reaction: Optional[MultiHouseReaction] = None
 
     @staticmethod
     @inject
@@ -27,6 +29,7 @@ class PhaseReact:
         PhaseReact.logger = logging.getLogger(
             f"{__name__}.{PhaseReact.__class__.__name__}",
         )
+        PhaseReact.multi_house_reaction = MultiHouseReaction()
 
     @staticmethod
     def react(phase_reaction_cls: Type[BasePhaseReaction],
@@ -38,7 +41,11 @@ class PhaseReact:
             if isinstance(sub_phase['houseTypes'], list):
                 for h in sub_phase['houseTypes']:
                     if h in game.houses:
-                        PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
+                        PhaseReact.multi_house_reaction.react(
+                            sub_phase,
+                            h,
+                            lambda: PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
+                        )
             elif isinstance(sub_phase['houseTypes'], dict):  # type: dict[HouseType, int]
                 # note this is for bidding
                 pass

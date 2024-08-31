@@ -26,12 +26,12 @@ case class ActionResolveCardMoose2(
       combat = null
     )
 
-    if  updatedCombat.defenderTileNum != tileNumber ||
+    if  (updatedCombat.defenderTileNum != tileNumber &&
       {
         if isAttackerAction
         then !updatedCombat.attackerSupport.contains(tileNumber)
         else !updatedCombat.defenderSupport.contains(tileNumber)
-      }
+      })
       || !gameState.armies.exists(
         (ta: (TileNumber, Seq[MilitaryUnit])) =>
           ta._1 == tileNumber && ta._2.exists(mu => mu.unitType == MilitaryUnitType.Footmen && mu.house == HouseType.Moose)
