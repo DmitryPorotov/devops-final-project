@@ -72,15 +72,16 @@ object Supplies extends JsonParsable {
     type tileNum = Int
     type armySize = Int
     val houseToNumArmies = armies.foldLeft(Map[HouseType, Seq[(tileNum, armySize)]]())((acc, cur) => {
-      val curTile = (cur._1, cur._2.count(mu => 
+      val (tn, army) = cur 
+      val (_, armySize) = (tn, army.count(mu => 
         mu.unitType != MilitaryUnitType.Garrison && mu.unitType != MilitaryUnitType.PowerToken))
 
-      if (houseType != null && houseType != cur._2.head.house)
-        acc
-      else if (curTile._2 < 2)
-        acc
+      if houseType != null && army.nonEmpty && houseType != army.head.house
+      then acc
+      else if armySize < 2
+      then acc
       else
-        acc + (cur._2.head.house -> (acc.getOrElse(cur._2.head.house, Seq[(tileNum, armySize)]()) :+ curTile))
+        acc + (army.head.house -> (acc.getOrElse(army.head.house, Seq[(tileNum, armySize)]()) :+ (tn -> armySize)))
     }).map((h, a: Seq[(tileNum, armySize)]) => {
       h -> a.sortWith((t1, t2) => t1._2 > t2._2)
     })
@@ -88,12 +89,12 @@ object Supplies extends JsonParsable {
     def compareUsage(current: Seq[(tileNum, armySize)], permitted: Seq[Int]): Seq[Int] = {
       @tailrec
       def rec(c: Seq[(tileNum, armySize)], p: Seq[Int]): Int = {
-        if (c.isEmpty)
-          Int.MaxValue
-        else if (p.isEmpty)
-          Int.MinValue
-        else if (c.head._2 > p.head)
-          c.head._2
+        if c.isEmpty
+        then Int.MaxValue
+        else if p.isEmpty
+        then Int.MinValue
+        else if c.head._2 > p.head
+        then c.head._2
         else
           rec(c.tail, p.tail)
       }
@@ -111,7 +112,7 @@ object Supplies extends JsonParsable {
 
   def getHouseToConsolidate(toConsolidate: Map[HouseType, Seq[Int]], throneTrack: Seq[HouseType]): HouseType = {
     extension (ht1: HouseType)
-      def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =
+      private def isHigherOnThroneTrackThan(ht2: HouseType): Boolean =
         ht1.isHigherOnTrack(throneTrack)(ht2)
 
     val sortedArmies = toConsolidate.toSeq.sortWith(
