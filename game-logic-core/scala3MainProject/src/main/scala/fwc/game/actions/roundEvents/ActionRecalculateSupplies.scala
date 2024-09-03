@@ -30,7 +30,11 @@ case class ActionRecalculateSupplies(
           UnitDisbandNextStepDeck2
         )
       else
-        EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards)
+        EventCards.fallThroughFromDeck2(
+          gameState.tracks,
+          gameState.boardCards,
+          gameState.wildlingCounter,
+        )
 
     gameState.copy(
       subPhase = newPhase,

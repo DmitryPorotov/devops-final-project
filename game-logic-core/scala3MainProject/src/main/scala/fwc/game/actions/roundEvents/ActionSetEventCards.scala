@@ -30,8 +30,12 @@ case class ActionSetEventCards(
 
     val newPhase: SubPhase =
       if updatedWildlingsCounter >= 12
-      then SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, true)
-      else EventCards.fallThroughFromDeck1(gameState.tracks, updatedBoardCards)
+      then SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, true, 12)
+      else EventCards.fallThroughFromDeck1(
+        gameState.tracks,
+        updatedBoardCards,
+        gameState.wildlingCounter,
+      )
 
 
     gameState.copy(

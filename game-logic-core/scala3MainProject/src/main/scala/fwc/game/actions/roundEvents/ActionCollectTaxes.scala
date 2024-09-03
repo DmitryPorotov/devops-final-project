@@ -14,7 +14,7 @@ case class ActionCollectTaxes(
     val updatedPowerTokens = Taxes.collectTaxes(gameState.armies, gameState.powerTokens)
     
     gameState.copy(
-      subPhase = EventCards.getPhaseForDeck3Card(gameState.boardCards.roundEvents3.head, gameState.tracks.steelBladeOwner),
+      subPhase = EventCards.getPhaseForDeck3Card(gameState.boardCards.roundEvents3.head, gameState.tracks.steelBladeOwner, gameState.wildlingCounter),
       powerTokens = updatedPowerTokens
     )
   }

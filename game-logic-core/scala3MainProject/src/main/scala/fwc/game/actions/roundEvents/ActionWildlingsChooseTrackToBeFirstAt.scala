@@ -26,7 +26,8 @@ case class ActionWildlingsChooseTrackToBeFirstAt(
       subPhase = WildlingsCards.getNextNonWildlingsPhase(
         gameState.wildlingsStartedFrom12Points.head,
         gameState.tracks,
-        gameState.boardCards
+        gameState.boardCards,
+        gameState.wildlingCounter,
       ),
       tracks = gameState.tracks.setHouseHighestOnTrack(houseType, trackType),
       wildlingsStartedFrom12Points = None

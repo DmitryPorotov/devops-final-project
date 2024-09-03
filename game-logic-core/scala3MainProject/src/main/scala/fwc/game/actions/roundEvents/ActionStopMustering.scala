@@ -22,7 +22,11 @@ case class ActionStopMustering(
     val newPhase =
       val idx: Int = gameState.tracks(TrackType.Throne).indexOf(houseType)
       if idx >= 5
-      then EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards)
+      then EventCards.fallThroughFromDeck2(
+        gameState.tracks,
+        gameState.boardCards,
+        gameState.wildlingCounter,
+      )
       else SubPhaseMuster(gameState.tracks(TrackType.Throne)(idx + 1))
 
     gameState.copy(newPhase)

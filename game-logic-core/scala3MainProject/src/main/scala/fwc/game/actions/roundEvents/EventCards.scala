@@ -28,9 +28,9 @@ object EventCards {
       case 4 => null
       case c => throw new ActionException(s"Unknown card code $c for deck 2")
 
-  def getPhaseForDeck3Card(card3: RoundEventCard, steelBladeOwner: HouseType): SubPhase =
+  def getPhaseForDeck3Card(card3: RoundEventCard, steelBladeOwner: HouseType, wildlingsCounter: Int): SubPhase =
     card3.code match
-      case 0 => SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, false)
+      case 0 => SubPhaseWildlingsBids(HouseType.getSeqOfAll, 6, false, wildlingsCounter)
       case 1 => SubPhaseChooseDisableMarchPlus1OrDefendOrders(steelBladeOwner)
       case 2 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.March)
       case 3 => SubPhaseDisableOrder(HouseType.getSeqOfAll, OrderType.Support)
@@ -41,28 +41,35 @@ object EventCards {
 
   def fallThroughFromDeck1(
                         tracks: Tracks,
-                        boardCards: BoardCards
+                        boardCards: BoardCards,
+                        wildlingsCounter: Int
                       ): SubPhase = {
     val c = getPhaseForDeck1Card(boardCards.roundEvents1.head, tracks.throneOwner)
     if c == null
-    then fallThroughFromDeck2(tracks, boardCards)
+    then fallThroughFromDeck2(tracks, boardCards, wildlingsCounter)
     else c
   }
   def fallThroughFromDeck2(
                         tracks: Tracks,
-                        boardCards: BoardCards
+                        boardCards: BoardCards,
+                        wildlingsCounter: Int,
                       ): SubPhase = {
     val c = getPhaseForDeck2Card(boardCards.roundEvents2.head, tracks.ravenOwner)
     if c == null
-    then getPhaseForDeck3Card(boardCards.roundEvents3.head, tracks.steelBladeOwner)
+    then getPhaseForDeck3Card(boardCards.roundEvents3.head, tracks.steelBladeOwner, wildlingsCounter)
     else c
   }
 
-  def bidsFallThroughFromThrone(trackType: TrackType, card3: RoundEventCard, steelBladeOwner: HouseType): SubPhase = {
+  def bidsFallThroughFromThrone(
+                                 trackType: TrackType, 
+                                 card3: RoundEventCard, 
+                                 steelBladeOwner: HouseType,
+                                 wildlingsCounter: Int
+                               ): SubPhase = {
     if trackType == TrackType.Throne
     then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Fiefdoms)
     else if trackType == TrackType.Fiefdoms
     then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Court)
-    else EventCards.getPhaseForDeck3Card(card3, steelBladeOwner)
+    else EventCards.getPhaseForDeck3Card(card3, steelBladeOwner, wildlingsCounter)
   }
 }

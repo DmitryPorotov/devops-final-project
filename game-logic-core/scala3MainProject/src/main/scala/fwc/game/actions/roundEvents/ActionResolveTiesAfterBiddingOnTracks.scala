@@ -36,7 +36,8 @@ case class ActionResolveTiesAfterBiddingOnTracks(
       EventCards.bidsFallThroughFromThrone(
         currentPhase.trackType,
         gameState.boardCards.roundEvents3.head,
-        updatedTracks.steelBladeOwner
+        updatedTracks.steelBladeOwner,
+        gameState.wildlingCounter,
       )
 
     gameState.copy(

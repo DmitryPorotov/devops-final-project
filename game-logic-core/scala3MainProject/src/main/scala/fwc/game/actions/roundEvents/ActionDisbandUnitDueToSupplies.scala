@@ -51,9 +51,9 @@ case class ActionDisbandUnitDueToSupplies(
       if updatedToCon.isEmpty
       then
         if nextStep == UnitDisbandNextStepDeck1
-        then EventCards.fallThroughFromDeck1(gameState.tracks,gameState.boardCards)
+        then EventCards.fallThroughFromDeck1(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
         else if nextStep == UnitDisbandNextStepDeck2
-          then EventCards.fallThroughFromDeck2(gameState.tracks,gameState.boardCards)
+          then EventCards.fallThroughFromDeck2(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
           else SubPhaseAddOrder(HouseType.getSeqOfAll)
       else if updatedToCon.contains(houseType)
         then SubPhaseDisbandUnit(houseType, currentPhase.nextStep)

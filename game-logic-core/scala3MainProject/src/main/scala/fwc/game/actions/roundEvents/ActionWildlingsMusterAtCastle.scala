@@ -28,7 +28,8 @@ case class ActionWildlingsMusterAtCastle(
         subPhase = WildlingsCards.getNextNonWildlingsPhase(
           gameState.wildlingsStartedFrom12Points.head,
           gameState.tracks,
-          gameState.boardCards
+          gameState.boardCards,
+          gameState.wildlingCounter,
         ),
         wildlingsStartedFrom12Points = None
       )

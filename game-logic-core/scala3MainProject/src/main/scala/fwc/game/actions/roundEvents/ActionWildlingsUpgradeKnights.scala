@@ -54,7 +54,8 @@ case class ActionWildlingsUpgradeKnights(
       subPhase = WildlingsCards.getNextNonWildlingsPhase(
         gameState.wildlingsStartedFrom12Points.head,
         gameState.tracks,
-        gameState.boardCards
+        gameState.boardCards,
+        gameState.wildlingCounter,
       ),
       armies = updatedArmies2,
       wildlingsStartedFrom12Points = None

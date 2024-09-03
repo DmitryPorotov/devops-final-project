@@ -54,7 +54,12 @@ case class ActionWildlingsKillUnit(
 
     val newPhase =
       if updatedPhaseHouses.isEmpty
-      then WildlingsCards.getNextNonWildlingsPhase(gameState.wildlingsStartedFrom12Points.head, gameState.tracks, gameState.boardCards)
+      then WildlingsCards.getNextNonWildlingsPhase(
+        gameState.wildlingsStartedFrom12Points.head, 
+        gameState.tracks, 
+        gameState.boardCards,
+        gameState.wildlingCounter,
+      )
       else currentPhase.copy(houseTypes = updatedPhaseHouses)
 
     gameState.copy(

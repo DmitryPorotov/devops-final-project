@@ -25,7 +25,11 @@ case class ActionThroneChooseSupplyOrMuster(
       then SubPhaseRecalculateSupplies()
       else if choice == EventCardChoiceType.ChoiceB
         then SubPhaseMuster(gameState.tracks.throneOwner)
-        else EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards)
+        else EventCards.fallThroughFromDeck2(
+          gameState.tracks,
+          gameState.boardCards,
+          gameState.wildlingCounter,
+        )
 
     gameState.copy(newPhase)
   }

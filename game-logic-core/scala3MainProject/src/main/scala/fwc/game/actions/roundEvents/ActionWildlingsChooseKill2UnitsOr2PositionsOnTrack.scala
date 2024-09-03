@@ -33,7 +33,8 @@ class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(
       WildlingsCards.getNextNonWildlingsPhase(
         gameState.wildlingsStartedFrom12Points.head,
         gameState.tracks,
-        gameState.boardCards
+        gameState.boardCards,
+        gameState.wildlingCounter,
       ),
       wildlingsStartedFrom12Points = None
     )

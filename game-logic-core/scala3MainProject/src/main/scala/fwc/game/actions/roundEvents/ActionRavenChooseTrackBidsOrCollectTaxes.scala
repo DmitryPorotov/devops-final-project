@@ -26,7 +26,11 @@ case class ActionRavenChooseTrackBidsOrCollectTaxes(
       then SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)
       else if choice == EventCardChoiceType.ChoiceB
       then SubPhaseCollectTaxes(HouseType.getSeqOfAll)
-      else EventCards.getPhaseForDeck3Card(gameState.boardCards.roundEvents3.head, gameState.tracks.steelBladeOwner)
+      else EventCards.getPhaseForDeck3Card(
+        gameState.boardCards.roundEvents3.head, 
+        gameState.tracks.steelBladeOwner,
+        gameState.wildlingCounter,
+      )
 
     gameState.copy(newPhase)
   }

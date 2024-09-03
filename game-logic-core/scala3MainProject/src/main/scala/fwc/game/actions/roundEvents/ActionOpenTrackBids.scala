@@ -34,7 +34,8 @@ case class ActionOpenTrackBids(
       else EventCards.bidsFallThroughFromThrone(
         currentPhase.trackType,
         gameState.boardCards.roundEvents3.head,
-        gameState.tracks.steelBladeOwner
+        gameState.tracks.steelBladeOwner,
+        gameState.wildlingCounter,
       )
 
     gameState.copy(

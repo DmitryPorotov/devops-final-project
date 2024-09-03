@@ -1,6 +1,5 @@
 package fwc.game.phases.roundEventsSubPhases
 
-import fwc.JsonSerializable
 import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
@@ -8,7 +7,8 @@ case class SubPhaseWildlingsBids(
                                   houseTypes: Seq[HouseType],
                                   numberOfParticipants: Int,
                                   wildlingsStartedFrom12Points: Boolean,
-                                  mainPhase: MainPhase = MainPhase.RoundEvents
+                                  wildlingsCounter: Int,
+                                  mainPhase: MainPhase = MainPhase.RoundEvents,
                                 ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {
@@ -18,7 +18,8 @@ case class SubPhaseWildlingsBids(
     val json = super.toJson
     json.obj.addAll(Map(
       "numberOfParticipants" -> numberOfParticipants,
-        "wildlingsStartedFrom12Points" -> wildlingsStartedFrom12Points
+      "wildlingsStartedFrom12Points" -> wildlingsStartedFrom12Points,
+      "wildlingsCounter" -> wildlingsCounter
     ))
     json
   }

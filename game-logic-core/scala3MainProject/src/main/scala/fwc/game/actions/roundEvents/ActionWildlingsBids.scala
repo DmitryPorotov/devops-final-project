@@ -42,21 +42,21 @@ case class ActionWildlingsBids(
       wildlingsStartedFrom12Points = Some(currentPhase.wildlingsStartedFrom12Points)
     )
 
-    val isWinAndWinnerLoser = gameState.bids.getLoserOrWinnerCandidatesInWildlingsBids(gameState.wildlingCounter)
+    val (isWin, winnerLoser) = gameState.bids.getLoserOrWinnerCandidatesInWildlingsBids(gameState.wildlingCounter)
 
     val newPhase =
-      if isWinAndWinnerLoser._2.size == 1
+      if winnerLoser.size == 1
       then 
         SubPhaseGetWildlingsCard(
           HouseType.getSeqOfAll,
           SubPhaseWildlingsCard(
             gameState.bids.toSeq.map(_._1),
-            isWinAndWinnerLoser._2.head,
+            winnerLoser.head,
             -1,
-            isWinAndWinnerLoser._1
+            isWin
           )
         )
-      else SubPhaseResolveTiesAfterBiddingOnWildlings(isWinAndWinnerLoser._2, isWinAndWinnerLoser._1)
+      else SubPhaseResolveTiesAfterBiddingOnWildlings(winnerLoser, isWin)
 
 
     gameState.copy(

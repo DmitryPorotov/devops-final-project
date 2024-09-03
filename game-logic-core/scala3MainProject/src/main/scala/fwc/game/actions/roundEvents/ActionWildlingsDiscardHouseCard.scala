@@ -37,7 +37,12 @@ case class ActionWildlingsDiscardHouseCard(
       subPhase =
         if housesLeft.nonEmpty
         then currentPhase.copy(houseTypes = housesLeft)
-        else WildlingsCards.getNextNonWildlingsPhase(gameState.wildlingsStartedFrom12Points.head, gameState.tracks, gameState.boardCards),
+        else WildlingsCards.getNextNonWildlingsPhase(
+          gameState.wildlingsStartedFrom12Points.head, 
+          gameState.tracks, 
+          gameState.boardCards,
+          gameState.wildlingCounter,
+        ),
       discardedHouseCards = gameState.discardedHouseCards + (houseType -> (gameState.discardedHouseCards(houseType) :+ cardCode)),
       wildlingsStartedFrom12Points =
         if housesLeft.nonEmpty

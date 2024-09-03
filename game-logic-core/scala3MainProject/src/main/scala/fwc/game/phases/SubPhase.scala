@@ -102,20 +102,26 @@ object SubPhase extends JsonParsable {
           mp
         )
       case "addOrder" =>
-        val f = getFieldsOfMultipleHouses(json)
-        SubPhaseAddOrder(f._1, f._2)
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseAddOrder(ht, mp)
       case "readyToOpenOrders" =>
-        val f = getFieldsOfMultipleHouses(json)
-        SubPhaseReadyToOpenOrders(f._1, f._2)
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseReadyToOpenOrders(ht, mp)
       case "wildlingsBids" =>
-        val f = getFieldsOfMultipleHouses(json)
-        SubPhaseWildlingsBids(f._1, json("numberOfParticipants").num.toInt, json("wildlingsStartedFrom12Points").bool, f._2)
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseWildlingsBids(
+          ht,
+          json("numberOfParticipants").num.toInt,
+          json("wildlingsStartedFrom12Points").bool,
+          json("wildlingsCounter").num.toInt,
+          mp,
+        )
       case "wildlingsCard" =>
-        val f = getFieldsOfMultipleHouses(json)
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
         val loserWinnerHouse = HouseType.fromString(json("loserWinnerHouse").str)
         val cardCode = json("cardCode").num.toInt
         val isWin = json("isWin").bool
-        SubPhaseWildlingsCard(f._1, loserWinnerHouse, cardCode, isWin, f._2)
+        SubPhaseWildlingsCard(ht, loserWinnerHouse, cardCode, isWin, mp)
       case "tracksBids" =>
         val f = getFieldsOfMultipleHousesTracks(json)
         SubPhaseTracksBids(f._1, f._2, f._3)

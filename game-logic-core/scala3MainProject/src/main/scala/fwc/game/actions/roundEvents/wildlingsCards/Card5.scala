@@ -12,7 +12,8 @@ case class Card5(gameState: GameState) extends WildlingsCards(gameState) {
       subPhase = SubPhaseWildlingsBids(
         HouseType.getSeqOfAll.filter(_ != phase.loserWinnerHouse),
         5,
-        gameState.wildlingsStartedFrom12Points.head
+        gameState.wildlingsStartedFrom12Points.head,
+        gameState.wildlingCounter,
       )
     )
     else gameStateWithCounterAndBids.copy(

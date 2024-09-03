@@ -21,7 +21,12 @@ trait WildlingsCards(gameState: GameState){
       if sum < 0 then 0 else sum
 
   protected def getNextNonWildlingsPhase: SubPhase =
-    WildlingsCards.getNextNonWildlingsPhase(gameState.wildlingsStartedFrom12Points.head, gameState.tracks, gameState.boardCards)
+    WildlingsCards.getNextNonWildlingsPhase(
+      gameState.wildlingsStartedFrom12Points.head, 
+      gameState.tracks, 
+      gameState.boardCards,
+      gameState.wildlingCounter,
+    )
 
   protected val gameStateWithCounterAndBids: GameState =
     gameState.copy(
@@ -49,8 +54,12 @@ object WildlingsCards {
       case 8 => Card8(gameState).resolve()
   }
 
-  def getNextNonWildlingsPhase(isWildlingsCounter12: Boolean, tracks: Tracks, boardCards: BoardCards): SubPhase =
+  def getNextNonWildlingsPhase(isWildlingsCounter12: Boolean, tracks: Tracks, boardCards: BoardCards, wildlingCounter: Int): SubPhase =
     if isWildlingsCounter12
-    then EventCards.fallThroughFromDeck1(tracks, boardCards)
+    then EventCards.fallThroughFromDeck1(
+      tracks,
+      boardCards,
+      wildlingCounter,
+    )
     else SubPhaseAddOrder(HouseType.getSeqOfAll)
 }
