@@ -10,7 +10,7 @@ import fwc.game.planningPhase.*
 import fwc.gameLoading.RoundEventCard
 
 object EventCards {
-  def getPhaseForDeck1Card(card1: RoundEventCard, throneOwner: HouseType): SubPhase =
+  private def getPhaseForDeck1Card(card1: RoundEventCard, throneOwner: HouseType): SubPhase =
     card1.code match
       case 0 => SubPhaseRecalculateSupplies()
       case 1 => SubPhaseMuster(throneOwner)
@@ -19,7 +19,7 @@ object EventCards {
       case 4 => null
       case c => throw new ActionException(s"Unknown card code $c for deck 1")
       
-  def getPhaseForDeck2Card(card2: RoundEventCard, ravenOwner: HouseType): SubPhase =
+  private def getPhaseForDeck2Card(card2: RoundEventCard, ravenOwner: HouseType): SubPhase =
     card2.code match
       case 0 => SubPhaseCollectTaxes(HouseType.getSeqOfAll)
       case 1 => SubPhaseTracksBids(HouseType.getSeqOfAll, TrackType.Throne)

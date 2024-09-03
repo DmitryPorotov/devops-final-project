@@ -3,6 +3,8 @@ from server_module.reactions.game_phase_reactions.action.choose_house_card_react
 from server_module.reactions.game_phase_reactions.action.choose_to_use_valyrian_steel_blade_reaction import \
     ChooseToUseValyrianSteelBladeReaction
 from server_module.reactions.game_phase_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
+from server_module.reactions.game_phase_reactions.action.kill_units_after_battle_reaction import \
+    KillUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
 from server_module.reactions.game_phase_reactions.action.resolve_house_card_reaction import ResolveHouseCardReaction
@@ -15,6 +17,7 @@ from server_module.reactions.game_phase_reactions.action.resolve_support_order_r
 from server_module.reactions.game_phase_reactions.action.retreat_units_after_battle_reaction import \
     RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.no_action_needed_reaction import NoActionNeededReaction
+from server_module.reactions.game_phase_reactions.round_events.finish_mustering_reaction import FinishMusteringReaction
 from server_module.reactions.game_phase_reactions.round_events.muster_reaction import MusterReaction
 from server_module.reactions.game_phase_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
     ResolveTiesAfterBiddingOnTracksReaction
@@ -72,6 +75,13 @@ switcher_obj = {
     'getEventCards': NoActionNeededReaction,
     'setEventCards': NoActionNeededReaction,
     'muster': MusterReaction,
+    'finishMustering': FinishMusteringReaction,
+    'killUnitsAfterBattle': KillUnitsAfterBattleReaction,
+    'openTrackBids': NoActionNeededReaction,
+    'collectTaxes': NoActionNeededReaction,
+    'getWildlingsCard': NoActionNeededReaction,
+    'wildlingsCard': NoActionNeededReaction,
+    'resolveCardRose2': NoActionNeededReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

@@ -37,7 +37,10 @@ class PhaseReact:
               sub_phase: SubPhase,
               ):
         game = PhaseReact.game_data.get_game(game_id)
-        if 'houseTypes' in sub_phase:
+        if 'houseType' in sub_phase:
+            if sub_phase['houseType'] in game.houses:
+                PhaseReact.__act_on_house(game_id, game, sub_phase['houseType'], phase_reaction_cls, sub_phase)
+        elif 'houseTypes' in sub_phase:
             if isinstance(sub_phase['houseTypes'], list):
                 for h in sub_phase['houseTypes']:
                     if h in game.houses:
@@ -51,9 +54,7 @@ class PhaseReact:
                 pass
             else:
                 raise RuntimeError("houseTypes should be list or dict.")
-        elif 'houseType' in sub_phase:
-            if sub_phase['houseType'] in game.houses:
-                PhaseReact.__act_on_house(game_id, game, sub_phase['houseType'], phase_reaction_cls, sub_phase)
+
         else:
             warning = 'sub_phase has neither "houseTypes" nor "houseType". ' + str(sub_phase)
             logging.warning(warning)

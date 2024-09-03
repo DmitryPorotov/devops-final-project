@@ -5,7 +5,7 @@ import fwc.game.{GameState, gameRules}
 import fwc.game.actions.{Action, JsonParsableAction}
 import fwc.game.eventsPhase.Bids
 import fwc.game.houses.HouseType
-import fwc.game.phases.roundEventsSubPhases.{SubPhaseResolveTiesAfterBiddingOnTracks, SubPhaseTracksBids}
+import fwc.game.phases.roundEventsSubPhases.{SubPhaseOpenTrackBids, SubPhaseResolveTiesAfterBiddingOnTracks}
 import ujson.Value
 
 case class ActionOpenTrackBids(
@@ -19,7 +19,7 @@ case class ActionOpenTrackBids(
           acc + htBid._2
       ).size != 6
 
-    val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseTracksBids]
+    val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseOpenTrackBids]
     
     val updatedTracks =
       if doResolveTies

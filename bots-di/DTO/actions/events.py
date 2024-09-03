@@ -47,6 +47,12 @@ class ActionTrackBids(TypedDict):
     bid: int
 
 
+class ActionOpenTrackBids(TypedDict):
+    actionType: str  # = "openTrackBids"
+    houseTypes: list[HouseType]
+    bids: dict[HouseType, int]
+
+
 class ActionWildlingsChooseTrackToBeLastAt(TypedDict):
     actionType: str  # = "wildlingsChooseTrackToBeLastAt"
     houseType: HouseType
@@ -64,6 +70,12 @@ class ActionMuster(TypedDict):
     unitToMuster: MilitaryUnit
     fromTile: int
     toTile: NotRequired[int]
+    usedPoints: NotRequired[dict[str, int]]
+
+
+class ActionFinishMustering(TypedDict):
+    actionType: str  # = "finishMustering"
+    houseType: HouseType
 
 
 class ActionWildlingsBids(TypedDict):

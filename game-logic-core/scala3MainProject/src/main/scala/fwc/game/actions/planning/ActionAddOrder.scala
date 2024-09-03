@@ -2,6 +2,7 @@ package fwc.game.actions.planning
 
 import fwc.JsonSerializable
 import fwc.game.GameState
+import fwc.game.actions.Action.PlanningActions
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.board.{TileNumber, TrackType, isValid}
 import fwc.game.houses.HouseType
@@ -68,7 +69,7 @@ case class ActionAddOrder(
   }
 
   def toJson: ujson.Value = ujson.Obj(
-      Action.actionTypeJsonKey -> "addOrder",
+      Action.actionTypeJsonKey -> PlanningActions.AddOrder.string,
       "order" -> (if order == null then ujson.Null else order.toJson),
       "houseType" -> houseType.toString,
       "tileNumber" -> tileNumber

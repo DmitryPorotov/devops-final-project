@@ -7,12 +7,13 @@ import fwc.game.{FWCException, gameRules}
 import ujson.Value
 import enrichment.ExtSeq
 import fwc.game.eventsPhase.Supplies
+import fwc.gameLoading.BoardTile
 
 import scala.annotation.{tailrec, targetName}
 
 case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()) extends JsonSerializable {
 
-  export armies.{contains, count, exists, filter, flatMap, flatten, foldLeft, get, getOrElse, map}
+  export armies.{contains, count, exists, filter, flatMap, flatten, foldLeft, get, getOrElse, map, withFilter}
   def toJson: ujson.Value = {
     ujson.Obj(
       upickle.core.LinkedHashMap(
@@ -27,6 +28,15 @@ case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()
     armies.contains(tileNum) && armies(tileNum).exists(mu => mu.house == house && mu.unitType.canBeMustered)
   }
 
+  def getControlledCastleTilesByHouse(houseType: HouseType): Seq[BoardTile] = {
+    armies.foldLeft[Seq[BoardTile]](Seq())((acc, cur) => {
+      val (tileNum, army) = cur
+      if army.nonEmpty && army.head.house == houseType && gameRules.board(tileNum).musteringPoints > 0
+      then acc :+ gameRules.board(tileNum)
+      else acc
+    })
+  }
+  
   def moveArmy(
                 houseType: HouseType,
                 sourceTileNum: TileNumber,

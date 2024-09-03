@@ -7,6 +7,7 @@ import fwc.game.actions.action.*
 import fwc.game.actions.{Action, ActionSetCard, PlayerAction}
 import fwc.game.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
 import fwc.game.actions.roundEvents.*
+import fwc.game.eventsPhase.Mustering
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseRavenGetWildlingsCard}
 import fwc.game.phases.roundEventsSubPhases.*
@@ -224,6 +225,12 @@ object ReactionGameAction {
         case a: ActionWildlingsBids =>
           val json = a.toJson
           json.obj("bid") = -1
+          buildMessageToAll(json)
+        case a: ActionMuster =>
+          val json = a.toJson
+          json.obj.addOne("usedPoints" -> ujson.Obj.from(
+            updatedGameState.usedMusteringPoints.map((k, v) => k.number.toString -> ujson.Num(v))
+          ))
           buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then

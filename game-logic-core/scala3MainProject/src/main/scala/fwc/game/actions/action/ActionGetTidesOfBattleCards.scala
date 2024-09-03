@@ -24,7 +24,7 @@ case class ActionGetTidesOfBattleCards(
           subPhase = {
             if gameState.subPhase.isInstanceOf[SubPhaseGetTidesOfBattleCards]
             then SubPhaseSetTidesOfBattleCards(
-              HouseType.getSeqOfAll,
+              Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse),
               Some(card1.code)
             )
             else {
@@ -44,7 +44,7 @@ case class ActionGetTidesOfBattleCards(
             subPhase = SubPhaseRefreshTidesOfBattleDeck()
           )
     else gameState.copy(
-      subPhase = SubPhaseSetTidesOfBattleCards(HouseType.getSeqOfAll),
+      subPhase = SubPhaseSetTidesOfBattleCards(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse)),
     )
   }
 

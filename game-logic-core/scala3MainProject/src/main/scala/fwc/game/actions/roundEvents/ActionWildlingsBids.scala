@@ -2,8 +2,7 @@ package fwc.game.actions.roundEvents
 
 import fwc.JsonSerializable
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
-import fwc.game.eventsPhase.Bids
-import fwc.game.{GameState, gameRules}
+import fwc.game.GameState
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.{SubPhaseGetWildlingsCard, SubPhaseResolveTiesAfterBiddingOnWildlings, SubPhaseWildlingsBids, SubPhaseWildlingsCard}
 import ujson.Value
@@ -56,7 +55,7 @@ case class ActionWildlingsBids(
             isWin
           )
         )
-      else SubPhaseResolveTiesAfterBiddingOnWildlings(winnerLoser, isWin)
+      else SubPhaseResolveTiesAfterBiddingOnWildlings(gameState.tracks.throneOwner ,winnerLoser, isWin)
 
 
     gameState.copy(

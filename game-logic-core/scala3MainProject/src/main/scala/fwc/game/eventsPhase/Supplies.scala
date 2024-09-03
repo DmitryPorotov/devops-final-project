@@ -40,7 +40,7 @@ object Supplies extends JsonParsable {
 
   def recalculateSupplyTrack(armies: Armies): Supplies = {
     val tilesWithArmiesAndEmptyHomeTiles = (for (
-      army <- armies;
+      army <- armies if army._2.nonEmpty;
       tile <- gameRules.board if tile.number == army._1
     ) yield {
       (army._2.head.house, tile.supplyPoints, tile.number)

@@ -15,11 +15,18 @@ trait Action(gameState: GameState) extends JsonSerializable {
 object Action extends JsonParsableAction {
   val actionTypeJsonKey = "actionType"
 
+  //todo refactor the rest of cases
+  enum PlanningActions(val string: String) {
+    case AddOrder extends PlanningActions("addOrder")
+    case RemoveOrder extends PlanningActions("removeOrder")
+    case OpenOrders extends PlanningActions("openOrders")
+  }
+
   def fromJson(gameState: GameState, json: ujson.Value): Action = {
     json(actionTypeJsonKey).str match
-      case "addOrder" => ActionAddOrder.fromJson(gameState, json)
-      case "removeOrder" => ActionRemoveOrder.fromJson(gameState, json)
-      case "openOrders" => ActionOpenOrders.fromJson(gameState, json)
+      case PlanningActions.AddOrder.string => ActionAddOrder.fromJson(gameState, json)
+      case PlanningActions.RemoveOrder.string => ActionRemoveOrder.fromJson(gameState, json)
+      case PlanningActions.OpenOrders.string => ActionOpenOrders.fromJson(gameState, json)
       case "ravenChooseChangeOrderOrLookAtWildlingCard" => ActionRavenChooseChangeOrderOrLookAtWildlingCard.fromJson(gameState, json)
       case "ravenChangeOrder" => ActionRavenChangeOrder.fromJson(gameState, json)
       case "ravenChoosePutWildlingsCardOnTopOrBottom" => ActionRavenChoosePutWildlingsCardOnTopOrBottom.fromJson(gameState, json)
@@ -62,6 +69,7 @@ object Action extends JsonParsableAction {
       case "recalculateSupplies" => ActionRecalculateSupplies.fromJson(gameState, json)
       case "disbandUnitDueToSupplies" => ActionDisbandUnitDueToSupplies.fromJson(gameState, json)
       case "muster" => ActionMuster.fromJson(gameState, json)
+      case "finishMustering" => ActionFinishMustering.fromJson(gameState, json)
       case "stopMustering" => ActionStopMustering.fromJson(gameState, json)
       case "throneChooseSupplyOrMuster" => ActionThroneChooseSupplyOrMuster.fromJson(gameState, json)
       case "collectTaxes" => ActionCollectTaxes.fromJson(gameState, json)

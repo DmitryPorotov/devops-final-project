@@ -21,8 +21,9 @@ class MusterReaction(BasePhaseReaction):
     def get_actions(self) -> list[MessageGameAction[ActionMuster]]:
         my_armies = self._game_state.armies.get_armies_by_house_type(self._house_type)
         musterable_tiles: dict[str, BoardTile] = {}
+        ump = self._game_state.used_mustering_points
         for tn, t in self._game_rules.board.get_castle_tiles().items():
-            if (tn in my_armies and t.mustering_points > 0) or (t.home_of == self._house_type and tn not in self._game_state.armies):
+            if (tn in my_armies and (t.mustering_points - (ump[int(tn)] if int(tn) in ump else 0)) > 0) or (t.home_of == self._house_type and tn not in self._game_state.armies):
                 musterable_tiles[tn] = t
         if len(musterable_tiles) > 1:
             idx = randrange(len(musterable_tiles))
@@ -35,7 +36,7 @@ class MusterReaction(BasePhaseReaction):
                 tile = t
         else:
             raise Exception('Should not get here!')
-        mu, to_tile = self.__choose_unit_to_muster(tile.mustering_points, tile_num)
+        mu, to_tile = self.__choose_unit_to_muster(tile.mustering_points - (ump[tile_num] if tile_num in ump else 0), tile_num)
         return [self._to_json(mu, tile_num, to_tile)]
 
     __units_types = [MilitaryUnitType.FOOTMEN, MilitaryUnitType.FOOTMEN, MilitaryUnitType.SHIPS, MilitaryUnitType.KNIGHTS, MilitaryUnitType.SIEGE_ENGINES]
@@ -56,6 +57,8 @@ class MusterReaction(BasePhaseReaction):
             for tn in neighbours:
                 if self._game_rules.board[tn].tile_type is BoardTileType.SEA or self._game_rules.board[tn].tile_type is BoardTileType.PORT:
                     seas.append(tn)
+            if not seas:  # note this can happen castles 28 and 39 which are inside land
+                return from_tile_num
             idx = randrange(len(seas))
             return seas[idx]
         else:

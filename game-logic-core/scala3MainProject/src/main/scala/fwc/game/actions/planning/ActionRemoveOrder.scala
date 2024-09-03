@@ -1,6 +1,7 @@
 package fwc.game.actions.planning
 
 import fwc.JsonSerializable
+import fwc.game.actions.Action.PlanningActions
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.{TileNumber, isValid}
@@ -45,7 +46,7 @@ case class ActionRemoveOrder (
   }
 
   override def toJson: Value = ujson.Obj(
-    Action.actionTypeJsonKey -> "removeOrder",
+    Action.actionTypeJsonKey -> PlanningActions.RemoveOrder.string,
     "houseType" -> houseType.toString,
     "tileNumber" -> tileNumber
   )

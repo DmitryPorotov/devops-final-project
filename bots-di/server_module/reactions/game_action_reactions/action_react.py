@@ -3,6 +3,7 @@ from typing import Optional
 from dependency_injector.wiring import Provide, inject
 
 from DTO.actions.all_actions import Action
+from DTO.actions.events import ActionOpenTrackBids
 from DTO.messages.messages import MessageGameAction
 from DTO.messages.reply import Reply
 from containers_module import App
@@ -34,6 +35,7 @@ switch_obj = {
     'resolveCardMoose2': CleanUpAfterCombatReactionHouseCard,
     'resolveCardMoose3': CleanUpAfterCombatReactionHouseCard,
     'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
+    'openTrackBids': ActionOpenTrackBids,
 }
 
 

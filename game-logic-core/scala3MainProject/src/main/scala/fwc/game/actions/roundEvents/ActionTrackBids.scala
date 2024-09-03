@@ -35,10 +35,11 @@ case class ActionTrackBids(
     val newPhase =
       if !isBiddingFinished
       then SubPhaseTracksBids(currentPhase.houseTypes.filter(_ != houseType), currentPhase.trackType)
-      else SubPhaseOpenTrackBids(currentPhase.trackType)
+      else SubPhaseOpenTrackBids(HouseType.getSeqOfAll, currentPhase.trackType)
 
     gameState.copy(
       subPhase = newPhase,
+      bids = updatedBids,
       powerTokens = updatedPowerTokens
     )
   }

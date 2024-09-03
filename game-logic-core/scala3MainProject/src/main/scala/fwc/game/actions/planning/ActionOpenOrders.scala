@@ -1,6 +1,7 @@
 package fwc.game.actions.planning
 
 import fwc.JsonSerializable
+import fwc.game.actions.Action.PlanningActions
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.gameRules
 import fwc.game.{FWCException, GameState}
@@ -55,7 +56,7 @@ case class ActionOpenOrders(
   }
 
   override def toJson: Value = ujson.Obj(
-    Action.actionTypeJsonKey -> ujson.Str("openOrders"),
+    Action.actionTypeJsonKey -> PlanningActions.OpenOrders.string,
     "houseType" -> ujson.Str(houseType.toString),
   )
 }

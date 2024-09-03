@@ -45,8 +45,11 @@ class ResolveMarchOrderReaction(BasePhaseReaction):
         # todo: check supplies (maybe I should do a retry strategy instead)
         try:
             source_tile = self._game_rules.board[source]
-            potential_targets = source_tile.neighbour_tiles if source_tile.tile_type is BoardTileType.SEA or source_tile.tile_type is BoardTileType.PORT else\
-                find_reachable_targets(self._game_rules, self._game_state, self._house_type, source_tile, [source])
+            potential_targets = source_tile.neighbour_tiles \
+                if source_tile.tile_type is BoardTileType.SEA else\
+                find_reachable_targets(self._game_rules, self._game_state, self._house_type, source_tile, [source])\
+                if source_tile.tile_type is BoardTileType.LAND else\
+                    [*(tn for tn in source_tile.neighbour_tiles if tn != source - 1)]
 
             if source_tile.tile_type is BoardTileType.LAND:
                 potential_targets = potential_targets[1:]

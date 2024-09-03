@@ -7,7 +7,7 @@ trait SubPhaseMultipleHouses(
                               houseTypes: Seq[HouseType],
                               mainPhase: MainPhase = Planning
                             ) extends SubPhase {
-  def toJson: ujson.Value = ujson.Obj(
+  override def toJson: ujson.Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,
     "subPhase" -> getSubPhaseName,
     "houseTypes" -> ujson.Arr.from(

@@ -153,8 +153,9 @@ object SubPhase extends JsonParsable {
         val (ht, mp) = getFieldsOfMultipleHouses(json)
         SubPhaseDisableOrder(ht, OrderType.fromString(json("orderType").str), mp)
       case "resolveTiesAfterBiddingOnWildlings" =>
-        val f = getFieldsOfMultipleHouses(json)
-        SubPhaseResolveTiesAfterBiddingOnWildlings(f._1, json("isWinner").bool, f._2)
+        val (hts, mp) = getFieldsOfMultipleHouses(json)
+        val (ht, _) = getFieldsOfSingleHouse(json)
+        SubPhaseResolveTiesAfterBiddingOnWildlings(ht, hts, json("isWinner").bool, mp)
       case "wildlingsDiscardHouseCard" =>
         val f = getFieldsOfMultipleHouses(json)
         SubPhaseWildlingsDiscardHouseCard(f._1, f._2)
@@ -210,7 +211,8 @@ object SubPhase extends JsonParsable {
         SubPhaseAutoRetreatAfterBattle(ht, mp)
       case "openTrackBids" =>
         val trackType = TrackType.fromString(json("trackType").str)
-        SubPhaseOpenTrackBids(trackType, getFieldsOfNoHouse(json))
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseOpenTrackBids(ht, trackType, mp)
   }
 
 

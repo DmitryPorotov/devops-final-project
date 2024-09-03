@@ -1,5 +1,8 @@
+from typing import Optional
+
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.armies import Armies
+from server_module.game_state.bids import Bids
 from server_module.game_state.dominance_tokens_usage import DominanceTokensUsage
 from server_module.game_state.placed_orders import PlacedOrders
 from server_module.game_state.tracks import Tracks
@@ -23,6 +26,7 @@ class GameState:
             dominance_tokens_usage: DominanceTokensUsage,
             used_mustering_points: UsedMusteringPoints,
             available_orders: AvailableOrders,
+            bids: Optional[Bids],
             combat: Combat,
             wildling_counter: int = 6,
             round_counter: int = 1
@@ -36,6 +40,7 @@ class GameState:
         self.dominance_tokens_usage = dominance_tokens_usage
         self.used_mustering_points = used_mustering_points 
         self.available_orders = available_orders
+        self.bids = bids
         self.combat = combat 
         self.wildling_counter = wildling_counter
         self.round_counter = round_counter
@@ -54,6 +59,7 @@ class GameState:
             json['dominanceTokensUsage'],
             UsedMusteringPoints(**json['usedMusteringPoints']),
             available_orders,
+            Bids(**json['bids']) if ('bids' in json and json['bids'] is not None) else None,
             Combat.from_json(json['combat']) if ('combat' in json and json['combat'] is not None) else None,
             json['wildlingCounter'],
             json['roundCounter'],

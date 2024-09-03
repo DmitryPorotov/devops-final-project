@@ -18,7 +18,7 @@ class Armies(dict[str, list[MilitaryUnit]]):
     def get_armies_by_house_type(self, house_type: HouseType) -> dict[str, list[MilitaryUnit]]:
         ret_val = {}
         for tile in self:
-            if self[tile][0].house == house_type:
+            if self[tile] and self[tile][0].house == house_type:
                 ret_val[tile] = self[tile]
         return ret_val
 
