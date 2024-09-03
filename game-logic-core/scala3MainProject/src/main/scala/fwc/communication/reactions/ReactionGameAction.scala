@@ -221,6 +221,10 @@ object ReactionGameAction {
           val json = a.toJson
           json.obj("bid") = -1
           buildMessageToAll(json)
+        case a: ActionWildlingsBids =>
+          val json = a.toJson
+          json.obj("bid") = -1
+          buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then
       val updatedCombat =
