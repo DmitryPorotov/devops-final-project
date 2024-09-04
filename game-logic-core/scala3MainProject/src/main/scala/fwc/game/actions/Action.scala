@@ -75,6 +75,7 @@ object Action extends JsonParsableAction {
       case "collectTaxes" => ActionCollectTaxes.fromJson(gameState, json)
       case "ravenChooseTrackBidsOrCollectTaxes" => ActionRavenChooseTrackBidsOrCollectTaxes.fromJson(gameState, json)
       case "trackBids" => ActionTrackBids.fromJson(gameState, json)
+      case "openTrackBids" => ActionOpenTrackBids.fromJson(gameState, json)
       case "resolveTiesAfterBiddingOnTracks" => ActionResolveTiesAfterBiddingOnTracks.fromJson(gameState, json)
       case "disableOrder" => ActionDisableOrder.fromJson(gameState, json)
       case "steelBladeChooseDisableMarchOrDefend" => ActionSteelBladeChooseDisableMarchOrDefend.fromJson(gameState, json)
