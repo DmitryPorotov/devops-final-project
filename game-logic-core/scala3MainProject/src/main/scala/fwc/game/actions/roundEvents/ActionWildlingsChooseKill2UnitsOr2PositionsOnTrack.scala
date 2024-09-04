@@ -12,7 +12,7 @@ import ujson.Value
 import scala.collection.mutable
 import scala.util.Try
 
-class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(
+case class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(
                                                           gameState: GameState,
                                                           houseType: HouseType,
                                                           track: Option[TrackType],
