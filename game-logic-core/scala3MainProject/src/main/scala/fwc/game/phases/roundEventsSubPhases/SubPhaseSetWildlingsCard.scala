@@ -5,12 +5,12 @@ import fwc.game.phases.*
 import ujson.Value
 
 case class SubPhaseSetWildlingsCard(
-                                     houseTypes: Seq[HouseType],
+                                    houseTypes: Seq[HouseType],
                                      subPhaseWildlingsCard: SubPhaseWildlingsCard,
-                                   override val mainPhase: MainPhase = MainPhase.RoundEvents
-                                   )extends SubPhase(mainPhase)
-  with SubPhasePassive (mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase) {
+                                    mainPhase: MainPhase = MainPhase.RoundEvents
+                                   )
+  extends SubPhasePassiveMultipleHouses (houseTypes, mainPhase)
+    with SubPhasePassive {
   override def toJson: Value = 
     val json = super.toJson
     json.obj.addOne(

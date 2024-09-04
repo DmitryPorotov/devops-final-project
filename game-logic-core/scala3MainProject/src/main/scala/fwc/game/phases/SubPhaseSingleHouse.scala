@@ -3,10 +3,12 @@ import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.houses.HouseType
 import ujson.Value
 
-trait SubPhaseSingleHouse(
-                           val houseType: HouseType,
-                           override val mainPhase: MainPhase
-                         ) extends SubPhase {
+abstract class SubPhaseSingleHouse(
+                           houseType: HouseType,
+                           mainPhase: MainPhase,
+                         ) 
+  extends SubPhase(mainPhase) {
+  def getHouseType: HouseType = houseType
   override def toJson: Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,
     "subPhase" -> getSubPhaseName,

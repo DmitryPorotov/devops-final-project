@@ -4,12 +4,10 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.{MainPhase, SubPhase, SubPhaseSingleHouse}
 
 case class SubPhaseResolveHouseCard(
-                                     override val houseType: HouseType,
-                                      cardCode: Int,
-                                     override val mainPhase: MainPhase = MainPhase.Action
-                                  ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
-  houseType, mainPhase
-) {
+                                     houseType: HouseType,
+                                     cardCode: Int,
+                                     mainPhase: MainPhase = MainPhase.Action
+                                  ) extends SubPhaseSingleHouse(  houseType, mainPhase) {
   def getSubPhaseName: String = "resolveHouseCard"
 
   override def toJson: ujson.Value = {

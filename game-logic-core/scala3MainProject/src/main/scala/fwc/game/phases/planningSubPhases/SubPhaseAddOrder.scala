@@ -5,9 +5,8 @@ import fwc.game.phases.*
 
 case class SubPhaseAddOrder(
                              houseTypes: Seq[HouseType],
-                             override val mainPhase: MainPhase = MainPhase.Planning
-                           ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses (
-  houseTypes, mainPhase
-) {
+                             mainPhase: MainPhase = MainPhase.Planning
+                           ) 
+  extends SubPhaseMultipleHouses (houseTypes, mainPhase) {
   def getSubPhaseName: String = "addOrder"
 }

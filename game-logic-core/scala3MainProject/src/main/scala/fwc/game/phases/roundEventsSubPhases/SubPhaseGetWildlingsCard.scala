@@ -6,12 +6,11 @@ import fwc.game.phases.*
 case class SubPhaseGetWildlingsCard(
                                     houseTypes: Seq[HouseType],
                                      subPhaseWildlingsCard: SubPhaseWildlingsCard,
-                                   override val mainPhase: MainPhase = MainPhase.RoundEvents
+                                   mainPhase: MainPhase = MainPhase.RoundEvents
                                    )
- extends SubPhase(mainPhase) 
-   with SubPhasePassive(mainPhase) 
-   with SubPhaseMultipleHouses(houseTypes, mainPhase)
-   with SubPhaseRandom {
+ extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase)
+   with SubPhaseRandom
+   with SubPhasePassive {
   def getSubPhaseName: String = "getWildlingsCard"
 
   override def toJson: ujson.Value =

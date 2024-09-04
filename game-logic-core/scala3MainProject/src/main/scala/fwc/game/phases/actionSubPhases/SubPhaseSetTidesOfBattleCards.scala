@@ -1,19 +1,17 @@
 package fwc.game.phases.actionSubPhases
 
-import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhaseSingleHouse}
-import fwc.gameLoading.TidesOfBattleCard
+import fwc.game.phases.{MainPhase, SubPhasePassive, SubPhasePassiveMultipleHouses}
 import ujson.Value
 
 case class SubPhaseSetTidesOfBattleCards(
                                           houseTypes: Seq[HouseType],
                                           attackerCard: Option[Int] = None,
                                           defenderCard: Option[Int] = None,
-                                        override val mainPhase: MainPhase = MainPhase.Action
-                                        ) extends SubPhase(mainPhase)
-  with SubPhasePassive (mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase) {
+                                          mainPhase: MainPhase = MainPhase.Action
+                                        )
+  extends SubPhasePassiveMultipleHouses (houseTypes, mainPhase)
+    with SubPhasePassive {
   def getSubPhaseName: String = "setTidesOfBattleCards"
 
   def toCleanJson: Value =

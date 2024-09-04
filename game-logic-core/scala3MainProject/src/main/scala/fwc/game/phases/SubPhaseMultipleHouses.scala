@@ -3,11 +3,13 @@ package fwc.game.phases
 import fwc.game.houses.HouseType
 import fwc.game.phases.MainPhase.Planning
 
-trait SubPhaseMultipleHouses(
-                              houseTypes: Seq[HouseType],
-                            override val mainPhase: MainPhase = Planning
-                            ) extends SubPhase {
-  override def toJson: ujson.Value = ujson.Obj(
+abstract class SubPhaseMultipleHouses(
+                                      houseTypes: Seq[HouseType],
+                                      mainPhase: MainPhase = Planning
+                                      )
+  extends SubPhase(mainPhase) {
+  override def toJson: ujson.Value =
+    ujson.Obj(
     "mainPhase" -> mainPhase.toString,
     "subPhase" -> getSubPhaseName,
     "houseTypes" -> ujson.Arr.from(

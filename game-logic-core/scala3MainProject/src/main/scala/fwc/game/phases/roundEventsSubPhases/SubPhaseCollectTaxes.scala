@@ -6,11 +6,9 @@ import ujson.Value
 
 case class SubPhaseCollectTaxes(
                                  houseTypes: Seq[HouseType],
-                               override val mainPhase: MainPhase = MainPhase.RoundEvents
-                               ) extends SubPhase(mainPhase)
-  with SubPhasePassive(mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase)
-  {
-    override def toJson: Value = super.toJson
+                                 mainPhase: MainPhase = MainPhase.RoundEvents
+                               ) 
+  extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase) 
+  with SubPhasePassive {
     def getSubPhaseName: String = "collectTaxes"
 }

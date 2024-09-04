@@ -7,11 +7,11 @@ import fwc.game.phases.*
 import ujson.Value
 
 case class SubPhaseResolveTiesAfterBiddingOnTracks(
-                                                    override val houseType: HouseType,
+                                                    houseType: HouseType,
                                                     trackType: TrackType,
-                                                    override val mainPhase: MainPhase = MainPhase.RoundEvents
+                                                    mainPhase: MainPhase = MainPhase.RoundEvents
                                                   )
-  extends SubPhase(mainPhase) with SubPhaseSingleHouse(houseType, mainPhase) {
+  extends SubPhaseSingleHouse(houseType, mainPhase) {
 
   override def toJson: Value =
     val json = super.toJson

@@ -6,12 +6,11 @@ import fwc.game.phases.{MainPhase, SubPhase, SubPhaseSingleHouse}
 import ujson.Value
 
 case class SubPhaseLeavePowerTokenAtTile(
-                                          override val houseType: HouseType,
+                                          houseType: HouseType,
                                           tileNumber: TileNumber,
-                                          override val mainPhase: MainPhase = MainPhase.Action
-                                        ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
-  houseType, mainPhase
-) {
+                                          mainPhase: MainPhase = MainPhase.Action
+                                        ) 
+  extends SubPhaseSingleHouse(houseType, mainPhase) {
   override def toJson: Value = {
     val json = super.toJson
     json.obj.addOne("tileNumber", tileNumber)

@@ -14,7 +14,7 @@ import ujson.Value
 import scala.util.Try
 
 abstract class SubPhase(
-                         val mainPhase: MainPhase
+                         mainPhase: MainPhase
                        ) extends JsonSerializable {
   def getSubPhaseName: String
   

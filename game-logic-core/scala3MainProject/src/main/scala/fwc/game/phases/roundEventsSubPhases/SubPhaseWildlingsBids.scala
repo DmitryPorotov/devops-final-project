@@ -4,14 +4,13 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
 case class SubPhaseWildlingsBids(
-                                  houseTypes: Seq[HouseType],
+                                 houseTypes: Seq[HouseType],
                                   numberOfParticipants: Int,
                                   wildlingsStartedFrom12Points: Boolean,
                                   wildlingsCounter: Int,
-                                override val mainPhase: MainPhase = MainPhase.RoundEvents,
-                                ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
-  houseTypes, mainPhase
-) {
+                                 mainPhase: MainPhase = MainPhase.RoundEvents,
+                                )
+  extends SubPhaseMultipleHouses(houseTypes, mainPhase) {
   def getSubPhaseName: String = "wildlingsBids"
 
   override def toJson: ujson.Value = {

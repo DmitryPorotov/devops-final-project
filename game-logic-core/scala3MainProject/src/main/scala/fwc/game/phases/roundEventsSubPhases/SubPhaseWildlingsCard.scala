@@ -10,11 +10,10 @@ case class SubPhaseWildlingsCard(
                                   loserWinnerHouse: HouseType,
                                   cardCode: Int,
                                   isWin: Boolean,
-                                override val mainPhase: MainPhase = MainPhase.RoundEvents
+                                  mainPhase: MainPhase = MainPhase.RoundEvents
                                )
-  extends SubPhase(mainPhase)
-    with SubPhasePassive(mainPhase)
-    with SubPhaseMultipleHouses(houseTypes, mainPhase) {
+  extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase)
+    with SubPhasePassive {
   def getSubPhaseName: String = "wildlingsCard"
 
   override def toJson: Value = {

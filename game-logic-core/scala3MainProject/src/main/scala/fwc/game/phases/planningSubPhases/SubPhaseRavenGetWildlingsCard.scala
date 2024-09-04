@@ -4,13 +4,12 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
 case class SubPhaseRavenGetWildlingsCard(
-                                          override val houseType: HouseType,
-                                          override val mainPhase: MainPhase = MainPhase.Action
+                                          houseType: HouseType,
+                                          mainPhase: MainPhase = MainPhase.Action
                                         )
- extends SubPhase(mainPhase) 
-   with SubPhasePassive(mainPhase)
-   with SubPhaseSingleHouse(houseType, mainPhase)
-   with SubPhaseRandom {
+ extends SubPhasePassiveSingleHouse(houseType, mainPhase)
+   with SubPhaseRandom
+   with SubPhasePassive {
   def getSubPhaseName: String = "ravenGetWildlingsCard"
 
 }

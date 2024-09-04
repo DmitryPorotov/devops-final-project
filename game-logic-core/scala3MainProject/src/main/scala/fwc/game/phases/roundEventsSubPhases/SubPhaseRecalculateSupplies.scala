@@ -5,12 +5,11 @@ import fwc.game.phases.*
 import ujson.Value
 
 case class SubPhaseRecalculateSupplies(
-                                        houseTypes: Seq[HouseType] = HouseType.getSeqOfAll,
-                                      override val mainPhase: MainPhase = MainPhase.RoundEvents
-                                      )extends SubPhase(mainPhase)
-  with SubPhasePassive(mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase)
-  {
+                                       houseTypes: Seq[HouseType] = HouseType.getSeqOfAll,
+                                       mainPhase: MainPhase = MainPhase.RoundEvents
+                                      )
+  extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase)
+    with SubPhasePassive {
     override def toJson: Value = super.toJson
     def getSubPhaseName: String = "recalculateSupplies"
 }

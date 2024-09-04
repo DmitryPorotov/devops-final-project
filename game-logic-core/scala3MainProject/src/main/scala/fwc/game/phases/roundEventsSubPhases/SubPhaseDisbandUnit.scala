@@ -7,12 +7,11 @@ import ujson.Value
 
 
 case class SubPhaseDisbandUnit(
-                                override val houseType: HouseType,
+                                houseType: HouseType,
                                 nextStep: UnitDisbandNextStepType,
-                                override val mainPhase: MainPhase = MainPhase.RoundEvents
-                              ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
-    houseType, mainPhase
-  ) {
+                                mainPhase: MainPhase = MainPhase.RoundEvents
+                              ) 
+  extends SubPhaseSingleHouse(houseType, mainPhase) {
   def getSubPhaseName: String = "disbandUnit"
 
   override def toJson: Value =

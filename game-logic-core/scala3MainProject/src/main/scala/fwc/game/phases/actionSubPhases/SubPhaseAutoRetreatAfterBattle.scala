@@ -4,11 +4,11 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
 case class SubPhaseAutoRetreatAfterBattle(
-                                         override val houseType: HouseType,
-                                         override val mainPhase: MainPhase = MainPhase.Action
-                                         ) extends SubPhase(mainPhase) 
-  with SubPhasePassive(mainPhase) 
-  with SubPhaseSingleHouse(houseType, mainPhase)
+                                          houseType: HouseType,
+                                          mainPhase: MainPhase = MainPhase.Action
+                                         )
+  extends SubPhasePassiveSingleHouse(houseType, mainPhase)
+    with SubPhasePassive
   {
   def getSubPhaseName: String = "autoRetreatAfterBattle"
 }

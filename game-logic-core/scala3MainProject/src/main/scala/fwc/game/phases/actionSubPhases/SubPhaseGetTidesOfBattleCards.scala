@@ -1,18 +1,15 @@
 package fwc.game.phases.actionSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhaseRandom}
-import ujson.Value
+import fwc.game.phases.{MainPhase, SubPhasePassive, SubPhasePassiveMultipleHouses, SubPhaseRandom}
 
 case class SubPhaseGetTidesOfBattleCards(
                                           houseTypes: Seq[HouseType],
-                                        override val mainPhase: MainPhase = MainPhase.Action
+                                          mainPhase: MainPhase = MainPhase.Action
                                         )
- extends SubPhase(mainPhase) 
-   with SubPhasePassive(mainPhase) 
-   with SubPhaseMultipleHouses(houseTypes, mainPhase)
-   with SubPhaseRandom {
-  override def toJson: Value = super.toJson
+ extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase)
+   with SubPhaseRandom
+   with SubPhasePassive {
   def getSubPhaseName: String = "getTidesOfBattleCards"
 
 }

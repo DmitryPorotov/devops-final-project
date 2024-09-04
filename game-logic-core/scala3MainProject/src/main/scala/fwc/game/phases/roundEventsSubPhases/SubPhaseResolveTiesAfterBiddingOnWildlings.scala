@@ -15,10 +15,9 @@ case class SubPhaseResolveTiesAfterBiddingOnWildlings(
                                                        houseType: HouseType,
                                                        houseTypes: Seq[HouseType],
                                                        isWinner: Boolean,
-                                                     override val mainPhase: MainPhase = MainPhase.RoundEvents
-                                                     ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
-  houseTypes, mainPhase
-) {
+                                                       mainPhase: MainPhase = MainPhase.RoundEvents
+                                                     ) 
+  extends SubPhaseMultipleHouses(houseTypes, mainPhase) {
   def getSubPhaseName: String = "resolveTiesAfterBiddingOnWildlings"
 
   override def toJson: Value =

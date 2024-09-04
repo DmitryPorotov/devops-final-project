@@ -4,10 +4,10 @@ import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
 case class SubPhaseWildlingsReturnHouseCard(
-                                             override val houseType: HouseType,
-                                             override val mainPhase: MainPhase = MainPhase.RoundEvents
+                                             houseType: HouseType,
+                                             mainPhase: MainPhase = MainPhase.RoundEvents
                                            )
-  extends SubPhase(mainPhase) with SubPhaseSingleHouse(houseType, mainPhase) {
+  extends SubPhaseSingleHouse(houseType, mainPhase) {
 
   override def getSubPhaseName: String = "wildlingsReturnHouseCard"
 

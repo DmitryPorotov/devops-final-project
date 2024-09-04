@@ -1,17 +1,14 @@
 package fwc.game.phases.actionSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePassive}
-import ujson.Value
+import fwc.game.phases.{MainPhase, SubPhasePassive, SubPhasePassiveMultipleHouses}
 
 case class SubPhaseResolveConsolidatePowerOrder(
-                                                houseTypes: Seq[HouseType] = HouseType.getSeqOfAll ,
-                                               override val mainPhase: MainPhase = MainPhase.Action
-                                               ) extends SubPhase(mainPhase)
-  with SubPhasePassive(mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase)
-  {
-    override def toJson: Value = super.toJson
+                                               houseTypes: Seq[HouseType] = HouseType.getSeqOfAll ,
+                                               mainPhase: MainPhase = MainPhase.Action
+                                               )
+  extends SubPhasePassiveMultipleHouses(houseTypes, mainPhase)
+    with SubPhasePassive {
     def getSubPhaseName: String = "resolveConsolidatePowerOrder"
 }
 

@@ -11,10 +11,10 @@ case class SubPhaseSetEventCards(
                                   card1: Option[RoundEventCard] = None,
                                   card2: Option[RoundEventCard] = None,
                                   card3: Option[RoundEventCard] = None,
-                                override val mainPhase: MainPhase = MainPhase.RoundEvents
-                                )extends SubPhase(mainPhase) 
-  with SubPhasePassive (mainPhase)
-  with SubPhaseMultipleHouses(houseTypes, mainPhase) {
+                                 mainPhase: MainPhase = MainPhase.RoundEvents
+                                )
+  extends SubPhasePassiveMultipleHouses (houseTypes, mainPhase)
+    with SubPhasePassive {
   def getSubPhaseName: String = "setEventCards"
 
   override def toJson: Value =
