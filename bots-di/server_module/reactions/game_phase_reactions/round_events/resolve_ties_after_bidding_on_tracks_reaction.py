@@ -15,8 +15,9 @@ class ResolveTiesAfterBiddingOnTracksReaction(BasePhaseReaction):
 
     def get_actions(self) -> list[MessageGameAction[ActionResolveTiesAfterBiddingOnTracks]]:
         bids = self._game_state.bids
-        res_tuples = sorted(bids,key=lambda kvp: kvp[1],reverse=True)
-        return [self._to_json(res_tuples)]
+        res_tuples = sorted(bids.items(),key=lambda kvp: kvp[1],reverse=True)
+        res_tuples1 = [*(t[0] for t in res_tuples)]
+        return [self._to_json(res_tuples1)]
 
     def _to_json(self, resolution: list[str]) -> MessageGameAction[ActionResolveTiesAfterBiddingOnTracks]:
         json = super()._to_json()
