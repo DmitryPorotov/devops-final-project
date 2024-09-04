@@ -23,11 +23,17 @@ case class ActionCleanUpAfterCombat(
       then gameState.armies + (combat.attackerTileNum ->
         (gameState.armies.getOrElse(combat.attackerTileNum, Seq()) ++ combat.attackerArmy)
       )
-      else gameState.armies + (combat.defenderTileNum ->
-          (if combat.winner.contains(combat.attackerHouse)
-          then combat.attackerArmy
-          else combat.defenderArmy)
-        )
+      else {
+        if combat.winner.contains(combat.attackerHouse)
+        then 
+          if combat.attackerArmy.nonEmpty
+          then gameState.armies + (combat.defenderTileNum -> combat.attackerArmy)
+          else gameState.armies - combat.defenderTileNum
+        else 
+          if combat.defenderArmy.nonEmpty
+          then gameState.armies + (combat.defenderTileNum -> combat.defenderArmy)
+          else gameState.armies - combat.defenderTileNum
+      }
 
     val updatedDiscardedCards =
       gameState.discardedHouseCards.concat(Map(
