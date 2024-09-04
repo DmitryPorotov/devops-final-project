@@ -17,7 +17,7 @@ case class ActionResolveCardMoose3(
 
     val (_, updatedCombat) = CardResolve.validateAndGetCombat(gameState.subPhase, houseType, gameState.combat)
 
-    if !gameState.combat.winnerCard.exists(_.isMoose3)
+    if !gameState.combat.attackerCard.isMoose3 && !gameState.combat.defenderCard.isMoose3
     then throw new ActionException("This phase is for moose 3")
 
     if cardCode >= 7
