@@ -14,8 +14,8 @@ class TracksBidsReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionTrackBids]]:
-        total_tokens = self._game_state.power_tokens[self._house_type]
-        tokens_to_bid = randrange(total_tokens + 1)
+        total_tokens = self._game_state.power_tokens[self._house_type] / 2
+        tokens_to_bid = randrange(int(total_tokens) + 1)
         return [self._to_json(tokens_to_bid)]
 
     def _to_json(self, num_tokens: int) -> MessageGameAction[ActionTrackBids]:
