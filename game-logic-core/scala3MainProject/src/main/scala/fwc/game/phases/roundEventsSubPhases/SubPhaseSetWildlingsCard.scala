@@ -7,7 +7,7 @@ import ujson.Value
 case class SubPhaseSetWildlingsCard(
                                      houseTypes: Seq[HouseType],
                                      subPhaseWildlingsCard: SubPhaseWildlingsCard,
-                                     mainPhase: MainPhase = MainPhase.RoundEvents
+                                   override val mainPhase: MainPhase = MainPhase.RoundEvents
                                    )extends SubPhase(mainPhase)
   with SubPhasePassive (mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase) {

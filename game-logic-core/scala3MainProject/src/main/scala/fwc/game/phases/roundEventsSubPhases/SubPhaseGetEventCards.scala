@@ -6,7 +6,7 @@ import ujson.Value
 
 case class SubPhaseGetEventCards(
                                   houseTypes: Seq[HouseType],
-                                  mainPhase: MainPhase = MainPhase.RoundEvents
+                                override val mainPhase: MainPhase = MainPhase.RoundEvents
                                 )
  extends SubPhase(mainPhase)
    with SubPhasePassive(mainPhase)

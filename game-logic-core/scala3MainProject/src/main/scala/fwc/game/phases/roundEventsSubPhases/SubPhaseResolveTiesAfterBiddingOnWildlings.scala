@@ -15,7 +15,7 @@ case class SubPhaseResolveTiesAfterBiddingOnWildlings(
                                                        houseType: HouseType,
                                                        houseTypes: Seq[HouseType],
                                                        isWinner: Boolean,
-                                                       mainPhase: MainPhase = MainPhase.RoundEvents
+                                                     override val mainPhase: MainPhase = MainPhase.RoundEvents
                                                      ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {

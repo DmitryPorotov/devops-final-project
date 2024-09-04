@@ -13,8 +13,9 @@ import ujson.Value
 
 import scala.util.Try
 
-// todo try to convert SubPhase into an abstract class to see if it solves the problem of coping the mainPhase
-trait SubPhase(mainPhase: MainPhase) extends JsonSerializable {
+abstract class SubPhase(
+                         val mainPhase: MainPhase
+                       ) extends JsonSerializable {
   def getSubPhaseName: String
   
   def getMainPhase: MainPhase = mainPhase

@@ -5,7 +5,7 @@ import fwc.game.phases.*
 
 case class SubPhaseWildlingsChooseTrackToBeLastAt(
                                                    houseTypes: Seq[HouseType],
-                                                   mainPhase: MainPhase = MainPhase.RoundEvents
+                                                 override val mainPhase: MainPhase = MainPhase.RoundEvents
                                                  )
   extends SubPhase(mainPhase) with SubPhaseMultipleHouses(houseTypes, mainPhase) {
 

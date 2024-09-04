@@ -5,7 +5,7 @@ import ujson.Value
 
 trait SubPhaseSingleHouse(
                            val houseType: HouseType,
-                           val mainPhase: MainPhase
+                           override val mainPhase: MainPhase
                          ) extends SubPhase {
   override def toJson: Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,

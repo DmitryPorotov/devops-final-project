@@ -10,7 +10,7 @@ case class SubPhaseSetTidesOfBattleCards(
                                           houseTypes: Seq[HouseType],
                                           attackerCard: Option[Int] = None,
                                           defenderCard: Option[Int] = None,
-                                          mainPhase: MainPhase = MainPhase.Action
+                                        override val mainPhase: MainPhase = MainPhase.Action
                                         ) extends SubPhase(mainPhase)
   with SubPhasePassive (mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase) {

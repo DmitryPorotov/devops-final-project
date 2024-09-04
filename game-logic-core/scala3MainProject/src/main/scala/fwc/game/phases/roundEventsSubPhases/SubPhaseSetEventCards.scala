@@ -11,7 +11,7 @@ case class SubPhaseSetEventCards(
                                   card1: Option[RoundEventCard] = None,
                                   card2: Option[RoundEventCard] = None,
                                   card3: Option[RoundEventCard] = None,
-                                  mainPhase: MainPhase = MainPhase.RoundEvents
+                                override val mainPhase: MainPhase = MainPhase.RoundEvents
                                 )extends SubPhase(mainPhase) 
   with SubPhasePassive (mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase) {

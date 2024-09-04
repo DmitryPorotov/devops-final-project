@@ -6,7 +6,7 @@ import ujson.Value
 
 case class SubPhaseCalculateGameWinner(
                                         houseTypes: Seq[HouseType],
-                                        mainPhase: MainPhase = MainPhase.Action
+                                      override val mainPhase: MainPhase = MainPhase.Action
                                       ) extends SubPhase(mainPhase)
   with SubPhasePassive (mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase)

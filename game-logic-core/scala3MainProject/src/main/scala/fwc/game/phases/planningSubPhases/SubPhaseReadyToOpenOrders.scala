@@ -6,7 +6,7 @@ import fwc.game.phases.*
 //TODO unused now, remove later
 case class SubPhaseReadyToOpenOrders(
                                       houseTypes: Seq[HouseType],
-                                      mainPhase: MainPhase = MainPhase.Planning
+                                    override val mainPhase: MainPhase = MainPhase.Planning
                                     ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses (
   houseTypes, mainPhase
 ) {

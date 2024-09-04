@@ -7,9 +7,7 @@ import fwc.game.phases.*
 case class SubPhaseMuster(
                            override val houseType: HouseType,
                            override val mainPhase: MainPhase = MainPhase.RoundEvents
-                         ) extends SubPhase(mainPhase) with SubPhaseSingleHouse(
-    houseType: HouseType,
-    mainPhase: MainPhase
-) {
+                         ) extends SubPhase(mainPhase) 
+  with SubPhaseSingleHouse(houseType, mainPhase) {
   def getSubPhaseName: String = "muster"
 }

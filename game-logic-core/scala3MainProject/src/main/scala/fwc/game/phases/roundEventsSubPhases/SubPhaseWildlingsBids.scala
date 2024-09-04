@@ -8,7 +8,7 @@ case class SubPhaseWildlingsBids(
                                   numberOfParticipants: Int,
                                   wildlingsStartedFrom12Points: Boolean,
                                   wildlingsCounter: Int,
-                                  mainPhase: MainPhase = MainPhase.RoundEvents,
+                                override val mainPhase: MainPhase = MainPhase.RoundEvents,
                                 ) extends SubPhase(mainPhase) with SubPhaseMultipleHouses(
   houseTypes, mainPhase
 ) {

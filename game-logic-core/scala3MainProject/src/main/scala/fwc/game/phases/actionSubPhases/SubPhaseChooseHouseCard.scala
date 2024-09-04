@@ -6,7 +6,7 @@ import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses}
 
 case class SubPhaseChooseHouseCard(
                                   houseTypes: Seq[HouseType],
-                                  mainPhase: MainPhase = MainPhase.Action
+                                override val mainPhase: MainPhase = MainPhase.Action
                                  )extends SubPhase(mainPhase) with SubPhaseMultipleHouses (
    houseTypes,
    mainPhase

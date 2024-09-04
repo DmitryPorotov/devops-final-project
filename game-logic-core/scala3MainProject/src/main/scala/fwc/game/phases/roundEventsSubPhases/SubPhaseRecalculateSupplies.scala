@@ -6,7 +6,7 @@ import ujson.Value
 
 case class SubPhaseRecalculateSupplies(
                                         houseTypes: Seq[HouseType] = HouseType.getSeqOfAll,
-                                        mainPhase: MainPhase = MainPhase.RoundEvents
+                                      override val mainPhase: MainPhase = MainPhase.RoundEvents
                                       )extends SubPhase(mainPhase)
   with SubPhasePassive(mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase)

@@ -7,7 +7,7 @@ import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePas
 case class SubPhaseOpenTrackBids(
                                   houseTypes: Seq[HouseType],
                                   trackType: TrackType,
-                                  mainPhase: MainPhase = MainPhase.RoundEvents
+                                override val mainPhase: MainPhase = MainPhase.RoundEvents
                                 ) 
   extends SubPhase(mainPhase)
     with SubPhasePassive(mainPhase)

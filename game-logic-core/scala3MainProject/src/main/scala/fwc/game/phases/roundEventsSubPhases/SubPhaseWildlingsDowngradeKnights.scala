@@ -6,7 +6,7 @@ import ujson.Value
 
 case class SubPhaseWildlingsDowngradeKnights(
                                               houseTypes: Map[HouseType, Int],
-                                              mainPhase: MainPhase = MainPhase.RoundEvents
+                                            override val mainPhase: MainPhase = MainPhase.RoundEvents
                                             )
   extends SubPhase(mainPhase)
     with SubPhaseWildlingsMultiHousesMap(houseTypes)

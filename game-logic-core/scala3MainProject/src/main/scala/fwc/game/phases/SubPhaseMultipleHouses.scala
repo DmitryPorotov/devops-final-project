@@ -5,7 +5,7 @@ import fwc.game.phases.MainPhase.Planning
 
 trait SubPhaseMultipleHouses(
                               houseTypes: Seq[HouseType],
-                              mainPhase: MainPhase = Planning
+                            override val mainPhase: MainPhase = Planning
                             ) extends SubPhase {
   override def toJson: ujson.Value = ujson.Obj(
     "mainPhase" -> mainPhase.toString,

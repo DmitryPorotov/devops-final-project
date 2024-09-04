@@ -8,7 +8,7 @@ import ujson.Value
 case class SubPhaseDisableOrder(
                                 houseTypes: Seq[HouseType],
                                 orderType: OrderType,
-                                mainPhase: MainPhase = MainPhase.RoundEvents
+                              override val mainPhase: MainPhase = MainPhase.RoundEvents
                               )extends SubPhase(mainPhase) 
   with SubPhasePassive(mainPhase)
   with SubPhaseMultipleHouses(houseTypes, mainPhase) 
