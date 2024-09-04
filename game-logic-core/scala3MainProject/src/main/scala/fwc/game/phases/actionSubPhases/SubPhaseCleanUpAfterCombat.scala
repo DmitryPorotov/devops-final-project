@@ -1,8 +1,7 @@
 package fwc.game.phases.actionSubPhases
 
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, SubPhase, SubPhaseMultipleHouses, SubPhasePassive, SubPhasePassiveMultipleHouses}
-import ujson.Value
+import fwc.game.phases.{MainPhase, SubPhasePassive, SubPhasePassiveMultipleHouses}
 
 case class SubPhaseCleanUpAfterCombat(
                                      houseTypes: Seq[HouseType],
