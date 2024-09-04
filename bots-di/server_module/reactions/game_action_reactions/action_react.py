@@ -3,7 +3,6 @@ from typing import Optional
 from dependency_injector.wiring import Provide, inject
 
 from DTO.actions.all_actions import Action
-from DTO.actions.events import ActionOpenTrackBids
 from DTO.messages.messages import MessageGameAction
 from DTO.messages.reply import Reply
 from containers_module import App
@@ -22,6 +21,7 @@ from server_module.reactions.game_action_reactions.action.resolve_march_order_re
 from server_module.reactions.game_action_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
 from server_module.reactions.game_action_reactions.planning.open_orders_reaction import OpenOrdersReaction
 from server_module.reactions.game_action_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
+from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 switch_obj = {
@@ -35,7 +35,7 @@ switch_obj = {
     'resolveCardMoose2': CleanUpAfterCombatReactionHouseCard,
     'resolveCardMoose3': CleanUpAfterCombatReactionHouseCard,
     'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
-    'openTrackBids': ActionOpenTrackBids,
+    'openTrackBids': OpenTrackBidsReaction,
 }
 
 
