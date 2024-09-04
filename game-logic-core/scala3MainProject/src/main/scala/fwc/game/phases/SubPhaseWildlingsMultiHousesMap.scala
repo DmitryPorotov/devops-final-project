@@ -6,15 +6,12 @@ import scala.collection.mutable
 
 trait SubPhaseWildlingsMultiHousesMap(
                                        houseTypes: Map[HouseType, Int],
-                                     )
-  extends SubPhasePassive {
+                                     ) 
+{
 
-  override def toJson: ujson.Value =
-    val json = super.toJson
-    json.obj.addOne(
+  def toJson: ujson.Value = ujson.Obj(
       "houseTypes" -> mutable.LinkedHashMap.from(
         houseTypes.map((ht, num) => ht.toString -> num)
       )
     )
-    json
 }

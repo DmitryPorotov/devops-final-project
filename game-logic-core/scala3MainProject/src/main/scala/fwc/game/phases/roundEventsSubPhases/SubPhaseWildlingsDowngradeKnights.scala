@@ -8,10 +8,18 @@ case class SubPhaseWildlingsDowngradeKnights(
                                               houseTypes: Map[HouseType, Int],
                                               mainPhase: MainPhase = MainPhase.RoundEvents
                                             )
-  extends SubPhase(mainPhase) 
+  extends SubPhase(mainPhase)
     with SubPhaseWildlingsMultiHousesMap(houseTypes)
-    with SubPhasePassive(mainPhase) {
+ {
 
   override def getSubPhaseName: String = "wildlingsDowngradeKnights"
-  
+
+   override def toJson: Value = {
+     val json = super.toJson
+     json.obj.addAll(Map(
+       "mainPhase" -> mainPhase.toString,
+       "subPhase" -> getSubPhaseName,
+     ))
+     json
+   }
 }
