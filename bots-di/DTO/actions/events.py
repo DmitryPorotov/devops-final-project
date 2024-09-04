@@ -26,7 +26,8 @@ class ActionGetEventCards(TypedDict):
 class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(TypedDict):
     actionType: str  # = "wildlingsChooseKill2UnitsOr2PositionsOnTrack"
     houseType: HouseType
-    track: str
+    track: NotRequired[str]
+    units: NotRequired[dict[str, MilitaryUnit]]
 
 
 class ActionResolveTiesAfterBiddingOnTracks(TypedDict):
