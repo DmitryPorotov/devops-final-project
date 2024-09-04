@@ -130,6 +130,7 @@ object ReactionGameAction {
       case _: SubPhaseRecalculateSupplies => ActionRecalculateSupplies(gameState)
       case s: SubPhaseResolveCardRose2 => ActionResolveCardRose2(gameState, s.houseType)
       case s: SubPhaseOpenTrackBids => ActionOpenTrackBids(gameState, gameState.bids)
+      case _: SubPhaseWildlingsCard => ActionWildlingsCard(gameState)
 //      case _ => throw new RuntimeException("SubPhase " + subPhase + " has no matching action.")
 
 
