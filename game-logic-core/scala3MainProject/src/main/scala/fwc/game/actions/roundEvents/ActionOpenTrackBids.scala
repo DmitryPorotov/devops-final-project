@@ -38,10 +38,14 @@ case class ActionOpenTrackBids(
         gameState.wildlingCounter,
       )
 
-    gameState.copy(
+    val gameStateWithBids =
+      if doResolveTies
+      then gameState
+      else gameState.copy(bids = Bids())
+
+    gameStateWithBids.copy(
       subPhase = newPhase,
       tracks = updatedTracks,
-      bids = Bids(),
     )
   }
 
@@ -54,6 +58,6 @@ object ActionOpenTrackBids extends JsonParsableAction {
   override def fromJson(gameState: GameState, json: Value): ActionOpenTrackBids =
     ActionOpenTrackBids(
       gameState,
-      Bids.fromJson(json)
+      Bids.fromJson(json("bids"))
     )
 }
