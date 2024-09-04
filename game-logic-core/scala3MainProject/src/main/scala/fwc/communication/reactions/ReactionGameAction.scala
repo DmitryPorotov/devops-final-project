@@ -7,7 +7,6 @@ import fwc.game.actions.action.*
 import fwc.game.actions.{Action, ActionSetCard, PlayerAction}
 import fwc.game.actions.planning.{ActionAddOrder, ActionOpenOrders, ActionRavenGetWildlingsCard}
 import fwc.game.actions.roundEvents.*
-import fwc.game.eventsPhase.Mustering
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.{SubPhaseAddOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseRavenGetWildlingsCard}
 import fwc.game.phases.roundEventsSubPhases.*
@@ -60,7 +59,7 @@ object ReactionGameAction {
 
         loop(a, gameReplay)
 
-      case _ => ???
+      case _ => throw new RuntimeException("We should not get here.")
 
   }
 
