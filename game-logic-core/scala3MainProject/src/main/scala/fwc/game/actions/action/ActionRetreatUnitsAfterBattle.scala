@@ -58,7 +58,7 @@ case class ActionRetreatUnitsAfterBattle(
 
     val toConsolidate = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies, houseType)
     val newPhase =
-      if toConsolidate(houseType).nonEmpty
+      if toConsolidate.contains(houseType) && toConsolidate(houseType).nonEmpty
       then SubPhaseDisbandUnit(gameState.combat.loser.head, UnitDisbandNextStepCombatCleanUp, MainPhase.Action)
       else SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, gameState.combat.attackerHouse))
 
