@@ -24,7 +24,7 @@ class Armies(dict[str, list[MilitaryUnit]]):
                 ret_val[tile] = self[tile]
         return ret_val
 
-    def get_armies_by_house_type_generator(self, house_type: HouseType) -> Generator[tuple[str, list[MilitaryUnit]]]:
+    def get_armies_by_house_type_generator(self, house_type: HouseType) -> Generator[tuple[str, list[MilitaryUnit]], None, None]:
         for tile in self:
             if self[tile] and self[tile][0].house == house_type:
                 yield tile, self[tile]
