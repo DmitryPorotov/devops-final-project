@@ -123,7 +123,7 @@ class ActionWildlingsMusterAtCastle(TypedDict):
     actionType: str  # = "wildlingsMusterAtCastle"
     houseType: HouseType
     sourceTile: int
-    targetUnits: list
+    targetUnits: list[tuple[int,bool,MilitaryUnit]]
 
 
 class ActionWildlingsKillUnit(TypedDict):
@@ -154,6 +154,7 @@ class ActionGetWildlingsCard(TypedDict):
 class ActionWildlingsReturnHouseCard(TypedDict):
     actionType: str  # = "wildlingsReturnHouseCard"
     houseType: HouseType
+    cardCode: NotRequired[int]
 
 
 class ActionWildlingsDowngradeKnights(TypedDict):
