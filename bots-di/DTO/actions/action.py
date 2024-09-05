@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional
+from typing import TypedDict, Optional, NotRequired
 
 from server_module.game_state.military_unit import HouseType, MilitaryUnit
 from server_module.game_state.track_type import TrackType
@@ -129,8 +129,10 @@ class ActionResolveCardRose2(TypedDict):
 class ActionResolveSpecialConsolidatePower(TypedDict):
     actionType: str  # = "resolveSpecialConsolidatePower"
     houseType: HouseType
-    tileNumber: int
-    unit: Optional[MilitaryUnit]
+    fromTile: int
+    toTile: NotRequired[int]
+    unitToMuster: NotRequired[MilitaryUnit]
+    isUpgrade: bool
 
 
 class ActionSetTidesOfBattleCards(TypedDict):
