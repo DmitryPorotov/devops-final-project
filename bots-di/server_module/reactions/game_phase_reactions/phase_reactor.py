@@ -87,7 +87,7 @@ switcher_obj = {
     'chooseDisableMarchPlus1OrDefendOrders': ChooseDisableMarchPlus1OrDefendOrdersReaction,
     'disableOrder': NoActionNeededReaction,
     'chooseUpdateSupplyOrMuster': ChooseUpdateSupplyOrMusterReaction,
-    'chooseTracksBidsOrCollectTaxes': RavenChooseTrackBidsOrCollectTaxesReaction,
+    'chooseTracksBidsOrCollectTaxes': RavenChooseTrackBidsOrCollectTaxesReaction, # todo make the key the same as in the action (with the word raven)
     'recalculateSupplies': NoActionNeededReaction,
     'tracksBids': TracksBidsReaction,
     'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
