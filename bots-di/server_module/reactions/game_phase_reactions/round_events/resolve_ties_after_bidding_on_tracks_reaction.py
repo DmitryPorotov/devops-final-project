@@ -3,6 +3,7 @@ from random import randrange
 from DTO.actions.events import ActionResolveTiesAfterBiddingOnTracks
 from DTO.messages.messages import MessageGameAction
 from DTO.phases.all_phases import SubPhase
+from DTO.phases.phases import SubPhaseResolveTiesAfterBiddingOnTracks
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
@@ -21,10 +22,12 @@ class ResolveTiesAfterBiddingOnTracksReaction(BasePhaseReaction):
 
     def _to_json(self, resolution: list[str]) -> MessageGameAction[ActionResolveTiesAfterBiddingOnTracks]:
         json = super()._to_json()
+        phase: SubPhaseResolveTiesAfterBiddingOnTracks = self._phase
         action: ActionResolveTiesAfterBiddingOnTracks = {
             'houseType': self._house_type,
             'actionType': 'resolveTiesAfterBiddingOnTracks',
-            'resolution': resolution
+            'resolution': resolution,
+            'trackType': phase['trackType']
         }
         json['player_action'] = action
         return json
