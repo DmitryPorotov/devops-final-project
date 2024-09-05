@@ -34,6 +34,7 @@ class ActionResolveTiesAfterBiddingOnTracks(TypedDict):
     actionType: str  # = "resolveTiesAfterBiddingOnTracks"
     houseType: HouseType
     resolution: list[str]
+    trackType: str
 
 
 class ActionResolveTiesAfterBiddingOnWildlings(TypedDict):
