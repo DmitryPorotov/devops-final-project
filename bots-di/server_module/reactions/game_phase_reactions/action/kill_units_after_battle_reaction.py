@@ -1,3 +1,5 @@
+import random
+
 from DTO.actions.action import ActionKillUnitsAfterBattle
 from DTO.messages.messages import MessageGameAction
 from DTO.phases.all_phases import SubPhase
@@ -13,7 +15,12 @@ class KillUnitsAfterBattleReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionKillUnitsAfterBattle]]:
-        raise Exception('Unimplemented!')
+        combat = self._game_state.combat
+        num_units_to_kill = combat.combat_outcome.attacker_units_to_kill if combat.attacker_house == self._house_type else combat.combat_outcome.defender_units_to_kill
+        all_units = list(combat.attacker_army if combat.attacker_house == self._house_type else combat.defender_army)
+        random.shuffle(all_units)
+        to_kill = all_units[:num_units_to_kill]
+        return [self._to_json(to_kill)]
 
     def _to_json(self, units: list[MilitaryUnit]) -> MessageGameAction[ActionKillUnitsAfterBattle]:
         json = super()._to_json()

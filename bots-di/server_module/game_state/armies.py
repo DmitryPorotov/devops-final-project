@@ -1,3 +1,5 @@
+from typing import Generator
+
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.house_type import HouseType
@@ -21,6 +23,11 @@ class Armies(dict[str, list[MilitaryUnit]]):
             if self[tile] and self[tile][0].house == house_type:
                 ret_val[tile] = self[tile]
         return ret_val
+
+    def get_armies_by_house_type_generator(self, house_type: HouseType) -> Generator[tuple[str, list[MilitaryUnit]], None, None]:
+        for tile in self:
+            if self[tile] and self[tile][0].house == house_type:
+                yield tile, self[tile]
 
     def get_units_left_to_muster(self, game_rules: GameRules, house_type: HouseType) -> dict[MilitaryUnitType, int]:
         max_armies = dict(game_rules.max_armies)

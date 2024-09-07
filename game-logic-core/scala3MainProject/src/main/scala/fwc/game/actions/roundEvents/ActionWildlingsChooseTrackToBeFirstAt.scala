@@ -6,7 +6,7 @@ import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerActi
 import fwc.game.actions.roundEvents.wildlingsCards.WildlingsCards
 import fwc.game.board.TrackType
 import fwc.game.houses.HouseType
-import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
+import fwc.game.phases.roundEventsSubPhases.SubPhaseWildlingsChooseTrackToBeFirstAt
 import ujson.Value
 
 case class ActionWildlingsChooseTrackToBeFirstAt(
@@ -16,10 +16,10 @@ case class ActionWildlingsChooseTrackToBeFirstAt(
                                                 )
   extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
-    if !gameState.subPhase.isInstanceOf[SubPhaseMuster]
+    if !gameState.subPhase.isInstanceOf[SubPhaseWildlingsChooseTrackToBeFirstAt]
     then throw new ActionException("Wrong phase")
 
-    if gameState.subPhase.asInstanceOf[SubPhaseMuster].houseType != houseType
+    if gameState.subPhase.asInstanceOf[SubPhaseWildlingsChooseTrackToBeFirstAt].houseType != houseType
     then throw new ActionException("Wrong house")
 
     gameState.copy(

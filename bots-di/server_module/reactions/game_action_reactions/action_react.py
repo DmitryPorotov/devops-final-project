@@ -17,8 +17,15 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
+from server_module.reactions.game_action_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
+    ResolveTiesAfterBiddingOnTracksReaction
+from server_module.reactions.game_action_reactions.round_events.muster_reaction import MusterReaction
+from server_module.reactions.game_action_reactions.action.nothing_to_update_generic_reaction import \
+    NothingToUpdateGenericReaction
 from server_module.reactions.game_action_reactions.action.resolve_march_order_reaction import ResolveMarchOrderReaction
 from server_module.reactions.game_action_reactions.action.resolve_raid_order_reaction import ResolveRaidOrderReaction
+from server_module.reactions.game_action_reactions.action.use_valyrian_steel_blade_reaction import \
+    UseValyrianSteelBladeReaction
 from server_module.reactions.game_action_reactions.planning.open_orders_reaction import OpenOrdersReaction
 from server_module.reactions.game_action_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
 from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
@@ -36,7 +43,33 @@ switch_obj = {
     'resolveCardMoose3': CleanUpAfterCombatReactionHouseCard,
     'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
     'openTrackBids': OpenTrackBidsReaction,
+    'useValyrianSteelBlade': UseValyrianSteelBladeReaction,
+    'muster': MusterReaction,
+    'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
+
+
+    'openOrders': NothingToUpdateGenericReaction,
+    'trackBids': NothingToUpdateGenericReaction,
+    'wildlingsBids': NothingToUpdateGenericReaction,
+    'ravenChooseChangeOrderOrLookAtWildlingCard': NothingToUpdateGenericReaction,
+    'ravenGetWildlingsCard': NothingToUpdateGenericReaction,
+    'chooseHouseCard': NothingToUpdateGenericReaction,
+    'getTidesOfBattleCards': NothingToUpdateGenericReaction,
+    'setTidesOfBattleCards': NothingToUpdateGenericReaction,
+    'addOrder': NothingToUpdateGenericReaction,
+    'autoKillUnitsAfterBattle': NothingToUpdateGenericReaction,
+    'resolveSupportOrder': NothingToUpdateGenericReaction,
+    'resolveConsolidatePowerOrder': NothingToUpdateGenericReaction,
+    'ravenChooseTrackBidsOrCollectTaxes': NothingToUpdateGenericReaction,
+    'retreatUnitsAfterBattle': NothingToUpdateGenericReaction,
+    'autoRetreatAfterBattle': NothingToUpdateGenericReaction,
+    'ravenChoosePutWildlingsCardOnTopOrBottom': NothingToUpdateGenericReaction,  # todo should save it to ravens personal memory later
+    'throneChooseSupplyOrMuster': NothingToUpdateGenericReaction,
+    'finishMustering': NothingToUpdateGenericReaction,
+    'cleanUpAfterRound': NothingToUpdateGenericReaction,
+    'wildlingsCard': NothingToUpdateGenericReaction,  # todo maybe save somewhere
 }
+
 
 
 class ActionReact:
@@ -62,5 +95,7 @@ class ActionReact:
                     OpenOrdersReaction(ActionReact.game_data.get_game(game_id).state, reply).update_game_state()
                 elif action['actionType'] in switch_obj:
                     switch_obj[action['actionType']](ActionReact.game_data.get_game(game_id).state, reply).update_game_state()
+                else:
+                    raise Exception("{} action is not implemented".format(action['actionType']))
 
                 react_to_phase(game_id, reply['current_phase'])

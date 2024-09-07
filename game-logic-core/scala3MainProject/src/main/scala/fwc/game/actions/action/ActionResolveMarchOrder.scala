@@ -190,11 +190,12 @@ case class ActionResolveMarchOrder(
     Action.actionTypeJsonKey -> "resolveMarchOrder",
     "houseType" -> houseType.toString,
     "sourceTileNumber" -> sourceTileNumber,
-    "targets" -> mutable.LinkedHashMap.from(
+    "targets" -> (if targets != null
+    then mutable.LinkedHashMap.from(
       targets.map((tn: Int, army: Seq[MilitaryUnit]) =>
         tn.toString -> ujson.Value(army.map(_.toJson))
       )
-    )
+    ) else ujson.Null)
   )
 }
 

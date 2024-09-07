@@ -3,6 +3,7 @@ package fwc.game.actions.roundEvents
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
+import fwc.game.board.TrackType
 import fwc.game.eventsPhase.Bids
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseResolveTiesAfterBiddingOnTracks
@@ -11,7 +12,8 @@ import ujson.Value
 case class ActionResolveTiesAfterBiddingOnTracks(
                                                   gameState: GameState,
                                                   houseType: HouseType,
-                                                  resolution: Seq[HouseType]
+                                                  resolution: Seq[HouseType],
+                                                  trackType: TrackType
                                                 )
   extends Action(gameState) with PlayerAction(houseType) with JsonSerializable {
   override def doAction(): GameState = {
@@ -50,7 +52,8 @@ case class ActionResolveTiesAfterBiddingOnTracks(
   override def toJson: ujson.Value = ujson.Obj(
     Action.actionTypeJsonKey -> "resolveTiesAfterBiddingOnTracks",
     "houseType" -> houseType.toString,
-    "resolution" -> ujson.Arr.from(resolution.map(_.toString))
+    "resolution" -> ujson.Arr.from(resolution.map(_.toString)),
+    "trackType" -> trackType.toString
   )
 }
 
@@ -59,6 +62,7 @@ object ActionResolveTiesAfterBiddingOnTracks extends JsonParsableAction {
     ActionResolveTiesAfterBiddingOnTracks(
       gameState,
       HouseType.fromString(json("houseType").str),
-      json("resolution").arr.map(ht => HouseType.fromString(ht.str)).toSeq
+      json("resolution").arr.map(ht => HouseType.fromString(ht.str)).toSeq,
+      TrackType.fromString(json("trackType").str)
     )
 }

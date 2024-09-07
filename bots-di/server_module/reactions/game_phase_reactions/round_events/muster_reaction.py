@@ -23,7 +23,7 @@ class MusterReaction(BasePhaseReaction):
         musterable_tiles: dict[str, BoardTile] = {}
         ump = self._game_state.used_mustering_points
         for tn, t in self._game_rules.board.get_castle_tiles().items():
-            if (tn in my_armies and (t.mustering_points - (ump[int(tn)] if int(tn) in ump else 0)) > 0) or (t.home_of == self._house_type and tn not in self._game_state.armies):
+            if (tn in my_armies or (t.home_of == self._house_type and tn not in self._game_state.armies)) and (t.mustering_points - (ump[int(tn)] if int(tn) in ump else 0)) > 0:
                 musterable_tiles[tn] = t
         if len(musterable_tiles) > 1:
             idx = randrange(len(musterable_tiles))
@@ -36,11 +36,11 @@ class MusterReaction(BasePhaseReaction):
                 tile = t
         else:
             raise Exception('Should not get here!')
-        mu, to_tile = self.__choose_unit_to_muster(tile.mustering_points - (ump[tile_num] if tile_num in ump else 0), tile_num)
+        mu, to_tile = self._choose_unit_to_muster(tile.mustering_points - (ump[tile_num] if tile_num in ump else 0), tile_num)
         return [self._to_json(mu, tile_num, to_tile)]
 
     __units_types = [MilitaryUnitType.FOOTMEN, MilitaryUnitType.FOOTMEN, MilitaryUnitType.SHIPS, MilitaryUnitType.KNIGHTS, MilitaryUnitType.SIEGE_ENGINES]
-    def __choose_unit_to_muster(self, avail_points: int, from_tile_num: int) -> "tuple[MilitaryUnit, int]":
+    def _choose_unit_to_muster(self, avail_points: int, from_tile_num: int) -> "tuple[MilitaryUnit, int]":
         if avail_points > 1:
             idx = randrange(len(self.__units_types))
         else:
