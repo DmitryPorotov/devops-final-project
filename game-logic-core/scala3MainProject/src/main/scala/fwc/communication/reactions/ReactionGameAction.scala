@@ -1,5 +1,6 @@
 package fwc.communication.reactions
 
+import enrichment.ExtUPickleHashMap
 import fwc.{GameSettings, JsonSerializable, PlayerInputting}
 import fwc.game.phases.*
 import fwc.game.phases.actionSubPhases.*
@@ -170,11 +171,9 @@ object ReactionGameAction {
           )
         )
         case a: ActionCleanUpAfterCombat => buildMessageToAll(
-          a.toJson.obj.addAll(
-            ujson.Obj(
-              "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState),
-              "doCardResolve" -> (updatedGameState.combat != null)
-            ).obj
+          a.toJson.obj.addPairs(
+            "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState),
+            "doCardResolve" -> (updatedGameState.combat != null)
           )
         )
         case a: ActionCleanUpAfterRound => buildMessageToAll(
@@ -187,17 +186,17 @@ object ReactionGameAction {
           if sp.defenderCard.isEmpty
           then ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.attackerHouse),
-            "player_action" -> a.toJson.obj.addAll(Map(
+            "player_action" -> a.toJson.obj.addPairs(
               "code" -> sp.attackerCard.head,
               "houseType" -> a.gameState.combat.attackerHouse.toString
-            ))
+            )
           )
           else ujson.Obj(
             "to" -> findPlayerIdByHouse(updatedGameState.combat.defenderHouse),
-            "player_action" -> a.toJson.obj.addAll(Map(
+            "player_action" -> a.toJson.obj.addPairs(
               "code" -> sp.defenderCard.head,
               "houseType" -> a.gameState.combat.defenderHouse.toString
-            ))
+            )
           )
         case a: ActionRavenGetWildlingsCard =>
           if a.isRandom

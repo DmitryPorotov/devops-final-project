@@ -1,18 +1,17 @@
 package fwc.game
 
+import enrichment.ExtUPickleHashMap
 import fwc.{JsonParsable, JsonSerializable}
 import fwc.game.actionPhase.{Combat, DiscardedHouseCards, DominanceTokensUsage}
 import fwc.game.eventsPhase.cards.BoardCards
-import fwc.game.board.{Armies, DominanceTokenType, TileNumber, Tracks}
+import fwc.game.board.{Armies, TileNumber, Tracks}
 import fwc.game.eventsPhase.{Bids, PowerTokens, Supplies, UsedMusteringPoints}
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.phases.SubPhase
 import fwc.game.planningPhase.{AvailableOrders, Order, OrderType, PlacedOrders}
-import fwc.gameLoading.BoardTile
 import ujson.Value
 
-import scala.collection.mutable
 import scala.util.Try
 
 case class GameState(
@@ -74,11 +73,9 @@ case class GameState(
       else null
           
     ujson.Obj(
-      toCleanJson.value.addAll(
-        Map(
-          "placedOrders" -> placedOrdersP.toJson,
-          "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
-        )
+      toCleanJson.value.addPairs(
+        "placedOrders" -> placedOrdersP.toJson,
+        "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
       )
     )
   }
@@ -122,11 +119,9 @@ case class GameState(
       else null
 
     ujson.Obj(
-      toCleanJson.value.addAll(
-        Map(
-          "placedOrders" -> placedOrdersP.toJson,
-          "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
-        )
+      toCleanJson.value.addPairs(
+        "placedOrders" -> placedOrdersP.toJson,
+        "combat" -> (if combatP == null then ujson.Null else combatP.toJson),
       )
     )
   

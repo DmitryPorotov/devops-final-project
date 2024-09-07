@@ -1,5 +1,6 @@
 package fwc.game.phases.roundEventsSubPhases
 
+import enrichment.ExtUPickleHashMap
 import fwc.game.houses.HouseType
 import fwc.game.phases.*
 
@@ -15,11 +16,11 @@ case class SubPhaseWildlingsBids(
 
   override def toJson: ujson.Value = {
     val json = super.toJson
-    json.obj.addAll(Map(
+    json.obj.addPairs(
       "numberOfParticipants" -> numberOfParticipants,
       "wildlingsStartedFrom12Points" -> wildlingsStartedFrom12Points,
       "wildlingsCounter" -> wildlingsCounter
-    ))
+    )
     json
   }
 }

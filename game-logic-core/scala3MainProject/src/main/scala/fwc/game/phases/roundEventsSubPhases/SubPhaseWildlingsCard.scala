@@ -1,6 +1,6 @@
 package fwc.game.phases.roundEventsSubPhases
 
-import fwc.JsonSerializable
+import enrichment.ExtUPickleHashMap
 import fwc.game.houses.HouseType
 import fwc.game.phases.*
 import ujson.Value
@@ -18,11 +18,11 @@ case class SubPhaseWildlingsCard(
 
   override def toJson: Value = {
     val json = super.toJson
-    json.obj.addAll(Map(
+    json.obj.addPairs(
       "loserWinnerHouse" -> loserWinnerHouse.toString,
       "cardCode" -> cardCode,
       "isWin" -> isWin,
-    ))
+    )
     json
   }
 }

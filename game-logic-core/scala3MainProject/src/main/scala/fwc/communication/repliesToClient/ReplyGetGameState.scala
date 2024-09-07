@@ -1,5 +1,6 @@
 package fwc.communication.repliesToClient
 
+import enrichment.ExtUPickleHashMap
 import fwc.GameSettings
 import fwc.game.{GameRules, GameState}
 
@@ -21,7 +22,7 @@ case class ReplyGetGameState(
       if gameSettings.isInputOnly && gameSettings.playersInputting.nonEmpty
       then gameSettings.playersInputting.head.find(_.userId == userId)
       else None
-    json.value.addAll(Map(
+    json.value.addPairs(
       "gameRules" -> gameRules.toJson,
       "gameState" -> (
         if userId < 0 || userId == 1 then //todo check if admin somehow instead of "userId == 1" (maybe on webserver and send negative id)
@@ -32,6 +33,6 @@ case class ReplyGetGameState(
         then gameState.toPersonalJson(player.head.house.head)
         else gameState.toCleanJson
         ),
-    ))
+    )
   }
 }
