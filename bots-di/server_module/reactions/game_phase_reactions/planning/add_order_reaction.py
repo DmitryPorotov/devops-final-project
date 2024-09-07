@@ -109,13 +109,6 @@ class AddOrderReaction(BasePhaseReaction):
             'actionType': 'openOrders',
             'houseType': self._house_type,
         }
-        message: MessageGameAction[ActionOpenOrders] = {
-            'type': 'action',
-            'userId': self._bot_id,
-            'gameId': game_id,
-            'messageId': str(uuid.uuid4()),
-            'action': 'game_action',
-            'player_action': action,
-        }
-
+        message: MessageGameAction[ActionOpenOrders] = super()._to_json()
+        message['player_action'] = action
         return message
