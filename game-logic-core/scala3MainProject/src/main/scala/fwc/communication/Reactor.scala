@@ -28,9 +28,6 @@ object Reactor {
           games = games updated (gameId, replay)
           ReplyGameAction(gameId, reply, messageId)
 
-        case MessageTestConnectivity(_, messageId) =>
-          ReplyTestConnectivity(messageId)
-
         case MessageSaveGame(userId, gameId, saveName, messageId) =>
           ReplySaveGame(userId, gameId,ReactionSaveGame(userId, gameId, saveName, getGame(gameId)), messageId)
 
@@ -67,6 +64,10 @@ object Reactor {
           val game = getGame(gameId)
           ReplyGetGameState(userId, gameId, gameRules, game.currentGameState, game.gameSettings, messageId)
 
+        case MessageGetPartialGameState(userId, gameId, parts, messageId) =>
+          val game = getGame(gameId)
+          ReplyGetPartialGameState(userId, gameId, game.currentGameState, game.gameSettings, parts, messageId)
+          
         case MessageCreateGame(userId, gameId, isRandomHouses, isInputOnly, messageId) =>
           val (id, settings, state) = ReactionCreateGame(userId, gameId, isRandomHouses, isInputOnly)
           games = games updated (id, GameReplay(settings, state.boardCards, state, Seq()))
@@ -83,6 +84,9 @@ object Reactor {
 
         case MessageRestoreGames(userId, gameId, messageId, games) =>
           throw new RestoreGamesException(games, messageId)
+          
+        case MessageTestConnectivity(_, messageId) =>
+          ReplyTestConnectivity(messageId)
     } match
       case Success(reply: Reply) =>
         reply.toJson

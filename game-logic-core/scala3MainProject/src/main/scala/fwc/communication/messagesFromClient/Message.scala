@@ -70,6 +70,11 @@ object Message {
           messageId,
         )
       case "get_game_state" => MessageGetGameState(userId, gameId, messageId)
+      case "get_partial_game_state" =>
+        val parts = Try(json("parts").arr.map(_.str).toSeq) match
+          case Success(value) => value
+          case Failure(_) => throw new FWCException("The field 'parts' should be an array of game state parts or an array with a singular '*'")
+        MessageGetPartialGameState(userId, gameId, parts, messageId)
       case "restore_games" => 
         val games = Try[List[String]](json.obj("games").arr.map(_.str).toList) getOrElse null
         MessageRestoreGames(userId, gameId, messageId, games)
