@@ -41,7 +41,7 @@ case class ActionWildlingsReturnHouseCard(
     if cardCode.isEmpty
     then gameStateWithPhase
     else
-      if !gameState.discardedHouseCards(houseType).contains(cardCode)
+      if !gameState.discardedHouseCards(houseType).contains(cardCode.head)
       then throw new ActionException("The card is not discarded")
 
       val updatedDiscardedHouseCards = gameStateWithPhase.discardedHouseCards
