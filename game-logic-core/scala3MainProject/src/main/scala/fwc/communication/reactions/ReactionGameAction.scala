@@ -217,6 +217,10 @@ object ReactionGameAction {
           val json = a.toJson
           json.obj.addOne("supplies" -> updatedGameState.supplies.toJson)
           buildMessageToAll(json)
+        case a: ActionCollectTaxes =>
+          val json = a.toJson
+          json.obj.addOne("powerTokens" -> updatedGameState.powerTokens.toJson)
+          buildMessageToAll(json)
         case a: ActionTrackBids =>
           val json = a.toJson
           json.obj("bid") = -1
