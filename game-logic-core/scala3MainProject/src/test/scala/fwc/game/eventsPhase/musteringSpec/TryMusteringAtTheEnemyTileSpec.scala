@@ -7,7 +7,6 @@ import fwc.game.houses.HouseType
 import org.scalatest.*
 import org.scalatest.flatspec.*
 import org.scalatest.matchers.*
-import org.scalatest.funspec.AnyFunSpec
 
 class TryMusteringAtTheEnemyTileSpec extends AnyFlatSpec with should.Matchers {
 

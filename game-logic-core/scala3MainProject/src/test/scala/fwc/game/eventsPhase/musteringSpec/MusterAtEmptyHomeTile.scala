@@ -23,7 +23,7 @@ class MusterAtEmptyHomeTile extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      newGameState._2.points(gameRules.board(3)) == 1,
+      newGameState._2(gameRules.board(3)) == 1,
       "1 mustering point should be used at tile 7"
     )
 

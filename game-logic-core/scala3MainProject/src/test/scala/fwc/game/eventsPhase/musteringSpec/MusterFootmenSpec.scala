@@ -21,7 +21,7 @@ class MusterFootmenSpec extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      usedMusteringPoints.points(gameRules.board(7)) == 1,
+      usedMusteringPoints(gameRules.board(7)) == 1,
       "1 mustering point should be used at tile 7"
     )
 

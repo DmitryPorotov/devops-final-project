@@ -81,7 +81,7 @@ object Mustering {
                            newArmyAtTile: Seq[MilitaryUnit],
                            musteringPointsToBeUsed: Int
                          ) = {
-    val usedPointAtTile = gameState.usedMusteringPoints.points.getOrElse(musteringBoardTile, 0)
+    val usedPointAtTile = gameState.usedMusteringPoints.getOrElse(musteringBoardTile, 0)
     if (musteringBoardTile.musteringPoints - usedPointAtTile)
       < musteringPointsToBeUsed
     then throw new MusteringException(s"Not enough points to muster ${militaryUnitToMuster.unitType}")
@@ -94,31 +94,16 @@ object Mustering {
         s"House ${militaryUnitToMuster.house} does not have enough supplies to muster ${militaryUnitToMuster.unitType}"
       )
 
-//    gameState.copy(
-//      armies = newArmies,
-//      usedMusteringPoints = UsedMusteringPoints(
-//        gameState.usedMusteringPoints.points +
-//        (
-//          musteringBoardTile ->
-//            (
-//              usedPointAtTile
-//                + musteringPointsToBeUsed
-//            )
-//        )
-//      )
-//    )
     (
       newArmies,
-      UsedMusteringPoints(
-        gameState.usedMusteringPoints.points +
-          (
-            musteringBoardTile ->
-              (
-                usedPointAtTile
-                  + musteringPointsToBeUsed
-                )
-            )
-      )
+      gameState.usedMusteringPoints +
+        (
+          musteringBoardTile ->
+            (
+              usedPointAtTile
+                + musteringPointsToBeUsed
+              )
+        )
     )
   }
 

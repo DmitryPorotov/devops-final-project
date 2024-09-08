@@ -5,8 +5,10 @@ import fwc.gameLoading.BoardTile
 import ujson.Value
 import fwc.game.gameRules
 
+import scala.annotation.targetName
 
-case class UsedMusteringPoints(points: Map[BoardTile, Int] = Map()) extends JsonSerializable {
+
+case class UsedMusteringPoints(private val points: Map[BoardTile, Int] = Map()) extends JsonSerializable {
   export points.{apply, getOrElse, map}
   def toJson: ujson.Value = {
     ujson.Obj(
@@ -17,8 +19,12 @@ case class UsedMusteringPoints(points: Map[BoardTile, Int] = Map()) extends Json
       )
     )
   }
-  
+
+  @targetName("updated")
+  def +(kv: (BoardTile, Int)): UsedMusteringPoints = copy(points + kv)
 }
+
+
 
 object UsedMusteringPoints extends JsonParsable {
   override def fromJson(json: Value): UsedMusteringPoints = {

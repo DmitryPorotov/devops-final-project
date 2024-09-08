@@ -21,7 +21,7 @@ class MusterKnightsSpec extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      newGameState._2.points(gameRules.board(3)) == 2,
+      newGameState._2(gameRules.board(3)) == 2,
       "2 mustering points should be used at tile 3")
 
     assert(

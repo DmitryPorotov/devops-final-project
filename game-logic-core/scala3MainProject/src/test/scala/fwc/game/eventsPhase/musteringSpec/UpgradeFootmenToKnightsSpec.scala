@@ -22,7 +22,7 @@ class UpgradeFootmenToKnightsSpec extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      newGameState._2.points(gameRules.board(3)) == 1,
+      newGameState._2(gameRules.board(3)) == 1,
       "1 mustering points should be used at tile 3, after upgrading footmen to knights")
 
     assert(
@@ -45,7 +45,7 @@ class UpgradeFootmenToKnightsSpec extends AnyFlatSpec with should.Matchers {
     )
 
     assert(
-      newGameState2._2.points(gameRules.board(3)) == 2,
+      newGameState2._2(gameRules.board(3)) == 2,
       "2 mustering points should be used at tile 3, after upgrading and mustering footmen")
   }
 }
