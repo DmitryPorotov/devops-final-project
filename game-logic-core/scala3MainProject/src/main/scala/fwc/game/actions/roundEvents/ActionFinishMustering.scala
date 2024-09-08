@@ -3,6 +3,7 @@ package fwc.game.actions.roundEvents
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actions.*
+import fwc.game.eventsPhase.UsedMusteringPoints
 import fwc.game.houses.HouseType
 import fwc.game.phases.SubPhase
 import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
@@ -30,8 +31,15 @@ case class ActionFinishMustering(
       then EventCards.fallThroughFromDeck2(gameState.tracks, gameState.boardCards, gameState.wildlingCounter)
       else SubPhaseMuster(nextHouse)
     }
-    gameState.copy(
+
+    val updatedGameState = gameState.copy(
       subPhase = newPhase
+    )
+
+    if newPhase.isInstanceOf[SubPhaseMuster]
+    then updatedGameState
+    else updatedGameState.copy(
+      usedMusteringPoints = UsedMusteringPoints()
     )
   }
 
