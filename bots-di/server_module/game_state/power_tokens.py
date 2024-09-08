@@ -6,5 +6,5 @@ class PowerTokens(dict[HouseType, int]):
         if kwargs is None:
             super().__init__()
         else:
-            for ht in kwargs:
-                self[HouseType[ht.upper()]] = kwargs[ht]
+            for ht, tokens in kwargs.items():  # type: str, int
+                self[HouseType[ht.upper()]] = tokens

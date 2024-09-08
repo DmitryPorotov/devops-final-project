@@ -41,7 +41,7 @@ class WildlingsUpgradeKnightsReaction(BasePhaseReaction):
         json = super()._to_json()
         action: ActionWildlingsUpgradeKnights = {
             'houseType': self._house_type,
-            'actionType': 'wildlingsDowngradeKnights',
+            'actionType': 'wildlingsUpgradeKnights',
             'tileNumber1': tn1,
             'tileNumber2': tn2,
         }

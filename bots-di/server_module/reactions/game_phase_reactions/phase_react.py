@@ -50,7 +50,14 @@ class PhaseReact:
                             lambda: PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
                         )
             elif isinstance(sub_phase['houseTypes'], dict):  # type: dict[HouseType, int]
-                # note this is for bidding
+                # note this is for wildlings killing units etc.
+                PhaseReact.multi_house_reaction.set_house_map(sub_phase['houseTypes'])
+                for h, num in sub_phase['houseTypes'].items():
+                    PhaseReact.multi_house_reaction.react(
+                        sub_phase,
+                        h,
+                        lambda: PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
+                    )
                 pass
             else:
                 raise RuntimeError("houseTypes should be list or dict.")

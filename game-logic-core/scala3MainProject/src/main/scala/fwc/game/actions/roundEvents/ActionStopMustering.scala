@@ -4,6 +4,7 @@ import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.board.TrackType
+import fwc.game.eventsPhase.UsedMusteringPoints
 import fwc.game.houses.HouseType
 import fwc.game.phases.roundEventsSubPhases.SubPhaseMuster
 import ujson.Value
@@ -29,7 +30,7 @@ case class ActionStopMustering(
       )
       else SubPhaseMuster(gameState.tracks(TrackType.Throne)(idx + 1))
 
-    gameState.copy(newPhase)
+    gameState.copy(newPhase, usedMusteringPoints = UsedMusteringPoints())
   }
 
   override def toJson: Value = ujson.Obj(

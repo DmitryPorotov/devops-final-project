@@ -46,7 +46,7 @@ object GameServer {
             case Success((msg: Message, json: ujson.Value)) =>
               Try[ujson.Value](Reactor(msg, json)) match
                 case Success(j) =>
-                  val doCrop = j.obj("action").str.equals("get_game_state")
+                  val doCrop = j.obj("action").str.equals("get_game_state") //|| j.obj("action").str.equals("get_partial_game_state")
                   (j.render(fwc.jsonIndentation), doCrop)
                 case Failure(e: FWCException) =>
                   val errJson = ujson.Obj(

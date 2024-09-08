@@ -5,9 +5,9 @@ from server_module.game_state.house_type import HouseType
 
 
 class MultiHouseReaction:
-    def __init__(self):
+    def __init__(self, house_map=None):
         self._phase: Optional[SubPhase] = None
-        self._houseMap = HouseTypesMap()
+        self._houseMap = HouseTypesMap() if house_map is None else house_map
 
     def react(self, phase: SubPhase, house: HouseType , handler: Callable[[], None]):
         if self._phase is None:
@@ -17,16 +17,23 @@ class MultiHouseReaction:
             self._phase = phase
             self._houseMap = HouseTypesMap()
 
-        if not self._houseMap[house]:
+        if self._houseMap[house]:
             handler()
-            self._houseMap[house] = True
+            self._houseMap[house] -= 1
+
+    def set_house_map(self, house_map: dict[str, int]):
+        self._houseMap = HouseTypesMap(**house_map)
 
 class HouseTypesMap(dict):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
-        self[HouseType.LION] = False
-        self[HouseType.ROSE] = False
-        self[HouseType.WOLF] = False
-        self[HouseType.MOOSE] = False
-        self[HouseType.KRAKEN] = False
-        self[HouseType.PUFFERFISH] = False
+        if kwargs:
+            for k, v in kwargs.items():
+                self[HouseType[k.upper()]] = v
+        else:
+            self[HouseType.LION] = 1
+            self[HouseType.ROSE] = 1
+            self[HouseType.WOLF] = 1
+            self[HouseType.MOOSE] = 1
+            self[HouseType.KRAKEN] = 1
+            self[HouseType.PUFFERFISH] = 1

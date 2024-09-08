@@ -1,11 +1,12 @@
 from dependency_injector.wiring import Provide, inject
 
 from DTO.actions.action import ActionRetreatUnitsAfterBattle
-from DTO.actions.events import ActionMuster
+from DTO.actions.events import ActionMuster, ActionWildlingsMusterAtCastle
+from DTO.actions.planning import ActionAddOrder
 from DTO.messages.messages import ErrorMessage
 from DTO.actions.all_actions import Action, ActionResolveMarchOrder
 from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle, \
-    SubPhaseMuster
+    SubPhaseMuster, SubPhaseWildlingsMusterAtCastle, SubPhaseAddOrder
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.game_state.house_type import HouseType
@@ -71,6 +72,30 @@ class ErrorRetryHandler:
                 }
 
                 react_to_phase(game_id, sp4)
+            elif pa['actionType'] == 'wildlingsMusterAtCastle':
+                pa5: ActionWildlingsMusterAtCastle = pa
+                sp5: SubPhaseWildlingsMusterAtCastle = {
+                    "mainPhase": "phaseRoundEvents",
+                    "subPhase": "wildlingsMusterAtCastle",
+                    "houseType": pa5["houseType"],
+                }
+                react_to_phase(game_id, sp5)
+            elif pa['actionType'] == 'addOrder' and 'There is an order on this tile' not in msg['message']:
+                pa5: ActionAddOrder = pa
+                sp5: SubPhaseAddOrder = {
+                    "mainPhase": "phasePlanning",
+                    "subPhase": "addOrder",
+                    "houseTypes": [pa5["houseType"]],
+                }
+                react_to_phase(game_id, sp5)
+            elif pa['actionType'] == 'openOrders' and 'not placed any' not in msg['message']:
+                pa5: ActionAddOrder = pa
+                sp5: SubPhaseAddOrder = {
+                    "mainPhase": "phasePlanning",
+                    "subPhase": "addOrder",
+                    "houseTypes": [pa5["houseType"]],
+                }
+                react_to_phase(game_id, sp5)
             else:
                 pass
 

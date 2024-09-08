@@ -2,7 +2,6 @@ from DTO.actions.action import ActionCalculateCombatOutcome
 from DTO.messages.reply import Reply
 from server_module.game_state.combat import Combat
 from server_module.game_state.game_state import GameState
-from server_module.game_state.house_card import HouseCard
 from server_module.reactions.game_action_reactions.base_action_reaction import BaseActionReaction
 
 

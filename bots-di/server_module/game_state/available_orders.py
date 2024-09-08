@@ -5,7 +5,6 @@ from server_module.game_state.placed_orders import PlacedOrders
 
 
 class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
-    calls = 0
 
     def __init__(self, **kwargs):
         if kwargs is None:
@@ -40,7 +39,6 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
         return inst
 
     def use_order(self, house: HouseType, order: Order):
-        AvailableOrders.calls += 1
         idx = -1
         for i, o in enumerate(self[house][order.order_type]):
             if o.is_star == order.is_star and o.modifier == order.modifier:

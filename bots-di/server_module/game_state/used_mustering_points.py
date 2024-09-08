@@ -1,2 +1,2 @@
-class UsedMusteringPoints(dict[int, int]):
+class UsedMusteringPoints(dict[str, int]):
     pass

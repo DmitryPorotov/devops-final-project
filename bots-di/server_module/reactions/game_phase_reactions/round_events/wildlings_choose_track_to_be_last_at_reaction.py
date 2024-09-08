@@ -13,7 +13,7 @@ class WildlingsChooseTrackToBeLastAtReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionWildlingsChooseTrackToBeLastAt]]:
-        return [self._to_json(choose_from_list(list(TrackType)))]
+        return [self._to_json(choose_from_list([TrackType.COURT, TrackType.FIEFDOMS]))]
 
     def _to_json(self, track: str) -> MessageGameAction[ActionWildlingsChooseTrackToBeLastAt]:
         json = super()._to_json()

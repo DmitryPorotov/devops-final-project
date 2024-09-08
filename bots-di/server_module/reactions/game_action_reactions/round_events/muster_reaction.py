@@ -10,5 +10,5 @@ class MusterReaction(BaseActionReaction):
 
     def update_game_state(self):
         pa: ActionMuster = self._reply['player_action']
-        for tile, points in pa['usedPoints']:
+        for tile, points in pa['usedPoints'].items():
             self._game_state.used_mustering_points[int(tile)] = points

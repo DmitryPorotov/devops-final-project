@@ -10,6 +10,7 @@ class Message(TypedDict):
     messageId: str
     type: str
     action: str
+    parts: NotRequired[list[str]]
 
 
 class MessageGameAction(TypedDict, Generic[_T]):
@@ -23,3 +24,4 @@ class MessageGameAction(TypedDict, Generic[_T]):
 
 class ErrorMessage(TypedDict, Message):
     originalMessage: MessageGameAction[_T]
+    message: str

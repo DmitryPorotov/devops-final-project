@@ -40,7 +40,7 @@ class ResolveSpecialConsolidatePowerReaction(BasePhaseReaction):
     def __find_possible_muster_units(self, points_to_muster: int, tile_num: str) -> tuple[Optional[MilitaryUnit], Optional[int], bool]:
         units_left_to_muster = self._game_state.armies.get_units_left_to_muster(self._game_rules, self._house_type)
         avail_types = []
-        for ut, n in units_left_to_muster:
+        for ut, n in units_left_to_muster.items():
             if n:
                 avail_types.append(ut)
 

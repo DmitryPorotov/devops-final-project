@@ -36,7 +36,7 @@ class WildlingsKillUnitReaction(BasePhaseReaction):
         action: ActionWildlingsKillUnit = {
             'houseType': self._house_type,
             'actionType': 'wildlingsKillUnit',
-            'tileNumber': tn,
+            'tileNumber': int(tn),
             'unit': mu
         }
         json['player_action'] = action

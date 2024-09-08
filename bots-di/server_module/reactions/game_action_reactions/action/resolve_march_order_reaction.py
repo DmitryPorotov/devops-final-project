@@ -18,6 +18,10 @@ class ResolveMarchOrderReaction(BaseActionReaction):
         is_combat = 'combat' in self._reply
         house = HouseType[pa['houseType'].upper()]
         source_tn = str(pa['sourceTileNumber'])
+
+        if pa['targets'] is None:
+            return
+
         for tn, mil_units_json in pa['targets'].items():
             mil_units: list[MilitaryUnit] = [*(MilitaryUnit.from_json(j) for j in mil_units_json)]
             subtract_army(self._game_state.armies[source_tn], mil_units)

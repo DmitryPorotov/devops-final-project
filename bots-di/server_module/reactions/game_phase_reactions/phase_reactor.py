@@ -112,6 +112,7 @@ switcher_obj = {
     'wildlingsChooseTrackToBeFirstAt': WildlingsChooseTrackToBeFirstAtReaction,
     'wildlingsChooseTrackToBeLastAt': WildlingsChooseTrackToBeLastAtReaction,
     'wildlingsDiscardHouseCard': WildlingsDiscardHouseCardReaction,
+    'wildlingsKillUnits': WildlingsKillUnitReaction,
     'wildlingsKillUnit': WildlingsKillUnitReaction,
     'wildlingsMusterAtCastle': WildlingsMusterAtCastleReaction,
 }

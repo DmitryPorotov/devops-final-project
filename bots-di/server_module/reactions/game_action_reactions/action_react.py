@@ -17,6 +17,9 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
+from server_module.reactions.game_action_reactions.round_events.collect_taxes_reaction import CollectTaxesReaction
+from server_module.reactions.game_action_reactions.round_events.recalculate_supplies_reaction import \
+    RecalculateSuppliesReaction
 from server_module.reactions.game_action_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
     ResolveTiesAfterBiddingOnTracksReaction
 from server_module.reactions.game_action_reactions.round_events.muster_reaction import MusterReaction
@@ -29,6 +32,8 @@ from server_module.reactions.game_action_reactions.action.use_valyrian_steel_bla
 from server_module.reactions.game_action_reactions.planning.open_orders_reaction import OpenOrdersReaction
 from server_module.reactions.game_action_reactions.planning.raven_change_order_reaction import RavenChangeOrderReaction
 from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_kill_unit_reaction import \
+    WildlingsKillUnitReaction
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 switch_obj = {
@@ -46,6 +51,9 @@ switch_obj = {
     'useValyrianSteelBlade': UseValyrianSteelBladeReaction,
     'muster': MusterReaction,
     'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
+    'recalculateSupplies': RecalculateSuppliesReaction,
+    'collectTaxes': CollectTaxesReaction,
+    'wildlingsKillUnit': WildlingsKillUnitReaction,
 
 
     'openOrders': NothingToUpdateGenericReaction,
@@ -68,6 +76,22 @@ switch_obj = {
     'finishMustering': NothingToUpdateGenericReaction,
     'cleanUpAfterRound': NothingToUpdateGenericReaction,
     'wildlingsCard': NothingToUpdateGenericReaction,  # todo maybe save somewhere
+    'getEventCards': NothingToUpdateGenericReaction,
+    'setEventCards': NothingToUpdateGenericReaction,
+    'getWildlingsCard': NothingToUpdateGenericReaction,
+    'setWildlingsCard': NothingToUpdateGenericReaction,  #todo save somewhere
+    'disableOrder': NothingToUpdateGenericReaction,
+    'resolveCardKraken6': NothingToUpdateGenericReaction,
+    'resolveTiesAfterBiddingOnWildlings': NothingToUpdateGenericReaction,
+    'steelBladeChooseDisableMarchOrDefend': NothingToUpdateGenericReaction,
+    'wildlingsChooseTrackToBeLastAt': NothingToUpdateGenericReaction,
+    'wildlingsChooseKill2UnitsOr2PositionsOnTrack': NothingToUpdateGenericReaction,
+    'resolveCardRose4': NothingToUpdateGenericReaction,
+    'resolveSpecialConsolidatePower': NothingToUpdateGenericReaction,
+    'wildlingsDowngradeKnights': NothingToUpdateGenericReaction,
+    'resolveCardLion5': NothingToUpdateGenericReaction,
+    'resolveCardPufferfish0': NothingToUpdateGenericReaction,
+    'wildlingsReturnHouseCard': NothingToUpdateGenericReaction,
 }
 
 

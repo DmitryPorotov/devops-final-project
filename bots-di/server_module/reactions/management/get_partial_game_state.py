@@ -1,0 +1,15 @@
+from dependency_injector.wiring import Provide, inject
+
+from containers_module import App
+from events_service import EventSourcesService
+from server_module.games_data_service import GamesDataService
+
+
+class GetPartialGameState:
+    @inject
+    def __init__(self, events_service: EventSourcesService = Provide[App.events], games_data: GamesDataService = Provide[App.game_manager]):
+        events_service.react_to_game_event_sources.message_get_partial_game_state.subscribe(on_next=self.on_partial_game_state)
+        self._games_data = games_data
+
+    def on_partial_game_state(self, msg):
+        self._games_data.update_game_state(msg["gameId"], msg['gameState'])

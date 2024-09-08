@@ -3,7 +3,7 @@ import uuid
 from typing import Optional
 
 from DTO.actions.all_actions import Action
-from DTO.messages.messages import MessageGameAction
+from DTO.messages.messages import MessageGameAction, Message
 from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
@@ -36,7 +36,7 @@ class BasePhaseReaction:
     def finalizing_move_json(self, game_id) -> Optional[MessageGameAction]:
         return None
 
-    def _to_json(self, **kwargs) -> list[MessageGameAction] | MessageGameAction:
+    def _to_json(self, **kwargs) -> list[MessageGameAction] | MessageGameAction | Message:
         message: MessageGameAction = {
             'userId': self._bot_id,
             'gameId': self._game_id,

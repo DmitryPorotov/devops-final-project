@@ -20,6 +20,10 @@ class MilitaryUnit(dict[str, HouseType | MilitaryUnitType | bool | int]):
         self.is_defeated = is_defeated
         self.garrison_defence_points = garrison_defence_points
 
+    def __eq__(self, other: dict[str, HouseType | MilitaryUnitType | bool | int]):
+        return str(self.unit_type) == other['type'] and str(self.house) == other['house'] and (self.is_defeated == other['isDefeated'] if 'isDefeated' in other else True)\
+            and (self.garrison_defence_points if 'defPoints' in other else True)
+
     @classmethod
     def from_json(cls, json) -> "MilitaryUnit":
         return cls(

@@ -1,7 +1,7 @@
 from random import randrange
 from typing import Optional
 
-from DTO.actions.events import ActionMuster
+from DTO.actions.events import ActionMuster, ActionFinishMustering
 from DTO.messages.messages import MessageGameAction
 from DTO.phases.all_phases import SubPhase
 from server_module.game_rules.board_tile import BoardTile
@@ -23,8 +23,11 @@ class MusterReaction(BasePhaseReaction):
         musterable_tiles: dict[str, BoardTile] = {}
         ump = self._game_state.used_mustering_points
         for tn, t in self._game_rules.board.get_castle_tiles().items():
-            if (tn in my_armies or (t.home_of == self._house_type and tn not in self._game_state.armies)) and (t.mustering_points - (ump[int(tn)] if int(tn) in ump else 0)) > 0:
-                musterable_tiles[tn] = t
+            try:
+                if (tn in my_armies or (t.home_of == self._house_type and tn not in self._game_state.armies)) and (t.mustering_points - (ump[tn] if tn in ump else 0)) > 0:
+                    musterable_tiles[tn] = t
+            except Exception as e:
+                print(repr(e))
         if len(musterable_tiles) > 1:
             idx = randrange(len(musterable_tiles))
             tns = [*(tn for tn, bt in musterable_tiles.items())]
@@ -35,7 +38,14 @@ class MusterReaction(BasePhaseReaction):
                 tile_num = int(tn)
                 tile = t
         else:
-            raise Exception('Should not get here!')
+            # finish mustering
+            json = super()._to_json()
+            action: ActionFinishMustering = {
+                'actionType': 'finishMustering',
+                'houseType': self._house_type
+            }
+            json['player_action'] = action
+            return [json]
         mu, to_tile = self._choose_unit_to_muster(tile.mustering_points - (ump[tile_num] if tile_num in ump else 0), tile_num)
         return [self._to_json(mu, tile_num, to_tile)]
 

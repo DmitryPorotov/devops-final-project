@@ -4,7 +4,7 @@ from reactivex import Subject, operators as op
 
 from DTO.messages.messages import Message
 from base_service import BaseService
-from configs import my_channel
+from configs import my_channel, my_name
 from redis_service import RedisConnector, RedisMessage
 
 
@@ -14,12 +14,15 @@ class GameManagementEventSources:
     reset_game: Subject
 
 
+
 class ReactToGameEventSources:
     message_join_game: Subject[Message]
     message_get_game_state: Subject[Message]
+    message_get_partial_game_state: Subject[Message]
     message_start_game: Subject[Message]  # still not used, game starts when it's created, even before everyone joins
     message_create_game: Subject[Message]  # should not be used b/c game is created before it's filled with bots
     message_error: Subject[Message]
+    message_switch_to_planning_phase: Subject[Message]
 
 
 class EventSourcesService(BaseService):
@@ -30,6 +33,7 @@ class EventSourcesService(BaseService):
         self.react_to_game_event_sources = ReactToGameEventSources
 
         self.game_management_event_sources.react_to_game = Subject()
+        self.debugging_event = Subject()
 
         def react_to_game(message: RedisMessage):
             if message['type'] == 'pmessage':
@@ -47,7 +51,10 @@ class EventSourcesService(BaseService):
             if message['type'] == 'pmessage' and message['pattern'] == my_channel:
                 data = json.loads(message['data'])
                 channel = message['channel'].decode('utf-8')
-                self.game_management_event_sources.fill_with_bots.on_next((data, channel))
+                if channel == my_name + ".debug":
+                    self.debugging_event.on_next((data, channel))
+                else:
+                    self.game_management_event_sources.fill_with_bots.on_next((data, channel))
 
         redis_service.set_request_for_bots_handler(handle_requests_for_bots)
 
@@ -72,9 +79,20 @@ class EventSourcesService(BaseService):
             op.filter(lambda m: m['action'] == 'get_game_state'),
         )
 
+        self.react_to_game_event_sources.message_get_partial_game_state = react_to_game_message_only.pipe(
+            op.filter(lambda m: m['action'] == 'get_partial_game_state'),
+        )
+
         self.react_to_game_action = react_to_game_message_only.pipe(
             op.filter(lambda m: m['action'] == "game_action"),
         )
+
+        self.react_to_game_event_sources.message_switch_to_planning_phase = self.react_to_game_action.pipe(
+            op.pairwise(),
+            op.filter(lambda m: m[0]['reply'][0]['current_phase']['mainPhase'] == 'phasePlanning' and m[1]['reply'][0]['current_phase']['mainPhase'] == 'phaseAction')
+        )
+
+        self.react_to_game_event_sources.message_switch_to_planning_phase.subscribe(lambda b: b)
 
         self.react_to_game_event_sources.message_create_game = react_to_game_message_only.pipe(
             op.filter(lambda m: m['action'] == 'create_game'),

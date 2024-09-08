@@ -10,6 +10,7 @@ class ActionWildlingsChooseTrackToBeFirstAt(TypedDict):
 
 class ActionCollectTaxes(TypedDict):
     actionType: str  # = "collectTaxes"
+    powerTokens: dict[HouseType, int]
 
 
 class ActionThroneChooseSupplyOrMuster(TypedDict):
