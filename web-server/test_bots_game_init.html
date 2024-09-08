@@ -135,7 +135,8 @@
         const json = await data.json();
         const select = document.getElementById('saved_games');
         select.innerHTML = '';
-        for (const save of json.saves) {
+
+        for (const save of json.saves.sort()) {
           /**
            * @type {HTMLElement | HTMLOptionElement}
            */
