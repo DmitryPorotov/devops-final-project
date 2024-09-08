@@ -18,13 +18,14 @@ case class ReplyGetPartialGameState(userId: Int,
         gameSettings.players.head.find(_.userId == userId)
       else None
     val house = if player.nonEmpty then player.head.house else None
-    if parts.nonEmpty && parts.head == "*" 
-    then 
-      if house.nonEmpty
-      then gameState.toPersonalJson(house.head)
-      else gameState.toCleanJson
-    else 
-      gameState.toPartialJson(parts, house)
+    val partsJson = if parts.nonEmpty && parts.head == "*" 
+      then 
+        if house.nonEmpty
+        then gameState.toPersonalJson(house.head)
+        else gameState.toCleanJson
+      else 
+        gameState.toPartialJson(parts, house)
+    json.obj.addOne("gameState" -> partsJson)
   }
 
 }
