@@ -167,12 +167,14 @@ case class GameState(
       case GameStateParts.Armies.string => GameStateParts.Armies.toString -> armies.toJson
       case GameStateParts.Tracks.string => GameStateParts.Tracks.toString -> tracks.toJson
       case GameStateParts.Supplies.string => GameStateParts.Supplies.toString -> supplies.toJson
+      case GameStateParts.PowerTokens.string => GameStateParts.PowerTokens.toString -> powerTokens.toJson
       case GameStateParts.DiscardedHouseCards.string => GameStateParts.DiscardedHouseCards.toString -> supplies.toJson
       case GameStateParts.UsedMusteringPoints.string => GameStateParts.UsedMusteringPoints.toString -> usedMusteringPoints.toJson
       case GameStateParts.WildlingCounter.string => GameStateParts.WildlingCounter.toString -> wildlingCounter
       case GameStateParts.WildlingsStartedFrom12Points.string => GameStateParts.WildlingsStartedFrom12Points.string
         -> (if wildlingsStartedFrom12Points.isEmpty then ujson.Null else wildlingsStartedFrom12Points.head)
       case GameStateParts.RoundCounter.string => GameStateParts.RoundCounter.toString -> roundCounter
+      case GameStateParts.AvailableOrders.string => GameStateParts.AvailableOrders.toString -> availableOrders.toJson
       case GameStateParts.PlacedOrders.string => GameStateParts.PlacedOrders.toString -> getPlacedOrders(
         if subPhase.isInstanceOf[SubPhaseAddOrder]
         then 

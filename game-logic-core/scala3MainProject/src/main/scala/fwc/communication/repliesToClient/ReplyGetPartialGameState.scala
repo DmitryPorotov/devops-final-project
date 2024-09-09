@@ -1,7 +1,7 @@
 package fwc.communication.repliesToClient
 
 import fwc.GameSettings
-import fwc.game.{GameRules, GameState}
+import fwc.game.{GameRules, GameState, GameStateParts}
 import ujson.Value
 
 case class ReplyGetPartialGameState(userId: Int,
@@ -18,13 +18,18 @@ case class ReplyGetPartialGameState(userId: Int,
         gameSettings.players.head.find(_.userId == userId)
       else None
     val house = if player.nonEmpty then player.head.house else None
+
     val partsJson = if parts.nonEmpty && parts.head == "*" 
       then 
         if house.nonEmpty
         then gameState.toPersonalJson(house.head)
         else gameState.toCleanJson
-      else 
-        gameState.toPartialJson(parts, house)
+      else
+        val updatedParts =
+          if userId > 0
+          then parts.filter(_ != GameStateParts.AvailableOrders.string)
+          else parts
+        gameState.toPartialJson(updatedParts, house)
     json.obj.addOne("gameState" -> partsJson)
   }
 
