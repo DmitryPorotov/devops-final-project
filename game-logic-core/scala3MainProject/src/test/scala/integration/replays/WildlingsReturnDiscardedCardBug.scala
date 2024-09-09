@@ -9,10 +9,10 @@ import org.scalatest.matchers.*
 
 import scala.io.Source.fromFile
 
-class WildlingsReurnDiscardedCardBug extends AnyFlatSpec with should.Matchers  {
+class WildlingsReturnDiscardedCardBug extends AnyFlatSpec with should.Matchers  {
   "Wolf" should "should be able to return discarded card 1" in {
 
-    val source = fromFile("saves/forIntegration/3--wildlingsReurnDiscardedCardBug--2024-09-08T11-54-27.json")
+    val source = fromFile("saves/forIntegration/3--wildlingsReturnDiscardedCardBug--2024-09-08T11-54-27.json")
     val lines = try source.mkString finally source.close
 
     Reactor.restoreGame(lines)
