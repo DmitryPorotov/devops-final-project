@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+
 from dependency_injector.wiring import Provide, inject
 
 from containers_module import App
@@ -16,4 +19,14 @@ class DebuggingEventHandler:
     def _on_debug_event(self, msg):
         # note: put break point here
         data = self._games_data
+        state = data.games["3"].state
+        # self._dump_to_file(state)
         a = 0
+
+    @staticmethod
+    def _dump_to_file(data):
+        j = json.dumps(data, indent=2, sort_keys=True)
+        name = "dump-{}.json".format(datetime.now())
+        f = open("./state_dumps/{}".format(name), "w")
+        f.write(j)
+        f.close()
