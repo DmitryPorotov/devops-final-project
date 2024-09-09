@@ -7,6 +7,7 @@ from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.management.get_partial_game_state import GetPartialGameState
 from server_module.reactions.management.join_game import JoinGame
 from server_module.reactions.management.new_or_reset_game import NewOrResetGame
+from server_module.reactions.management.round_events_main_phase_end import RoundEventsMainPhaseEnd
 
 
 def init():
@@ -19,6 +20,7 @@ def init():
     ErrorRetryHandler()
     GetPartialGameState()
     DebuggingEventHandler()
+    RoundEventsMainPhaseEnd()
 
 
 def imports():

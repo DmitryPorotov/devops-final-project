@@ -89,10 +89,9 @@ class EventSourcesService(BaseService):
 
         self.react_to_game_event_sources.message_switch_to_planning_phase = self.react_to_game_action.pipe(
             op.pairwise(),
-            op.filter(lambda m: m[0]['reply'][0]['current_phase']['mainPhase'] == 'phasePlanning' and m[1]['reply'][0]['current_phase']['mainPhase'] == 'phaseAction')
+            op.filter(lambda m: m[0]['reply'][0]['current_phase']['mainPhase'] == 'phasePlanning' and m[1]['reply'][0]['current_phase']['mainPhase'] == 'phaseAction'),
+            op.map(lambda mm: mm[0])
         )
-
-        self.react_to_game_event_sources.message_switch_to_planning_phase.subscribe(lambda b: b)
 
         self.react_to_game_event_sources.message_create_game = react_to_game_message_only.pipe(
             op.filter(lambda m: m['action'] == 'create_game'),

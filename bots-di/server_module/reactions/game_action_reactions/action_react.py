@@ -34,6 +34,7 @@ from server_module.reactions.game_action_reactions.planning.raven_change_order_r
 from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
 from server_module.reactions.game_action_reactions.round_events.wildlings_kill_unit_reaction import \
     WildlingsKillUnitReaction
+from server_module.reactions.game_action_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 switch_obj = {
@@ -54,6 +55,7 @@ switch_obj = {
     'recalculateSupplies': RecalculateSuppliesReaction,
     'collectTaxes': CollectTaxesReaction,
     'wildlingsKillUnit': WildlingsKillUnitReaction,
+    'cleanUpAfterRound': CleanUpAfterRoundReaction,
 
 
     'openOrders': NothingToUpdateGenericReaction,
@@ -74,7 +76,6 @@ switch_obj = {
     'ravenChoosePutWildlingsCardOnTopOrBottom': NothingToUpdateGenericReaction,  # todo should save it to ravens personal memory later
     'throneChooseSupplyOrMuster': NothingToUpdateGenericReaction,
     'finishMustering': NothingToUpdateGenericReaction,
-    'cleanUpAfterRound': NothingToUpdateGenericReaction,
     'wildlingsCard': NothingToUpdateGenericReaction,  # todo maybe save somewhere
     'getEventCards': NothingToUpdateGenericReaction,
     'setEventCards': NothingToUpdateGenericReaction,
@@ -92,6 +93,12 @@ switch_obj = {
     'resolveCardLion5': NothingToUpdateGenericReaction,
     'resolveCardPufferfish0': NothingToUpdateGenericReaction,
     'wildlingsReturnHouseCard': NothingToUpdateGenericReaction,
+    'wildlingsDiscardHouseCard': NothingToUpdateGenericReaction,
+    'resolveCardRose2': NothingToUpdateGenericReaction,
+    'killUnitsAfterBattle': NothingToUpdateGenericReaction,
+    'wildlingsMusterAtCastle': NothingToUpdateGenericReaction,
+    'chooseHouseCardAfterLion5': NothingToUpdateGenericReaction,
+    'wildlingsUpgradeKnights': NothingToUpdateGenericReaction,
 }
 
 
