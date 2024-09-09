@@ -6,7 +6,7 @@ import fwc.game.actions.roundEvents.wildlingsCards.WildlingsCards
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.HouseType
-import fwc.game.phases.roundEventsSubPhases.{SubPhaseMuster, SubPhaseWildlingsDowngradeKnights}
+import fwc.game.phases.roundEventsSubPhases.SubPhaseWildlingsDowngradeKnights
 import ujson.Value
 
 case class ActionWildlingsDowngradeKnights(
