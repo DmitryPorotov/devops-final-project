@@ -459,7 +459,8 @@
         "kraken",
         "pufferfish",
         "moose"
-      ]
+      ],
+      "trackType": "court"
     },
     {
       "actionType": "openTrackBids",
@@ -512,7 +513,8 @@
         "pufferfish",
         "moose",
         "rose"
-      ]
+      ],
+      "trackType": "fiefdoms"
     },
     {
       "actionType": "openTrackBids",
@@ -565,7 +567,8 @@
         "kraken",
         "moose",
         "rose"
-      ]
+      ],
+      "trackType": "throne"
     },
     {
       "actionType": "openTrackBids",
