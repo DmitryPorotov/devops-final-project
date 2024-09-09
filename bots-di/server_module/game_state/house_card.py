@@ -3,7 +3,7 @@ from typing import Optional
 from server_module.game_state.house_type import HouseType
 import server_module.game_rules.game_rules as gr
 
-class HouseCard:
+class HouseCard(dict):
     _game_rules = None  # type: Optional[gr.GameRules]
 
     @classmethod
@@ -18,15 +18,24 @@ class HouseCard:
             strength: int,
             text: str = '',
             attack: int = 0,
-            defense: int = 0
+            defense: int = 0,
+            **kwargs
     ):
+        super().__init__(**kwargs)
         self.defense = defense
+        self['defense'] = defense
         self.attack = attack
+        self['attack'] = attack
         self.text = text
+        self['text'] = text
         self.strength = strength
+        self['strength'] = strength
         self.name = name
+        self['name'] = name
         self.code = code
+        self['code'] = code
         self.house = house
+        self['house'] = house
 
     @classmethod
     def from_json(cls, json):

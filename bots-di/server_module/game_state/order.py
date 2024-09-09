@@ -1,11 +1,21 @@
 from server_module.game_state.order_type import OrderType
 
 
-class Order:
-    def __init__(self, order_type: OrderType, is_star: bool = False, modifier: int = 0):
+class Order(dict):
+    def __init__(
+            self,
+            order_type: OrderType,
+            is_star: bool = False,
+            modifier: int = 0,
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
         self.order_type = order_type
+        self['order_type'] = order_type
         self.is_star = is_star
+        self['is_star'] = is_star
         self.modifier = modifier
+        self['modifier'] = modifier
 
     def to_json(self):
         o = {

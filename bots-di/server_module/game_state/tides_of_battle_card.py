@@ -2,7 +2,7 @@ from typing import Optional
 import server_module.game_rules.game_rules as gr
 
 
-class TidesOfBattleCard:
+class TidesOfBattleCard(dict):
     _game_rules = None  # type: Optional[gr.GameRules]
 
     @classmethod
@@ -15,13 +15,20 @@ class TidesOfBattleCard:
             power: int,
             death: bool = False,
             attack: bool = False,
-            defense: bool = False
+            defense: bool = False,
+            **kwargs
     ):
+        super().__init__(**kwargs)
         self.code = code
+        self['code'] = code
         self.power = power
+        self['power'] = power
         self.death = death
+        self['death'] = death
         self.attack = attack
+        self['attack'] = attack
         self.defense = defense
+        self['defense'] = defense
 
     @staticmethod
     def from_code(code: int):

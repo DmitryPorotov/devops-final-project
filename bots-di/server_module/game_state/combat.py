@@ -7,7 +7,7 @@ from server_module.game_state.tides_of_battle_card import TidesOfBattleCard
 from server_module.game_state.combat_outcome import CombatOutcome
 
 
-class Combat:
+class Combat(dict[str, dict | int | list | str]):
     def __init__(
             self,
             attacker_tile_num: int,
@@ -24,23 +24,40 @@ class Combat:
             defender_card: HouseCard,
             defender_tides_of_battle: TidesOfBattleCard,
             defender_support: list[int],
-            combat_outcome: Optional[CombatOutcome] = None
+            combat_outcome: Optional[CombatOutcome] = None,
+            **kwargs
     ):
+        super().__init__(**kwargs)
         self.attacker_tile_num = attacker_tile_num
+        self['attacker_tile_num'] = attacker_tile_num
         self.attacker_house = attacker_house
+        self['attacker_house'] = attacker_house
         self.attacker_army = attacker_army
+        self['attacker_army'] = attacker_army
         self.attacker_order = attacker_order
+        self['attacker_order'] = attacker_order
         self.attacker_card = attacker_card
+        self['attacker_card'] = attacker_card
         self.attacker_tides_of_battle = attacker_tides_of_battle
+        self['attacker_tides_of_battle'] = attacker_tides_of_battle
         self.attacker_support = attacker_support
+        self['attacker_support'] = attacker_support
         self.defender_tile_num = defender_tile_num
+        self['defender_tile_num'] = defender_tile_num
         self.defender_house = defender_house
+        self['defender_house'] = defender_house
         self.defender_army = defender_army
+        self['defender_army'] = defender_army
         self.defender_order = defender_order
+        self['defender_order'] = defender_order
         self.defender_card = defender_card
+        self['defender_card'] = defender_card
         self.defender_tides_of_battle = defender_tides_of_battle
+        self['defender_tides_of_battle'] = defender_tides_of_battle
         self.defender_support = defender_support
+        self['defender_support'] = defender_support
         self.combat_outcome = combat_outcome
+        self['combat_outcome'] = combat_outcome
 
     @classmethod
     def from_json(cls, json) -> "Combat":
