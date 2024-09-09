@@ -119,6 +119,7 @@ class ActionGetTidesOfBattleCards(TypedDict):
 class ActionCleanUpAfterRound(TypedDict):
     actionType: str  # = "cleanUpAfterRound"
     isRandom: bool
+    round: int
 
 
 class ActionResolveCardRose2(TypedDict):
