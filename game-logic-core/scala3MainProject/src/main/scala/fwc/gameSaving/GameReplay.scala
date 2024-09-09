@@ -25,16 +25,13 @@ case class GameReplay(
 
 object GameReplay extends JsonParsable {
   override def fromJson(json: Value): GameReplay =
-    val settings = GameSettings.fromJson(json("gameSettings"))
-    val startingCards = BoardCards.fromJson(json("startingBoardCards"))
-    val startingGameState = fwc.game.initializeGameState(false).copy(
-      boardCards = startingCards
-    )
+    val (settings, startingCards, startingGameState) = initStartingState(json)
     val (actions, currentGameState) = json("actions").arr.foldRight((Seq[Action](),startingGameState))(
       (cur, acc) =>
-        val curAction = Action.fromJson(acc._2, cur)
+        val (actions, curState) = acc
+        val curAction = Action.fromJson(curState, cur)
         val newState = curAction.doAction()
-        (acc._1 prepended curAction, newState)
+        (actions prepended curAction, newState)
     )
     GameReplay(
       settings,
@@ -42,4 +39,32 @@ object GameReplay extends JsonParsable {
       currentGameState,
       actions
     )
+
+  private def initStartingState(json: Value): (GameSettings, BoardCards, GameState) = {
+    val settings = GameSettings.fromJson(json("gameSettings"))
+    val startingCards = BoardCards.fromJson(json("startingBoardCards"))
+    val startingGameState = fwc.game.initializeGameState(false).copy(
+      boardCards = startingCards
+    )
+    (settings, startingCards, startingGameState)
+  }
+
+  def fromJsonDebug(json: Value, onDoAction: Option[((currentState: GameState, action: Action, newState: GameState) => Unit)] = None): GameReplay = {
+    val (settings, startingCards, startingGameState) = initStartingState(json)
+    val (actions, currentGameState) = json("actions").arr.foldRight((Seq[Action](), startingGameState))(
+      (cur, acc) =>
+        val (actions, curState) = acc
+        val curAction = Action.fromJson(curState, cur)
+        val newState = curAction.doAction()
+        if onDoAction.nonEmpty
+        then onDoAction.head(curState, curAction, newState)
+        (actions prepended curAction, newState)
+    )
+    GameReplay(
+      settings,
+      startingCards,
+      currentGameState,
+      actions
+    )
+  }
 }
