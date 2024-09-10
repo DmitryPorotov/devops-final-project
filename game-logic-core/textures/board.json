@@ -95,6 +95,7 @@
       2,
       3,
       8,
+      9,
       13,
       14
     ],
@@ -142,7 +143,8 @@
       10,
       12,
       15
-    ]
+    ],
+    "musteringPoints": 1
   },
   {
     "number": 12,
@@ -155,7 +157,7 @@
       15,
       18
     ],
-    "musteringPoints": 1
+    "supplyPoints": 1
   },
   {
     "number": 13,
@@ -182,6 +184,7 @@
       9,
       13,
       19,
+      20,
       25,
       26,
       29,
@@ -289,7 +292,8 @@
       33
     ],
     "musteringPoints": 2,
-    "supplyPoints": 2
+    "supplyPoints": 2,
+    "home": "lion"
   },
   {
     "number": 23,
@@ -746,6 +750,7 @@
       37,
       46,
       50,
+      52,
       54,
       55,
       56
