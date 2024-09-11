@@ -28,7 +28,7 @@ case class ActionWildlingsKillUnit(
     then throw new ActionException("Wrong house")
 
     val doPrioritizeCastles =
-      currentPhase.loserHouse.contains(houseType)
+      currentPhase.loserHouse.contains(houseType) && gameState.boardCards.wildlings.head.code == 6
       
     val tilesWithCastlesContainingArmiesOfThisHouse: Seq[TileNumber] =
       gameState.armies.foldLeft(Seq[TileNumber]())(
