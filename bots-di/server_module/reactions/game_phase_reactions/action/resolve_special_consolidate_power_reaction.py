@@ -75,7 +75,8 @@ class ResolveSpecialConsolidatePowerReaction(BasePhaseReaction):
                     return muster_for_1_point()
                 unit = choose_from_list(choices)
                 return MilitaryUnit(self._house_type, unit), None, True
-            pass
+            else:
+                return muster_for_1_point()
         else:
             fill_in_choices_for_2_points()
             if not choices:
