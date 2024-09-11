@@ -49,16 +49,38 @@ object GameReplay extends JsonParsable {
     (settings, startingCards, startingGameState)
   }
 
-  def fromJsonDebug(json: Value, onDoAction: Option[((currentState: GameState, action: Action, newState: GameState) => Unit)] = None): GameReplay = {
+  def fromJsonDebug(json: Value, onDoAction: Option[((actionNum: Int, currentState: GameState, action: Action, newState: GameState) => Unit)] = None): GameReplay = {
     val (settings, startingCards, startingGameState) = initStartingState(json)
     val (actions, currentGameState) = json("actions").arr.foldRight((Seq[Action](), startingGameState))(
       (cur, acc) =>
         val (actions, curState) = acc
-        val curAction = Action.fromJson(curState, cur)
-        val newState = curAction.doAction()
+        var curAction: Option[Action] = None
+        try
+          curAction = Some(Action.fromJson(curState, cur))
+        catch
+          case e: Throwable => throw new DebuggingExceptionWrapper(
+            s"Action.fromJson (${actions.size}/${json("actions").arr.size}) threw an exception: ${e.getMessage}",
+            actions.size,
+            json("actions").arr.size,
+            null,
+            curState,
+            e
+          )
+        var newState: Option[GameState] = None
+        try
+          newState = Some(curAction.head.doAction())
+        catch
+          case e: Throwable => throw new DebuggingExceptionWrapper(
+            s"Action.doAction (${actions.size}/${json("actions").arr.size}) threw an exception: ${e.getMessage}",
+            actions.size,
+            json("actions").arr.size,
+            curAction.head,
+            curState,
+            e
+          )
         if onDoAction.nonEmpty
-        then onDoAction.head(curState, curAction, newState)
-        (actions prepended curAction, newState)
+        then onDoAction.head(actions.size, curState, curAction.head, newState.head)
+        (actions prepended curAction.head, newState.head)
     )
     GameReplay(
       settings,
