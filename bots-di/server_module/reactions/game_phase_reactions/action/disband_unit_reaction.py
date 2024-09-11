@@ -20,10 +20,11 @@ class DisbandUnitReaction(BasePhaseReaction):
 
     def get_actions(self) -> list[MessageGameAction[ActionDisbandUnitsAfterCombat | ActionDisbandUnitDueToSupplies]]:
         combat = self._game_state.combat
-        if combat:  # this is after combat
+        if self._phase['mainPhase'] == 'phaseAction':  # this is after combat
             all_units = list(combat.attacker_army if combat.attacker_house == self._house_type else combat.defender_army)
             unit = choose_from_list(all_units)
             unit.is_defeated = True
+            unit['isDefeated'] = True
             return [self._to_json(unit)]
         else:  # this is after adjusting supplies at round events
             phase: SubPhaseDisbandUnit = self._phase
@@ -33,7 +34,7 @@ class DisbandUnitReaction(BasePhaseReaction):
                     commandable_units = [*(mu for mu in army if mu.unit_type not in [MilitaryUnitType.POWER_TOKEN, MilitaryUnitType.GARRISON])]
                     if len(commandable_units) > len(biggest_army[1]):
                         biggest_army = (tn, commandable_units)
-            return [self._to_json_supplies(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
+            return [self._to_json_supplsies(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
 
 
     def _to_json(self, unit: MilitaryUnit) -> MessageGameAction[ActionDisbandUnitsAfterCombat]:
