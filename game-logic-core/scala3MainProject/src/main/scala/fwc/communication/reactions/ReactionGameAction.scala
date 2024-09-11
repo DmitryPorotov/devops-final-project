@@ -182,6 +182,10 @@ object ReactionGameAction {
           )
         )
         case a: ActionGetTidesOfBattleCards =>
+          if updatedGameState.subPhase.isInstanceOf[SubPhaseRefreshTidesOfBattleDeck]
+          then return buildMessageToAll(
+            a.toJson
+          )
           val sp = updatedGameState.subPhase.asInstanceOf[SubPhaseSetTidesOfBattleCards]
           if sp.defenderCard.isEmpty
           then ujson.Obj(
