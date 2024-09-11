@@ -12,6 +12,7 @@ import ujson.Value
 
 import scala.util.Try
 
+//todo this action causes an infinite loop 
 case class ActionResolveSpecialConsolidatePower(
                                                  gameState: GameState,
                                                  houseType: HouseType,
