@@ -205,16 +205,6 @@
         "house": "kraken",
         "type": "ships"
       },
-      "fromTile": 12,
-      "toTile": 15
-    },
-    {
-      "actionType": "muster",
-      "houseType": "kraken",
-      "unitToMuster": {
-        "house": "kraken",
-        "type": "ships"
-      },
       "fromTile": 16,
       "toTile": 15
     },
