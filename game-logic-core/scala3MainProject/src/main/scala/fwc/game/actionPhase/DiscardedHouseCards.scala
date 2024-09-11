@@ -13,14 +13,10 @@ extension (t: CardCode)
   
 case class DiscardedHouseCards(cards: Map[HouseType, Seq[CardCode]] = Map()) extends JsonSerializable {
   def toJson: ujson.Value = {
-    ujson.Obj(
-      upickle.core.LinkedHashMap(
-        cards.map((houseType, cardCodeSeq: Seq[CardCode]) => {
-          houseType.toString -> ujson.Value(
-            cardCodeSeq.map(cc => ujson.Num(cc))
-          )
-        })
-      )
+    ujson.Obj.from(
+      cards.map((houseType, cardCodeSeq: Seq[CardCode]) => {
+        houseType.toString -> ujson.Arr.from(cardCodeSeq)
+      })
     )
   }
 
