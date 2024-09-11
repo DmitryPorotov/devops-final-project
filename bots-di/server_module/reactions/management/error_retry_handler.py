@@ -1,12 +1,13 @@
 from dependency_injector.wiring import Provide, inject
 
 from DTO.actions.action import ActionRetreatUnitsAfterBattle, ActionResolveSpecialConsolidatePower
-from DTO.actions.events import ActionMuster, ActionWildlingsMusterAtCastle
+from DTO.actions.events import ActionMuster, ActionWildlingsMusterAtCastle, ActionTrackBids
 from DTO.actions.planning import ActionAddOrder
 from DTO.messages.messages import ErrorMessage
 from DTO.actions.all_actions import Action, ActionResolveMarchOrder
 from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle, \
-    SubPhaseMuster, SubPhaseWildlingsMusterAtCastle, SubPhaseAddOrder, SubPhaseResolveSpecialConsolidatePower
+    SubPhaseMuster, SubPhaseWildlingsMusterAtCastle, SubPhaseAddOrder, SubPhaseResolveSpecialConsolidatePower, \
+    SubPhaseTracksBids
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.game_state.house_type import HouseType
@@ -24,6 +25,7 @@ class ErrorRetryHandler:
     def on_error_message(self, msg: ErrorMessage):
         if 'originalMessage' in msg:
             game_id = msg['originalMessage']['gameId']
+            game = self._game_data.get_game(game_id)
             pa: Action = msg['originalMessage']['player_action']
 
             if pa['actionType'] == 'resolveMarchOrder':
@@ -52,7 +54,7 @@ class ErrorRetryHandler:
                     "subPhase": "muster",
                     "houseType": pa3["houseType"],
                 }
-                if self._game_data.get_game(game_id).error_retry_counter.can_retry('muster', pa["houseType"]):
+                if game.error_retry_counter.can_retry('muster', pa["houseType"]):
                     react_to_phase(game_id, sp3)
                 else:
                     pseudo_phase_finish_mustering = {
@@ -60,7 +62,7 @@ class ErrorRetryHandler:
                         "subPhase": "finishMustering",
                         "houseType": pa3["houseType"],
                     }
-                    self._game_data.get_game(game_id).error_retry_counter.reset_retries()
+                    game.error_retry_counter.reset_retries()
                     react_to_phase(game_id, pseudo_phase_finish_mustering)
             elif pa['actionType'] == 'resolveMarchOrder':
                 pa4: ActionResolveMarchOrder = pa
@@ -72,7 +74,7 @@ class ErrorRetryHandler:
                 react_to_phase(game_id, sp4)
             elif pa['actionType'] == 'wildlingsMusterAtCastle':
                 pa5: ActionWildlingsMusterAtCastle = pa
-                if self._game_data.get_game(game_id).error_retry_counter.can_retry('wildlingsMusterAtCastle', pa["houseType"]):
+                if game.error_retry_counter.can_retry('wildlingsMusterAtCastle', pa["houseType"]):
                     sp5: SubPhaseWildlingsMusterAtCastle = {
                         "mainPhase": "phaseRoundEvents",
                         "subPhase": "wildlingsMusterAtCastle",
@@ -85,11 +87,11 @@ class ErrorRetryHandler:
                         "subPhase": "wildlingsFinishMusteringAtCastle",
                         "houseType": pa5["houseType"],
                     }
-                    self._game_data.get_game(game_id).error_retry_counter.reset_retries()
+                    game.error_retry_counter.reset_retries()
                     react_to_phase(game_id, pseudo_phase_finish_mustering)
             elif pa['actionType'] == 'addOrder':
                 pa5: ActionAddOrder = pa
-                state = self._game_data.get_game(game_id).state
+                state = game.state
                 state.placed_orders.remove_order(pa5['tileNumber'])
                 state.available_orders.return_order(pa5['houseType'], Order.from_json(pa5['order']))
                 if 'There is an order on this tile' not in msg['message']:
@@ -115,6 +117,18 @@ class ErrorRetryHandler:
                     "houseType": pa6["houseType"],
                 }
                 react_to_phase(game_id, sp6)
+            elif pa['actionType'] == 'wildlingsBids':
+                if 'power tokens which is not enough to place this bid' in msg['message']:
+                    pa7: ActionTrackBids = pa
+                    my_tokens = int(msg['message'].split()[2])
+                    game.state.power_tokens[HouseType[pa7["houseType"].upper()]] = my_tokens
+                    sp7: SubPhaseTracksBids = {
+                        "mainPhase": "phaseAction",
+                        "subPhase": "tracksBids",
+                        "houseTypes": [pa7["houseType"]],
+                        'trackType': game.other['last_track']
+                    }
+                    react_to_phase(game_id, sp7)
             else:
                 pass
 
