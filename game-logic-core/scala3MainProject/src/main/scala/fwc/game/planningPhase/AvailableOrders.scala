@@ -14,7 +14,7 @@ case class AvailableOrders(
                             orders: Map[HouseType, Map[OrderType, Seq[Order]]]
                           ) extends JsonSerializable {
 
-  def isOrderAvailable(house: HouseType, order: Order): Boolean = {
+  private def isOrderAvailable(house: HouseType, order: Order): Boolean = {
     this.orders(house)(order.orderType)
       .exists(o => o.isStar == order.isStar && o.modifier == order.modifier)
   }
