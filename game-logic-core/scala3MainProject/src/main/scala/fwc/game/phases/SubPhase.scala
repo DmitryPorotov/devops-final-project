@@ -146,6 +146,9 @@ object SubPhase extends JsonParsable {
       case "calculateGameWinner" =>
         val (ht, mp) = getFieldsOfMultipleHouses(json)
         SubPhaseCalculateGameWinner(ht, mp)
+      case "gameEnd" =>
+        val (ht, mp) = getFieldsOfMultipleHouses(json)
+        SubPhaseGameEnd(ht, mp)
       case "recalculateSupplies" =>
         SubPhaseRecalculateSupplies()
       case "collectTaxes" =>
@@ -184,7 +187,9 @@ object SubPhase extends JsonParsable {
         val f = getFieldsOfMultipleHouses(json)
         SubPhaseWildlingsChooseTrackToBeLastAt(f._1, f._2)
       case "refreshTidesOfBattleDeck" =>
-        SubPhaseRefreshTidesOfBattleDeck()
+        val prevPhaseJson = json("previousPhase")
+        val prevPhase = SubPhase.fromJson(prevPhaseJson)
+        SubPhaseRefreshTidesOfBattleDeck(prevPhase.asInstanceOf[SubPhasePassiveMultipleHouses])
       case "resolveConsolidatePowerOrder" =>
         SubPhaseResolveConsolidatePowerOrder()
       case "ravenGetWildlingsCard" =>

@@ -6,6 +6,7 @@ import fwc.game.actions.{Action, JsonParsableAction}
 import fwc.game.actions.roundEvents.ActionGetEventCards
 import fwc.game.eventsPhase.cards.TidesOfBattleDeckEmptyException
 import fwc.game.houses.HouseType
+import fwc.game.phases.SubPhasePassiveMultipleHouses
 import fwc.game.phases.actionSubPhases.{SubPhaseGetTidesOfBattleCards, SubPhaseRefreshTidesOfBattleDeck, SubPhaseSetTidesOfBattleCards}
 import ujson.Value
 
@@ -41,7 +42,7 @@ case class ActionGetTidesOfBattleCards(
       catch
         case _: TidesOfBattleDeckEmptyException =>
           gameState.copy(
-            subPhase = SubPhaseRefreshTidesOfBattleDeck()
+            subPhase = SubPhaseRefreshTidesOfBattleDeck(gameState.subPhase.asInstanceOf[SubPhasePassiveMultipleHouses])
           )
     else gameState.copy(
       subPhase = SubPhaseSetTidesOfBattleCards(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse)),

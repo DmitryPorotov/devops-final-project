@@ -2,7 +2,7 @@ package fwc.game.actions.action
 
 import fwc.JsonSerializable
 import fwc.game.actions.{Action, ActionException, JsonParsableAction}
-import fwc.game.phases.actionSubPhases.SubPhaseRefreshTidesOfBattleDeck
+import fwc.game.phases.actionSubPhases.{SubPhaseRefreshTidesOfBattleDeck, SubPhaseSetTidesOfBattleCards}
 import fwc.game.{GameState, gameRules}
 import fwc.gameLoading.TidesOfBattleCard
 
@@ -15,7 +15,8 @@ case class ActionRefreshTidesOfBattleDeck(
     then throw new ActionException("Wrong phase")
 
     gameState.copy(
-      boardCards = gameState.boardCards.copy(tidesOfBattle = newCards)
+      boardCards = gameState.boardCards.copy(tidesOfBattle = newCards),
+      subPhase = gameState.subPhase.asInstanceOf[SubPhaseRefreshTidesOfBattleDeck].previousPhase
     )
 
   override def toJson: ujson.Value = ujson.Obj(
