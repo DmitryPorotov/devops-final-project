@@ -29,7 +29,7 @@ case class ReplyGetPartialGameState(userId: Int,
           if userId > 0
           then parts.filter(_ != GameStateParts.AvailableOrders.string)
           else parts
-        gameState.toPartialJson(updatedParts, house)
+        gameState.toPartialJson(updatedParts, userId, house)
     json.obj.addOne("gameState" -> partsJson)
   }
 

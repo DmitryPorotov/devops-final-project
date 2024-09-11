@@ -161,29 +161,32 @@ case class GameState(
     )
   }
 
-  private def getPart(partName: String, houseType: Option[HouseType] = None): (String, ujson.Value) = {
+  private def getPart(partName: String, userId: Int, houseType: Option[HouseType] = None): (String, ujson.Value) = {
     partName match
       case GameStateParts.SubPhase.string => GameStateParts.SubPhase.toString -> subPhase.toJson
       case GameStateParts.Armies.string => GameStateParts.Armies.toString -> armies.toJson
       case GameStateParts.Tracks.string => GameStateParts.Tracks.toString -> tracks.toJson
       case GameStateParts.Supplies.string => GameStateParts.Supplies.toString -> supplies.toJson
       case GameStateParts.PowerTokens.string => GameStateParts.PowerTokens.toString -> powerTokens.toJson
-      case GameStateParts.DiscardedHouseCards.string => GameStateParts.DiscardedHouseCards.toString -> supplies.toJson
+      case GameStateParts.DiscardedHouseCards.string => GameStateParts.DiscardedHouseCards.toString -> discardedHouseCards.toJson
       case GameStateParts.UsedMusteringPoints.string => GameStateParts.UsedMusteringPoints.toString -> usedMusteringPoints.toJson
       case GameStateParts.WildlingCounter.string => GameStateParts.WildlingCounter.toString -> wildlingCounter
       case GameStateParts.WildlingsStartedFrom12Points.string => GameStateParts.WildlingsStartedFrom12Points.string
         -> (if wildlingsStartedFrom12Points.isEmpty then ujson.Null else wildlingsStartedFrom12Points.head)
       case GameStateParts.RoundCounter.string => GameStateParts.RoundCounter.toString -> roundCounter
       case GameStateParts.AvailableOrders.string => GameStateParts.AvailableOrders.toString -> availableOrders.toJson
-      case GameStateParts.PlacedOrders.string => GameStateParts.PlacedOrders.toString -> getPlacedOrders(
-        if subPhase.isInstanceOf[SubPhaseAddOrder]
-        then 
-          if houseType.nonEmpty 
-          then houseType.head
-          else throw new FWCException("No house type provided for placed orders in 'add order' phase.")
+      case GameStateParts.PlacedOrders.string => GameStateParts.PlacedOrders.toString -> (if userId < 0 
+        then placedOrders.toJson
         else
-          null
-        ).toJson
+          getPlacedOrders(
+          if subPhase.isInstanceOf[SubPhaseAddOrder]
+          then 
+            if houseType.nonEmpty 
+            then houseType.head
+            else throw new FWCException("No house type provided for placed orders in 'add order' phase.")
+          else
+            null
+          ).toJson)
       case GameStateParts.Combat.string => GameStateParts.Combat.toString -> getCombat(
           if houseType.nonEmpty 
           then houseType.head
@@ -191,14 +194,14 @@ case class GameState(
         ).toJson
   }
 
-  def toPartialJson(parts: Seq[String], houseType: Option[HouseType] = None): ujson.Obj = {
+  def toPartialJson(parts: Seq[String], userId: Int, houseType: Option[HouseType] = None): ujson.Obj = {
     @tailrec
     def buildJson(parts: Seq[String], json: ujson.Obj = ujson.Obj()): ujson.Obj = {
       if parts.isEmpty
       then
         json
       else
-        json.obj.addOne(getPart(parts.head, houseType))
+        json.obj.addOne(getPart(parts.head, userId,  houseType))
         buildJson(parts.tail, json)
     }
     buildJson(parts)
