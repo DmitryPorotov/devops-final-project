@@ -1,6 +1,7 @@
 from DTO.actions.events import ActionWildlingsKillUnit
 from DTO.messages.messages import MessageGameAction
 from DTO.phases.all_phases import SubPhase
+from DTO.phases.phases import SubPhaseWildlingsKillUnits
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
@@ -14,7 +15,16 @@ class WildlingsKillUnitReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionWildlingsKillUnit]]:
+        sp: SubPhaseWildlingsKillUnits = self._phase
+        do_castles = sp['loserHouse'] == self._house_type and self._game_state.board_cards.wildlings[0] == 6
         tiles = self.__get_tile_nums()
+        castle_tiles = {}
+        if do_castles:
+            for tn, army in tiles.items():
+                if self._game_rules.board[int(tn)].mustering_points > 0:
+                    castle_tiles[tn] = army
+        if do_castles and castle_tiles:
+            tiles = castle_tiles
         tn = choose_from_list([*tiles.keys()])
         unit = choose_from_list(tiles[tn])
         return [self._to_json(tn, unit)]
