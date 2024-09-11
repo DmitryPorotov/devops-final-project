@@ -28,7 +28,7 @@ class ResolveCardRose4Reaction(BasePhaseReaction):
         combat = self._game_state.combat
         neighbors = [*(x for x in self._game_rules.board[combat.defender_tile_num].neighbour_tiles if x != combat.attacker_tile_num)]
         opponent_house: HouseType = combat.defender_house if self._house_type == combat.attacker_house else combat.attacker_house
-        candidate_orders = [*(int(tn) for tn, o in self._game_state.placed_orders[opponent_house].items() if int(tn) in neighbors)]
+        candidate_orders = [*(int(tn) for tn, o in (self._game_state.placed_orders[opponent_house].items() if opponent_house in self._game_state.placed_orders else []) if int(tn) in neighbors)]
         if candidate_orders:
             idx = randrange(len(candidate_orders))
             return candidate_orders[idx]
