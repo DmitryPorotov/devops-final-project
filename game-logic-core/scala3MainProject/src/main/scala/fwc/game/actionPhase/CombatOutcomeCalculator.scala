@@ -26,7 +26,7 @@ class CombatOutcomeCalculator(gameState: GameState) {
             + acc
         case MilitaryUnitType.Footmen =>
           val card = gameState.combat.attackerCard
-          (if card.code == 4 && card.house == HouseType.Lion
+          (if card.isLion4
           then 2
           else 1)
             + acc
