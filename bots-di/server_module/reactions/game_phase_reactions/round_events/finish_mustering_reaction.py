@@ -21,4 +21,5 @@ class FinishMusteringReaction(BasePhaseReaction):
             'actionType': 'finishMustering',
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

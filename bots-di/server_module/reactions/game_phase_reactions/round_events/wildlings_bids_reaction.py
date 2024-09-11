@@ -26,4 +26,5 @@ class WildlingsBidsReaction(BasePhaseReaction):
             'bid': num_tokens
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

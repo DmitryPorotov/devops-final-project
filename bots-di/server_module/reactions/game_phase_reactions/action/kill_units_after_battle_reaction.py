@@ -30,4 +30,5 @@ class KillUnitsAfterBattleReaction(BasePhaseReaction):
             'units': units
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

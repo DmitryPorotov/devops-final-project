@@ -39,4 +39,5 @@ class WildlingsChooseKill2UnitsOr2PositionsOnTrackReaction(BasePhaseReaction):
         if units:
             track['units'] = units
         json['player_action'] = action
+        self.logger.info(json)
         return json

@@ -21,6 +21,7 @@ class ResolveCardRose4Reaction(BasePhaseReaction):
             "tileNumber": self.__get_tile_num() if randrange(5) else -1
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __get_tile_num(self) -> int:

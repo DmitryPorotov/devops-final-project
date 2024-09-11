@@ -23,6 +23,7 @@ class ResolveCardWolf0Reaction(BasePhaseReaction):
             "targetTileNumber": self.__get_tile_num()
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __get_tile_num(self) -> int:

@@ -21,6 +21,7 @@ class ResolveCardLion1Reaction(BasePhaseReaction):
             'tileNumber': self.__find_order_to_remove()
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __find_order_to_remove(self) -> int:

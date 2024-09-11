@@ -21,5 +21,6 @@ class ResolveCardLion5Reaction(BasePhaseReaction):
             "doCancelCard": bool(random.randrange(2))
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 

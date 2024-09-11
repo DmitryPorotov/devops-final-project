@@ -40,4 +40,5 @@ class WildlingsKillUnitReaction(BasePhaseReaction):
             'unit': mu
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

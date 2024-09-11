@@ -24,4 +24,5 @@ class CleanUpAfterRoundReaction(BasePhaseReaction):
         json: Message = super()._to_json()
         json['action'] = 'get_partial_game_state'
         json['parts'] = ['tracks', 'roundCounter', 'powerTokens']
+        self.logger.info(json)
         return json

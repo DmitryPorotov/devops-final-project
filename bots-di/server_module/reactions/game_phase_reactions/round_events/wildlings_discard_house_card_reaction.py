@@ -25,4 +25,5 @@ class WildlingsDiscardHouseCardReaction(BasePhaseReaction):
             'cardCode': cc
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

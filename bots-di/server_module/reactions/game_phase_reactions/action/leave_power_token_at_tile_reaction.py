@@ -30,4 +30,5 @@ class LeavePowerTokenAtTileReaction(BasePhaseReaction):
             'tileNumber': self._phase['tileNumber']
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

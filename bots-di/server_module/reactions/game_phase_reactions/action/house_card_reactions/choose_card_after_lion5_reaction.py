@@ -26,6 +26,7 @@ class ChooseHouseCardAfterLion5Reaction(BasePhaseReaction):
             "cardCode": new_cc
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __choose_new_card(self) -> int:

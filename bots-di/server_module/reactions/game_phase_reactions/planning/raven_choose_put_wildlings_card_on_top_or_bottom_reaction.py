@@ -23,4 +23,5 @@ class RavenChoosePutWildlingsCardOnTopOrBottomReaction(BasePhaseReaction):
             'houseType': self._house_type,
             'isPutOnTop': is_top
         }
+        self.logger.info(json)
         return json

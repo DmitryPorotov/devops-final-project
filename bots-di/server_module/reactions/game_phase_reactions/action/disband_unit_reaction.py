@@ -44,6 +44,7 @@ class DisbandUnitReaction(BasePhaseReaction):
             'unit': unit
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def _to_json_supplies(self, unit: MilitaryUnit, from_tile: str, next_step: str) -> MessageGameAction[ActionDisbandUnitDueToSupplies]:
@@ -56,4 +57,5 @@ class DisbandUnitReaction(BasePhaseReaction):
             'tileNumber': int(from_tile)
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

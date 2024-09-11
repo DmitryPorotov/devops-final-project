@@ -27,4 +27,5 @@ class ResolveTiesAfterBiddingOnWildlingsReaction(BasePhaseReaction):
             'winnerLoser': winner_looser
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

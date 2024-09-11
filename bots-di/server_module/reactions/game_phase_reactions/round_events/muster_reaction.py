@@ -86,4 +86,5 @@ class MusterReaction(BasePhaseReaction):
             action['toTile'] = to_tile
 
         json['player_action'] = action
+        self.logger.info(json)
         return json

@@ -50,4 +50,6 @@ class ResolveHouseCardReaction(BasePhaseReaction):
 
     def _to_json(self, card_reaction_cls: type[BasePhaseReaction]) -> MessageGameAction[Action]:
         inst = card_reaction_cls(self._game_id, self._house_type, self._game_state, self._game_rules, self._phase)
-        return inst._to_json()
+        json = inst._to_json()
+        self.logger.info(json)
+        return json

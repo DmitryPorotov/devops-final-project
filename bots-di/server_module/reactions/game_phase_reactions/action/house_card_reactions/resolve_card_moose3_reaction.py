@@ -21,6 +21,7 @@ class ResolveCardMoose3Reaction(BasePhaseReaction):
             "cardCode":  self.__get_card_code()
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __get_card_code(self) -> int:

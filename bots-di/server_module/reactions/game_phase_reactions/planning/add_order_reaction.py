@@ -97,6 +97,7 @@ class AddOrderReaction(BasePhaseReaction):
             'tileNumber': int(tile_num),
             'order': order.to_json()
         }
+        self.logger.info(json)
         return json
 
 

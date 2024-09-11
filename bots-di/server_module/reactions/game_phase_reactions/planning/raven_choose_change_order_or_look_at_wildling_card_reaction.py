@@ -27,4 +27,5 @@ class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BasePhaseReaction):
             'houseType': self._house_type,
             'ravenChoice': self.__raven_choices[idx]
         }
+        self.logger.info(json)
         return json

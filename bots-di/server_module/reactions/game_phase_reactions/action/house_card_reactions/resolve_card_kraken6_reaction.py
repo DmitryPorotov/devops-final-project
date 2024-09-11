@@ -22,6 +22,7 @@ class ResolveCardKraken6Reaction(BasePhaseReaction):
             "newCardCode": new_cc
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __choose_new_card(self) -> int:

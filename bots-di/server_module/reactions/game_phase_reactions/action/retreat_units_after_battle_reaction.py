@@ -68,4 +68,5 @@ class RetreatUnitsAfterBattleReaction(BasePhaseReaction):
             'targetTileNumber': tile_num
         }
         json['player_action'] = pa
+        self.logger.info(json)
         return json

@@ -23,6 +23,7 @@ class ResolveCardMoose2Reaction(BasePhaseReaction):
             "tileNumber" : self.__get_tile_with_a_footman()
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
 
     def __get_tile_with_a_footman(self) -> int:

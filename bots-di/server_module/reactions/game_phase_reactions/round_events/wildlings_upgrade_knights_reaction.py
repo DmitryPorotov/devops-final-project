@@ -46,4 +46,5 @@ class WildlingsUpgradeKnightsReaction(BasePhaseReaction):
             'tileNumber2': tn2,
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json

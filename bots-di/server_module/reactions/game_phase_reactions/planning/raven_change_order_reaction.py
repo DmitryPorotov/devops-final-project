@@ -40,4 +40,5 @@ class RavenChangeOrderReaction(BasePhaseReaction):
             "tileNumber": int(order_to_replace[0])
         }
         json['player_action'] = action
+        self.logger.info(json)
         return json
