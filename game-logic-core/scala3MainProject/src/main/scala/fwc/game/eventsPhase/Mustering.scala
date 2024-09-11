@@ -21,9 +21,7 @@ object Mustering {
 
     val armyAtTile = gameState.armies.getOrElse(musteringTileNumber, Seq())
 
-    if (armyAtTile.isEmpty && musteringBoardTile.homeOf != militaryUnitToMuster.house)
-      || (armyAtTile.nonEmpty && armyAtTile.head.house != militaryUnitToMuster.house)
-    then throw new MusteringException(s"This tile does not belong to ${militaryUnitToMuster.house}")
+    checkMusteringTileBelongsToHouse(militaryUnitToMuster, musteringBoardTile, armyAtTile)
 
     if isUpgrade && !armyAtTile.exists(_.unitType == MilitaryUnitType.Footmen)
     then throw new MusteringException("This tile has no Footmen to upgrade")
@@ -45,10 +43,18 @@ object Mustering {
 
   }
 
+
+
   private def commonChecks(militaryUnitToMuster: MilitaryUnit, armies: Armies, musteringBoardTile: BoardTile): Unit = {
     checkUnitCanBeMustered(militaryUnitToMuster)
     checkUnitCountIsNotReached(militaryUnitToMuster, armies)
     checkMusteringTileHasMusteringPoints(musteringBoardTile)
+  }
+
+  private def checkMusteringTileBelongsToHouse(militaryUnitToMuster: MilitaryUnit, musteringBoardTile: BoardTile, armyAtMusteringTile: Seq[MilitaryUnit]): Unit = {
+    if (armyAtMusteringTile.isEmpty && musteringBoardTile.homeOf != militaryUnitToMuster.house)
+      || (armyAtMusteringTile.nonEmpty && armyAtMusteringTile.head.house != militaryUnitToMuster.house)
+    then throw new MusteringException(s"This tile does not belong to ${militaryUnitToMuster.house}")
   }
 
   private def checkUnitCanBeMustered(militaryUnitToMuster: MilitaryUnit): Unit = {
@@ -120,6 +126,8 @@ object Mustering {
     val musteringBoardTile = gameRules.board(musteringTileNumber)
 
     commonChecks(militaryUnitToMuster, gameState.armies, musteringBoardTile)
+
+    checkMusteringTileBelongsToHouse(militaryUnitToMuster, musteringBoardTile, gameState.armies.getOrElse(musteringTileNumber, Seq()))
 
     if targetBoardTile.tileType == BoardTileType.Land
     then throw new MusteringException("A ship must be mustered on a sea or in a port")
