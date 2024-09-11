@@ -5,7 +5,7 @@ import fwc.game.actions.{Action, ActionException, JsonParsableAction}
 import fwc.game.board.TrackType
 import fwc.game.{GameState, gameRules}
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.SubPhaseCalculateGameWinner
+import fwc.game.phases.actionSubPhases.{SubPhaseCalculateGameWinner, SubPhaseGameEnd}
 import ujson.Value
 
 case class ActionCalculateGameWinner(
@@ -35,7 +35,8 @@ case class ActionCalculateGameWinner(
     val housesWithMaxCastles = numCastles.filter(_._2.size == maxCastles)
     if housesWithMaxCastles.size == 1
     then gameState.copy(
-      winner = Some(housesWithMaxCastles.head._1)
+      winner = Some(housesWithMaxCastles.head._1),
+      subPhase = SubPhaseGameEnd(HouseType.getSeqOfAll)
     )
     else
       val maxMusteringPoints = housesWithMaxCastles.foldLeft(0)((acc, cur) => if cur._2.sum > acc then cur._2.sum else acc)
@@ -43,7 +44,8 @@ case class ActionCalculateGameWinner(
 
       if housesWithMaxStrongholds.size == 1
       then gameState.copy(
-        winner = Some(housesWithMaxStrongholds.head._1)
+        winner = Some(housesWithMaxStrongholds.head._1),
+        subPhase = SubPhaseGameEnd(HouseType.getSeqOfAll)
       )
       else
         val suppliesOfHousesWithMaxStrongholds: Map[HouseType, Int] = gameState.supplies.filter(hs => housesWithMaxStrongholds.contains(hs._1))
@@ -51,12 +53,14 @@ case class ActionCalculateGameWinner(
         val housesWithMaxSupplies = suppliesOfHousesWithMaxStrongholds.filter(_._2 == maxSupplies)
         if housesWithMaxSupplies.size == 1
         then gameState.copy(
-          winner = Some(housesWithMaxSupplies.head._1)
+          winner = Some(housesWithMaxSupplies.head._1),
+          subPhase = SubPhaseGameEnd(HouseType.getSeqOfAll)
         )
         else
           val sortedByThrone = housesWithMaxSupplies.toSeq.sortWith((a, b)=> a._1 isHigherOnThroneTrackThan b._1)
           gameState.copy(
-            winner = Some(sortedByThrone.head._1)
+            winner = Some(sortedByThrone.head._1),
+            subPhase = SubPhaseGameEnd(HouseType.getSeqOfAll)
           )
   }
 
