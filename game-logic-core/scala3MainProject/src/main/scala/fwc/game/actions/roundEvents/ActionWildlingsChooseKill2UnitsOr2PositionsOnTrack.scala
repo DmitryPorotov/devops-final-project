@@ -46,7 +46,7 @@ case class ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack(
       then gameState2.copy(
         tracks = gameState2.tracks.reduce2PositionsOnTrack(highestTracks.head, houseType)
       )
-      else if highestTracks.contains(track)
+      else if highestTracks.contains(track.head)
         then gameState2.copy(
           tracks = gameState2.tracks.reduce2PositionsOnTrack(track.head, houseType)
         )
