@@ -4,6 +4,7 @@ from server_module.reactions.game_phase_reactions.action.choose_to_use_valyrian_
     ChooseToUseValyrianSteelBladeReaction
 from server_module.reactions.game_phase_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
 from server_module.reactions.game_phase_reactions.action.disband_unit_reaction import DisbandUnitReaction
+from server_module.reactions.game_phase_reactions.action.game_end_reaction import GameEndReaction
 from server_module.reactions.game_phase_reactions.action.house_card_reactions.choose_card_after_lion5_reaction import \
     ChooseHouseCardAfterLion5Reaction
 from server_module.reactions.game_phase_reactions.action.kill_units_after_battle_reaction import \
@@ -20,6 +21,8 @@ from server_module.reactions.game_phase_reactions.action.resolve_support_order_r
 from server_module.reactions.game_phase_reactions.action.retreat_units_after_battle_reaction import \
     RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_phase_reactions.no_action_needed_reaction import NoActionNeededReaction
+from server_module.reactions.game_phase_reactions.round_events.set_event_cards_reaction import SetEventCardsReaction
+from server_module.reactions.game_phase_reactions.round_events.wildlings_card_reaction import WildlingsCardReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_choose_kill2_units_or2_positions_on_track_reaction import \
     WildlingsChooseKill2UnitsOr2PositionsOnTrackReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_choose_track_to_be_first_at_reaction import \
@@ -96,7 +99,7 @@ switcher_obj = {
     'resolveTiesAfterBiddingOnTracks': ResolveTiesAfterBiddingOnTracksReaction,
     'resolveTiesAfterBiddingOnWildlings': ResolveTiesAfterBiddingOnWildlingsReaction,
     'getEventCards': NoActionNeededReaction,
-    'setEventCards': NoActionNeededReaction,
+    'setEventCards': SetEventCardsReaction,
     'muster': MusterReaction,
     'collectTaxes': NoActionNeededReaction,
     'finishMustering': FinishMusteringReaction,
@@ -107,7 +110,7 @@ switcher_obj = {
     'chooseHouseCardAfterLion5': ChooseHouseCardAfterLion5Reaction,
     'getWildlingsCard': NoActionNeededReaction,
     'setWildlingsCards': NoActionNeededReaction,
-    'wildlingsCard': NoActionNeededReaction,
+    'wildlingsCard': WildlingsCardReaction,
     'wildlingsBids': WildlingsBidsReaction,
     'wildlingsChooseKill2UnitsOr2PositionsOnTrack': WildlingsChooseKill2UnitsOr2PositionsOnTrackReaction,
     'wildlingsReturnHouseCard': WildlingsReturnHouseCardReaction,
@@ -120,6 +123,8 @@ switcher_obj = {
     'wildlingsKillUnit': WildlingsKillUnitReaction,
     'wildlingsMusterAtCastle': WildlingsMusterAtCastleReaction,
     'disbandUnit': DisbandUnitReaction,
+    'calculateGameWinner': NoActionNeededReaction,
+    'gameEnd': GameEndReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):
