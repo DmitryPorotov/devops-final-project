@@ -11,9 +11,9 @@ class Order(dict):
     ):
         super().__init__(**kwargs)
         self.order_type = order_type
-        self['order_type'] = order_type
+        self['type'] = order_type
         self.is_star = is_star
-        self['is_star'] = is_star
+        self['isStar'] = is_star
         self.modifier = modifier
         self['modifier'] = modifier
 

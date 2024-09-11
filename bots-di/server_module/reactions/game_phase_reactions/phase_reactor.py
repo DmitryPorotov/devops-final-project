@@ -3,6 +3,7 @@ from server_module.reactions.game_phase_reactions.action.choose_house_card_react
 from server_module.reactions.game_phase_reactions.action.choose_to_use_valyrian_steel_blade_reaction import \
     ChooseToUseValyrianSteelBladeReaction
 from server_module.reactions.game_phase_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
+from server_module.reactions.game_phase_reactions.action.disband_unit_reaction import DisbandUnitReaction
 from server_module.reactions.game_phase_reactions.action.house_card_reactions.choose_card_after_lion5_reaction import \
     ChooseHouseCardAfterLion5Reaction
 from server_module.reactions.game_phase_reactions.action.kill_units_after_battle_reaction import \
@@ -115,6 +116,7 @@ switcher_obj = {
     'wildlingsKillUnits': WildlingsKillUnitReaction,
     'wildlingsKillUnit': WildlingsKillUnitReaction,
     'wildlingsMusterAtCastle': WildlingsMusterAtCastleReaction,
+    'disbandUnit': DisbandUnitReaction,
 }
 
 def react_to_phase(game_id: str, phase: SubPhase):

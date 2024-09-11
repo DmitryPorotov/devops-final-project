@@ -74,7 +74,7 @@ class Combat(dict[str, dict | int | list | str]):
             json['defenderTileNum'],
             defender_house,
             [*(MilitaryUnit.from_json(mu) for mu in json['defenderArmy'])],
-            (Order.from_json(json['defenderOrder']) if 'defenderOrder' in json else None),
+            (Order.from_json(json['defenderOrder']) if 'defenderOrder' in json and json['defenderOrder'] else None),
             (HouseCard.from_house_and_code(defender_house, json['defenderCard']) if 'defenderCard' in json else None),
             (TidesOfBattleCard.from_code(json['defenderTidesOfBattle']) if 'defenderTidesOfBattle' in json else None),
             (json['defenderSupport'] if 'defenderSupport' in json else None),

@@ -8,7 +8,6 @@ from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.order import Order
-import uuid
 
 from server_module.game_state.order_type import OrderType
 from server_module.game_state.track_type import TrackType

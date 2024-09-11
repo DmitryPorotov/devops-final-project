@@ -10,7 +10,7 @@ class DiscardedHouseCards(dict[HouseType, list[int]]):
             for ht in kwargs:
                 self[HouseType[ht.upper()]] = kwargs[ht]
 
-    def discard_card(self, card:HouseCard):
+    def discard_card(self, card: HouseCard):
         if card.house not in self:
             self[card.house] = []
         self[card.house].append(card.code)

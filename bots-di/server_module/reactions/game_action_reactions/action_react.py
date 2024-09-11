@@ -17,6 +17,7 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
+from server_module.reactions.game_action_reactions.planning.add_order_reaction import AddOrderReaction
 from server_module.reactions.game_action_reactions.round_events.collect_taxes_reaction import CollectTaxesReaction
 from server_module.reactions.game_action_reactions.round_events.recalculate_supplies_reaction import \
     RecalculateSuppliesReaction
@@ -85,20 +86,25 @@ switch_obj = {
     'resolveCardKraken6': NothingToUpdateGenericReaction,
     'resolveTiesAfterBiddingOnWildlings': NothingToUpdateGenericReaction,
     'steelBladeChooseDisableMarchOrDefend': NothingToUpdateGenericReaction,
-    'wildlingsChooseTrackToBeLastAt': NothingToUpdateGenericReaction,
-    'wildlingsChooseKill2UnitsOr2PositionsOnTrack': NothingToUpdateGenericReaction,
     'resolveCardRose4': NothingToUpdateGenericReaction,
     'resolveSpecialConsolidatePower': NothingToUpdateGenericReaction,
-    'wildlingsDowngradeKnights': NothingToUpdateGenericReaction,
     'resolveCardLion5': NothingToUpdateGenericReaction,
     'resolveCardPufferfish0': NothingToUpdateGenericReaction,
-    'wildlingsReturnHouseCard': NothingToUpdateGenericReaction,
-    'wildlingsDiscardHouseCard': NothingToUpdateGenericReaction,
+    'chooseHouseCardAfterLion5': NothingToUpdateGenericReaction,
     'resolveCardRose2': NothingToUpdateGenericReaction,
     'killUnitsAfterBattle': NothingToUpdateGenericReaction,
+
+    'wildlingsChooseKill2UnitsOr2PositionsOnTrack': NothingToUpdateGenericReaction,
+    'wildlingsChooseTrackToBeFirstAt': NothingToUpdateGenericReaction,
+    'wildlingsChooseTrackToBeLastAt': NothingToUpdateGenericReaction,
+    'wildlingsDiscardHouseCard': NothingToUpdateGenericReaction,
+    'wildlingsDowngradeKnights': NothingToUpdateGenericReaction,
     'wildlingsMusterAtCastle': NothingToUpdateGenericReaction,
-    'chooseHouseCardAfterLion5': NothingToUpdateGenericReaction,
+    'wildlingsReturnHouseCard': NothingToUpdateGenericReaction,
     'wildlingsUpgradeKnights': NothingToUpdateGenericReaction,
+    'disbandUnitsAfterCombat': NothingToUpdateGenericReaction,
+    'disbandUnitDueToSupplies': NothingToUpdateGenericReaction,
+    'calculateGameWinner': NothingToUpdateGenericReaction, # remove the game from the game data
 }
 
 

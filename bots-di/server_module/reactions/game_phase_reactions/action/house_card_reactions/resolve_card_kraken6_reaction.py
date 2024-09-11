@@ -25,7 +25,7 @@ class ResolveCardKraken6Reaction(BasePhaseReaction):
         return json
 
     def __choose_new_card(self) -> int:
-        discarded = self._game_state.discarded_house_cards[self._house_type] if self._house_type in self._game_state.discarded_house_cards else []
+        discarded = list(self._game_state.discarded_house_cards[self._house_type] if self._house_type in self._game_state.discarded_house_cards else [])
         available = [*(x for x in range(7) if x not in discarded and x != 6)]
         if len(available) > 1:
             idx = random.randrange(len(available))

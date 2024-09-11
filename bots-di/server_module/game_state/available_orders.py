@@ -48,3 +48,6 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
             self[house][order.order_type].pop(idx)
         else:
             raise RuntimeError('Order "{}" modifier "{}" does not is not available'.format(order.order_type, order.modifier))
+
+    def return_order(self, house: HouseType, order: Order):
+        self[house][order.order_type].append(order)

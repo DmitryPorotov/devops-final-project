@@ -5,12 +5,20 @@ from dependency_injector.wiring import Provide, inject
 
 from containers_module import App
 from events_service import EventSourcesService
+from redis_service import RedisConnector
 from server_module.games_data_service import GamesDataService
+from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 
 class DebuggingEventHandler:
     @inject
-    def __init__(self, events_service: EventSourcesService = Provide[App.events], games_data: GamesDataService = Provide[App.game_manager]):
+    def __init__(
+            self,
+            events_service: EventSourcesService = Provide[App.events],
+            games_data: GamesDataService = Provide[App.game_manager],
+            redis: RedisConnector = Provide[App.redis_service]
+    ):
+        self.redis = redis
         self._events_service = events_service
         self._games_data = games_data
         self._events_service.debugging_event.subscribe(on_next=self._on_debug_event)
