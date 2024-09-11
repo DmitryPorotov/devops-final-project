@@ -23,11 +23,10 @@ class ResolveMarchOrderReaction(BasePhaseReaction):
         try:
             source = self.__choose_source_order()
             targets = {}
-            dont_march = not bool(random.randrange(0, 500))  # note 75% chance to do march
+            dont_march = not bool(random.randrange(0, 4))  # note 75% chance to do march
             if dont_march:
                 return [self._to_json(source, targets)]
             targets = self.__choose_target_tiles(source)
-            self._game_state.placed_orders.remove_order(source, self._house_type)
             return [self._to_json(source, targets)]
         except Exception as e:
             print_file_lineno_error(e)

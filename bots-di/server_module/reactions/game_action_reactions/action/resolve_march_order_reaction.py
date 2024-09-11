@@ -18,6 +18,7 @@ class ResolveMarchOrderReaction(BaseActionReaction):
         is_combat = 'combat' in self._reply
         house = HouseType[pa['houseType'].upper()]
         source_tn = str(pa['sourceTileNumber'])
+        self._game_state.placed_orders.remove_order(source_tn, house)
 
         if pa['targets'] is None:
             return
