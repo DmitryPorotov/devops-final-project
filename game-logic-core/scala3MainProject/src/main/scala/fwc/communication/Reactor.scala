@@ -4,6 +4,7 @@ import fwc.communication.messagesFromClient.*
 import fwc.game.{FWCException, GameState, gameRules}
 import fwc.communication.reactions.*
 import fwc.communication.repliesToClient.*
+import fwc.game.actions.Action
 import fwc.game.houses.HouseType
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.gameSaving.GameReplay
@@ -99,6 +100,12 @@ object Reactor {
     val json = ujson.read(jsonStr)
     val replay = GameReplay.fromJson(json)
     games = games updated (replay.gameSettings.gameId, replay)
+  }
+
+  def restoreGameDebug(jsonStr: String, onDoAction: Option[((actNum: Int, currentState: GameState, action: Action, newState: GameState) => Unit)] = None): Unit = {
+    val json = ujson.read(jsonStr)
+    val replay = GameReplay.fromJsonDebug(json, onDoAction)
+    games = games updated(replay.gameSettings.gameId, replay)
   }
   
   def prepareShutdown: Map[String, GameReplay] =
