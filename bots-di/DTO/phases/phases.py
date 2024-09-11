@@ -323,3 +323,7 @@ class SubPhaseWildlingsChooseTrackToBeFirstAt(TypedDict):
     subPhase: str  # = "wildlingsChooseTrackToBeFirstAt"
     houseType: HouseType
 
+class SubPhaseGameEnd(TypedDict):
+    mainPhase: str  # = "phaseAction"
+    subPhase: str  # = "gameEnd"
+    houseTypes: list[HouseType]
