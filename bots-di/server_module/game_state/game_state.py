@@ -3,6 +3,7 @@ from typing import Optional
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.armies import Armies
 from server_module.game_state.bids import Bids
+from server_module.game_state.board_cards import BoardCards
 from server_module.game_state.dominance_tokens_usage import DominanceTokensUsage
 from server_module.game_state.placed_orders import PlacedOrders
 from server_module.game_state.tracks import Tracks
@@ -36,29 +37,32 @@ class GameState(dict[str, dict | int]):
         self.armies = armies 
         self['armies'] = armies
         self.placed_orders = placed_orders
-        self['placed_orders'] = placed_orders
+        self['placedOrders'] = placed_orders
         self.tracks = tracks
         self['tracks'] = tracks
         self.supplies = supplies
         self['supplies'] = supplies
         self.discarded_house_cards = discarded_house_cards
-        self['discarded_house_cards'] = discarded_house_cards
+        self['discardedHouseCards'] = discarded_house_cards
         self.power_tokens = power_tokens
-        self['power_tokens'] = power_tokens
+        self['powerTokens'] = power_tokens
         self.dominance_tokens_usage = dominance_tokens_usage
-        self['dominance_tokens_usage'] = dominance_tokens_usage
+        self['dominanceTokensUsage'] = dominance_tokens_usage
         self.used_mustering_points = used_mustering_points
-        self['used_mustering_points'] = used_mustering_points
+        self['usedMusteringPoints'] = used_mustering_points
         self.available_orders = available_orders
-        self['available_orders'] = available_orders
+        self['availableOrders'] = available_orders
         self.bids = bids
         self['bids'] = bids
         self.combat = combat
         self['combat'] = combat
         self.wildling_counter = wildling_counter
-        self['wildling_counter'] = wildling_counter
+        self['wildlingCounter'] = wildling_counter
         self.round_counter = round_counter
-        self['round_counter'] = round_counter
+        self['roundCounter'] = round_counter
+        self.board_cards = BoardCards()
+        self['boardCards'] = self.board_cards
+
 
     @classmethod
     def from_json(cls, json, game_rules: GameRules):

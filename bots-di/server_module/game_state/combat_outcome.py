@@ -13,13 +13,13 @@ class CombatOutcome(dict):
     ):
         super().__init__(**kwargs)
         self.attacker_strength = attacker_strength
-        self['attacker_strength'] = attacker_strength
+        self['attackerStrength'] = attacker_strength
         self.defender_strength = defender_strength
-        self['defender_strength'] = defender_strength
+        self['defenderStrength'] = defender_strength
         self.attacker_units_to_kill = attacker_units_to_kill
-        self['attacker_units_to_kill'] = attacker_units_to_kill
+        self['attackerUnitsToKill'] = attacker_units_to_kill
         self.defender_units_to_kill = defender_units_to_kill
-        self['defender_units_to_kill'] = defender_units_to_kill
+        self['defenderUnitsToKill'] = defender_units_to_kill
         self.winner = winner
         self['winner'] = winner
 
