@@ -46,14 +46,17 @@ case class ActionDisbandUnitsAfterCombat(
 
     val toConsolidate2 = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies, houseType)
 
+    val doNotDisbandAnymore = toConsolidate2(houseType).isEmpty
+
     val newPhase =
-      if toConsolidate2(houseType).isEmpty
+      if doNotDisbandAnymore
       then NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.winner.head)
       else SubPhaseDisbandUnit(houseType, UnitDisbandNextStepCombatCleanUp, MainPhase.Action)
 
     gameState.copy(
       subPhase = newPhase,
-      armies = updatedArmies
+      armies = updatedArmies,
+      combat = if doNotDisbandAnymore then null else gameState.combat
     )
   }
 
