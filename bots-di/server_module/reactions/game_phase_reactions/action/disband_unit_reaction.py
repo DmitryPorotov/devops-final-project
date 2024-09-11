@@ -34,7 +34,7 @@ class DisbandUnitReaction(BasePhaseReaction):
                     commandable_units = [*(mu for mu in army if mu.unit_type not in [MilitaryUnitType.POWER_TOKEN, MilitaryUnitType.GARRISON])]
                     if len(commandable_units) > len(biggest_army[1]):
                         biggest_army = (tn, commandable_units)
-            return [self._to_json_supplsies(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
+            return [self._to_json_supplies(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
 
 
     def _to_json(self, unit: MilitaryUnit) -> MessageGameAction[ActionDisbandUnitsAfterCombat]:
