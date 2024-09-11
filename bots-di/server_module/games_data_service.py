@@ -15,13 +15,16 @@ from server_module.game_state.power_tokens import PowerTokens
 from server_module.game_state.supplies import Supplies
 from server_module.game_state.tides_of_battle_card import TidesOfBattleCard
 from server_module.game_state.tracks import Tracks
+from server_module.reactions.management.error_retry_counter import ErrorRetryCounter
+from server_module.reactions.game_phase_reactions.multi_house_reaction import MultiHouseReaction
 
 
 class GameHandle(NamedTuple):
     worker: str
     state: Optional[GameState]
     houses: set[HouseType]
-
+    multi_house_reaction: MultiHouseReaction
+    error_retry_counter: ErrorRetryCounter
 
 class GamesDataService(BaseService):
     def __init__(self):
@@ -31,7 +34,7 @@ class GamesDataService(BaseService):
 
     def add_game(self, game_id: str, worker: str):
         if game_id not in self.games:
-            self.games[game_id] = GameHandle(worker, None, set())
+            self.games[game_id] = GameHandle(worker, None, set(), MultiHouseReaction(), ErrorRetryCounter())
 
     def delete_game(self, game_id: str):
         if game_id in self.games:
@@ -46,7 +49,9 @@ class GamesDataService(BaseService):
             self.games[game_id] = GameHandle(
                 self.games[game_id].worker,
                 GameState.from_json(game_state, self.game_rules),
-                self.games[game_id].houses
+                self.games[game_id].houses,
+                self.games[game_id].multi_house_reaction,
+                self.games[game_id].error_retry_counter
             )
 
     def update_game_state(self, game_id: str,  game_state: dict[str, dict | int | bool]):
@@ -102,3 +107,4 @@ class GamesDataService(BaseService):
             return self.games[game_id]
         except KeyError:
             return None
+

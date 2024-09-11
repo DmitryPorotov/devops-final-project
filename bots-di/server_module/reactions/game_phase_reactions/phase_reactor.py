@@ -51,6 +51,8 @@ from server_module.reactions.game_phase_reactions.round_events.resolve_ties_afte
     ResolveTiesAfterBiddingOnWildlingsReaction
 from server_module.reactions.game_phase_reactions.round_events.tracks_bids_reaction import TracksBidsReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_bids_reaction import WildlingsBidsReaction
+from server_module.reactions.game_phase_reactions.round_events.wildlings_finish_muster_at_castle_reaction import \
+    WildlingsFinishMusterAtCastleReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_kill_unit_reaction import \
     WildlingsKillUnitReaction
 from server_module.reactions.game_phase_reactions.round_events.wildlings_muster_at_castle_reaction import \
@@ -98,6 +100,7 @@ switcher_obj = {
     'muster': MusterReaction,
     'collectTaxes': NoActionNeededReaction,
     'finishMustering': FinishMusteringReaction,
+    'wildlingsFinishMusteringAtCastle': WildlingsFinishMusterAtCastleReaction,
     'killUnitsAfterBattle': KillUnitsAfterBattleReaction,
     'openTrackBids': NoActionNeededReaction,
     'resolveCardRose2': NoActionNeededReaction,

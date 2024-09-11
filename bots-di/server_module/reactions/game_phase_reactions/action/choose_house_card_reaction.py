@@ -15,28 +15,25 @@ class ChooseHouseCardReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[MessageGameAction[ActionChooseHouseCard]]:
-        try:
-            unused_cards = []
-            if self._house_type not in self._game_state.discarded_house_cards:
-                unused_cards = range(7)
-            else:
-                for i in range(7):
-                    if i not in self._game_state.discarded_house_cards[self._house_type]:
-                        unused_cards.append(i)
-            idx = random.randrange(0, len(unused_cards))
+        unused_cards = []
+        if self._house_type not in self._game_state.discarded_house_cards:
+            unused_cards = range(7)
+        else:
+            for i in range(7):
+                if i not in self._game_state.discarded_house_cards[self._house_type]:
+                    unused_cards.append(i)
+        idx = random.randrange(0, len(unused_cards))
 
-            ## note: a code snippet to force a card
-            # def has_ships():
-            #     if self._game_state.combat.attacker_house == self._house_type:
-            #         return self._game_state.combat.attacker_army[0].unit_type is MilitaryUnitType.SHIPS
-            #     else:
-            #         return self._game_state.combat.defender_army[0].unit_type is MilitaryUnitType.SHIPS
-            # if self._house_type is HouseType.KRAKEN and 4 in unused_cards and has_ships():
-            #     idx = unused_cards.index(4)
+        ## note: a code snippet to force a card
+        # def has_ships():
+        #     if self._game_state.combat.attacker_house == self._house_type:
+        #         return self._game_state.combat.attacker_army[0].unit_type is MilitaryUnitType.SHIPS
+        #     else:
+        #         return self._game_state.combat.defender_army[0].unit_type is MilitaryUnitType.SHIPS
+        # if self._house_type is HouseType.KRAKEN and 4 in unused_cards and has_ships():
+        #     idx = unused_cards.index(4)
 
-            return [self._to_json(unused_cards[idx])]
-        except Exception as e:
-            print_file_lineno_error(e)
+        return [self._to_json(unused_cards[idx])]
 
 
     def _to_json(self, card_code: int) -> MessageGameAction[ActionChooseHouseCard]:

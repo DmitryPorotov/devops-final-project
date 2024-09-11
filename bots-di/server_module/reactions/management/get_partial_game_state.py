@@ -3,7 +3,6 @@ from dependency_injector.wiring import Provide, inject
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.games_data_service import GamesDataService
-from server_module.reactions.game_phase_reactions.phase_react import PhaseReact
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 
@@ -16,7 +15,7 @@ class GetPartialGameState:
     def on_partial_game_state(self, msg):
         self._games_data.update_game_state(msg["gameId"], msg['gameState'])
         if 'armies' in msg['gameState']:
-            PhaseReact.multi_house_reaction.set_house_map({
+            self._games_data.get_game(msg["gameId"]).multi_house_reaction.set_house_map({
                 "moose": 1,
                  "kraken": 1,
                 "lion": 1,

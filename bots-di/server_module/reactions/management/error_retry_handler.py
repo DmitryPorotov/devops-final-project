@@ -14,17 +14,12 @@ from server_module.game_state.order import Order
 from server_module.games_data_service import GamesDataService
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
-
 class ErrorRetryHandler:
-    __NUM_RETRIES = 10
-
     @inject
     def __init__(self, events=Provide[App.events], game_data=Provide[App.game_manager]):
         self._events: EventSourcesService = events
         self._events.react_to_game_event_sources.message_error.subscribe(on_next=self.on_error_message)
         self._game_data: GamesDataService = game_data
-        self.__retry_counter = 0
-        self.__retry_key = ""
 
     def on_error_message(self, msg: ErrorMessage):
         if 'originalMessage' in msg:
@@ -57,7 +52,7 @@ class ErrorRetryHandler:
                     "subPhase": "muster",
                     "houseType": pa3["houseType"],
                 }
-                if self.__can_retry('muster', pa["houseType"]):
+                if self._game_data.get_game(game_id).error_retry_counter.can_retry('muster', pa["houseType"]):
                     react_to_phase(game_id, sp3)
                 else:
                     pseudo_phase_finish_mustering = {
@@ -65,6 +60,7 @@ class ErrorRetryHandler:
                         "subPhase": "finishMustering",
                         "houseType": pa3["houseType"],
                     }
+                    self._game_data.get_game(game_id).error_retry_counter.reset_retries()
                     react_to_phase(game_id, pseudo_phase_finish_mustering)
             elif pa['actionType'] == 'resolveMarchOrder':
                 pa4: ActionResolveMarchOrder = pa
@@ -73,16 +69,24 @@ class ErrorRetryHandler:
                     "subPhase": "muster",
                     "houseType": pa4["houseType"],
                 }
-
                 react_to_phase(game_id, sp4)
             elif pa['actionType'] == 'wildlingsMusterAtCastle':
                 pa5: ActionWildlingsMusterAtCastle = pa
-                sp5: SubPhaseWildlingsMusterAtCastle = {
-                    "mainPhase": "phaseRoundEvents",
-                    "subPhase": "wildlingsMusterAtCastle",
-                    "houseType": pa5["houseType"],
-                }
-                react_to_phase(game_id, sp5)
+                if self._game_data.get_game(game_id).error_retry_counter.can_retry('wildlingsMusterAtCastle', pa["houseType"]):
+                    sp5: SubPhaseWildlingsMusterAtCastle = {
+                        "mainPhase": "phaseRoundEvents",
+                        "subPhase": "wildlingsMusterAtCastle",
+                        "houseType": pa5["houseType"],
+                    }
+                    react_to_phase(game_id, sp5)
+                else:
+                    pseudo_phase_finish_mustering = {
+                        "mainPhase": "phaseRoundEvents",
+                        "subPhase": "wildlingsFinishMusteringAtCastle",
+                        "houseType": pa5["houseType"],
+                    }
+                    self._game_data.get_game(game_id).error_retry_counter.reset_retries()
+                    react_to_phase(game_id, pseudo_phase_finish_mustering)
             elif pa['actionType'] == 'addOrder':
                 pa5: ActionAddOrder = pa
                 state = self._game_data.get_game(game_id).state
@@ -122,14 +126,3 @@ class ErrorRetryHandler:
              'houseType': action['houseType'],
          }
          return phase
-
-    def reset_retries(self):
-        self.__retry_key = ''
-
-    def __can_retry(self, phase, house_type) -> bool:
-        key = "{}-{}".format(phase, house_type)
-        if self.__retry_key != key:
-            self.__retry_key = key
-            self.__retry_counter = 0
-        self.__retry_counter += 1
-        return self.__retry_counter < self.__NUM_RETRIES
