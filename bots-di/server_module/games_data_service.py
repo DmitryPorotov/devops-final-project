@@ -1,4 +1,4 @@
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, Any
 
 from base_service import BaseService
 from server_module.game_rules.game_rules import GameRules
@@ -25,6 +25,7 @@ class GameHandle(NamedTuple):
     houses: set[HouseType]
     multi_house_reaction: MultiHouseReaction
     error_retry_counter: ErrorRetryCounter
+    other: dict[str, Any]
 
 class GamesDataService(BaseService):
     def __init__(self):
@@ -34,7 +35,7 @@ class GamesDataService(BaseService):
 
     def add_game(self, game_id: str, worker: str):
         if game_id not in self.games:
-            self.games[game_id] = GameHandle(worker, None, set(), MultiHouseReaction(), ErrorRetryCounter())
+            self.games[game_id] = GameHandle(worker, None, set(), MultiHouseReaction(), ErrorRetryCounter(), {})
 
     def delete_game(self, game_id: str):
         if game_id in self.games:
@@ -51,7 +52,8 @@ class GamesDataService(BaseService):
                 GameState.from_json(game_state, self.game_rules),
                 self.games[game_id].houses,
                 self.games[game_id].multi_house_reaction,
-                self.games[game_id].error_retry_counter
+                self.games[game_id].error_retry_counter,
+                self.games[game_id].other
             )
 
     def update_game_state(self, game_id: str,  game_state: dict[str, dict | int | bool]):
