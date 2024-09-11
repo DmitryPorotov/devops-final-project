@@ -11,14 +11,14 @@ import scala.io.Source.fromFile
 class TryResolveTrackBids extends AnyFlatSpec with should.Matchers  {
   "Try to resolve track bids with wrong solution" should "return a proper error" in {
 
-    val source = fromFile("saves/forIntegration/3--tryResolvetrackBids--2024-09-04T08-31-25.json")
+    val source = fromFile("saves/forIntegration/3--tryResolveTrackBids--2024-09-04T08-31-25.json")
     val lines = try source.mkString finally source.close
 
-    Reactor.restoreGame(lines)
+    Reactor.restoreGameDebug(lines)
 
     val message = MessageGameAction(-6, "3",
       ujson.Obj(
-        "houseType" -> "lion", "actionType" -> "resolveTiesAfterBiddingOnTracks", "resolution" -> ujson.Arr.from(Seq("pufferfish", "kraken", "wolf", "moose", "rose", "lion"))
+        "houseType" -> "lion", "trackType" -> "throne" ,"actionType" -> "resolveTiesAfterBiddingOnTracks", "resolution" -> ujson.Arr.from(Seq("pufferfish", "kraken", "wolf", "moose", "rose", "lion"))
       ),
       null)
     val result = Reactor(message, ujson.Obj())

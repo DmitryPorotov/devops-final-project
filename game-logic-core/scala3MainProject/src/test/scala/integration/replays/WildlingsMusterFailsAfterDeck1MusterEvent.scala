@@ -15,7 +15,7 @@ class WildlingsMusterFailsAfterDeck1MusterEvent extends AnyFlatSpec with should.
     val source = fromFile("saves/forIntegration/3--wildlingsMusterFailsAfterDeck1MusterEvent--2024-09-08T12-17-04.json")
     val lines = try source.mkString finally source.close
 
-    Reactor.restoreGame(lines)
+    Reactor.restoreGameDebug(lines)
 
     val message = MessageGameAction(-2, "3", ujson.Obj(
       "houseType" -> "moose",

@@ -15,7 +15,13 @@ class WildlingsReturnDiscardedCardBug extends AnyFlatSpec with should.Matchers  
     val source = fromFile("saves/forIntegration/3--wildlingsReturnDiscardedCardBug--2024-09-08T11-54-27.json")
     val lines = try source.mkString finally source.close
 
-    Reactor.restoreGame(lines)
+
+
+    Reactor.restoreGameDebug(lines, Some((acNum, os, ac, ns) => {
+      if acNum >= 89
+        then
+        val a = 0
+    }))
 
     val message = MessageGameAction(-1, "3", ujson.Obj(
       "houseType" -> "wolf",
