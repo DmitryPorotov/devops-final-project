@@ -18,6 +18,7 @@ from utils_ import print_file_lineno_error
 class PhaseReact:
     game_data: Optional[GamesDataService] = None
     redis: Optional[RedisConnector] = None
+    __update_state_sub_phases = ['setEventCards', 'wildlingsCard']
 
     @staticmethod
     @inject
@@ -40,13 +41,16 @@ class PhaseReact:
                 PhaseReact.__act_on_house(game_id, game, sub_phase['houseType'], phase_reaction_cls, sub_phase)
         elif 'houseTypes' in sub_phase:
             if isinstance(sub_phase['houseTypes'], list):
-                for h in sub_phase['houseTypes']:
-                    if h in game.houses:
-                        game.multi_house_reaction.react(
-                            sub_phase,
-                            h,
-                            lambda: PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
-                        )
+                if sub_phase['subPhase'] in PhaseReact.__update_state_sub_phases:
+                    PhaseReact.__act_on_house(game_id, game, sub_phase['houseTypes'][0], phase_reaction_cls, sub_phase)
+                else:
+                    for h in sub_phase['houseTypes']:
+                        if h in game.houses:
+                            game.multi_house_reaction.react(
+                                sub_phase,
+                                h,
+                                lambda: PhaseReact.__act_on_house(game_id, game, h, phase_reaction_cls, sub_phase)
+                            )
             elif isinstance(sub_phase['houseTypes'], dict):
                 # note this is for wildlings killing units etc.
                 sp: SubPhaseWildlingsKillUnits = sub_phase
