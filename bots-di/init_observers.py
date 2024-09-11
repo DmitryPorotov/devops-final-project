@@ -9,6 +9,10 @@ from server_module.reactions.management.join_game import JoinGame
 from server_module.reactions.management.new_or_reset_game import NewOrResetGame
 from server_module.reactions.management.round_events_main_phase_end import RoundEventsMainPhaseEnd
 
+# note these imports are needed for DI
+from server_module.reactions.game_phase_reactions.round_events.tracks_bids_reaction import TracksBidsReaction # DO NOT REMOVE
+from server_module.reactions.game_phase_reactions.action.game_end_reaction import GameEndReaction # DO NOT REMOVE
+
 
 def init():
     FillWithBots()
