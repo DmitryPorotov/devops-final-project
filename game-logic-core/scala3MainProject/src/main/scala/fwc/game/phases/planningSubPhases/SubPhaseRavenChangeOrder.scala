@@ -5,7 +5,7 @@ import fwc.game.phases.*
 
 case class SubPhaseRavenChangeOrder(
                                      houseType: HouseType,
-                                     mainPhase: MainPhase = MainPhase.Action //note why action though?
+                                     mainPhase: MainPhase = MainPhase.Planning
                                    ) extends SubPhaseSingleHouse(houseType, mainPhase) {
   override def getSubPhaseName: String = "ravenChangeOrder"
 }

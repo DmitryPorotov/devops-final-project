@@ -5,7 +5,7 @@ import fwc.game.phases.*
 
 case class SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard(
                                                                houseType: HouseType,
-                                                               mainPhase: MainPhase = MainPhase.Action
+                                                               mainPhase: MainPhase = MainPhase.Planning
                                                              ) extends SubPhaseSingleHouse(houseType, mainPhase) {
   def getSubPhaseName: String = "ravenChooseChangeOrderOrLookAtWildlingCard"
 }
