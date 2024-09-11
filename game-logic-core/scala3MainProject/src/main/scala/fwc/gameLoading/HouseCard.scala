@@ -37,5 +37,6 @@ case class HouseCard(
   def isRose0: Boolean = house == HouseType.Rose && code == 0
   def isLion1: Boolean = house == HouseType.Lion && code == 1
   def isLion2: Boolean = house == HouseType.Lion && code == 2
+  def isLion4: Boolean = house == HouseType.Lion && code == 4
 
 }
