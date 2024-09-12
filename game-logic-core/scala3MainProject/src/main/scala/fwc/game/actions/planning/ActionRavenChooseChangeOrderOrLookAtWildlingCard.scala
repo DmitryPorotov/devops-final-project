@@ -2,11 +2,12 @@ package fwc.game.actions.planning
 
 import fwc.JsonSerializable
 import fwc.game.GameState
-import fwc.game.actionPhase.RavenChoiceType
+import fwc.game.actionPhase.{DominanceTokensUsage, RavenChoiceType}
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.actions.action.NextOrderFinder
+import fwc.game.board.DominanceTokenType
 import fwc.game.houses.HouseType
-import fwc.game.phases.planningSubPhases.{SubPhaseRavenChangeOrder, SubPhaseRavenGetWildlingsCard, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard}
+import fwc.game.phases.planningSubPhases.{SubPhaseRavenChangeOrder, SubPhaseRavenChooseChangeOrderOrLookAtWildlingCard, SubPhaseRavenGetWildlingsCard}
 import fwc.game.planningPhase.OrderType
 import ujson.Value
 
@@ -30,7 +31,10 @@ case class ActionRavenChooseChangeOrderOrLookAtWildlingCard(
         case _: RavenChoiceType.Nothing.type => NextOrderFinder.nextSubPhase(gameState, OrderType.Raid)
 
     gameState.copy(
-      subPhase = newPhase
+      subPhase = newPhase,
+      dominanceTokensUsage = DominanceTokensUsage(
+        gameState.dominanceTokensUsage.usage + (DominanceTokenType.MessengerRaven -> (ravenChoiceType != RavenChoiceType.Nothing))
+      )
     )
   }
 
