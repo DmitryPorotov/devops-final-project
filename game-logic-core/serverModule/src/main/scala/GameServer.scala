@@ -46,7 +46,7 @@ object GameServer {
             case Success((msg: Message, json: ujson.Value)) =>
               Try[ujson.Value](Reactor(msg, json)) match
                 case Success(j) =>
-                  val doCrop = j.obj("action").str.equals("get_game_state") || j.obj("action").str.equals("get_partial_game_state")
+                  val doCrop = true//j.obj("action").str.equals("get_game_state") || j.obj("action").str.equals("get_partial_game_state")
                   (j.render(fwc.jsonIndentation), doCrop)
                 case Failure(e: FWCException) =>
                   val errJson = ujson.Obj(
@@ -83,8 +83,8 @@ object GameServer {
               )
               .render(fwc.jsonIndentation), false)
       if !isProd then println(" [x] Sent to " + replyTo + "\n '" + (
-        if reply.length > 500 && needsCropping
-        then reply.substring(0, 500)
+        if reply.length > 1500 && needsCropping
+        then reply.substring(0, 1500)
         else reply
         ) + "'")
       if !isShuttingDown then 
