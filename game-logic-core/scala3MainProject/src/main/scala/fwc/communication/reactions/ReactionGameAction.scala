@@ -239,6 +239,12 @@ object ReactionGameAction {
             updatedGameState.usedMusteringPoints.map((k, v) => k.number.toString -> ujson.Num(v))
           ))
           buildMessageToAll(json)
+        case a: ActionResolveConsolidatePowerOrder =>
+          val json = a.toJson
+          json.obj.addOne(
+            "powerTokens" -> updatedGameState.powerTokens.toJson
+          )
+          buildMessageToAll(json)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then
       val updatedCombat =
@@ -254,6 +260,9 @@ object ReactionGameAction {
         case subPhase: SubPhaseSetTidesOfBattleCards => subPhase.toCleanJson
         case s => s.toJson
       })
+    )
+    reply.obj.addOne(
+      "gameState" -> updatedGameState.toJson
     )
   }
   private def buildMessageToAll(a: ujson.Value): ujson.Obj =
