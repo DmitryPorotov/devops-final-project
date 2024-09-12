@@ -1,4 +1,4 @@
-from random import randrange
+from utils_ import randrange
 
 from DTO.actions.events import ActionThroneChooseSupplyOrMuster
 from DTO.messages.messages import MessageGameAction

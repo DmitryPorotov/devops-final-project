@@ -1,4 +1,4 @@
-from random import randrange
+from utils_ import randrange
 
 from dependency_injector.wiring import Provide, inject
 
@@ -22,12 +22,12 @@ class TracksBidsReaction(BasePhaseReaction):
     def get_actions(self) -> list[MessageGameAction[ActionTrackBids]]:
         sp: SubPhaseTracksBids = self._phase
         self.__update_track_to_bid(TrackType[sp['trackType'].upper()])
-        total_tokens = self._game_state.power_tokens[self._house_type] / 3
+        total_tokens = self._game_state.power_tokens[self._house_type] / 2
         tokens_to_bid = randrange(int(total_tokens) + 1)
         return [self._to_json(tokens_to_bid)]
 
     @inject
-    def __update_track_to_bid(self, track: TrackType, games_service: GamesDataService = Provide[App.game_manager]):
+    def __update_track_to_bid(self, track: TrackType, games_service: GamesDataService = Provide[App.game_service]):
         games_service.get_game(self._game_id).other['last_track'] = track
 
     def _to_json(self, num_tokens: int) -> MessageGameAction[ActionTrackBids]:

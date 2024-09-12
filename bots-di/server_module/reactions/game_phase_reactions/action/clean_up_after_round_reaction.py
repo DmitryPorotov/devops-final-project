@@ -14,10 +14,10 @@ class CleanUpAfterRoundReaction(BasePhaseReaction):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
     def get_actions(self) -> list[Message]:
-        if self._game_state.round_counter not in self._requested_game_state_by_round:
-            self._requested_game_state_by_round[self._game_state.round_counter] = True
-            return [self._to_json()]
-        else:
+        # if self._game_state.round_counter not in self._requested_game_state_by_round:
+        #     self._requested_game_state_by_round[self._game_state.round_counter] = True
+        #     return [self._to_json()]
+        # else:
             raise NoReplyNeedException()
 
     def _to_json(self) -> Message:

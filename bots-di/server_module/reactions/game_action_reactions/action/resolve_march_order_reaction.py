@@ -18,12 +18,13 @@ class ResolveMarchOrderReaction(BaseActionReaction):
         is_combat = 'combat' in self._reply
         house = HouseType[pa['houseType'].upper()]
         source_tn = str(pa['sourceTileNumber'])
+        self._game_state.available_orders.return_order(house, self._game_state.placed_orders[house][source_tn])
         self._game_state.placed_orders.remove_order(source_tn, house)
 
         if pa['targets'] is None:
             return
 
-        for tn, mil_units_json in pa['targets'].items():
+        for tn, mil_units_json in pa['targets'].items():  # type: str, dict
             mil_units: list[MilitaryUnit] = [*(MilitaryUnit.from_json(j) for j in mil_units_json)]
             subtract_army(self._game_state.armies[source_tn], mil_units)
             if not self._game_state.armies[source_tn]:
@@ -38,3 +39,5 @@ class ResolveMarchOrderReaction(BaseActionReaction):
                     self._game_state.armies[tn] = mil_units
         if is_combat:
             self._game_state.combat = Combat.from_json(self._reply['combat'])
+            combat_tn = self._game_state.combat.defender_tile_num
+            del self._game_state.armies[str(combat_tn)]

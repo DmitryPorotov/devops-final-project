@@ -8,6 +8,7 @@ from DTO.messages.reply import Reply
 from containers_module import App
 from events_service import EventSourcesService
 from redis_service import RedisConnector
+from server_module.game_state.game_state import GameState
 from server_module.games_data_service import GamesDataService
 from server_module.reactions.game_action_reactions.action.calculate_combat_outcome_reaction import \
     CalculateCombatOutcomeReaction
@@ -17,6 +18,10 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
+from server_module.reactions.game_action_reactions.planning.raven_choose_change_order_or_look_at_wildling_card_reaction import \
+    RavenChooseChangeOrderOrLookAtWildlingCardReaction
+from server_module.reactions.game_action_reactions.planning.raven_choose_put_wildlings_card_on_top_or_bottom_reaction import \
+    RavenChoosePutWildlingsCardOnTopOrBottomReaction
 from server_module.reactions.game_action_reactions.round_events.collect_taxes_reaction import CollectTaxesReaction
 from server_module.reactions.game_action_reactions.round_events.recalculate_supplies_reaction import \
     RecalculateSuppliesReaction
@@ -56,13 +61,14 @@ switch_obj = {
     'collectTaxes': CollectTaxesReaction,
     'wildlingsKillUnit': WildlingsKillUnitReaction,
     'cleanUpAfterRound': CleanUpAfterRoundReaction,
+    'ravenChooseChangeOrderOrLookAtWildlingCard': RavenChooseChangeOrderOrLookAtWildlingCardReaction,
+    'ravenChoosePutWildlingsCardOnTopOrBottom': RavenChoosePutWildlingsCardOnTopOrBottomReaction,
 
 
     'openOrders': NothingToUpdateGenericReaction,
     'trackBids': NothingToUpdateGenericReaction,
     'wildlingsBids': NothingToUpdateGenericReaction,
-    'ravenChooseChangeOrderOrLookAtWildlingCard': NothingToUpdateGenericReaction,
-    'ravenGetWildlingsCard': NothingToUpdateGenericReaction,
+    'ravenGetWildlingsCard': NothingToUpdateGenericReaction,   # todo should save it to ravens personal memory later
     'chooseHouseCard': NothingToUpdateGenericReaction,
     'getTidesOfBattleCards': NothingToUpdateGenericReaction,
     'setTidesOfBattleCards': NothingToUpdateGenericReaction,
@@ -73,7 +79,7 @@ switch_obj = {
     'ravenChooseTrackBidsOrCollectTaxes': NothingToUpdateGenericReaction,
     'retreatUnitsAfterBattle': NothingToUpdateGenericReaction,
     'autoRetreatAfterBattle': NothingToUpdateGenericReaction,
-    'ravenChoosePutWildlingsCardOnTopOrBottom': NothingToUpdateGenericReaction,  # todo should save it to ravens personal memory later
+
     'throneChooseSupplyOrMuster': NothingToUpdateGenericReaction,
     'finishMustering': NothingToUpdateGenericReaction,
     'wildlingsCard': NothingToUpdateGenericReaction,  # todo maybe save somewhere
@@ -114,7 +120,7 @@ class ActionReact:
 
     @staticmethod
     @inject
-    def init(game_data: GamesDataService = Provide[App.game_manager],
+    def init(game_data: GamesDataService = Provide[App.game_service],
              redis: RedisConnector = Provide[App.redis_service],
              events: EventSourcesService = Provide[App.events]):
         ActionReact.game_data = game_data
@@ -133,5 +139,18 @@ class ActionReact:
                     switch_obj[action['actionType']](ActionReact.game_data.get_game(game_id).state, reply).update_game_state()
                 else:
                     raise Exception("{} action is not implemented".format(action['actionType']))
+
+                if reply['player_action']['actionType'] not in [
+                    "addOrder",
+                    "openOrders",
+                    "calculateCombatOutcome",
+                    "autoKillUnitsAfterBattle",
+                    "autoRetreatAfterBattle",
+                    "killUnitsAfterBattle",
+                    "retreatUnitsAfterBattle",
+                    ]:
+                    new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
+                    local_game_handle = ActionReact.game_data.get_game(game_id)
+                    local_game_handle.state.compare(new_game_state)
 
                 react_to_phase(game_id, reply['current_phase'])

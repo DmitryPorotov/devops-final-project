@@ -1,4 +1,4 @@
-import random
+from utils_ import randrange
 
 from DTO.actions.planning import ActionRavenChangeOrder
 from DTO.messages.messages import MessageGameAction
@@ -20,10 +20,10 @@ class RavenChangeOrderReaction(BasePhaseReaction):
             avail_orders_flat = []
             for o in avail_orders:
                 avail_orders_flat.extend(o)
-            new_idx = random.randrange(len(avail_orders_flat))
+            new_idx = randrange(len(avail_orders_flat))
             if len(avail_orders_flat) > 0:
                 placed_orders = self._game_state.placed_orders[self._house_type].items()
-                random_num = random.randrange(0, len(placed_orders))
+                random_num = randrange(0, len(placed_orders))
                 random_placed_order = None
                 for idx, random_placed_order in enumerate(placed_orders):
                     if idx == random_num:

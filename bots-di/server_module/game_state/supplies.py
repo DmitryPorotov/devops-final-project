@@ -1,6 +1,7 @@
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.armies import Armies
 from server_module.game_state.house_type import HouseType
+from server_module.game_state.state_discrepancy_exception import StateDiscrepancyException
 
 
 class Supplies(dict[HouseType, int]):
@@ -34,3 +35,9 @@ class Supplies(dict[HouseType, int]):
             if armies_able_to_be_supplied[i] < my_armies_numbers[i]:
                 return False
             return True
+
+    def compare(self, other: "Supplies") -> bool:
+        for ht, n in self.items():
+            if n != other[ht]:
+                raise StateDiscrepancyException("Supplies of {} in local {} are not equal to other {}".format(ht, n, other[ht]))
+        return True

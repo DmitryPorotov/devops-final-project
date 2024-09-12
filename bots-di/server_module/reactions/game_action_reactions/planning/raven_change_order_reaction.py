@@ -13,4 +13,10 @@ class RavenChangeOrderReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionRavenChangeOrder = self._reply['player_action']
         order = Order.from_json(pa['order'])
-        self._game_state.placed_orders[HouseType[pa['houseType'].upper()]][str(pa['tileNumber'])] = order
+        house = HouseType[pa['houseType'].upper()]
+        tile_num = str(pa['tileNumber'])
+        self._game_state.available_orders.return_order(house, self._game_state.placed_orders[house][tile_num])
+        self._game_state.available_orders.use_order(house, order)
+
+        self._game_state.placed_orders[house][tile_num] = order
+        self._game_state.dominance_tokens_usage['messengerRaven'] = True

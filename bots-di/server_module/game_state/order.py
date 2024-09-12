@@ -34,3 +34,6 @@ class Order(dict):
             json['isStar'] if 'isStar' in json else False,
             json['modifier'] if 'modifier' in json else 0
         )
+
+    def __eq__(self, other):
+        return self['type'] == other['type'] and self['isStar'] == other['isStar'] and self['modifier'] == other['modifier']

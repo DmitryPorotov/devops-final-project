@@ -22,7 +22,7 @@ class PhaseReact:
 
     @staticmethod
     @inject
-    def init(game_data: GamesDataService = Provide[App.game_manager],
+    def init(game_data: GamesDataService = Provide[App.game_service],
              redis: RedisConnector = Provide[App.redis_service]):
         PhaseReact.game_data = game_data
         PhaseReact.redis = redis

@@ -16,7 +16,7 @@ class CleanUpAfterCombatReaction(BaseActionReaction):
         pa: ActionCleanUpAfterCombat = self._reply['player_action']
         state_json = pa['state']
         self._game_state.combat = self._game_state.combat if pa['doCardResolve'] else None
-        self._game_state.armies = Armies(**state_json['armies'])
-        self._game_state.placed_orders = PlacedOrders(**state_json['placedOrders'])
-        self._game_state.discarded_house_cards = DiscardedHouseCards(**state_json['discardedHouseCards'])
-        self._game_state.power_tokens = PowerTokens(**state_json['powerTokens'])
+        self._game_state.armies = self._game_state['armies'] = Armies(**state_json['armies'])
+        self._game_state.placed_orders = self._game_state['placedOrders'] = PlacedOrders(**state_json['placedOrders'])
+        self._game_state.discarded_house_cards = self._game_state['discardedHouseCards'] = DiscardedHouseCards(**state_json['discardedHouseCards'])
+        self._game_state.power_tokens = self._game_state['powerTokens'] = PowerTokens(**state_json['powerTokens'])

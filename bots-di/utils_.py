@@ -1,6 +1,7 @@
 from inspect import currentframe, getframeinfo
 import traceback
-from random import randrange
+from random import SystemRandom
+randrange = SystemRandom().randrange
 from typing import TypeVar
 
 T_ = TypeVar("T_")

@@ -12,8 +12,8 @@ from server_module.games_data_service import GamesDataService
 
 class RoundEventsMainPhaseEnd:
     @inject
-    def __init__(self, events_service: EventSourcesService = Provide[App.events], redis: RedisConnector = Provide[App.redis_service], games_data: GamesDataService = Provide[App.game_manager]):
-        events_service.react_to_game_event_sources.message_switch_to_planning_phase.subscribe(on_next=self.on_switch_to_action_phase)
+    def __init__(self, events_service: EventSourcesService = Provide[App.events], redis: RedisConnector = Provide[App.redis_service], games_data: GamesDataService = Provide[App.game_service]):
+        # events_service.react_to_game_event_sources.message_switch_to_planning_phase.subscribe(on_next=self.on_switch_to_action_phase)
         self._redis = redis
         self._game_data = games_data
 

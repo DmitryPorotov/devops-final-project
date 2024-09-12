@@ -27,3 +27,6 @@ class BoardCards(dict[str, list]):
 
     def add_tides_of_battle_card(self, cc):
         self.tides_of_battle.insert(0, cc)
+
+    def compare(self, other):
+        return True

@@ -11,5 +11,6 @@ class NoActionNeededReaction(BasePhaseReaction):
     def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
-    def get_actions(self) -> list[MessageGameAction]:
+    def get_actions(self) -> None:
+        self.logger.info(self._phase)
         raise NoReplyNeedException()

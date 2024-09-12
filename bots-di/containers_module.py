@@ -15,7 +15,7 @@ class App(containers.DeclarativeContainer):
         fname="logging.ini",
     )
 
-    game_manager = providers.Singleton(
+    game_service = providers.Singleton(
         GamesDataService
     )
 

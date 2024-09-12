@@ -1,4 +1,5 @@
 from server_module.game_state.house_type import HouseType
+from server_module.game_state.state_discrepancy_exception import StateDiscrepancyException
 from server_module.game_state.track_type import TrackType
 
 
@@ -15,3 +16,10 @@ class Tracks(dict[TrackType, list[HouseType]]):
 
     def get_1st_on_track(self, track: TrackType):
         return self[track][0]
+
+    def compare(self, other: "Tracks") -> bool:
+        for tt, track in self.items():
+            for i, ht in enumerate(track):
+                if ht != other[tt][i]:
+                    raise StateDiscrepancyException("House {} on place {} on track {} in local is not equal to other".format(ht, i, tt))
+        return True

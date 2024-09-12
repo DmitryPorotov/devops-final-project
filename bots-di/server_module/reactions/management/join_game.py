@@ -13,7 +13,7 @@ class JoinGame:
     @inject
     def __init__(self,
                  events_service: EventSourcesService = Provide[App.events],
-                 games_data: GamesDataService = Provide[App.game_manager],
+                 games_data: GamesDataService = Provide[App.game_service],
                  redis: RedisConnector = Provide[App.redis_service]):
         events_service.react_to_game_event_sources.message_join_game.subscribe(on_next=self.on_joined_as)
         self._games_data = games_data

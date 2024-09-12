@@ -81,3 +81,6 @@ class Combat(dict[str, dict | int | list | str]):
             (CombatOutcome.from_json(json['combatOutcome']) if 'combatOutcome' in json else None),
         )
 
+    def compare(self, other):
+        return True
+

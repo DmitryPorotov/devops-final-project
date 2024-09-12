@@ -1,5 +1,6 @@
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.order import Order
+from server_module.game_state.state_discrepancy_exception import StateDiscrepancyException
 
 
 class PlacedOrders(dict[HouseType, dict[str, Order]]):
@@ -37,3 +38,20 @@ class PlacedOrders(dict[HouseType, dict[str, Order]]):
                         if len(self[ht]) == 0:
                             del self[ht]
                         return
+
+    def compare(self, other: "PlacedOrders") -> bool:
+        for ht, orders in other.items():
+            if ht not in self and len(orders):
+                raise StateDiscrepancyException("House {} of other is not in local PlacedOrders".format(ht))
+            for tn, order in orders.items():
+                if tn not in self[ht]:
+                    raise StateDiscrepancyException("House {} tile number {} of other is not in local PlacedOrders".format(ht, tn))
+                if not order.__eq__(self[ht][tn]):
+                    raise StateDiscrepancyException("House {} tile number {} order of other {} is not equal to local {} order in PlacedOrders".format(ht, tn, order, self[ht][tn]))
+        for s_ht, s_orders in self.items():
+            if s_ht not in other and len(s_orders):
+                raise StateDiscrepancyException("House {} of local is not in other PlacedOrders".format(s_ht))
+            for tn, order in s_orders.items():
+                if tn not in other[s_ht]:
+                    raise StateDiscrepancyException("House {} tile number {} of local is not in other PlacedOrders".format(s_ht, tn))
+        return True

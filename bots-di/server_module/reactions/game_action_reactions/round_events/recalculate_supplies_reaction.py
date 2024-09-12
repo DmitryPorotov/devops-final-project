@@ -11,4 +11,4 @@ class RecalculateSuppliesReaction(BaseActionReaction):
 
     def update_game_state(self):
         pa: ActionRecalculateSupplies = self._reply['player_action']
-        self._game_state.supplies = Supplies(**pa['supplies'])
+        self._game_state.supplies = self._game_state['supplies'] = Supplies(**pa['supplies'])

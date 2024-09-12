@@ -11,7 +11,7 @@ class NewOrResetGame:
     @inject
     def __init__(self,
                  events_service: EventSourcesService = Provide[App.events],
-                 games_data: GamesDataService = Provide[App.game_manager],):
+                 games_data: GamesDataService = Provide[App.game_service], ):
         self._games_data = games_data
         self._events_service = events_service
         self._events_service.game_management_event_sources.reset_game.subscribe(on_next=self.on_new_reset)

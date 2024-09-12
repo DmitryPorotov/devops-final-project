@@ -1,4 +1,4 @@
-from random import randrange
+from utils_ import randrange
 
 from DTO.actions.events import ActionWildlingsChooseKill2UnitsOr2PositionsOnTrack
 from DTO.messages.messages import MessageGameAction

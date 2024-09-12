@@ -17,7 +17,7 @@ from server_module.reactions.game_phase_reactions.phase_reactor import react_to_
 
 class ErrorRetryHandler:
     @inject
-    def __init__(self, events=Provide[App.events], game_data=Provide[App.game_manager]):
+    def __init__(self, events=Provide[App.events], game_data=Provide[App.game_service]):
         self._events: EventSourcesService = events
         self._events.react_to_game_event_sources.message_error.subscribe(on_next=self.on_error_message)
         self._game_data: GamesDataService = game_data

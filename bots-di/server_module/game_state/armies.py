@@ -4,6 +4,7 @@ from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.military_unit_type import MilitaryUnitType
+from server_module.game_state.state_discrepancy_exception import StateDiscrepancyException
 
 
 class Armies(dict[str, list[MilitaryUnit]]):
@@ -40,3 +41,23 @@ class Armies(dict[str, list[MilitaryUnit]]):
                         max_armies[u.unit_type] -= 1
 
         return max_armies
+
+    @staticmethod
+    def __mil_unit_sort_key(item: MilitaryUnit):
+        return "{}-{}".format(item.unit_type, item.is_defeated)
+
+    def compare(self, other: "Armies") -> bool:
+        for tn, army in other.items():
+            if tn not in self:
+                raise StateDiscrepancyException("Tile number {} is not in local Armies".format(tn))
+            local_army = sorted(self[tn], key=self.__mil_unit_sort_key)
+            other_army = sorted(army, key=self.__mil_unit_sort_key)
+            if len(local_army) != len(other_army):
+                raise StateDiscrepancyException("Tile number {} armies has different number of units; local {}, other {}".format(tn, len(local_army), len(other_army)))
+            for i in range(len(local_army)):
+                if not local_army[i].__eq__(other_army[i]):
+                    raise StateDiscrepancyException("Tile number {} armies have different units; local {}, other {}".format(tn, local_army[i], other_army[i]))
+        for s_tn, s_army in self.items():
+            if s_tn not in other:
+                raise StateDiscrepancyException("Tile number {} is not in other Armies".format(s_tn))
+        return True

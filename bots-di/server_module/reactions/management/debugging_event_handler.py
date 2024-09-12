@@ -15,7 +15,7 @@ class DebuggingEventHandler:
     def __init__(
             self,
             events_service: EventSourcesService = Provide[App.events],
-            games_data: GamesDataService = Provide[App.game_manager],
+            games_data: GamesDataService = Provide[App.game_service],
             redis: RedisConnector = Provide[App.redis_service]
     ):
         self.redis = redis

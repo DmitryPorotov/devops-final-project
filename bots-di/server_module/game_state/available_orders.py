@@ -2,6 +2,7 @@ from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.order import Order, OrderType
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.placed_orders import PlacedOrders
+from server_module.game_state.state_discrepancy_exception import StateDiscrepancyException
 
 
 class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
@@ -47,7 +48,27 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
         if idx >= 0:
             self[house][order.order_type].pop(idx)
         else:
-            raise RuntimeError('Order "{}" modifier "{}" does not is not available'.format(order.order_type, order.modifier))
+            raise RuntimeError('Order "{}" modifier "{}" is not available'.format(order.order_type, order.modifier))
 
     def return_order(self, house: HouseType, order: Order):
         self[house][order.order_type].append(order)
+
+    def compare(self, other: "AvailableOrders") -> bool:
+        for ht, orders in self.items():
+            if ht not in other:
+                raise StateDiscrepancyException("AvailableOrders local house {} is not in other".format(ht))
+            for ot, os in orders.items():
+                if ot not in other[ht]:
+                    raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' is not in other".format(ht, ot))
+                key = lambda o: "{}-{}-{}".format(o.order_type, o.modifier, o.is_star)
+                local = sorted(os, key=key)
+                others = sorted(other[ht][ot], key=key)
+                if len(local) != len(others):
+                    raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' number of orders is not equal to other".format(ht, ot))
+                for i in range(len(local)):
+                    if not local[i].__eq__(others[i]):
+                        raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' order at {} is not equal to other".format(ht, ot, i))
+        for ht, orders in other.items():
+            if ht not in self:
+                raise StateDiscrepancyException("AvailableOrders other house {} is not in local".format(ht))
+        return True

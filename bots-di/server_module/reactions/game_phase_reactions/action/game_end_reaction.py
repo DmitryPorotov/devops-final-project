@@ -19,6 +19,6 @@ class GameEndReaction(BasePhaseReaction):
         raise NoReplyNeedException()
 
     @inject
-    def __clean_up_game(self, games_data_service: GamesDataService = Provide[App.game_manager]):
+    def __clean_up_game(self, games_data_service: GamesDataService = Provide[App.game_service]):
         # games_data_service.delete_game(self._game_id)
         pass

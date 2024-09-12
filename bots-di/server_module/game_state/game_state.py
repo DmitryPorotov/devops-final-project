@@ -34,35 +34,20 @@ class GameState(dict[str, dict | int]):
             **kwargs
     ):
         super().__init__(**kwargs)
-        self.armies = armies 
-        self['armies'] = armies
-        self.placed_orders = placed_orders
-        self['placedOrders'] = placed_orders
-        self.tracks = tracks
-        self['tracks'] = tracks
-        self.supplies = supplies
-        self['supplies'] = supplies
-        self.discarded_house_cards = discarded_house_cards
-        self['discardedHouseCards'] = discarded_house_cards
-        self.power_tokens = power_tokens
-        self['powerTokens'] = power_tokens
-        self.dominance_tokens_usage = dominance_tokens_usage
-        self['dominanceTokensUsage'] = dominance_tokens_usage
-        self.used_mustering_points = used_mustering_points
-        self['usedMusteringPoints'] = used_mustering_points
-        self.available_orders = available_orders
-        self['availableOrders'] = available_orders
-        self.bids = bids
-        self['bids'] = bids
-        self.combat = combat
-        self['combat'] = combat
-        self.wildling_counter = wildling_counter
-        self['wildlingCounter'] = wildling_counter
-        self.round_counter = round_counter
-        self['roundCounter'] = round_counter
-        self.board_cards = BoardCards()
-        self['boardCards'] = self.board_cards
-
+        self['armies'] = self.armies = armies
+        self['placedOrders'] = self.placed_orders = placed_orders
+        self['tracks'] = self.tracks = tracks
+        self['supplies'] =self.supplies = supplies
+        self['discardedHouseCards'] = self.discarded_house_cards = discarded_house_cards
+        self['powerTokens'] = self.power_tokens = power_tokens
+        self['dominanceTokensUsage'] = self.dominance_tokens_usage = dominance_tokens_usage
+        self['usedMusteringPoints'] = self.used_mustering_points = used_mustering_points
+        self['availableOrders'] = self.available_orders = available_orders
+        self['bids'] = self.bids = bids
+        self['combat'] = self.combat = combat
+        self['wildlingCounter'] = self.wildling_counter = wildling_counter
+        self['roundCounter'] = self.round_counter = round_counter
+        self['boardCards'] = self.board_cards = BoardCards()
 
     @classmethod
     def from_json(cls, json, game_rules: GameRules):
@@ -75,7 +60,7 @@ class GameState(dict[str, dict | int]):
             Supplies(**json['supplies']),
             DiscardedHouseCards(**json['discardedHouseCards']),
             PowerTokens(**json['powerTokens']),
-            json['dominanceTokensUsage'],
+            DominanceTokensUsage(**json['dominanceTokensUsage']),
             UsedMusteringPoints(**json['usedMusteringPoints']),
             available_orders,
             Bids(**json['bids']) if ('bids' in json and json['bids'] is not None) else None,
@@ -83,3 +68,14 @@ class GameState(dict[str, dict | int]):
             json['wildlingCounter'],
             json['roundCounter'],
         )
+
+    def compare(self, other: "GameState") -> bool:
+        for key, val in self.items():
+            if isinstance(val, dict):
+                if not val.compare(other[key]):
+                    return False
+            if isinstance(val, int):
+                if other[key] != val:
+                    return False
+        return True
+
