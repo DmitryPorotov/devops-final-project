@@ -109,6 +109,7 @@ class ActionCalculateCombatOutcome(TypedDict):
 
 class ActionResolveConsolidatePowerOrder(TypedDict):
     actionType: str  # = "resolveConsolidatePowerOrder"
+    powerTokens: dict[HouseType | str, int]
 
 
 class ActionGetTidesOfBattleCards(TypedDict):
