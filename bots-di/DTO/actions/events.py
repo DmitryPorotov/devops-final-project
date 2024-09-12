@@ -74,6 +74,7 @@ class ActionMuster(TypedDict):
     fromTile: int
     toTile: NotRequired[int]
     usedPoints: NotRequired[dict[str, int]]
+    isUpgrade: NotRequired[bool]
 
 
 class ActionFinishMustering(TypedDict):
