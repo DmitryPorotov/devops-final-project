@@ -38,8 +38,6 @@ case class ActionChooseHouseCardAfterLion5(
 
     val isAttackerAction = gameState.combat.defenderHouse == HouseType.Lion
 
-    val updatedDiscardedForHouse = gameState.discardedHouseCards(houseType) :+ cardCode
-
     val updatedPhase = CombatCommon.getImmediatelyResolvableCardSubPhase(
       houseCard,
       gameState.powerTokens(HouseType.Kraken)
@@ -50,8 +48,7 @@ case class ActionChooseHouseCardAfterLion5(
         if updatedPhase != null
         then updatedPhase
         else SubPhaseGetTidesOfBattleCards(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse)),
-      discardedHouseCards = gameState.discardedHouseCards + (houseType -> updatedDiscardedForHouse),
-      combat = 
+      combat =
         if isAttackerAction
         then gameState.combat.copy(attackerCard = houseCard)
         else gameState.combat.copy(defenderCard = houseCard)
