@@ -42,4 +42,4 @@ class ResolveCardLion1Reaction(BasePhaseReaction):
         if combat.attacker_house is self._house_type:
             return combat.defender_house
         else:
-            return combat.defender_house
+            return combat.attacker_house

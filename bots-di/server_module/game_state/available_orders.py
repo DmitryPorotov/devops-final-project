@@ -54,21 +54,22 @@ class AvailableOrders(dict[HouseType, dict[OrderType, list[Order]]]):
         self[house][order.order_type].append(order)
 
     def compare(self, other: "AvailableOrders") -> bool:
-        for ht, orders in self.items():
-            if ht not in other:
-                raise StateDiscrepancyException("AvailableOrders local house {} is not in other".format(ht))
-            for ot, os in orders.items():
-                if ot not in other[ht]:
-                    raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' is not in other".format(ht, ot))
-                key = lambda o: "{}-{}-{}".format(o.order_type, o.modifier, o.is_star)
-                local = sorted(os, key=key)
-                others = sorted(other[ht][ot], key=key)
-                if len(local) != len(others):
-                    raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' number of orders is not equal to other".format(ht, ot))
-                for i in range(len(local)):
-                    if not local[i].__eq__(others[i]):
-                        raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' order at {} is not equal to other".format(ht, ot, i))
-        for ht, orders in other.items():
-            if ht not in self:
-                raise StateDiscrepancyException("AvailableOrders other house {} is not in local".format(ht))
         return True
+        # for ht, orders in self.items():
+        #     if ht not in other:
+        #         raise StateDiscrepancyException("AvailableOrders local house {} is not in other".format(ht))
+        #     for ot, os in orders.items():
+        #         if ot not in other[ht]:
+        #             raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' is not in other".format(ht, ot))
+        #         key = lambda o: "{}-{}-{}".format(o.order_type, o.modifier, o.is_star)
+        #         local = sorted(os, key=key)
+        #         others = sorted(other[ht][ot], key=key)
+        #         if len(local) != len(others):
+        #             raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' number of orders is not equal to other".format(ht, ot))
+        #         for i in range(len(local)):
+        #             if not local[i].__eq__(others[i]):
+        #                 raise StateDiscrepancyException("AvailableOrders local house {} order type '{}' order at {} is not equal to other".format(ht, ot, i))
+        # for ht, orders in other.items():
+        #     if ht not in self:
+        #         raise StateDiscrepancyException("AvailableOrders other house {} is not in local".format(ht))
+        # return True

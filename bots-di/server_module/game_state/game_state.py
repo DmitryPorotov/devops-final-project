@@ -69,13 +69,14 @@ class GameState(dict[str, dict | int]):
             json['roundCounter'],
         )
 
-    def compare(self, other: "GameState") -> bool:
+    def compare(self, other: "GameState", except_: list[str] = None) -> bool:
         for key, val in self.items():
-            if isinstance(val, dict):
-                if not val.compare(other[key]):
-                    return False
-            if isinstance(val, int):
-                if other[key] != val:
-                    return False
+            if except_ is None or (except_ is not None and key not in except_):
+                if isinstance(val, dict):
+                    if not val.compare(other[key]):
+                        return False
+                if isinstance(val, int):
+                    if other[key] != val:
+                        return False
         return True
 

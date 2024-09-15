@@ -10,6 +10,8 @@ from events_service import EventSourcesService
 from redis_service import RedisConnector
 from server_module.game_state.game_state import GameState
 from server_module.games_data_service import GamesDataService
+from server_module.reactions.game_action_reactions.action.resolve_card_kraken6_reaction import \
+    ResolveCardKraken6Reaction
 from server_module.reactions.game_action_reactions.action.calculate_combat_outcome_reaction import \
     CalculateCombatOutcomeReaction
 from server_module.reactions.game_action_reactions.action.clean_up_after_combat_house_card_reaction import \
@@ -18,11 +20,19 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
     CleanUpAfterCombatReaction
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
+from server_module.reactions.game_action_reactions.action.resolve_card_moose3_reaction import ResolveCardMoose3Reaction
+from server_module.reactions.game_action_reactions.action.resolve_consolidate_power_order_reaction import \
+    ResolveConsolidatePowerOrderReaction
 from server_module.reactions.game_action_reactions.planning.raven_choose_change_order_or_look_at_wildling_card_reaction import \
     RavenChooseChangeOrderOrLookAtWildlingCardReaction
 from server_module.reactions.game_action_reactions.planning.raven_choose_put_wildlings_card_on_top_or_bottom_reaction import \
     RavenChoosePutWildlingsCardOnTopOrBottomReaction
+from server_module.reactions.game_action_reactions.round_events.resolve_ties_after_bidding_on_wildlings_reaction import \
+    ResolveTiesAfterBiddingOnWildlingsReaction
 from server_module.reactions.game_action_reactions.round_events.collect_taxes_reaction import CollectTaxesReaction
+from server_module.reactions.game_action_reactions.round_events.finish_mustering_reaction import FinishMusteringReaction
+from server_module.reactions.game_action_reactions.round_events.get_wildlings_card_reaction import \
+    GetWildlingsCardReaction
 from server_module.reactions.game_action_reactions.round_events.recalculate_supplies_reaction import \
     RecalculateSuppliesReaction
 from server_module.reactions.game_action_reactions.round_events.resolve_ties_after_bidding_on_tracks_reaction import \
@@ -51,7 +61,7 @@ switch_obj = {
     'cleanUpAfterCombat': CleanUpAfterCombatReaction,
     'resolveCardLion1': CleanUpAfterCombatReactionHouseCard,
     'resolveCardMoose2': CleanUpAfterCombatReactionHouseCard,
-    'resolveCardMoose3': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardMoose3': ResolveCardMoose3Reaction,
     'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
     'openTrackBids': OpenTrackBidsReaction,
     'useValyrianSteelBlade': UseValyrianSteelBladeReaction,
@@ -63,6 +73,9 @@ switch_obj = {
     'cleanUpAfterRound': CleanUpAfterRoundReaction,
     'ravenChooseChangeOrderOrLookAtWildlingCard': RavenChooseChangeOrderOrLookAtWildlingCardReaction,
     'ravenChoosePutWildlingsCardOnTopOrBottom': RavenChoosePutWildlingsCardOnTopOrBottomReaction,
+    'resolveConsolidatePowerOrder': ResolveConsolidatePowerOrderReaction,
+    'getWildlingsCard': GetWildlingsCardReaction,
+    'resolveCardKraken6': ResolveCardKraken6Reaction,
 
 
     'openOrders': NothingToUpdateGenericReaction,
@@ -75,21 +88,18 @@ switch_obj = {
     'addOrder': NothingToUpdateGenericReaction,
     'autoKillUnitsAfterBattle': NothingToUpdateGenericReaction,
     'resolveSupportOrder': NothingToUpdateGenericReaction,
-    'resolveConsolidatePowerOrder': NothingToUpdateGenericReaction,
     'ravenChooseTrackBidsOrCollectTaxes': NothingToUpdateGenericReaction,
     'retreatUnitsAfterBattle': NothingToUpdateGenericReaction,
     'autoRetreatAfterBattle': NothingToUpdateGenericReaction,
+    'finishMustering': FinishMusteringReaction,
+    'resolveTiesAfterBiddingOnWildlings': ResolveTiesAfterBiddingOnWildlingsReaction,
 
     'throneChooseSupplyOrMuster': NothingToUpdateGenericReaction,
-    'finishMustering': NothingToUpdateGenericReaction,
     'wildlingsCard': NothingToUpdateGenericReaction,  # todo maybe save somewhere
     'getEventCards': NothingToUpdateGenericReaction,
     'setEventCards': NothingToUpdateGenericReaction,
-    'getWildlingsCard': NothingToUpdateGenericReaction,
     'setWildlingsCard': NothingToUpdateGenericReaction,  #todo save somewhere
     'disableOrder': NothingToUpdateGenericReaction,
-    'resolveCardKraken6': NothingToUpdateGenericReaction,
-    'resolveTiesAfterBiddingOnWildlings': NothingToUpdateGenericReaction,
     'steelBladeChooseDisableMarchOrDefend': NothingToUpdateGenericReaction,
     'resolveCardRose4': NothingToUpdateGenericReaction,
     'resolveSpecialConsolidatePower': NothingToUpdateGenericReaction,
@@ -148,9 +158,15 @@ class ActionReact:
                     "autoRetreatAfterBattle",
                     "killUnitsAfterBattle",
                     "retreatUnitsAfterBattle",
+                    "ravenChooseTrackBidsOrCollectTaxes",
+                    "wildlingsBids",
+                    "trackBids"
                     ]:
                     new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
                     local_game_handle = ActionReact.game_data.get_game(game_id)
-                    local_game_handle.state.compare(new_game_state)
+                    if reply['player_action']['actionType'] == 'cleanUpAfterCombat':
+                        local_game_handle.state.compare(new_game_state, ['AvailableOrders'])
+                    else:
+                        local_game_handle.state.compare(new_game_state)
 
                 react_to_phase(game_id, reply['current_phase'])

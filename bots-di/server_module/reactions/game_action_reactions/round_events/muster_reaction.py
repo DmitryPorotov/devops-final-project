@@ -17,7 +17,7 @@ class MusterReaction(BaseActionReaction):
         from_tile = str(pa['fromTile'])
         to_tile = str(pa['toTile']) if 'toTile' in pa else from_tile
         house = HouseType[pa['houseType'].upper()]
-        if pa['isUpgrade']:
+        if 'isUpgrade' in pa and pa['isUpgrade']:
             subtract_army(self._game_state.armies[from_tile], [MilitaryUnit(house, MilitaryUnitType.FOOTMEN)])
         if to_tile not in self._game_state.armies:
             self._game_state.armies[to_tile] = []

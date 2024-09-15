@@ -20,6 +20,7 @@ class ActionResolveCardMoose3(TypedDict):
     actionType: str  # = "resolveCardMoose3"
     houseType: HouseType
     cardCode: int
+    opponentHouseType: HouseType
 
 
 class ActionRetreatUnitsAfterBattle(TypedDict):
@@ -154,6 +155,7 @@ class ActionLeavePowerTokenAtTile(TypedDict):
     houseType: HouseType
     doLeave: bool
     tileNumber: int
+    state: NotRequired[dict[str, dict]]
 
 
 class ActionResolveMarchOrder(TypedDict):

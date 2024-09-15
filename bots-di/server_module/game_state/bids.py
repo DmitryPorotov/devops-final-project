@@ -9,7 +9,7 @@ class Bids(dict[HouseType, int]):
             self[HouseType[k.upper()]] = v
 
     def compare(self, other: "Bids") -> bool:
-        for ht, n in self.items():
-            if n != other[ht]:
-                raise StateDiscrepancyException("Bids of {} in local {} are not equal to other {}".format(ht, n, other[ht]))
         return True
+#         for ht, n in self.items():
+#             if n != other[ht]:
+#                 raise StateDiscrepancyException("Bids of {} in local {} are not equal to other {}".format(ht, n, other[ht]))

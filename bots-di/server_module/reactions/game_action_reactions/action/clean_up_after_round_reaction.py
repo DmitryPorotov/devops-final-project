@@ -22,6 +22,7 @@ class CleanUpAfterRoundReaction(BaseActionReaction):
         self._game_state.dominance_tokens_usage['valyrianSword'] = False
         self._game_state.dominance_tokens_usage['messengerRaven'] = False
         self._game_state.used_mustering_points.clear()
+        self._game_state['usedMusteringPoints'] = self._game_state.used_mustering_points
         self._game_state.round_counter = pa['round']
         for tn, army in self._game_state.armies.items():
             for mu in army:
