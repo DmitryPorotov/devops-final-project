@@ -176,11 +176,26 @@ object ReactionGameAction {
             "doCardResolve" -> (updatedGameState.combat != null)
           )
         )
+        case a: ActionLeavePowerTokenAtTile =>
+          if a.gameState.combat != null && a.gameState.combat.defenderHouse == HouseType.Neutral
+          then
+            buildMessageToAll(
+              a.toJson.obj.addOne(
+                "state" -> ActionCleanUpAfterCombat.buildMessage(updatedGameState)
+              )
+            )
+          else
+            buildMessageToAll(a.toJson)
         case a: ActionCleanUpAfterRound => buildMessageToAll(
           a.toJson.obj.addAll(
             ActionCleanUpAfterRound.buildMessage(updatedGameState).obj
           )
         )
+        case a: ActionResolveCardMoose3 =>
+          val combat = a.gameState.combat
+          val json = a.toJson
+          json.obj.addOne("opponentHouseType" -> (if combat.attackerHouse == HouseType.Moose then combat.defenderHouse.toString else combat.attackerHouse.toString))
+          buildMessageToAll(json)
         case a: ActionGetTidesOfBattleCards =>
           if updatedGameState.subPhase.isInstanceOf[SubPhaseRefreshTidesOfBattleDeck]
           then return buildMessageToAll(
@@ -221,10 +236,6 @@ object ReactionGameAction {
           val json = a.toJson
           json.obj.addOne("supplies" -> updatedGameState.supplies.toJson)
           buildMessageToAll(json)
-        case a: ActionCollectTaxes =>
-          val json = a.toJson
-          json.obj.addOne("powerTokens" -> updatedGameState.powerTokens.toJson)
-          buildMessageToAll(json)
         case a: ActionTrackBids =>
           val json = a.toJson
           json.obj("bid") = -1
@@ -239,12 +250,14 @@ object ReactionGameAction {
             updatedGameState.usedMusteringPoints.map((k, v) => k.number.toString -> ujson.Num(v))
           ))
           buildMessageToAll(json)
+        case a: ActionCollectTaxes =>
+          addPowerTokensToMessage(a.toJson, updatedGameState)
         case a: ActionResolveConsolidatePowerOrder =>
-          val json = a.toJson
-          json.obj.addOne(
-            "powerTokens" -> updatedGameState.powerTokens.toJson
-          )
-          buildMessageToAll(json)
+          addPowerTokensToMessage(a.toJson, updatedGameState)
+        case a: ActionGetWildlingsCard =>
+          addPowerTokensToMessage(a.toJson, updatedGameState)
+        case a: ActionResolveTiesAfterBiddingOnWildlings =>
+          addPowerTokensToMessage(a.toJson, updatedGameState)
         case a => buildMessageToAll(a.toJson)
     if updatedGameState.combat != null then
       val updatedCombat =
@@ -270,4 +283,8 @@ object ReactionGameAction {
       "to" -> "*",
       "player_action" -> a
     )
+  private def addPowerTokensToMessage(json: ujson.Value, updatedGameState: GameState): ujson.Obj = {
+    json.obj.addOne("powerTokens" -> updatedGameState.powerTokens.toJson)
+    buildMessageToAll(json)
+  }
 }
