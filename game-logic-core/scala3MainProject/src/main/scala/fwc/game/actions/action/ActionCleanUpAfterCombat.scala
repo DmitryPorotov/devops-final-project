@@ -19,7 +19,7 @@ case class ActionCleanUpAfterCombat(
   override def doAction(): GameState = {
 
     val combat = gameState.combat
-    val updatedArmies = `move winner's army to enbattled tile` (combat)
+    val updatedArmies = `move winner's army to embattled tile` (combat)
 
     val updatedDiscardedCards = `discard cards used in combat` (combat)
 
@@ -149,7 +149,7 @@ case class ActionCleanUpAfterCombat(
     ))
   }
 
-  private def `move winner's army to enbattled tile`(combat: Combat) = {
+  private def `move winner's army to embattled tile`(combat: Combat) = {
     if combat.loserCard.exists(_.isPufferfish2) && combat.loser.contains(combat.defenderHouse)
     then gameState.armies + (combat.attackerTileNum ->
       (gameState.armies.getOrElse(combat.attackerTileNum, Seq()) ++ combat.attackerArmy)
