@@ -86,7 +86,7 @@ object CombatCommon {
       )
     else
       val remainingArmiesAtSourceTileAfterDefeat =
-        gameState.armies.getOrElse(tileNumberUnderAttack, Seq())
+        gameState.armies.getOrElse(gameState.combat.attackerTileNum, Seq())
           :++ attackerArmy.map(_.copy(isDefeated = true))
       gameState.copy(
         subPhase = newPhase,
