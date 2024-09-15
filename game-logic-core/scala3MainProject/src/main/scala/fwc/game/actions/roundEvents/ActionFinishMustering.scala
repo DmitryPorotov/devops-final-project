@@ -32,13 +32,8 @@ case class ActionFinishMustering(
       else SubPhaseMuster(nextHouse)
     }
 
-    val updatedGameState = gameState.copy(
-      subPhase = newPhase
-    )
-
-    if newPhase.isInstanceOf[SubPhaseMuster]
-    then updatedGameState
-    else updatedGameState.copy(
+    gameState.copy(
+      subPhase = newPhase,
       usedMusteringPoints = UsedMusteringPoints()
     )
   }
