@@ -23,16 +23,16 @@ case class ActionResolveCardMoose3(
     if cardCode >= 7
     then throw new ActionException("Card code is invalid")
 
-    val loserHouse = gameState.combat.loser.head
+    val opponentHouse = if gameState.combat.defenderHouse == HouseType.Moose then gameState.combat.attackerHouse else gameState.combat.defenderHouse
 
     val updatedDiscardedHouseCards =
       if cardCode < 0
       then gameState.discardedHouseCards
       else
-        val loserDisCards: Seq[Int] = gameState.discardedHouseCards.getOrElse(loserHouse, Seq[Int]())
+        val loserDisCards: Seq[Int] = gameState.discardedHouseCards.getOrElse(opponentHouse, Seq[Int]())
         if loserDisCards.contains(cardCode)
         then throw new ActionException("This card is already discarded")
-        else gameState.discardedHouseCards + (loserHouse -> (gameState.discardedHouseCards(loserHouse) :+ cardCode))
+        else gameState.discardedHouseCards + (opponentHouse -> (gameState.discardedHouseCards(opponentHouse) :+ cardCode))
 
     gameState.copy(
       subPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.attackerHouse),
