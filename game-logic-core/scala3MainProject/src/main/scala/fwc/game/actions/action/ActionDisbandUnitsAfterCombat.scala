@@ -38,11 +38,8 @@ case class ActionDisbandUnitsAfterCombat(
     val tileNumber = toConsolidate(houseType).head
 
     val updatedArmies =
-      if !gameState.armies.getOrElse(tileNumber, Seq()).contains(unit)
-      then throw new ActionException("No such unit at the tile")
-      else
-        val army = gameState.armies(tileNumber).deleteFirstMatch(unit)
-        gameState.armies + (tileNumber -> army)
+      val army = gameState.armies(tileNumber).deleteFirstMatch(getUnitPrioritizeFullMatch(gameState.armies.getOrElse(tileNumber, Seq()), unit))
+      gameState.armies + (tileNumber -> army)
 
     val toConsolidate2 = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies, houseType)
 
@@ -58,6 +55,16 @@ case class ActionDisbandUnitsAfterCombat(
       armies = updatedArmies,
       combat = if doNotDisbandAnymore then null else gameState.combat
     )
+  }
+
+  private def getUnitPrioritizeFullMatch(army: Seq[MilitaryUnit], unit: MilitaryUnit): MilitaryUnit = {
+    if army.contains(unit)
+    then unit
+    else
+      val unitChangedDefeated = unit.copy(isDefeated = !unit.isDefeated)
+      if army.contains(unitChangedDefeated)
+      then unitChangedDefeated
+      else throw new ActionException("No such unit at the tile")
   }
 
   override def toJson: Value = ujson.Obj(
