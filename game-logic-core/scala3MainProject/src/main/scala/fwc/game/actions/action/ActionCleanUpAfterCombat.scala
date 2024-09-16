@@ -139,11 +139,11 @@ case class ActionCleanUpAfterCombat(
   private def `discard cards used in combat`(combat: Combat) = {
     gameState.discardedHouseCards.concat(Map(
       combat.attackerHouse -> (
-        if combat.attackerCard == null then gameState.discardedHouseCards(combat.attackerHouse)
+        if combat.attackerCard == null || gameState.discardedHouseCards(combat.attackerHouse).contains(combat.attackerCard.code) then gameState.discardedHouseCards(combat.attackerHouse)
         else gameState.discardedHouseCards(combat.attackerHouse) :+ combat.attackerCard.code
         ),
       combat.defenderHouse -> (
-        if combat.defenderCard == null then gameState.discardedHouseCards(combat.defenderHouse)
+        if combat.defenderCard == null || gameState.discardedHouseCards(combat.defenderHouse).contains(combat.defenderCard.code) then gameState.discardedHouseCards(combat.defenderHouse)
         else gameState.discardedHouseCards(combat.defenderHouse) :+ combat.defenderCard.code
         )
     ))
