@@ -21,6 +21,8 @@ class ResolveSupportOrderReaction(BasePhaseReaction):
             return [self._to_json(self._house_type, phase['tilesNumbers'])]
         else:
             to_house = combat.defender_house if random.randrange(2) else combat.attacker_house
+            if to_house is HouseType.NEUTRAL:
+                to_house = combat.attacker_house
             return [self._to_json(to_house, phase['tilesNumbers'])]
 
 

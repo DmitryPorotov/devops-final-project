@@ -20,3 +20,4 @@ class RavenChangeOrderReaction(BaseActionReaction):
 
         self._game_state.placed_orders[house][tile_num] = order
         self._game_state.dominance_tokens_usage['messengerRaven'] = True
+        self.logger.info(pa)

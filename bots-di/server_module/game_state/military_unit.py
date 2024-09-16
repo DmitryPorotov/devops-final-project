@@ -21,7 +21,7 @@ class MilitaryUnit(dict[str, HouseType | MilitaryUnitType | bool | int]):
         self.garrison_defence_points = garrison_defence_points
 
     def __eq__(self, other: dict[str, HouseType | MilitaryUnitType | bool | int]):
-        return str(self.unit_type) == other['type'] and str(self.house) == other['house'] and (self.is_defeated == other['isDefeated'] if 'isDefeated' in other else True)\
+        return str(self.unit_type) == str(other['type']) and str(self.house) == str(other['house']) and (self.is_defeated == other['isDefeated'] if 'isDefeated' in other else True)\
             and (self.garrison_defence_points == other['defPoints'] if 'defPoints' in other else True)
 
     @classmethod

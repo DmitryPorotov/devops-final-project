@@ -3,6 +3,7 @@ from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.order import Order
 from server_module.game_state.order_type import OrderType
+from server_module.game_state.track_type import TrackType
 from server_module.reactions.game_action_reactions.base_action_reaction import BaseActionReaction
 from DTO.messages.reply import Reply
 
@@ -22,4 +23,7 @@ class AddOrderReaction(BaseActionReaction):
             )
             house = HouseType[pa['houseType'].upper()]
             self._game_state.available_orders.use_order(house, order)
-            self._game_state.placed_orders.place_order(house, pa['tileNumber'], order)
+            pos_at_court = self._game_state.tracks[TrackType.COURT].index(HouseType[pa["houseType"].upper()])
+            self._game_state.placed_orders.place_order(house, pa['tileNumber'], order, pos_at_court)
+
+        self.logger.info(pa)

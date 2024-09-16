@@ -10,6 +10,7 @@ class CalculateCombatOutcomeReaction(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
+        pa: ActionCalculateCombatOutcome = self._reply['player_action']
         combat: Combat = Combat.from_json(self._reply['combat'])
         self._game_state.combat = combat
 

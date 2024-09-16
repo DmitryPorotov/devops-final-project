@@ -9,6 +9,7 @@ class UseValyrianSteelBladeReaction(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
-        action: ActionUseValyrianSteelBlade = self._reply['player_action']
-        if action['choice'] != 'nothing':
+        pa: ActionUseValyrianSteelBlade = self._reply['player_action']
+        if pa['choice'] != 'nothing':
             self._game_state.dominance_tokens_usage['valyrianSword'] = True
+        self.logger.info(pa)

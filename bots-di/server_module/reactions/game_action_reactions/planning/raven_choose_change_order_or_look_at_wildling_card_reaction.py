@@ -11,3 +11,4 @@ class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionRavenChooseChangeOrderOrLookAtWildlingCard = self._reply['player_action']
         self._game_state.dominance_tokens_usage['messengerRaven'] = pa['ravenChoice'] != 'nothing'
+        self.logger.info(pa)

@@ -27,7 +27,8 @@ class ResolveCardLion1Reaction(BasePhaseReaction):
     def __find_order_to_remove(self) -> int:
         combat = self._game_state.combat
         orders = dict(self._game_state.placed_orders[self.__get_opponent_house()])
-        del orders[str(combat.defender_tile_num)]  # this order is removed anyway because lion won
+        if (str_order := str(combat.defender_tile_num)) in orders:
+            del orders[str_order]  # this order is removed anyway because lion won
         orders_tuples = [*((tn, o) for tn, o in orders.items())]
         if (l := len(orders_tuples)) > 1:
             idx = random.randrange(l)

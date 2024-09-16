@@ -13,4 +13,6 @@ class CleanUpAfterCombatReactionHouseCard(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
+        pa: AfterCombatHouseCard = self._reply['player_action']
         self._game_state.combat = None
+        self.logger.info(pa)

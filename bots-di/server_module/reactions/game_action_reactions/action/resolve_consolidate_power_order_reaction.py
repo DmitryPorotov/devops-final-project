@@ -12,3 +12,4 @@ class ResolveConsolidatePowerOrderReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionResolveConsolidatePowerOrder = self._reply['player_action']
         self._game_state.power_tokens = self._game_state['powerTokens'] = PowerTokens(**pa['powerTokens'])
+        self.logger.info(pa)

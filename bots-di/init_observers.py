@@ -13,6 +13,7 @@ from server_module.reactions.management.round_events_main_phase_end import Round
 from server_module.reactions.game_phase_reactions.round_events.tracks_bids_reaction import TracksBidsReaction
 from server_module.reactions.game_phase_reactions.action.game_end_reaction import GameEndReaction
 from server_module.reactions.game_action_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
+from server_module.reactions.game_phase_reactions.round_events.wildlings_bids_reaction import WildlingsBidsReaction
 
 def init():
     FillWithBots()

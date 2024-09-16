@@ -20,3 +20,4 @@ class CleanUpAfterCombatReaction(BaseActionReaction):
         self._game_state.placed_orders = self._game_state['placedOrders'] = PlacedOrders(**state_json['placedOrders'])
         self._game_state.discarded_house_cards = self._game_state['discardedHouseCards'] = DiscardedHouseCards(**state_json['discardedHouseCards'])
         self._game_state.power_tokens = self._game_state['powerTokens'] = PowerTokens(**state_json['powerTokens'])
+        self.logger.info(pa)

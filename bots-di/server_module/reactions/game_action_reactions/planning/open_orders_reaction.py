@@ -11,9 +11,10 @@ class OpenOrdersReaction(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
-        action: ActionOpenOrders = self._reply['player_action']
-        if 'orders' in action:
-            orders = action["orders"]
+        pa: ActionOpenOrders = self._reply['player_action']
+        if 'orders' in pa:
+            self.logger.info(pa)
+            orders = pa["orders"]
             for ht, os in orders.items():
                 for tn, o in os.items():
                     house = HouseType[ht.upper()]

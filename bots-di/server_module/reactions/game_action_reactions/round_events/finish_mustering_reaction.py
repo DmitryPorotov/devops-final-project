@@ -8,4 +8,6 @@ class FinishMusteringReaction(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
+        pa: ActionMuster = self._reply['player_action']
         self._game_state.used_mustering_points.clear()
+        self.logger.info(pa)

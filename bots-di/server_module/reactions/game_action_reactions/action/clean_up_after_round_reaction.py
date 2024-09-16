@@ -27,3 +27,5 @@ class CleanUpAfterRoundReaction(BaseActionReaction):
         for tn, army in self._game_state.armies.items():
             for mu in army:
                 mu.is_defeated = mu['isDefeated'] = False
+
+        self.logger.info(pa)

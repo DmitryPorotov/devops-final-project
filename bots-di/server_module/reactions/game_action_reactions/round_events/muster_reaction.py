@@ -24,3 +24,5 @@ class MusterReaction(BaseActionReaction):
         self._game_state.armies[to_tile].append(MilitaryUnit.from_json(pa['unitToMuster']))
         for tile, points in pa['usedPoints'].items():
             self._game_state.used_mustering_points[str(tile)] = points
+
+        self.logger.info(pa)

@@ -9,4 +9,6 @@ class RavenChoosePutWildlingsCardOnTopOrBottomReaction(BaseActionReaction):
         super().__init__(game_state, reply)
 
     def update_game_state(self):
+        pa: ActionRavenChoosePutWildlingsCardOnTopOrBottom = self._reply['player_action']
         self._game_state.dominance_tokens_usage['messengerRaven'] = True
+        self.logger.info(pa)

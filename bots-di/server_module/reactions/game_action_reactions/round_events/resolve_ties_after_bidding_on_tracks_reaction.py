@@ -12,3 +12,4 @@ class ResolveTiesAfterBiddingOnTracksReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionResolveTiesAfterBiddingOnTracks = self._reply['player_action']
         self._game_state.tracks[TrackType[pa['trackType'].upper()]] = [*(HouseType[t.upper()] for t in pa['resolution'])]
+        self.logger.info(pa)

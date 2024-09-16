@@ -16,7 +16,7 @@ class WildlingsKillUnitReaction(BasePhaseReaction):
 
     def get_actions(self) -> list[MessageGameAction[ActionWildlingsKillUnit]]:
         sp: SubPhaseWildlingsKillUnits = self._phase
-        do_castles = sp['loserHouse'] == self._house_type and self._game_state.board_cards.wildlings[0] == 6
+        do_castles = ('loserHouse' in sp and sp['loserHouse'] == self._house_type and self._game_state.board_cards.wildlings[0] == 6)
         tiles = self.__get_tile_nums()
         castle_tiles = {}
         if do_castles:

@@ -41,3 +41,5 @@ class ResolveMarchOrderReaction(BaseActionReaction):
             self._game_state.combat = Combat.from_json(self._reply['combat'])
             combat_tn = self._game_state.combat.defender_tile_num
             del self._game_state.armies[str(combat_tn)]
+
+        self.logger.info(pa)

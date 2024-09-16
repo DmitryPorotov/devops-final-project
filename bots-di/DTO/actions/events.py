@@ -1,4 +1,6 @@
 from typing import TypedDict, Optional, NotRequired
+
+from DTO.phases.phases import SubPhaseWildlingsCard
 from server_module.game_state.military_unit import HouseType, MilitaryUnit
 
 
@@ -139,6 +141,7 @@ class ActionWildlingsKillUnit(TypedDict):
 class ActionSetWildlingsCard(TypedDict):
     actionType: str  # = "setWildlingsCard"
     wildlingsCardCode: int
+    subPhaseWildlingsCard: SubPhaseWildlingsCard
 
 
 class ActionDisbandUnitDueToSupplies(TypedDict):

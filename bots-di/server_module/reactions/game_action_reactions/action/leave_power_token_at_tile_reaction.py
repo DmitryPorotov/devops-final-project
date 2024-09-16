@@ -34,3 +34,4 @@ class LeavePowerTokenAtTileReaction(BaseActionReaction):
                 self._game_state['armies'] = self._game_state.armies
             if 'combat' in self._reply:
                 self._game_state.combat = Combat.from_json(self._reply['combat'])
+        self.logger.info(pa)

@@ -1,4 +1,4 @@
-from typing import NamedTuple, Optional, Any
+from typing import TypedDict, NamedTuple, Optional, Any
 
 from base_service import BaseService
 from server_module.game_rules.game_rules import GameRules
@@ -14,10 +14,14 @@ from server_module.game_state.placed_orders import PlacedOrders
 from server_module.game_state.power_tokens import PowerTokens
 from server_module.game_state.supplies import Supplies
 from server_module.game_state.tides_of_battle_card import TidesOfBattleCard
+from server_module.game_state.track_type import TrackType
 from server_module.game_state.tracks import Tracks
 from server_module.reactions.management.error_retry_counter import ErrorRetryCounter
 from server_module.reactions.game_phase_reactions.multi_house_reaction import MultiHouseReaction
 
+class OtherMiscData(TypedDict):
+    widlings_bids: dict[HouseType, int]
+    last_track: TrackType
 
 class GameHandle(NamedTuple):
     worker: str
@@ -25,7 +29,7 @@ class GameHandle(NamedTuple):
     houses: set[HouseType]
     multi_house_reaction: MultiHouseReaction
     error_retry_counter: ErrorRetryCounter
-    other: dict[str, Any]
+    other: OtherMiscData
 
 class GamesDataService(BaseService):
     def __init__(self):

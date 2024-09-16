@@ -17,3 +17,4 @@ class ResolveCardMoose3Reaction(BaseActionReaction):
                 self._game_state.discarded_house_cards[op_house] = []
             self._game_state.discarded_house_cards[op_house].append(pa['cardCode'])
         self._game_state.combat = None
+        self.logger.info(pa)

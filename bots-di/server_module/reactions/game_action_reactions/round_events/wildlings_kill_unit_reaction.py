@@ -14,3 +14,5 @@ class WildlingsKillUnitReaction(BaseActionReaction):
         del army[idx]
         if not army:
             del self._game_state.armies[str(pa['tileNumber'])]
+
+        self.logger.info(pa)

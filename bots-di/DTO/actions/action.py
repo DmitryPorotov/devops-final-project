@@ -170,6 +170,7 @@ class ActionResolveRaidOrder(TypedDict):
     houseType: HouseType
     sourceTileNumber: int
     targetTileNumber: int
+    powerTokens: dict[HouseType, int]
 
 
 class ActionChooseHouseCardAfterLion5(TypedDict):

@@ -44,7 +44,7 @@ class Armies(dict[str, list[MilitaryUnit]]):
 
     @staticmethod
     def __mil_unit_sort_key(item: MilitaryUnit):
-        return "{}-{}".format(item.unit_type, item.is_defeated)
+        return "{}-{}".format(item.unit_type, item.house)
 
     def compare(self, other: "Armies") -> bool:
         for tn, army in other.items():

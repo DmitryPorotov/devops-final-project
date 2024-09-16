@@ -15,3 +15,5 @@ class OpenTrackBidsReaction(BaseActionReaction):
         self._game_state.bids = self._game_state['bids'] = Bids(**pa['bids'])
         for house, bid in pa['bids'].items():
             self._game_state.power_tokens[HouseType[house.upper()]] -= bid
+
+        self.logger.info(pa)
