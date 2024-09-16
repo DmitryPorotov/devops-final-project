@@ -11,7 +11,7 @@ type CardCode = Int
 extension (t: CardCode)
   def isValid: Boolean = t >= 0 && t < 7
   
-case class DiscardedHouseCards(cards: Map[HouseType, Seq[CardCode]] = Map()) extends JsonSerializable {
+case class DiscardedHouseCards(private val cards: Map[HouseType, Seq[CardCode]] = Map()) extends JsonSerializable {
   def toJson: ujson.Value = {
     ujson.Obj.from(
       cards.map((houseType, cardCodeSeq: Seq[CardCode]) => {
