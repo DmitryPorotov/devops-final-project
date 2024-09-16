@@ -256,6 +256,8 @@ object ReactionGameAction {
           addPowerTokensToMessage(a.toJson, updatedGameState)
         case a: ActionGetWildlingsCard =>
           addPowerTokensToMessage(a.toJson, updatedGameState)
+        case a: ActionResolveRaidOrder =>
+          addPowerTokensToMessage(a.toJson, updatedGameState)
         case a: ActionResolveTiesAfterBiddingOnWildlings =>
           addPowerTokensToMessage(a.toJson, updatedGameState)
         case a => buildMessageToAll(a.toJson)
