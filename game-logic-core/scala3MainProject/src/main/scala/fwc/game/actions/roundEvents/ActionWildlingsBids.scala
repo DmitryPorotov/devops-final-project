@@ -43,19 +43,21 @@ case class ActionWildlingsBids(
 
     val (isWin, winnerLoser) = gameState.bids.getLoserOrWinnerCandidatesInWildlingsBids(gameState.wildlingCounter)
 
+    val subPhaseGetWildlingsCard = SubPhaseGetWildlingsCard(
+      HouseType.getSeqOfAll,
+      SubPhaseWildlingsCard(
+        gameState.bids.toSeq.map(_._1),
+        winnerLoser.head,
+        -1,
+        isWin
+      )
+    )
+    
     val newPhase =
       if winnerLoser.size == 1
-      then 
-        SubPhaseGetWildlingsCard(
-          HouseType.getSeqOfAll,
-          SubPhaseWildlingsCard(
-            gameState.bids.toSeq.map(_._1),
-            winnerLoser.head,
-            -1,
-            isWin
-          )
-        )
-      else SubPhaseResolveTiesAfterBiddingOnWildlings(gameState.tracks.throneOwner ,winnerLoser, isWin)
+      then
+        subPhaseGetWildlingsCard
+      else SubPhaseResolveTiesAfterBiddingOnWildlings(gameState.tracks.throneOwner ,winnerLoser, subPhaseGetWildlingsCard)
 
 
     gameState.copy(

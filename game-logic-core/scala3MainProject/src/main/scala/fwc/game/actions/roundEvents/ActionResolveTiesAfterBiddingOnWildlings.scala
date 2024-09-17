@@ -24,16 +24,11 @@ case class ActionResolveTiesAfterBiddingOnWildlings(
     then throw new ActionException("Wrong house")
 
     if !currentPhase.houseTypes.contains(winnerLoser)
-    then throw new ActionException(s"${if currentPhase.isWinner then "Winner" else "Loser"} should " +
+    then throw new ActionException(s"${if currentPhase.subPhaseGetWildlingsCard.subPhaseWildlingsCard.isWin then "Winner" else "Loser"} should " +
       s"be chosen from one of ${currentPhase.houseTypes.mkString(", ")}")
 
     gameState.copy(
-      subPhase = SubPhaseWildlingsCard(
-        gameState.bids.toSeq.map(_._1),
-        winnerLoser,
-        gameState.boardCards.wildlings.head.code,
-        currentPhase.isWinner
-      )
+      subPhase = currentPhase.subPhaseGetWildlingsCard
     )
   }
 
