@@ -160,7 +160,8 @@ object SubPhase extends JsonParsable {
       case "resolveTiesAfterBiddingOnWildlings" =>
         val (hts, mp) = getFieldsOfMultipleHouses(json)
         val (ht, _) = getFieldsOfSingleHouse(json)
-        SubPhaseResolveTiesAfterBiddingOnWildlings(ht, hts, json("isWinner").bool, mp)
+        val subPhaseGetWildlingsCard = SubPhase.fromJson(json("subPhaseGetWildlingsCard"))
+        SubPhaseResolveTiesAfterBiddingOnWildlings(ht, hts, subPhaseGetWildlingsCard.asInstanceOf[SubPhaseGetWildlingsCard], mp)
       case "wildlingsDiscardHouseCard" =>
         val f = getFieldsOfMultipleHouses(json)
         SubPhaseWildlingsDiscardHouseCard(f._1, f._2)
