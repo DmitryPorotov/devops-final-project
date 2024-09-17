@@ -18,6 +18,9 @@ class Kraken10OrderNotRemovedAfterDefeat extends AnyFlatSpec with should.Matcher
     val lines = try source.mkString finally source.close
 
     Reactor.restoreGameDebug(lines, Some((actNum, currentState, action, newState: GameState) =>{
+      if actNum >= 220
+      then
+        val a = 0
       if newState.roundCounter == 3 && newState.combat != null && newState.combat.defenderHouse == HouseType.Kraken
       then
         val a = 0

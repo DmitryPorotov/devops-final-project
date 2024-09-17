@@ -703,12 +703,6 @@
       "cardCode": 3
     },
     {
-      "actionType": "leavePowerTokenAtTile",
-      "houseType": "moose",
-      "doLeave": true,
-      "tileNumber": 40
-    },
-    {
       "actionType": "resolveMarchOrder",
       "houseType": "moose",
       "sourceTileNumber": 40,

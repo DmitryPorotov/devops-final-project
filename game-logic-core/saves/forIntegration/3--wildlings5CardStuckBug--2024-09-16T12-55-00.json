@@ -120,6 +120,14 @@
       "actionType": "wildlingsCard"
     },
     {
+      "actionType": "setWildlingsCard",
+      "wildlingsCardCode": 5
+    },
+    {
+      "actionType": "getWildlingsCard",
+      "isRandom": true
+    },
+    {
       "actionType": "resolveTiesAfterBiddingOnWildlings",
       "houseType": "moose",
       "winnerLoser": "moose"
