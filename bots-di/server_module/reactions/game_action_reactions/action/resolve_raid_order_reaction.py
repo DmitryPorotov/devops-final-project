@@ -23,4 +23,3 @@ class ResolveRaidOrderReaction(PowerTokensChangeGenericReaction):
             target_house = self._game_state.armies[target_tn][0].house
             self._game_state.available_orders.return_order(target_house, self._game_state.placed_orders[target_house][target_tn])
             self._game_state.placed_orders.remove_order(target_tn)
-        self.logger.info(pa)

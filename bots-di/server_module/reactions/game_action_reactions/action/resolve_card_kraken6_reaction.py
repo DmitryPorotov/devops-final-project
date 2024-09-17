@@ -11,7 +11,7 @@ class ResolveCardKraken6Reaction(BaseActionReaction):
 
     def update_game_state(self):
         pa: ActionResolveCardKraken6 = self._reply['player_action']
-        if pa['newCardCode'] is not None and pa['newCardCode'] != -1:
+        if pa['newCardCode'] is not None and pa['newCardCode'] >= 0:
             if HouseType.KRAKEN not in self._game_state.discarded_house_cards:
                 self._game_state.discarded_house_cards[HouseType.KRAKEN] = []
             self._game_state.discarded_house_cards[HouseType.KRAKEN].append(6)

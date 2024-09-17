@@ -20,7 +20,7 @@ class DiscardedHouseCards(dict[HouseType, list[int]]):
 
     def compare(self, other: "DiscardedHouseCards") -> bool:
         for ht, dhc in self.items():
-            if ht not in other and len(dhc):
+            if ht not in other:
                 raise StateDiscrepancyException("DiscardedHouseCards House {} is in local and not in other".format(ht))
             local = sorted(dhc)
             others = sorted(other[ht])

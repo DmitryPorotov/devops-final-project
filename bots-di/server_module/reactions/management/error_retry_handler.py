@@ -1,6 +1,7 @@
 from dependency_injector.wiring import Provide, inject
 
-from DTO.actions.action import ActionRetreatUnitsAfterBattle, ActionResolveSpecialConsolidatePower
+from DTO.actions.action import ActionRetreatUnitsAfterBattle, ActionResolveSpecialConsolidatePower, \
+    ActionResolveCardMoose3
 from DTO.actions.events import ActionMuster, ActionWildlingsMusterAtCastle, ActionTrackBids
 from DTO.actions.planning import ActionAddOrder
 from DTO.messages.messages import ErrorMessage
@@ -129,6 +130,15 @@ class ErrorRetryHandler:
                         'trackType': game.other['last_track']
                     }
                     react_to_phase(game_id, sp7)
+            elif pa['actionType'] == 'resolveCardMoose3':
+                pa8: ActionResolveCardMoose3 = pa
+                sp8: SubPhaseResolveHouseCard = {
+                    "mainPhase": "phaseAction",
+                    "subPhase": "resolveHouseCard",
+                    "houseType": pa8['houseType'],
+                    "cardCode": 3
+                }
+                react_to_phase(game_id, sp8)
             else:
                 pass
 

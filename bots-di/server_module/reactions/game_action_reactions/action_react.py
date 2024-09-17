@@ -27,6 +27,8 @@ from server_module.reactions.game_action_reactions.action.resolve_card_pufferfis
 from server_module.reactions.game_action_reactions.action.resolve_card_rose4_reaction import ResolveCardRose4Reaction
 from server_module.reactions.game_action_reactions.action.resolve_consolidate_power_order_reaction import \
     ResolveConsolidatePowerOrderReaction
+from server_module.reactions.game_action_reactions.action.retreat_units_after_battle_reaction import \
+    RetreatUnitsAfterBattleReaction
 from server_module.reactions.game_action_reactions.planning.raven_choose_change_order_or_look_at_wildling_card_reaction import \
     RavenChooseChangeOrderOrLookAtWildlingCardReaction
 from server_module.reactions.game_action_reactions.planning.raven_choose_put_wildlings_card_on_top_or_bottom_reaction import \
@@ -56,6 +58,8 @@ from server_module.reactions.game_action_reactions.planning.raven_change_order_r
 from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
 from server_module.reactions.game_action_reactions.round_events.set_wildlings_card_reaction import \
     SetWildlingsCardReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_choose_track_to_be_first_at_reaction import \
+    WildlingsChooseTrackToBeFirstAtReaction
 from server_module.reactions.game_action_reactions.round_events.wildlings_kill_unit_reaction import \
     WildlingsKillUnitReaction
 from server_module.reactions.game_action_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
@@ -95,6 +99,8 @@ switch_obj = {
     'resolveCardPufferfish0': ResolveCardPufferfish0Reaction,
     'wildlingsMusterAtCastle': WildlingsMusterAtCastleReaction,
     'resolveCardRose4': ResolveCardRose4Reaction,
+    'wildlingsChooseTrackToBeFirstAt': WildlingsChooseTrackToBeFirstAtReaction,
+    'retreatUnitsAfterBattle': RetreatUnitsAfterBattleReaction,
 
     'wildlingsCard': NothingToUpdateGenericReaction, # is it always a passive server action?
     'openOrders': NothingToUpdateGenericReaction,
@@ -108,7 +114,6 @@ switch_obj = {
     'autoKillUnitsAfterBattle': NothingToUpdateGenericReaction,
     'resolveSupportOrder': NothingToUpdateGenericReaction,
     'ravenChooseTrackBidsOrCollectTaxes': NothingToUpdateGenericReaction,
-    'retreatUnitsAfterBattle': NothingToUpdateGenericReaction,
     'autoRetreatAfterBattle': NothingToUpdateGenericReaction,
     'throneChooseSupplyOrMuster': NothingToUpdateGenericReaction,
     'getEventCards': NothingToUpdateGenericReaction,
@@ -121,7 +126,6 @@ switch_obj = {
     'killUnitsAfterBattle': NothingToUpdateGenericReaction,
 
     'wildlingsChooseKill2UnitsOr2PositionsOnTrack': NothingToUpdateGenericReaction,
-    'wildlingsChooseTrackToBeFirstAt': NothingToUpdateGenericReaction,
     'wildlingsChooseTrackToBeLastAt': NothingToUpdateGenericReaction,
     'wildlingsDiscardHouseCard': NothingToUpdateGenericReaction,
     'wildlingsDowngradeKnights': NothingToUpdateGenericReaction,
@@ -172,7 +176,9 @@ class ActionReact:
                     "retreatUnitsAfterBattle",
                     "ravenChooseTrackBidsOrCollectTaxes",
                     "wildlingsBids",
-                    "trackBids"
+                    "trackBids",
+                    "wildlingsCard",
+                    "setWildlingsCard",
                     ]:
                     new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
                     local_game_handle = ActionReact.game_data.get_game(game_id)
