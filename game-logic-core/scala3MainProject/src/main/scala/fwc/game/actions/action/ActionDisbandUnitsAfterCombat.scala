@@ -11,6 +11,7 @@ import enrichment.ExtSeq
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.actions.roundEvents.UnitDisbandNextStepCombatCleanUp
 import fwc.game.phases.MainPhase
+import fwc.game.phases.actionSubPhases.SubPhaseCleanUpAfterCombat
 import fwc.game.planningPhase.OrderType
 
 case class ActionDisbandUnitsAfterCombat(
@@ -47,13 +48,12 @@ case class ActionDisbandUnitsAfterCombat(
 
     val newPhase =
       if doNotDisbandAnymore
-      then NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.winner.head)
+      then SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
       else SubPhaseDisbandUnit(houseType, UnitDisbandNextStepCombatCleanUp, MainPhase.Action)
 
     gameState.copy(
       subPhase = newPhase,
       armies = updatedArmies,
-      combat = if doNotDisbandAnymore then null else gameState.combat
     )
   }
 
