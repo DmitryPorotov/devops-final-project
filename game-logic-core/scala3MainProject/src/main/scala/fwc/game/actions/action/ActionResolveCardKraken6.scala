@@ -40,7 +40,7 @@ case class ActionResolveCardKraken6(
       then throw new ActionException(s"House Kraken's card ${newKrakenCard.name} is discarded.")
 
       val updatedPowerTokens = gameState.powerTokens + (HouseType.Kraken -> (gameState.powerTokens(HouseType.Kraken) - 2))
-      val updatedDisCards = gameState.discardedHouseCards + (HouseType.Kraken -> (discardedKrakenCards :+ newCardCode))
+      val updatedDisCards = gameState.discardedHouseCards + (HouseType.Kraken -> (discardedKrakenCards :+ 6))
       val updatedCombat2 =
         if isAttackerAction
         then updatedCombat.copy(attackerCard = newKrakenCard)
