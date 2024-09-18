@@ -7,6 +7,7 @@ import fwc.game.board.{MilitaryUnit, TileNumber, TrackType}
 import fwc.game.eventsPhase.Supplies
 import fwc.game.houses.HouseType
 import fwc.game.phases.MainPhase
+import fwc.game.phases.actionSubPhases.SubPhaseCleanUpAfterCombat
 import fwc.game.phases.planningSubPhases.SubPhaseAddOrder
 import fwc.game.phases.roundEventsSubPhases.SubPhaseDisbandUnit
 import ujson.Value
@@ -24,7 +25,7 @@ case class ActionDisbandUnitDueToSupplies(
 
     val currentPhase = gameState.subPhase.asInstanceOf[SubPhaseDisbandUnit]
 
-    if currentPhase.nextStep == UnitDisbandNextStepCombatCleanUp || currentPhase.mainPhase != MainPhase.RoundEvents
+    if currentPhase.nextStep == UnitDisbandNextStepCombatCleanUp && currentPhase.mainPhase != MainPhase.Action
     then throw new ActionException("Wrong phase")
 
     if currentPhase.houseType != houseType
@@ -44,21 +45,23 @@ case class ActionDisbandUnitDueToSupplies(
     val updatedArmies =
       gameState.armies.disbandMilitaryUnit(tileNumber, unit)
 
-    val updatedToCon = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies)
+    val updatedToConsolidate = Supplies.findArmiesToConsolidate(updatedArmies, gameState.supplies)
       .filter(_._2.nonEmpty)
 
     val newPhase =
-      if updatedToCon.isEmpty
+      if updatedToConsolidate.isEmpty
       then
-        if nextStep == UnitDisbandNextStepDeck1
-        then EventCards.fallThroughFromDeck1(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
-        else if nextStep == UnitDisbandNextStepDeck2
-          then EventCards.fallThroughFromDeck2(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
-          else SubPhaseAddOrder(HouseType.getSeqOfAll)
-      else if updatedToCon.contains(houseType)
+        if nextStep == UnitDisbandNextStepCombatCleanUp
+        then SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, gameState.combat.defenderHouse))
+        else if nextStep == UnitDisbandNextStepDeck1
+          then EventCards.fallThroughFromDeck1(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
+          else if nextStep == UnitDisbandNextStepDeck2
+            then EventCards.fallThroughFromDeck2(gameState.tracks,gameState.boardCards, gameState.wildlingCounter)
+            else SubPhaseAddOrder(HouseType.getSeqOfAll)
+      else if updatedToConsolidate.contains(houseType)
         then SubPhaseDisbandUnit(houseType, currentPhase.nextStep)
         else SubPhaseDisbandUnit(
-          Supplies.getHouseToConsolidate(updatedToCon, gameState.tracks(TrackType.Throne)),
+          Supplies.getHouseToConsolidate(updatedToConsolidate, gameState.tracks(TrackType.Throne)),
           currentPhase.nextStep
         )
 
@@ -73,7 +76,7 @@ case class ActionDisbandUnitDueToSupplies(
     "houseType" -> houseType.toString,
     "tileNumber" -> tileNumber,
     "unit" -> unit.toJson,
-    "nextStep" -> nextStep.toString
+    "nextStep" -> nextStep.toString // note should this be in the action? it's already in the phase
   )
 }
 
