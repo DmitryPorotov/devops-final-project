@@ -30,7 +30,7 @@ case class ActionWildlingsUpgradeKnights(
     )
 
     if !gameState.armies(tileNumber1).contains(footman)
-    then throw new ActionException(s"There is no footman to upgrade at tile ${tileNumber1} (${gameRules.board(tileNumber1).name})")
+    then throw new ActionException(s"There is no footman to upgrade at tile $tileNumber1 (${gameRules.board(tileNumber1).name})")
 
     if tileNumber2.nonEmpty && !gameState.armies(tileNumber2.head).contains(footman)
     then throw new ActionException(s"There is no footman to upgrade at tile ${tileNumber2.head} " +
