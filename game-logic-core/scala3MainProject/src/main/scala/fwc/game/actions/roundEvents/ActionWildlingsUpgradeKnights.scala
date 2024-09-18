@@ -42,13 +42,17 @@ case class ActionWildlingsUpgradeKnights(
     then throw new ActionException("You can only upgrade one footman to a knight")
 
     val updatedArmies = gameState.armies.disbandMilitaryUnit(tileNumber1, footman)
-     + (tileNumber1 -> (gameState.armies(tileNumber1) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
+    val updatedArmies1 = updatedArmies + (tileNumber1 -> (updatedArmies(tileNumber1) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
 
     val updatedArmies2 =
       if tileNumber2.nonEmpty
-      then  updatedArmies.disbandMilitaryUnit(tileNumber2.head, footman)
-        + (tileNumber2.head -> (gameState.armies(tileNumber2.head) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
-      else updatedArmies
+      then  updatedArmies1.disbandMilitaryUnit(tileNumber2.head, footman)
+      else updatedArmies1
+
+    val updatedArmies3 =
+      if tileNumber2.nonEmpty
+      then updatedArmies2 + (tileNumber2.head -> (updatedArmies2(tileNumber2.head) :+ MilitaryUnit(houseType, MilitaryUnitType.Knights)))
+      else updatedArmies1
 
     gameState.copy(
       subPhase = WildlingsCards.getNextNonWildlingsPhase(
@@ -57,7 +61,7 @@ case class ActionWildlingsUpgradeKnights(
         gameState.boardCards,
         gameState.wildlingCounter,
       ),
-      armies = updatedArmies2,
+      armies = updatedArmies3,
       wildlingsStartedFrom12Points = None
     )
   }
