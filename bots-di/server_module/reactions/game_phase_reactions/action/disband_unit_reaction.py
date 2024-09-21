@@ -1,15 +1,17 @@
-import random
+from dependency_injector.wiring import inject, Provide
 
 from DTO.actions.action import ActionDisbandUnitsAfterCombat
 from DTO.actions.events import ActionDisbandUnitDueToSupplies
 from DTO.messages.messages import MessageGameAction
 from DTO.phases.all_phases import SubPhase
 from DTO.phases.phases import SubPhaseDisbandUnit
+from containers_module import App
 from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.military_unit import MilitaryUnit
 from server_module.game_state.military_unit_type import MilitaryUnitType
+from server_module.games_data_service import GamesDataService
 from server_module.reactions.game_phase_reactions.base_phase_reaction import BasePhaseReaction
 from utils_ import choose_from_list
 
@@ -18,14 +20,16 @@ class DisbandUnitReaction(BasePhaseReaction):
     def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
-    def get_actions(self) -> list[MessageGameAction[ActionDisbandUnitsAfterCombat | ActionDisbandUnitDueToSupplies]]:
+    @inject
+    def get_actions(self, game_service: GamesDataService = Provide[App.game_service]) -> list[MessageGameAction[ActionDisbandUnitsAfterCombat]]:
         combat = self._game_state.combat
         if self._phase['mainPhase'] == 'phaseAction':  # this is after combat
             all_units = list(combat.attacker_army if combat.attacker_house == self._house_type else combat.defender_army)
             unit = choose_from_list(all_units)
             unit.is_defeated = True
             unit['isDefeated'] = True
-            return [self._to_json(unit)]
+            tile_num = game_service.get_game(self._game_id).other['last_tile_retreated_to']
+            return [self._to_json(unit, tile_num, 'combatCleanUp')]
         else:  # this is after adjusting supplies at round events
             phase: SubPhaseDisbandUnit = self._phase
             biggest_army: tuple[str, list[MilitaryUnit]] = ("", [])
@@ -34,10 +38,10 @@ class DisbandUnitReaction(BasePhaseReaction):
                     commandable_units = [*(mu for mu in army if mu.unit_type not in [MilitaryUnitType.POWER_TOKEN, MilitaryUnitType.GARRISON])]
                     if len(commandable_units) > len(biggest_army[1]):
                         biggest_army = (tn, commandable_units)
-            return [self._to_json_supplies(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
+            return [self._to_json(choose_from_list(biggest_army[1]), biggest_army[0], phase['nextStep'])]
 
 
-    def _to_json(self, unit: MilitaryUnit) -> MessageGameAction[ActionDisbandUnitsAfterCombat]:
+    def _to_json_after_combat(self, unit: MilitaryUnit) -> MessageGameAction[ActionDisbandUnitsAfterCombat]:
         json = super()._to_json()
         action: ActionDisbandUnitsAfterCombat = {
             'houseType': self._house_type,
@@ -48,7 +52,7 @@ class DisbandUnitReaction(BasePhaseReaction):
         self.logger.info(json)
         return json
 
-    def _to_json_supplies(self, unit: MilitaryUnit, from_tile: str, next_step: str) -> MessageGameAction[ActionDisbandUnitDueToSupplies]:
+    def _to_json(self, unit: MilitaryUnit, from_tile: str | int, next_step: str) -> MessageGameAction[ActionDisbandUnitDueToSupplies]:
         json = super()._to_json()
         action: ActionDisbandUnitDueToSupplies = {
             'houseType': self._house_type,

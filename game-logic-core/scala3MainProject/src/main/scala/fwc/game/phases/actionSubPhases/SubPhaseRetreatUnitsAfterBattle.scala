@@ -1,8 +1,7 @@
 package fwc.game.phases.actionSubPhases
 
-import fwc.JsonSerializable
 import fwc.game.houses.HouseType
-import fwc.game.phases.{MainPhase, SubPhase, SubPhaseSingleHouse}
+import fwc.game.phases.{MainPhase, SubPhaseSingleHouse}
 
 case class SubPhaseRetreatUnitsAfterBattle(
                                             houseType: HouseType,

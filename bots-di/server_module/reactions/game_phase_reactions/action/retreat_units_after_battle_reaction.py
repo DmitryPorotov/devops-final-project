@@ -1,3 +1,7 @@
+from dependency_injector.wiring import inject, Provide
+
+from containers_module import App
+from server_module.games_data_service import GamesDataService
 from utils_ import randrange
 
 from DTO.actions.action import ActionRetreatUnitsAfterBattle
@@ -15,17 +19,26 @@ class RetreatUnitsAfterBattleReaction(BasePhaseReaction):
     def __init__(self, game_id: str, house_type: HouseType, game_state: GameState, game_rules: GameRules, phase: SubPhase):
         super().__init__(game_id, house_type, game_state, game_rules, phase)
 
-    def get_actions(self) -> list[MessageGameAction[ActionRetreatUnitsAfterBattle]]:
+    @inject
+    def get_actions(self, game_service: GamesDataService = Provide[App.game_service]) -> list[MessageGameAction[ActionRetreatUnitsAfterBattle]]:
         candidate_tile_nums = self.__get_candidates()
         # todo: try to avoid supply problems, go to empty tiles first maybe
         idx = randrange(len(candidate_tile_nums))
-        return [self._to_json(candidate_tile_nums[idx])]
+        tile_num = candidate_tile_nums[idx]
+        game_service.get_game(self._game_id).other['last_tile_retreated_to'] = tile_num
+        return [self._to_json(tile_num)]
 
     def __get_candidates(self) -> list[int]:
         combat = self._game_state.combat
         source_tile = self._game_rules.board[combat.defender_tile_num]
         if source_tile.tile_type is BoardTileType.SEA:
-            return [*(tn for tn in source_tile.neighbour_tiles if self.__is_valid_retreat_for_ship(tn))]
+            valid_to_retreat = [*(tn for tn in source_tile.neighbour_tiles if self.__is_valid_retreat_for_ship(tn))]
+            try:
+                idx = valid_to_retreat.index(combat.attacker_tile_num)
+                valid_to_retreat.pop(idx)
+            except ValueError:
+                pass
+            return valid_to_retreat
         else:
             candidate_tile_nums = find_reachable_targets(self._game_rules, self._game_state, self._house_type, source_tile, [combat.defender_tile_num])
             for i, tn in enumerate(candidate_tile_nums):

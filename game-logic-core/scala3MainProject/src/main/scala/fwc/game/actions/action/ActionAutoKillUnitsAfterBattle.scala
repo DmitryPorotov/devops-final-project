@@ -3,8 +3,8 @@ package fwc.game.actions.action
 import fwc.JsonSerializable
 import fwc.game.GameState
 import fwc.game.actionPhase.Combat
-import fwc.game.actions.{Action, JsonParsableAction, PlayerAction}
-import fwc.game.board.TrackType
+import fwc.game.actions.{Action, JsonParsableAction}
+import fwc.game.board.{TileNumber, TrackType}
 import fwc.game.houses.HouseType
 import fwc.game.phases.actionSubPhases.{SubPhaseAutoRetreatAfterBattle, SubPhaseCleanUpAfterCombat, SubPhaseKillUnitsAfterBattle, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle}
 import ujson.Value
@@ -36,8 +36,9 @@ case class ActionAutoKillUnitsAfterBattle(
     else if updatedCombat2.combatOutcome.defenderUnitsToKill > 0 then
       gameState.copy(subPhase = SubPhaseKillUnitsAfterBattle(updatedCombat2.defenderHouse), combat = updatedCombat2)
     else
+      val defenderCanRetreat = hasTileToRetreatTo(updatedCombat2.defenderHouse, updatedCombat2.defenderTileNum, updatedCombat2.attackerTileNum)
       gameState.copy(
-        combat = updatedCombat2,
+        combat = if defenderCanRetreat then updatedCombat2 else updatedCombat2.copy(defenderArmy = Seq()),
         subPhase =
           if updatedCombat2.winner.contains(updatedCombat2.defenderHouse) 
           then {
@@ -55,12 +56,22 @@ case class ActionAutoKillUnitsAfterBattle(
             then {
               if updatedCombat2.winnerCard.exists(_.isWolf0) 
               then SubPhaseResolveHouseCard(HouseType.Wolf, 0)
-              else SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
+              else
+                if defenderCanRetreat
+                then SubPhaseRetreatUnitsAfterBattle(updatedCombat2.defenderHouse)
+                else SubPhaseCleanUpAfterCombat(Seq(updatedCombat2.attackerHouse, updatedCombat2.defenderHouse))
             }
             else SubPhaseCleanUpAfterCombat(Seq(updatedCombat2.attackerHouse, updatedCombat2.defenderHouse))
           }
       )
 
+  }
+
+  private def hasTileToRetreatTo(houseType: HouseType, defTileNumber: TileNumber, attTileNumber: TileNumber): Boolean = {
+    val marchRetreat = new MarchRetreatTrait(gameState, houseType) {}
+    val tilesToRetreat = marchRetreat.getAllNeighboursBySea(defTileNumber)
+    val tilesToRetreatNoAttackerTile = tilesToRetreat.filter(_ != attTileNumber)
+    tilesToRetreatNoAttackerTile.nonEmpty
   }
 
   private def removePreviouslyDefeatedUnits(combat: Combat): Combat =

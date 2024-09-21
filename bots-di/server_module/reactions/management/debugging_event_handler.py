@@ -27,7 +27,7 @@ class DebuggingEventHandler:
     def _on_debug_event(self, msg):
         # note: put break point here
         data = self._games_data
-        state = data.games["3"].state
+        state = data._games["3"].state
         # self._dump_to_file(state)
         a = 0
 

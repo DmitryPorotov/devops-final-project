@@ -14,6 +14,7 @@ import fwc.game.phases.MainPhase
 import fwc.game.phases.actionSubPhases.SubPhaseCleanUpAfterCombat
 import fwc.game.planningPhase.OrderType
 
+//todo this action is unnecessary, ActionDisbandUnitDueToSupplies can be used instead, delete later
 case class ActionDisbandUnitsAfterCombat(
                                           gameState: GameState,
                                           houseType: HouseType,

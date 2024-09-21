@@ -34,6 +34,8 @@ from server_module.reactions.game_action_reactions.planning.raven_choose_change_
 from server_module.reactions.game_action_reactions.planning.raven_choose_put_wildlings_card_on_top_or_bottom_reaction import \
     RavenChoosePutWildlingsCardOnTopOrBottomReaction
 from server_module.reactions.game_action_reactions.round_events.disable_order_reaction import DisableOrderReaction
+from server_module.reactions.game_action_reactions.round_events.disband_unit_due_to_supplies_reaction import \
+    DisbandUnitDueToSuppliesReaction
 from server_module.reactions.game_action_reactions.round_events.resolve_special_consolidate_power_reaction import \
     ResolveSpecialConsolidatePowerReaction
 from server_module.reactions.game_action_reactions.round_events.resolve_ties_after_bidding_on_wildlings_reaction import \
@@ -58,13 +60,25 @@ from server_module.reactions.game_action_reactions.planning.raven_change_order_r
 from server_module.reactions.game_action_reactions.round_events.open_track_bids_reaction import OpenTrackBidsReaction
 from server_module.reactions.game_action_reactions.round_events.set_wildlings_card_reaction import \
     SetWildlingsCardReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_choose_kill2_units_or2_positions_on_track_reaction import \
+    WildlingsChooseKill2UnitsOr2PositionsOnTrackReaction
 from server_module.reactions.game_action_reactions.round_events.wildlings_choose_track_to_be_first_at_reaction import \
     WildlingsChooseTrackToBeFirstAtReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_choose_track_to_be_last_at_reaction import \
+    WildlingsChooseTrackToBeLastAtReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_discard_house_card_reaction import \
+    WildlingsDiscardHouseCardReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_downgrade_knights_reaction import \
+    WildlingsDowngradeKnightsReaction
 from server_module.reactions.game_action_reactions.round_events.wildlings_kill_unit_reaction import \
     WildlingsKillUnitReaction
 from server_module.reactions.game_action_reactions.action.clean_up_after_round_reaction import CleanUpAfterRoundReaction
 from server_module.reactions.game_action_reactions.round_events.wildlings_muster_at_castle_reaction import \
     WildlingsMusterAtCastleReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_return_house_card_reaction import \
+    WildlingsReturnHouseCardReaction
+from server_module.reactions.game_action_reactions.round_events.wildlings_upgrade_knights_reaction import \
+    WildlingsUpgradeKnightsReaction
 from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 switch_obj = {
@@ -101,6 +115,13 @@ switch_obj = {
     'resolveCardRose4': ResolveCardRose4Reaction,
     'wildlingsChooseTrackToBeFirstAt': WildlingsChooseTrackToBeFirstAtReaction,
     'retreatUnitsAfterBattle': RetreatUnitsAfterBattleReaction,
+    'wildlingsDowngradeKnights': WildlingsDowngradeKnightsReaction,
+    'wildlingsDiscardHouseCard': WildlingsDiscardHouseCardReaction,
+    'wildlingsChooseTrackToBeLastAt': WildlingsChooseTrackToBeLastAtReaction,
+    'wildlingsReturnHouseCard': WildlingsReturnHouseCardReaction,
+    'wildlingsUpgradeKnights': WildlingsUpgradeKnightsReaction,
+    'disbandUnitDueToSupplies': DisbandUnitDueToSuppliesReaction,
+    'wildlingsChooseKill2UnitsOr2PositionsOnTrack': WildlingsChooseKill2UnitsOr2PositionsOnTrackReaction,
 
     'wildlingsCard': NothingToUpdateGenericReaction, # is it always a passive server action?
     'openOrders': NothingToUpdateGenericReaction,
@@ -125,14 +146,7 @@ switch_obj = {
     'resolveCardRose2': NothingToUpdateGenericReaction,
     'killUnitsAfterBattle': NothingToUpdateGenericReaction,
 
-    'wildlingsChooseKill2UnitsOr2PositionsOnTrack': NothingToUpdateGenericReaction,
-    'wildlingsChooseTrackToBeLastAt': NothingToUpdateGenericReaction,
-    'wildlingsDiscardHouseCard': NothingToUpdateGenericReaction,
-    'wildlingsDowngradeKnights': NothingToUpdateGenericReaction,
-    'wildlingsReturnHouseCard': NothingToUpdateGenericReaction,
-    'wildlingsUpgradeKnights': NothingToUpdateGenericReaction,
-    'disbandUnitsAfterCombat': NothingToUpdateGenericReaction,
-    'disbandUnitDueToSupplies': NothingToUpdateGenericReaction,
+    'disbandUnitsAfterCombat': NothingToUpdateGenericReaction, # unused now
     'calculateGameWinner': NothingToUpdateGenericReaction, # remove the game from the game data
 }
 
@@ -184,6 +198,8 @@ class ActionReact:
                     local_game_handle = ActionReact.game_data.get_game(game_id)
                     if reply['player_action']['actionType'] == 'cleanUpAfterCombat':
                         local_game_handle.state.compare(new_game_state, ['AvailableOrders'])
+                    if reply['player_action']['actionType'] == 'disbandUnitDueToSupplies':
+                        local_game_handle.state.compare(new_game_state, ['AvailableOrders', 'PlacedOrders'])
                     elif reply['player_action']['actionType'] == 'setWildlingsCard':
                         local_game_handle.state.compare(new_game_state, ['Supplies'])
                     else:

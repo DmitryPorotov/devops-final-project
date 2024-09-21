@@ -1,21 +1,18 @@
 package fwc.game.actions.action
 
 import fwc.JsonSerializable
-import fwc.game.{GameState, gameRules}
+import fwc.game.GameState
 import fwc.game.actionPhase.CombatOutcomeCalculator
-import fwc.game.actions.{Action, ActionException, JsonParsableAction}
+import fwc.game.actions.{Action, JsonParsableAction}
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseAutoKillUnitsAfterBattle, SubPhaseCalculateCombatOutcome, SubPhaseKillUnitsAfterBattle, SubPhaseRetreatUnitsAfterBattle}
-import fwc.gameLoading.HouseCard
+import fwc.game.phases.actionSubPhases.SubPhaseAutoKillUnitsAfterBattle
 import ujson.Value
 
 case class ActionCalculateCombatOutcome(
                                          gameState: GameState
                                        ) extends Action(gameState) with JsonSerializable {
   override def doAction(): GameState = {
-//    if !gameState.subPhase.isInstanceOf[SubPhaseCalculateCombatOutcome]
-//    then throw new ActionException("Wrong phase")
-    
+
     val outcome = new CombatOutcomeCalculator(gameState).calculate()
     
     gameState.copy(

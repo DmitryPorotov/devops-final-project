@@ -28,13 +28,15 @@ class SetWildlingsCardReaction(BaseActionReaction):
                     self._game_state.supplies[l_w_house] = 0
                 for h_ in sp['houseTypes']:
                     h = HouseType[h_.upper()]
-                    self._game_state.supplies[h] -= 1
-                    if self._game_state.supplies[h] < 0:
-                        self._game_state.supplies[h] = 0
+                    if h is not l_w_house:
+                        self._game_state.supplies[h] -= 1
+                        if self._game_state.supplies[h] < 0:
+                            self._game_state.supplies[h] = 0
 
         elif sp['cardCode'] == 2:
             if sp['isWin']:
-                self._game_state.discarded_house_cards[l_w_house] = []
+                if l_w_house in self._game_state.discarded_house_cards:
+                    del self._game_state.discarded_house_cards[l_w_house]
             else:
                 if len(self._game_state.discarded_house_cards[l_w_house]) == 6:
                     pass  # don't take last card

@@ -15,4 +15,5 @@ class ResolveCardKraken6Reaction(BaseActionReaction):
             if HouseType.KRAKEN not in self._game_state.discarded_house_cards:
                 self._game_state.discarded_house_cards[HouseType.KRAKEN] = []
             self._game_state.discarded_house_cards[HouseType.KRAKEN].append(6)
+            self._game_state.power_tokens[HouseType.KRAKEN] -= 2
         self.logger.info(pa)
