@@ -21,10 +21,12 @@ from server_module.reactions.game_action_reactions.action.clean_up_after_combat_
 from server_module.reactions.game_action_reactions.action.leave_power_token_at_tile_reaction import \
     LeavePowerTokenAtTileReaction
 from server_module.reactions.game_action_reactions.action.resolve_card_lion1_reaction import ResolveCardLion1Reaction
+from server_module.reactions.game_action_reactions.action.resolve_card_moose2_reaction import ResolveCardMoose2Reaction
 from server_module.reactions.game_action_reactions.action.resolve_card_moose3_reaction import ResolveCardMoose3Reaction
 from server_module.reactions.game_action_reactions.action.resolve_card_pufferfish0_reaction import \
     ResolveCardPufferfish0Reaction
 from server_module.reactions.game_action_reactions.action.resolve_card_rose4_reaction import ResolveCardRose4Reaction
+from server_module.reactions.game_action_reactions.action.resolve_card_wolf0_reaction import ResolveCardWolf0Reaction
 from server_module.reactions.game_action_reactions.action.resolve_consolidate_power_order_reaction import \
     ResolveConsolidatePowerOrderReaction
 from server_module.reactions.game_action_reactions.action.retreat_units_after_battle_reaction import \
@@ -89,9 +91,9 @@ switch_obj = {
     'calculateCombatOutcome': CalculateCombatOutcomeReaction,
     'cleanUpAfterCombat': CleanUpAfterCombatReaction,
     'resolveCardLion1': ResolveCardLion1Reaction,
-    'resolveCardMoose2': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardMoose2': ResolveCardMoose2Reaction,
     'resolveCardMoose3': ResolveCardMoose3Reaction,
-    'resolveCardWolf0': CleanUpAfterCombatReactionHouseCard,
+    'resolveCardWolf0': ResolveCardWolf0Reaction,
     'openTrackBids': OpenTrackBidsReaction,
     'useValyrianSteelBlade': UseValyrianSteelBladeReaction,
     'muster': MusterReaction,
@@ -197,11 +199,11 @@ class ActionReact:
                     new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
                     local_game_handle = ActionReact.game_data.get_game(game_id)
                     if reply['player_action']['actionType'] == 'cleanUpAfterCombat':
-                        local_game_handle.state.compare(new_game_state, ['AvailableOrders'])
+                        local_game_handle.state.compare(new_game_state, ['availableOrders'])
                     if reply['player_action']['actionType'] == 'disbandUnitDueToSupplies':
-                        local_game_handle.state.compare(new_game_state, ['AvailableOrders', 'PlacedOrders'])
+                        local_game_handle.state.compare(new_game_state, ['availableOrders', 'placedOrders'])
                     elif reply['player_action']['actionType'] == 'setWildlingsCard':
-                        local_game_handle.state.compare(new_game_state, ['Supplies'])
+                        local_game_handle.state.compare(new_game_state, ['supplies'])
                     else:
                         local_game_handle.state.compare(new_game_state)
 

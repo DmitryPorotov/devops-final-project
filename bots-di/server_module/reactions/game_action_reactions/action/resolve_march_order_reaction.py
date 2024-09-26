@@ -15,21 +15,36 @@ class ResolveMarchOrderReaction(BaseActionReaction):
 
     def update_game_state(self):
         pa: ActionResolveMarchOrder = self._reply['player_action']
+        if pa['targets'] is None:
+            return
+
         is_combat = 'combat' in self._reply
         house = HouseType[pa['houseType'].upper()]
         source_tn = str(pa['sourceTileNumber'])
         self._game_state.available_orders.return_order(house, self._game_state.placed_orders[house][source_tn])
         self._game_state.placed_orders.remove_order(source_tn, house)
 
-        if pa['targets'] is None:
-            return
-
         for tn, mil_units_json in pa['targets'].items():  # type: str, dict
             mil_units: list[MilitaryUnit] = [*(MilitaryUnit.from_json(j) for j in mil_units_json)]
             subtract_army(self._game_state.armies[source_tn], mil_units)
             if not self._game_state.armies[source_tn]:
                 del self._game_state.armies[source_tn]
-            if not is_combat:
+            if tn in self._game_state.armies and self._game_state.armies[tn] and self._game_state.armies[tn][0].house is HouseType.NEUTRAL:
+                attacker_strength = 0
+                for mu in mil_units:
+                    if mu.unit_type is MilitaryUnitType.FOOTMEN:
+                        attacker_strength += 1
+                    elif mu.unit_type is MilitaryUnitType.KNIGHTS:
+                        attacker_strength += 2
+                    elif mu.unit_type is MilitaryUnitType.SIEGE_ENGINES:
+                        attacker_strength += 4 # all neutral have castles now and it should not change
+                if attacker_strength >= self._game_state.armies[tn][0].garrison_defence_points:
+                    self._game_state.armies[tn] = mil_units
+                else:
+                    for mu in mil_units:
+                        mu.is_defeated = True
+                    self._game_state.armies[source_tn].extend(mil_units)
+            elif not is_combat:
                 if tn in self._game_state.armies:
                     for i, mu in enumerate(self._game_state.armies[tn]):
                         if mu.unit_type is MilitaryUnitType.POWER_TOKEN and mu.house != house:
