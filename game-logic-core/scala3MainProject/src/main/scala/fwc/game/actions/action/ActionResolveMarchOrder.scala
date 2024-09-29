@@ -7,7 +7,7 @@ import fwc.game.actionPhase.Combat
 import fwc.game.actions.{Action, ActionException, JsonParsableAction, PlayerAction}
 import fwc.game.board.*
 import fwc.game.houses.HouseType
-import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveMarchOrder, SubPhaseResolveSupportOrder}
+import fwc.game.phases.actionSubPhases.{SubPhaseLeavePowerTokenAtTile, SubPhaseResolveMarchOrder}
 import fwc.game.planningPhase.OrderType
 import fwc.gameLoading.BoardTileType
 import ujson.Value
