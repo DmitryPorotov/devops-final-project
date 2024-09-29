@@ -38,7 +38,7 @@ class SetWildlingsCardReaction(BaseActionReaction):
                 if l_w_house in self._game_state.discarded_house_cards:
                     del self._game_state.discarded_house_cards[l_w_house]
             else:
-                if len(self._game_state.discarded_house_cards[l_w_house]) == 6:
+                if l_w_house in self._game_state.discarded_house_cards and len(self._game_state.discarded_house_cards[l_w_house]) == 6:
                     pass  # don't take last card
                 else:
                     max_str_cards = []
@@ -66,5 +66,13 @@ class SetWildlingsCardReaction(BaseActionReaction):
                     self._game_state.power_tokens[h] -= 2
                     if self._game_state.power_tokens[h] < 0:
                         self._game_state.power_tokens[h] = 0
+        elif sp['cardCode'] == 8:
+            if sp['isWin']:
+                pass
+            else:
+                for track in self._game_state.tracks:
+                    idx = self._game_state.tracks[track].index(l_w_house)
+                    self._game_state.tracks[track].pop(idx)
+                    self._game_state.tracks[track].append(l_w_house)
 
         self.logger.info(pa)
