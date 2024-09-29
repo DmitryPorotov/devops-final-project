@@ -76,7 +76,7 @@ object CombatCommon {
 
     val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.attackerHouse)
     if attackingArmyStr >= gameState.combat.defenderArmy.head.garrisonDefensePoints
-    //todo should check if someone has a support order nearby in attacker does not have enough strength 
+    //todo should check if someone has a support order nearby if attacker does not have enough strength 
     then
       val armiesWithoutNeutralGarrison = gameState.armies - tileNumberUnderAttack
       gameState.copy(
