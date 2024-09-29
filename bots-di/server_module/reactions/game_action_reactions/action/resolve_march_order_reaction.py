@@ -29,22 +29,25 @@ class ResolveMarchOrderReaction(BaseActionReaction):
             subtract_army(self._game_state.armies[source_tn], mil_units)
             if not self._game_state.armies[source_tn]:
                 del self._game_state.armies[source_tn]
-            if tn in self._game_state.armies and self._game_state.armies[tn] and self._game_state.armies[tn][0].house is HouseType.NEUTRAL:
-                attacker_strength = 0
-                for mu in mil_units:
-                    if mu.unit_type is MilitaryUnitType.FOOTMEN:
-                        attacker_strength += 1
-                    elif mu.unit_type is MilitaryUnitType.KNIGHTS:
-                        attacker_strength += 2
-                    elif mu.unit_type is MilitaryUnitType.SIEGE_ENGINES:
-                        attacker_strength += 4 # all neutral have castles now and it should not change
-                if attacker_strength >= self._game_state.armies[tn][0].garrison_defence_points:
-                    self._game_state.armies[tn] = mil_units
-                else:
-                    for mu in mil_units:
-                        mu.is_defeated = True
-                    self._game_state.armies[source_tn].extend(mil_units)
-            elif not is_combat:
+            # if tn in self._game_state.armies and self._game_state.armies[tn] and self._game_state.armies[tn][0].house is HouseType.NEUTRAL:
+            #     attacker_strength = 0
+            #     for mu in mil_units:
+            #         if mu.unit_type is MilitaryUnitType.FOOTMEN:
+            #             attacker_strength += 1
+            #         elif mu.unit_type is MilitaryUnitType.KNIGHTS:
+            #             attacker_strength += 2
+            #         elif mu.unit_type is MilitaryUnitType.SIEGE_ENGINES:
+            #             attacker_strength += 4 # all neutrals have castles now and it should not change
+            #     if attacker_strength >= self._game_state.armies[tn][0].garrison_defence_points:
+            #         self._game_state.armies[tn] = mil_units
+            #     else:
+            #         for mu in mil_units:
+            #             mu.is_defeated = True
+            #         if source_tn not in self._game_state.armies:
+            #             self._game_state.armies[source_tn] = []
+            #         self._game_state.armies[source_tn].extend(mil_units)
+            # el
+            if not is_combat:
                 if tn in self._game_state.armies:
                     for i, mu in enumerate(self._game_state.armies[tn]):
                         if mu.unit_type is MilitaryUnitType.POWER_TOKEN and mu.house != house:
