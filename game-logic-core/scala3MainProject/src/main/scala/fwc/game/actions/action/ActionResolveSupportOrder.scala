@@ -9,6 +9,8 @@ import fwc.game.phases.actionSubPhases.*
 import fwc.game.planningPhase.Order
 import ujson.Value
 
+import scala.util.Try
+
 case class ActionResolveSupportOrder(
                                       gameState: GameState,
                                       fromHouseType: HouseType,
@@ -24,16 +26,24 @@ case class ActionResolveSupportOrder(
 
     val currentSubPhase = gameState.subPhase.asInstanceOf[SubPhaseResolveSupportOrder]
     if currentSubPhase.houseType != fromHouseType
-    then throw new ActionException(s"House $fromHouseType has no support orders in near ${targetTile.name}")
+    then throw new ActionException(s"House $fromHouseType has no support orders in near ${targetTile.name}.")
 
     if toHouseType == HouseType.Neutral
-    then throw new ActionException("Can not support neutral house")
+    then throw new ActionException("Can not support neutral house.")
 
     supportingTiles.foreach(
       tn =>
         if !currentSubPhase.tilesNumbers.contains(tn.number)
-        then throw new ActionException(s"Tile ${tn.name} has no support order")
+        then throw new ActionException(s"Tile ${tn.name} has no support order.")
+        if gameState.combat.defenderSupport.contains(tn.number)
+        then throw new ActionException(s"Army of tile ${tn.name} is already supporting house ${gameState.combat.defenderHouse}.")
+        if gameState.combat.attackerSupport.contains(tn.number)
+        then throw new ActionException(s"Army of tile ${tn.name} is already supporting house ${gameState.combat.attackerHouse}.")
     )
+    
+    if (fromHouseType == gameState.combat.attackerHouse && toHouseType == gameState.combat.defenderHouse)
+      || (fromHouseType == gameState.combat.defenderHouse && toHouseType == gameState.combat.attackerHouse)
+      then throw new ActionException("Cannot support against yourself.")
 
     val supportOrdersFromHouse = gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
       .foldLeft(Seq[TileNumber]())(
@@ -95,7 +105,7 @@ object ActionResolveSupportOrder extends JsonParsableAction {
     ActionResolveSupportOrder(
       gameState,
       HouseType.fromString(json("fromHouseType").str),
-      HouseType.fromString(json("toHouseType").str),
+      Try(HouseType.fromString(json("toHouseType").str)).getOrElse(null),
       json("tileNumbers").arr.map(_.num.toInt).toSeq
     )
 }
