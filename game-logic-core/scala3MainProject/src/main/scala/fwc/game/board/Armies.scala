@@ -106,7 +106,9 @@ case class Armies(private val armies: Map[TileNumber, Seq[MilitaryUnit]] = Map()
   }
 
   @targetName("updated")
-  def +(kv: (TileNumber, Seq[MilitaryUnit])): Armies = copy(armies + kv)
+  def +(kv: (TileNumber, Seq[MilitaryUnit])): Armies = 
+    if kv._2.nonEmpty then copy(armies + kv)
+    else copy(armies - kv._1)
 
   @targetName("removed")
   def -(key: TileNumber): Armies = copy(armies - key)
