@@ -41,7 +41,7 @@ case class ActionWildlingsDowngradeKnights(
 
     val updatedArmies2 =
       if numFootmen < gameRules.maxArmies(MilitaryUnitType.Footmen)
-      then updatedArmies + (tileNumber -> (updatedArmies(tileNumber) :+ MilitaryUnit(houseType, MilitaryUnitType.Footmen)))
+      then updatedArmies + (tileNumber -> (updatedArmies.getOrElse(tileNumber, Seq()) :+ MilitaryUnit(houseType, MilitaryUnitType.Footmen)))
       else updatedArmies
 
     val updatedPhase =
@@ -54,7 +54,7 @@ case class ActionWildlingsDowngradeKnights(
       )
 
     val newPhase =
-      if currentPhase.houseTypes.isEmpty
+      if updatedPhase.houseTypes.isEmpty
       then WildlingsCards.getNextNonWildlingsPhase(
         gameState.wildlingsStartedFrom12Points.head,
         gameState.tracks,
