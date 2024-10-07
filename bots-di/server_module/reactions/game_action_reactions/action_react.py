@@ -195,6 +195,7 @@ class ActionReact:
                     "trackBids",
                     "wildlingsCard",
                     "setWildlingsCard",
+                    "getTidesOfBattleCards",
                     ]:
                     new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
                     local_game_handle = ActionReact.game_data.get_game(game_id)
