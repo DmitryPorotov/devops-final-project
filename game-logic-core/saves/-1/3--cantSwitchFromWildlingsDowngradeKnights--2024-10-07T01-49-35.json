@@ -1,0 +1,807 @@
+{
+  "gameSettings": {
+    "gameId": "3",
+    "gameUuid": "9942e618-800c-48ed-8d79-486a5f0b9012",
+    "ownerId": 1,
+    "isInputOnly": false,
+    "isRandomHouses": false,
+    "isRandomEventsServerSide": true,
+    "players": [
+      {
+        "userId": -6,
+        "house": "lion",
+        "name": "Bot1"
+      },
+      {
+        "userId": -4,
+        "house": "kraken",
+        "name": "Bot2"
+      },
+      {
+        "userId": -2,
+        "house": "moose",
+        "name": "Bot3"
+      },
+      {
+        "userId": -5,
+        "house": "rose",
+        "name": "Bot4"
+      },
+      {
+        "userId": -3,
+        "house": "pufferfish",
+        "name": "Bot5"
+      },
+      {
+        "userId": -1,
+        "house": "wolf",
+        "name": "Bot6"
+      }
+    ],
+    "playersInputting": null
+  },
+  "startingBoardCards": {
+    "deck1": [
+      1,
+      4,
+      0,
+      0,
+      0,
+      2,
+      3,
+      2,
+      1,
+      1
+    ],
+    "deck2": [
+      3,
+      1,
+      4,
+      1,
+      2,
+      0,
+      2,
+      1,
+      0,
+      0
+    ],
+    "deck3": [
+      1,
+      0,
+      1,
+      0,
+      4,
+      0,
+      3,
+      5,
+      2,
+      6
+    ],
+    "wildlings": [
+      7,
+      4,
+      3,
+      1,
+      8,
+      5,
+      6,
+      2,
+      0
+    ],
+    "tidesOfBattle": [
+      5,
+      3,
+      2,
+      1,
+      3,
+      0,
+      0,
+      0,
+      2,
+      4,
+      3,
+      0,
+      5,
+      1,
+      4,
+      0,
+      2,
+      4,
+      0,
+      3,
+      0,
+      4,
+      0,
+      2
+    ]
+  },
+  "actions": [
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "rose",
+      "tileNumber": 38
+    },
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "moose",
+      "tileNumber": 31
+    },
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "pufferfish",
+      "tileNumber": 52
+    },
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "wolf",
+      "tileNumber": 3
+    },
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "kraken",
+      "tileNumber": 16
+    },
+    {
+      "actionType": "wildlingsDowngradeKnights",
+      "houseType": "lion",
+      "tileNumber": 22
+    },
+    {
+      "actionType": "wildlingsCard"
+    },
+    {
+      "actionType": "setWildlingsCard",
+      "wildlingsCardCode": 7
+    },
+    {
+      "actionType": "getWildlingsCard",
+      "isRandom": true
+    },
+    {
+      "actionType": "resolveTiesAfterBiddingOnWildlings",
+      "houseType": "moose",
+      "winnerLoser": "rose"
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "pufferfish",
+      "bid": 0
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "wolf",
+      "bid": 2
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "rose",
+      "bid": 0
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "lion",
+      "bid": 2
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "kraken",
+      "bid": 0
+    },
+    {
+      "actionType": "wildlingsBids",
+      "houseType": "moose",
+      "bid": 1
+    },
+    {
+      "actionType": "resolveTiesAfterBiddingOnTracks",
+      "houseType": "moose",
+      "resolution": [
+        "wolf",
+        "rose",
+        "lion",
+        "kraken",
+        "pufferfish",
+        "moose"
+      ],
+      "trackType": "court"
+    },
+    {
+      "actionType": "openTrackBids",
+      "bids": {
+        "lion": 0,
+        "kraken": 0,
+        "wolf": 2,
+        "pufferfish": 0,
+        "moose": 0,
+        "rose": 1
+      }
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "pufferfish",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "wolf",
+      "bid": 2
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "rose",
+      "bid": 1
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "lion",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "kraken",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "moose",
+      "bid": 0
+    },
+    {
+      "actionType": "resolveTiesAfterBiddingOnTracks",
+      "houseType": "moose",
+      "resolution": [
+        "lion",
+        "pufferfish",
+        "kraken",
+        "moose",
+        "wolf",
+        "rose"
+      ],
+      "trackType": "fiefdoms"
+    },
+    {
+      "actionType": "openTrackBids",
+      "bids": {
+        "lion": 2,
+        "kraken": 1,
+        "wolf": 0,
+        "pufferfish": 2,
+        "moose": 1,
+        "rose": 0
+      }
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "pufferfish",
+      "bid": 2
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "wolf",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "rose",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "lion",
+      "bid": 2
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "kraken",
+      "bid": 1
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "moose",
+      "bid": 1
+    },
+    {
+      "actionType": "resolveTiesAfterBiddingOnTracks",
+      "houseType": "moose",
+      "resolution": [
+        "moose",
+        "rose",
+        "lion",
+        "wolf",
+        "kraken",
+        "pufferfish"
+      ],
+      "trackType": "throne"
+    },
+    {
+      "actionType": "openTrackBids",
+      "bids": {
+        "lion": 1,
+        "kraken": 0,
+        "wolf": 1,
+        "pufferfish": 0,
+        "moose": 2,
+        "rose": 2
+      }
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "pufferfish",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "wolf",
+      "bid": 1
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "rose",
+      "bid": 2
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "lion",
+      "bid": 1
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "kraken",
+      "bid": 0
+    },
+    {
+      "actionType": "trackBids",
+      "houseType": "moose",
+      "bid": 2
+    },
+    {
+      "actionType": "setEventCards",
+      "card1": 4,
+      "card2": 1,
+      "card3": 0
+    },
+    {
+      "actionType": "getEventCards",
+      "isRandom": true
+    },
+    {
+      "actionType": "cleanUpAfterRound",
+      "isRandom": true
+    },
+    {
+      "actionType": "resolveConsolidatePowerOrder"
+    },
+    {
+      "actionType": "cleanUpAfterCombat"
+    },
+    {
+      "actionType": "retreatUnitsAfterBattle",
+      "houseType": "moose",
+      "targetTileNumber": 30
+    },
+    {
+      "actionType": "autoKillUnitsAfterBattle"
+    },
+    {
+      "actionType": "calculateCombatOutcome"
+    },
+    {
+      "actionType": "setTidesOfBattleCards",
+      "attackerCardCode": 5,
+      "defenderCardCode": 3
+    },
+    {
+      "actionType": "getTidesOfBattleCards",
+      "isRandom": true
+    },
+    {
+      "actionType": "getTidesOfBattleCards",
+      "isRandom": true
+    },
+    {
+      "actionType": "chooseHouseCard",
+      "houseType": "moose",
+      "cardCode": 6
+    },
+    {
+      "actionType": "chooseHouseCard",
+      "houseType": "pufferfish",
+      "cardCode": 2
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "pufferfish",
+      "sourceTileNumber": 50,
+      "targets": {
+        "57": [
+          {
+            "house": "pufferfish",
+            "type": "ships"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "wolf",
+      "sourceTileNumber": 3,
+      "targets": {}
+    },
+    {
+      "actionType": "leavePowerTokenAtTile",
+      "houseType": "moose",
+      "doLeave": true,
+      "tileNumber": 40
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "moose",
+      "sourceTileNumber": 40,
+      "targets": {
+        "46": [
+          {
+            "house": "moose",
+            "type": "footmen"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "rose",
+      "sourceTileNumber": 41,
+      "targets": {
+        "37": [
+          {
+            "house": "rose",
+            "type": "ships"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "leavePowerTokenAtTile",
+      "houseType": "kraken",
+      "doLeave": true,
+      "tileNumber": 12
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "kraken",
+      "sourceTileNumber": 12,
+      "targets": {
+        "18": [
+          {
+            "house": "kraken",
+            "type": "footmen"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "leavePowerTokenAtTile",
+      "houseType": "pufferfish",
+      "doLeave": true,
+      "tileNumber": 54
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "pufferfish",
+      "sourceTileNumber": 54,
+      "targets": {
+        "52": [
+          {
+            "house": "pufferfish",
+            "type": "footmen"
+          },
+          {
+            "house": "pufferfish",
+            "type": "knights"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "wolf",
+      "sourceTileNumber": 7,
+      "targets": {}
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "lion",
+      "sourceTileNumber": 22,
+      "targets": {
+        "27": [
+          {
+            "house": "lion",
+            "type": "footmen"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "moose",
+      "sourceTileNumber": 31,
+      "targets": {}
+    },
+    {
+      "actionType": "leavePowerTokenAtTile",
+      "houseType": "rose",
+      "doLeave": true,
+      "tileNumber": 44
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "rose",
+      "sourceTileNumber": 44,
+      "targets": {
+        "39": [
+          {
+            "house": "rose",
+            "type": "footmen"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "kraken",
+      "sourceTileNumber": 15,
+      "targets": {}
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "pufferfish",
+      "sourceTileNumber": 55,
+      "targets": {
+        "54": [
+          {
+            "house": "pufferfish",
+            "type": "knights"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "wolf",
+      "sourceTileNumber": 2,
+      "targets": {
+        "14": [
+          {
+            "house": "wolf",
+            "type": "ships"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "lion",
+      "sourceTileNumber": 21,
+      "targets": {}
+    },
+    {
+      "actionType": "resolveMarchOrder",
+      "houseType": "moose",
+      "sourceTileNumber": 30,
+      "targets": {
+        "57": [
+          {
+            "house": "moose",
+            "type": "ships"
+          },
+          {
+            "house": "moose",
+            "type": "ships"
+          }
+        ]
+      }
+    },
+    {
+      "actionType": "ravenChangeOrder",
+      "order": {
+        "type": "support"
+      },
+      "houseType": "lion",
+      "tileNumber": 27
+    },
+    {
+      "actionType": "ravenChooseChangeOrderOrLookAtWildlingCard",
+      "houseType": "lion",
+      "ravenChoice": "changeOrder"
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "pufferfish"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "pufferfish",
+      "tileNumber": 50
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "pufferfish",
+      "tileNumber": 55
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "isStar": true,
+        "modifier": 1
+      },
+      "houseType": "pufferfish",
+      "tileNumber": 54
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "wolf"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "wolf",
+      "tileNumber": 7
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "wolf",
+      "tileNumber": 2
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "isStar": true,
+        "modifier": 1
+      },
+      "houseType": "wolf",
+      "tileNumber": 3
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "rose"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "support"
+      },
+      "houseType": "rose",
+      "tileNumber": 38
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "rose",
+      "tileNumber": 41
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "rose",
+      "tileNumber": 44
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "lion"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "lion",
+      "tileNumber": 22
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "lion",
+      "tileNumber": 27
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "isStar": true,
+        "modifier": 1
+      },
+      "houseType": "lion",
+      "tileNumber": 21
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "kraken"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "support"
+      },
+      "houseType": "kraken",
+      "tileNumber": 16
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "support"
+      },
+      "houseType": "kraken",
+      "tileNumber": 17
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "kraken",
+      "tileNumber": 15
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "kraken",
+      "tileNumber": 12
+    },
+    {
+      "actionType": "openOrders",
+      "houseType": "moose"
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "modifier": -1
+      },
+      "houseType": "moose",
+      "tileNumber": 30
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march"
+      },
+      "houseType": "moose",
+      "tileNumber": 31
+    },
+    {
+      "actionType": "addOrder",
+      "order": {
+        "type": "march",
+        "isStar": true,
+        "modifier": 1
+      },
+      "houseType": "moose",
+      "tileNumber": 40
+    }
+  ]
+}
