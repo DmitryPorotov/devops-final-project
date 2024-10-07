@@ -34,7 +34,7 @@ case class ActionResolveSupportOrder(
     supportingTiles.foreach(
       tn =>
         if !currentSubPhase.tilesNumbers.contains(tn.number)
-        then throw new ActionException(s"Tile ${tn.name} has no support order.")
+        then throw new ActionException(s"Tile ${tn.name} has no support order of house ${fromHouseType}.")
         if gameState.combat.defenderSupport.contains(tn.number)
         then throw new ActionException(s"Army of tile ${tn.name} is already supporting house ${gameState.combat.defenderHouse}.")
         if gameState.combat.attackerSupport.contains(tn.number)
@@ -45,19 +45,14 @@ case class ActionResolveSupportOrder(
       || (fromHouseType == gameState.combat.defenderHouse && toHouseType == gameState.combat.attackerHouse)
       then throw new ActionException("Cannot support against yourself.")
 
-    val supportOrdersFromHouse = gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
-      .foldLeft(Seq[TileNumber]())(
-        (acc: Seq[Int], tnHouseOrder: (TileNumber, (HouseType, Order))) =>
-          val (ht, _) = tnHouseOrder._2
-          if ht == fromHouseType
-          then acc :+ tnHouseOrder._1
-          else acc
-      )
-    val remainingSupportOrdersTiles = currentSubPhase.tilesNumbers.filter(tn => !supportOrdersFromHouse.contains(tn))
+    val supportOrdersForTile = gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
+    val usedSupportTiles = tileNumbers ++ gameState.combat.attackerSupport ++ gameState.combat.defenderSupport
+    val remainingSupportOrdersTiles = supportOrdersForTile.filter(x =>
+      !usedSupportTiles.contains(x._1)
+    )
     try {
       val newPhase = CombatCommon.getNewSubPhaseForMarchSupport(
-        gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
-          .filter((tn, _) => remainingSupportOrdersTiles.contains(tn)),
+        remainingSupportOrdersTiles,
         gameState.tracks(TrackType.Throne),
         gameState.combat.attackerHouse,
         gameState.combat.defenderHouse

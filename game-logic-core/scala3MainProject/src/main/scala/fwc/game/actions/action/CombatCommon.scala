@@ -26,12 +26,17 @@ object CombatCommon {
       )
 
     if supportOrders._1.nonEmpty
-    then SubPhaseResolveSupportOrder(
-      supportOrders._2.toSeq
+    then {
+      val supOrdersOfHouse = supportOrders._2.toSeq
         .sortWith((a, b) => sortedHouses.indexOf(a) < sortedHouses.indexOf(b))
-        .head,
-      supportOrders._1.toSeq
-    )
+        .head
+      SubPhaseResolveSupportOrder(
+        supOrdersOfHouse,
+        supportOrdersForTile.filter(x => x._2._1 == supOrdersOfHouse).foldLeft(Seq[Int]())((acc, cur) => {
+          acc :+ cur._1
+        })
+      )
+    }
     else if defendingHouse != HouseType.Neutral
     then SubPhaseChooseHouseCard(Seq(attackingHouse, defendingHouse))
     else throw new AttackNeutralException
