@@ -12,7 +12,7 @@ class ResolveCardMoose3Reaction(CleanUpAfterCombatReactionHouseCard):
 
     def update_game_state(self):
         pa: ActionResolveCardMoose3 = self._reply['player_action']
-        if pa['cardCode'] is not None:
+        if pa['cardCode'] is not None and pa['cardCode'] != -1:
             op_house = HouseType[pa['opponentHouseType'].upper()]
             if op_house not in self._game_state.discarded_house_cards:
                 self._game_state.discarded_house_cards[op_house] = []
