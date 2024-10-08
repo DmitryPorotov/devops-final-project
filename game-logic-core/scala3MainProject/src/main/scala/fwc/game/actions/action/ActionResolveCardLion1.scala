@@ -30,14 +30,17 @@ case class ActionResolveCardLion1(
       then gameState.placedOrders.removeOrder(updatedCombat.loser.head, tileNumber)
       else throw new ActionException(s"There is no order from house ${updatedCombat.loser.head} on this tile")
 
+    val updatedState = gameState.copy(
+      placedOrders = updatedOrders
+    )
+
     val newPhase =
       if updatedCombat.loserCard.exists(_.isMoose3)
       then SubPhaseResolveHouseCard(HouseType.Moose, 3)
-      else NextOrderFinder.nextSubPhase(gameState, OrderType.March, updatedCombat.attackerHouse)
-    
-    gameState.copy(
+      else NextOrderFinder.nextSubPhase(updatedState, OrderType.March, updatedCombat.attackerHouse)
+
+    updatedState.copy(
       subPhase = newPhase,
-      placedOrders = updatedOrders,
       combat = if newPhase.isInstanceOf[SubPhaseResolveHouseCard] then gameState.combat else null,
       discardedHouseCards =
         if newPhase.isInstanceOf[SubPhaseResolveHouseCard]
