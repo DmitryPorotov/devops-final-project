@@ -12,7 +12,7 @@ class ResolveCardWolf0Reaction(CleanUpAfterCombatReactionHouseCard):
 
     def update_game_state(self):
         pa: ActionResolveCardWolf0 = self._reply['player_action']
-        army = self._game_state.combat.attacker_army if self._game_state.combat.defender_house is HouseType.WOLF else self._game_state.combat.attacker_army
+        army = self._game_state.combat.attacker_army if self._game_state.combat.defender_house is HouseType.WOLF else self._game_state.combat.defender_army
         for mu in army:
             mu.is_defeated = True
         tile_num = str(pa['targetTileNumber'])
