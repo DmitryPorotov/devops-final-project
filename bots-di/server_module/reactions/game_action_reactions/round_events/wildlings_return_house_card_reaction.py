@@ -11,6 +11,7 @@ class WildlingsReturnHouseCardReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionWildlingsReturnHouseCard = self._reply['player_action']
         house = HouseType[pa['houseType'].upper()]
-        idx = self._game_state.discarded_house_cards[house].index(pa['cardCode'])
-        self._game_state.discarded_house_cards[house].pop(idx)
+        if 'cardCode' in pa and house in self._game_state.discarded_house_cards[house]:
+            idx = self._game_state.discarded_house_cards[house].index(pa['cardCode'])
+            self._game_state.discarded_house_cards[house].pop(idx)
         self.logger.info(pa)
