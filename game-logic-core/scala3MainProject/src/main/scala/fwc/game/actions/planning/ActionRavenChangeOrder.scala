@@ -33,15 +33,16 @@ case class ActionRavenChangeOrder(
       )
     else throw new ActionException(s"There is no order at ${gameRules.board(tileNumber).name} ($tileNumber)")
 
-    val newPhase = NextOrderFinder.nextSubPhase(
-      newGameState, OrderType.Raid
-    )
-
-    ActionAddOrder(newGameState, houseType, order, tileNumber).doPlaceOrder().copy(
-      subPhase = newPhase,
+    val newGameState1 = ActionAddOrder(newGameState, houseType, order, tileNumber).doPlaceOrder().copy(
       dominanceTokensUsage = DominanceTokensUsage(
         newGameState.dominanceTokensUsage.usage + (DominanceTokenType.MessengerRaven -> true)
       )
+    )
+    val newPhase = NextOrderFinder.nextSubPhase(
+      newGameState1, OrderType.Raid
+    )
+    newGameState1.copy(
+      subPhase = newPhase
     )
   }
 
