@@ -5,6 +5,7 @@ local player_panels = require "main/ui/player_panel"
 local orders = require "main/ui/orders"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	tiles_with_hints = {},
@@ -74,7 +75,7 @@ local function on_map_show_orders_menu(self, message)
 	)
 	if message.deleted then
 		self:set_has_order(message.tile_num, false)
-		event_dispatcher.trigger('ws_send',{
+		event_dispatcher.trigger(events.ws_send, {
 			player_action = {
 				actionType = "removeOrder",
 				tileNumber = tonumber(message.tile_num),
@@ -86,7 +87,7 @@ end
 local function on_order_button_click(self)
 	local order = orders:get_order_to_send()
 	self:set_has_order(order.player_action.tileNumber, true)
-	event_dispatcher.trigger('ws_send', order)
+	event_dispatcher.trigger(events.ws_send, order)
 	orders:add_order_to_map()
 end
 
@@ -111,8 +112,8 @@ local function on_ws_open_orders(reply)
 end
 
 function _M:init(armies, my_orders, phase)
-	event_dispatcher.on('hints_goto_button_click', self.on_goto_button_pressed, self)
-	event_dispatcher.on('hints_next_button_click', self.on_next_button_pressed, self)
+	event_dispatcher.on(events.hints_goto_button_click, self.on_goto_button_pressed, self)
+	event_dispatcher.on(events.hints_next_button_click, self.on_next_button_pressed, self)
 	local my_armies = utils.filter_my_armies(armies, game_data.me)
 	for tile_num, v in pairs(my_armies) do
 		if utils.is_unit_commandable(v[1].type) or #v > 1 then
@@ -127,19 +128,19 @@ function _M:init(armies, my_orders, phase)
 		end
 		player_panels:set_player_ready(v)
 	end
-	event_dispatcher.on('map_show_orders_menu', on_map_show_orders_menu, self)
-	event_dispatcher.on('order_button_click', on_order_button_click, self)
-	event_dispatcher.on('ws_add_order', on_ws_add_order)
-	event_dispatcher.on('ws_open_orders', on_ws_open_orders)
+	event_dispatcher.on(events.map_show_orders_menu, on_map_show_orders_menu, self)
+	event_dispatcher.on(events.order_button_click, on_order_button_click, self)
+	event_dispatcher.on(events.ws_add_order, on_ws_add_order)
+	event_dispatcher.on(events.ws_open_orders, on_ws_open_orders)
 end
 
 function _M:clean_up()
-	event_dispatcher.off('map_show_orders_menu', on_map_show_orders_menu)
-	event_dispatcher.off('order_button_click', on_order_button_click)
-	event_dispatcher.off('ws_add_order', on_ws_add_order)
-	event_dispatcher.off('ws_open_orders', on_ws_open_orders)
-	event_dispatcher.off('hints_goto_button_click', self.on_goto_button_pressed)
-	event_dispatcher.off('hints_next_button_click', self.on_next_button_pressed)
+	event_dispatcher.off(events.map_show_orders_menu, on_map_show_orders_menu)
+	event_dispatcher.off(events.order_button_click, on_order_button_click)
+	event_dispatcher.off(events.ws_add_order, on_ws_add_order)
+	event_dispatcher.off(events.ws_open_orders, on_ws_open_orders)
+	event_dispatcher.off(events.hints_goto_button_click, self.on_goto_button_pressed)
+	event_dispatcher.off(events.hints_next_button_click, self.on_next_button_pressed)
 	hints:clean_up()
 	orders:close()
 end
@@ -165,7 +166,7 @@ end
 
 function _M:on_next_button_pressed()
 	orders_confirmed(self)
-	event_dispatcher.trigger('ws_send', {
+	event_dispatcher.trigger(events.ws_send, {
 		player_action = {
 			actionType = "openOrders",
 		}

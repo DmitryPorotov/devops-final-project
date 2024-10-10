@@ -1,5 +1,6 @@
 local base = require "main/ui/dialogs/base_dialog"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 ---@module RavenChooseCardOrOrder : BaseDialog
 local _M = {}
@@ -22,11 +23,11 @@ function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) and not selected then
 		if gui.pick_node(self.order_button, x, y) then
 			selected = "changeOrder"
-			event_dispatcher.trigger('raven_card_or_order_click')
+			event_dispatcher.trigger(events.raven_card_or_order_click)
 			return true
 		elseif gui.pick_node(self.card_button, x, y) then
 			selected = "lookAtWildlingsCard"
-			event_dispatcher.trigger('raven_card_or_order_click')
+			event_dispatcher.trigger(events.raven_card_or_order_click)
 			return true
 		end
 		return gui.pick_node(self.panel, x, y)

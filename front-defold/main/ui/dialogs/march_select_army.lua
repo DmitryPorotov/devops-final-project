@@ -1,4 +1,5 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 local army_logic = require "main/ui/army_logic"
 local base = require "main/ui/dialogs/base_dialog"
 
@@ -203,11 +204,11 @@ function _M:check_button_pressed(x, y)
 					v.en = false
 				end
 				gui.set_color(self.ok_button, vmath.vector4(1,1,1,0.5))
-				event_dispatcher.trigger('march_select_army_ok_button_click', self:get_to_send())
+				event_dispatcher.trigger(events.march_select_army_ok_button_click, self:get_to_send())
 			elseif self.target_selected then
 				gui.set_color(self.ok_button, vmath.vector4(1,1,1,0.5))
 				self.target_selected = false
-				event_dispatcher.trigger('march_select_army_ok_button_click', false)
+				event_dispatcher.trigger(events.march_select_army_ok_button_click, false)
 			end
 			return true
 		end

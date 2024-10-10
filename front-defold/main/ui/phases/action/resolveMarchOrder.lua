@@ -1,4 +1,5 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 local game_data = require "main/ui/game_data"
 
 local march_select_army = require "main/ui/dialogs/march_select_army"
@@ -29,6 +30,7 @@ local _M = {
 
 ---@private
 function _M:on_map_resolve_order(message)
+	print('in on_map_resolve_order')
 	self.state.on_map_resolve_order(self, message)
 end
 
@@ -64,7 +66,7 @@ end
 
 ---@private
 function _M:on_hints_next_button_click()
-	event_dispatcher.trigger('ws_send', self.march_order.get_message_to_server())
+	event_dispatcher.trigger(events.ws_send, self.march_order.get_message_to_server())
 	self:clean_up()
 end
 
@@ -74,12 +76,12 @@ function _M:init()
 		return
 	end
 
-	event_dispatcher.on('map_resolve_order', self.on_map_resolve_order, self)
-	event_dispatcher.on('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click, self)
-	event_dispatcher.on("map_target_selected", self.on_map_target_selected, self)
-	event_dispatcher.on('partial_march_remove', self.on_partial_march_remove, self)
-	event_dispatcher.on('hints_goto_button_click', self.on_hints_goto_button_click, self)
-	event_dispatcher.on('hints_next_button_click', self.on_hints_next_button_click, self)
+	event_dispatcher.on(events.map_resolve_order, self.on_map_resolve_order, self)
+	event_dispatcher.on(events.march_select_army_ok_button_click, self.on_march_select_army_ok_button_click, self)
+	event_dispatcher.on(events.map_target_selected, self.on_map_target_selected, self)
+	event_dispatcher.on(events.partial_march_remove, self.on_partial_march_remove, self)
+	event_dispatcher.on(events.hints_goto_button_click, self.on_hints_goto_button_click, self)
+	event_dispatcher.on(events.hints_next_button_click, self.on_hints_next_button_click, self)
 
 	self.state = no_source_selected
 	no_source_selected.init(self)
@@ -130,12 +132,12 @@ function _M:set_up_hint()
 end
 
 function _M:clean_up()
-	event_dispatcher.off('map_resolve_order', self.on_map_resolve_order)
-	event_dispatcher.off('march_select_army_ok_button_click', self.on_march_select_army_ok_button_click)
-	event_dispatcher.off('hints_goto_button_click', self.on_hints_goto_button_click)
-	event_dispatcher.off('hints_next_button_click', self.on_hints_next_button_click)
-	event_dispatcher.off('map_target_selected', self.on_map_target_selected)
-	event_dispatcher.off('partial_march_remove', self.on_partial_march_remove)
+	event_dispatcher.off(events.map_resolve_order, self.on_map_resolve_order)
+	event_dispatcher.off(events.march_select_army_ok_button_click, self.on_march_select_army_ok_button_click)
+	event_dispatcher.off(events.hints_goto_button_click, self.on_hints_goto_button_click)
+	event_dispatcher.off(events.hints_next_button_click, self.on_hints_next_button_click)
+	event_dispatcher.off(events.map_target_selected, self.on_map_target_selected)
+	event_dispatcher.off(events.partial_march_remove, self.on_partial_march_remove)
 	msg.post('/map', 'unselect_label')
 	msg.post('/map', 'unhighlight')
 	hints:clean_up()

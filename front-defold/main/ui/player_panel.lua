@@ -1,5 +1,6 @@
 local game_data = require "main/ui/game_data"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	house_to_panel_num = {},
@@ -78,7 +79,7 @@ function _M:set_player_turn(house)
 end
 
 function _M:init()
-	event_dispatcher.on('set_power_tokens', self.set_player_power_tokens, self)
+	event_dispatcher.on(events.set_power_tokens, self.set_player_power_tokens, self)
 	self.panels = {
 		gui.get_node('player1/player_panel'),
 		gui.get_node('player2/player_panel'),
@@ -123,7 +124,7 @@ function _M:check_button_pressed(x, y)
 		for i, v in ipairs(self.panels) do
 			if gui.pick_node(v, x, y) then
 				local house = self.panel_num_to_house[i]
-				event_dispatcher.trigger('player_panel_click', house)
+				event_dispatcher.trigger(events.player_panel_click, house)
 				return true
 			end
 		end

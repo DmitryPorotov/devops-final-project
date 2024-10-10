@@ -1,5 +1,6 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
 local utils = require "main/utils"
+local events = require "main/ui/events"
 
 local POSITION_Y_STEP = 57
 
@@ -94,7 +95,7 @@ function _M:check_button_pressed(x, y)
 	for i, v in ipairs(self.panels) do
 		if gui.is_enabled(v.p) then
 			if gui.pick_node(self.buttons[i], x, y) then
-				event_dispatcher.trigger('partial_march_remove', v.id)
+				event_dispatcher.trigger(events.partial_march_remove, v.id)
 				remove_order_panel(self, v)
 				return true
 			end

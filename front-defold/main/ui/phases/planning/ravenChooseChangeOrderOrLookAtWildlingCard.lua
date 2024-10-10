@@ -4,6 +4,7 @@ local raven_card_or_order = require "main/ui/dialogs/raven_choose_card_or_order"
 local player_panels = require "main/ui/player_panel"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	raven_choice_prefix_text = 'The owner of the Messenger Raven chose to\n',
@@ -18,7 +19,7 @@ local function on_ws_raven_card_or_order(self, reply)
 end
 
 local function on_raven_card_or_order_click()
-	event_dispatcher.trigger('ws_send', raven_card_or_order:build_message())
+	event_dispatcher.trigger(events.ws_send, raven_card_or_order:build_message())
 	raven_card_or_order:close()
 end
 
@@ -26,14 +27,14 @@ function _M:init()
 	player_panels:set_player_turn(game_data.subPhase.houseType)
 	if game_data.me == game_data.tracks["court"][1] then
 		raven_card_or_order:open()
-		event_dispatcher.on('raven_card_or_order_click', on_raven_card_or_order_click)
+		event_dispatcher.on(events.raven_card_or_order_click, on_raven_card_or_order_click)
 	end
-	event_dispatcher.on('ws_raven_card_or_order', on_ws_raven_card_or_order, self)
+	event_dispatcher.on(events.ws_raven_card_or_order, on_ws_raven_card_or_order, self)
 end
 
 function _M:clean_up()
-	event_dispatcher.off('ws_raven_card_or_order', on_ws_raven_card_or_order)
-	event_dispatcher.off('raven_card_or_order_click', on_raven_card_or_order_click)
+	event_dispatcher.off(events.ws_raven_card_or_order, on_ws_raven_card_or_order)
+	event_dispatcher.off(events.raven_card_or_order_click, on_raven_card_or_order_click)
 	raven_card_or_order:close()
 	hints:clean_up()
 end

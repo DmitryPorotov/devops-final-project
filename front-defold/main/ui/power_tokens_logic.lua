@@ -1,4 +1,5 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local tokens_count
 local tokens_on_map = {}
@@ -16,7 +17,7 @@ local function add(house, number)
 	elseif tokens_count[house] > 20 - tokens_on_map[house] then
 		tokens_count[house] = 20 - tokens_on_map[house]
 	end
-	event_dispatcher.trigger('set_power_tokens', house, tokens_count[house])
+	event_dispatcher.trigger(events.set_power_tokens, house, tokens_count[house])
 end
 
 ---@param house string

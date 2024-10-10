@@ -1,4 +1,5 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {}
 
@@ -69,13 +70,13 @@ function _M:check_button_pressed(x, y)
 	if not gui.is_enabled(self.hints) then return false end
 
 	if gui.is_enabled(self.goto_button) and gui.pick_node(self.goto_button, x, y) then
-		event_dispatcher.trigger('hints_goto_button_click')
+		event_dispatcher.trigger(events.hints_goto_button_click)
 		return true
 	elseif gui.is_enabled(self.next_button) and gui.pick_node(self.next_button, x, y) then
-		event_dispatcher.trigger('hints_next_button_click')
+		event_dispatcher.trigger(events.hints_next_button_click)
 		return true
 	elseif gui.is_enabled(self.bar) and gui.pick_node(self.bar, x, y)  then
-		event_dispatcher.trigger('hints_goto_button_click')
+		event_dispatcher.trigger(events.hints_goto_button_click)
 		return true
 	end
 	return false

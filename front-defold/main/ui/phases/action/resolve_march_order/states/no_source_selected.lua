@@ -6,6 +6,7 @@ local utils = require "main/utils"
 local common = require "main/ui/phases/action/resolve_march_order/states/common"
 local confirm = require "main/ui/dialogs/confirm"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local to_next_state
 
@@ -41,7 +42,7 @@ local function on_march_select_army_confirm_army(self, to_send)
 				.. self.from_name .. '" and finish your turn?',
 				function(result)
 					if result then
-						event_dispatcher.trigger('hints_next_button_click')
+						event_dispatcher.trigger(events.hints_next_button_click)
 					else
 						msg.post('/map', 'unselect_label')
 						msg.post('/map', 'hide_targets')

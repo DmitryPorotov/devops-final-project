@@ -3,6 +3,7 @@ local utils = require "main/utils"
 local game_data = require "main/ui/game_data"
 local house_card = require "main/ui/house_card"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	a_card_position = vmath.vector3(-14, -102, 0),
@@ -127,7 +128,7 @@ function _M:check_button_pressed(x, y)
 		end
 		gui.set(self.cards[last_clicked_card_idx].bg, 'position.y', card_pos_y)
 		last_clicked_card_idx = nil
-		event_dispatcher.trigger('house_card_selected', false)
+		event_dispatcher.trigger(events.house_card_selected, false)
 	end
 	for i = #self.cards, 1, -1 do
 		if self.cards[i]:check_press(x, y) then
@@ -137,7 +138,7 @@ function _M:check_button_pressed(x, y)
 				end
 				gui.set(self.cards[i].bg, 'position.y', card_pos_y + 50)
 				last_clicked_card_idx = i
-				event_dispatcher.trigger('house_card_selected', true)
+				event_dispatcher.trigger(events.house_card_selected, true)
 			end
 			return true
 		end

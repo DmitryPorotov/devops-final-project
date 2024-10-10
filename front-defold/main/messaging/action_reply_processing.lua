@@ -9,6 +9,7 @@ local leavePowerTokenAtTile = require "main/ui/phases/action/leavePowerTokenAtTi
 local chooseHouseCard = require "main/ui/phases/action/chooseHouseCard"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 local army_logic = require "main/ui/army_logic"
 
 local power_tokens_logic = require "main/ui/power_tokens_logic"
@@ -24,7 +25,7 @@ action_type_switch = {
 		if reply.player_action.houseType == game_data.me then
 			return
 		end
-		event_dispatcher.trigger('ws_add_order', reply)
+		event_dispatcher.trigger(events.ws_add_order, reply)
 	end,
 	removeOrder = function(reply)
 		if reply.player_action.houseType == game_data.me then
@@ -33,14 +34,14 @@ action_type_switch = {
 		msg.post("/map", "remove_order", {tile_num = reply.player_action.tileNumber})
 	end,
 	openOrders = function(reply)
-		event_dispatcher.trigger('ws_open_orders', reply)
+		event_dispatcher.trigger(events.ws_open_orders, reply)
 		if reply.player_action.orders then
 			addOrder:clean_up()
 			do_current_phase_switching(reply)
 		end
 	end,
 	ravenChooseChangeOrderOrLookAtWildlingCard = function(reply)
-		event_dispatcher.trigger('ws_raven_card_or_order', reply)
+		event_dispatcher.trigger(events.ws_raven_card_or_order, reply)
 		ravenChoose:clean_up()
 		do_current_phase_switching(reply)
 	end,
@@ -159,6 +160,9 @@ current_phase_switch = {
 		last_init_phase = ravenChangeOrder
 	end,
 	ravenGetWildlingsCard = function(reply)
+
+	end,
+	cleanUpAfterCombat = function(reply)
 
 	end,
 }

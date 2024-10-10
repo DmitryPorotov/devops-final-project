@@ -1,4 +1,5 @@
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 local base = require "main/ui/dialogs/base_dialog"
 
 ---@module LeavePowerToken : BaseDialog
@@ -30,11 +31,11 @@ function _M:check_button_pressed(x, y)
 	if gui.is_enabled(self.panel) and selected == nil then
 		if gui.pick_node(self.yes_button, x, y) then
 			selected = true
-			event_dispatcher.trigger('leave_power_token_click')
+			event_dispatcher.trigger(events.leave_power_token_click)
 			return true
 		elseif gui.pick_node(self.no_button, x, y) then
 			selected = false
-			event_dispatcher.trigger('leave_power_token_click')
+			event_dispatcher.trigger(events.leave_power_token_click)
 			return true
 		end
 		return gui.pick_node(self.panel, x, y)

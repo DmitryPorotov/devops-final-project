@@ -20,6 +20,7 @@ local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
 local action_proc = require "main/messaging/action_reply_processing"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 local game_data = require "main/ui/game_data"
 
 local _M = {}
@@ -128,15 +129,16 @@ function _M:update(dt)
 	end
 	if self.show_orders_menu_message then
 		local status, err =
-			pcall(event_dispatcher.trigger, 'map_show_orders_menu', self.show_orders_menu_message)
+			pcall(event_dispatcher.trigger, events.map_show_orders_menu, self.show_orders_menu_message)
 		self.show_orders_menu_message = nil
 		if not status then
 			error(err)
 		end
 	end
 	if self.resolve_order_message then
+		print('in map_resolve_order')
 		local status, err =
-			pcall(event_dispatcher.trigger, 'map_resolve_order', self.resolve_order_message)
+		pcall(event_dispatcher.trigger, events.map_resolve_order, self.resolve_order_message)
 		self.resolve_order_message = nil
 		if not status then
 			error(err)
@@ -144,7 +146,7 @@ function _M:update(dt)
 	end
 	if self.target_selected_message then
 		local status, err =
-			pcall(event_dispatcher.trigger, 'map_target_selected', self.target_selected_message)
+			pcall(event_dispatcher.trigger, events.map_target_selected, self.target_selected_message)
 		self.target_selected_message = nil
 		if not status then
 			error(err)

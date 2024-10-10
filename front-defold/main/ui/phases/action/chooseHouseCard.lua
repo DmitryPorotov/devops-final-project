@@ -5,6 +5,7 @@ local utils = require "main/utils"
 local house_cards_logic = require "main/ui/house_cards_logic"
 local hints = require "main/ui/hints"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	att_str = 0,
@@ -14,7 +15,7 @@ local _M = {
 local function on_card_selection_confirmed()
 	local card = combat_screen:get_selected_card()
 	combat_screen:confirm_card(card, army_logic.combat.attackerHouse == game_data.me)
-	event_dispatcher.trigger('ws_send', {
+	event_dispatcher.trigger(events.ws_send, {
 		player_action = {
 			actionType = "chooseHouseCard",
 			cardCode = card.code,
@@ -63,8 +64,8 @@ function _M:init(attacker, defender, a_tile_num, d_tile_num)
 		hints:set_enabled(true)
 		hints:set_goto_button_enabled(false)
 		hints:set_hint_text('Select a card') -- todo : check the actual text
-		event_dispatcher.on('hints_next_button_click', on_card_selection_confirmed)
-		event_dispatcher.on('house_card_selected', on_house_card_selected)
+		event_dispatcher.on(events.hints_next_button_click, on_card_selection_confirmed)
+		event_dispatcher.on(events.house_card_selected, on_house_card_selected)
 	end
 end
 
@@ -110,8 +111,8 @@ function _M:update_outcome()
 end
 
 function _M:clean_up()
-	event_dispatcher.off('hints_next_button_click', on_card_selection_confirmed)
-	event_dispatcher.off('house_card_selected', on_house_card_selected)
+	event_dispatcher.off(events.hints_next_button_click, on_card_selection_confirmed)
+	event_dispatcher.off(events.house_card_selected, on_house_card_selected)
 	hints:set_enabled(false)
 	combat_screen:close()
 	self.att_str = 0

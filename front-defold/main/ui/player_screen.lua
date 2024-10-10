@@ -3,6 +3,7 @@ local utils = require "main/utils"
 local power_tokens_logic = require "main/ui/power_tokens_logic"
 local house_card = require "main/ui/house_card"
 local house_cards_logic = require "main/ui/house_cards_logic"
+local events = require "main/ui/events"
 
 local card_pos_y = -90
 local card_position_step = 140
@@ -51,7 +52,7 @@ function _M:init()
 	self.power_token_count = gui.get_node("player_screen/token_count")
 	self.house_name = gui.get_node('player_screen/house_name')
 	self.close_button = gui.get_node('player_screen/close_button')
-	event_dispatcher.on('player_panel_click', self.on_player_panel_click, self)
+	event_dispatcher.on(events.player_panel_click, self.on_player_panel_click, self)
 end
 
 function _M:check_pressed(x, y)

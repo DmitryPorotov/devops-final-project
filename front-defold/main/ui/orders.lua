@@ -3,6 +3,7 @@ local labels = require "main/labels"
 local utils = require "main/utils"
 local game_data = require "main/ui/game_data"
 local event_dispatcher = require "main/ui/event_dispatcher"
+local events = require "main/ui/events"
 
 local _M = {
 	ORDER_TYPES = {
@@ -154,7 +155,7 @@ function _M:check_button_pressed(x, y)
 			if not v.label and gui.pick_node(v.node, x, y) then
 				self.button_selected = k
 				self:close()
-				event_dispatcher.trigger('order_button_click')
+				event_dispatcher.trigger(events.order_button_click)
 				return true
 			end
 		end
