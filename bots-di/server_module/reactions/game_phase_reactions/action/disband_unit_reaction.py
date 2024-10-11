@@ -25,6 +25,7 @@ class DisbandUnitReaction(BasePhaseReaction):
         combat = self._game_state.combat
         if self._phase['mainPhase'] == 'phaseAction':  # this is after combat
             all_units = list(combat.attacker_army if combat.attacker_house == self._house_type else combat.defender_army)
+            all_units = list(u for u in all_units if u.unit_type is not MilitaryUnitType.GARRISON and u.unit_type is not MilitaryUnitType.POWER_TOKEN)
             unit = choose_from_list(all_units)
             unit.is_defeated = True
             unit['isDefeated'] = True
