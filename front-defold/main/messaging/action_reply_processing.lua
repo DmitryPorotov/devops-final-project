@@ -196,7 +196,10 @@ function _M:process(reply)
 		error("No action type in the reply")
 	else
 		game_data.subPhase = reply.current_phase
-		msg.post("/map", "set_phase", {phase = reply.current_phase.subPhase})
+		msg.post("/map", "set_phase", {
+			phase = reply.current_phase.subPhase,
+			house = reply.current_phase.houseType
+		})
 		--if reply.current_phase.houseType then
 		--	--todo move to phases?
 		--	self.player_panel__set_player_turn(reply.current_phase.houseType)
