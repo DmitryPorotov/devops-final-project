@@ -7,6 +7,7 @@ from server_module.game_rules.game_rules import GameRules
 from server_module.game_state.game_state import GameState
 from server_module.game_state.house_type import HouseType
 from server_module.game_state.military_unit import MilitaryUnit
+from server_module.game_state.military_unit_type import MilitaryUnitType
 from server_module.reactions.game_phase_reactions.base_phase_reaction import BasePhaseReaction
 
 
@@ -18,6 +19,7 @@ class KillUnitsAfterBattleReaction(BasePhaseReaction):
         combat = self._game_state.combat
         num_units_to_kill = combat.combat_outcome.attacker_units_to_kill if combat.attacker_house == self._house_type else combat.combat_outcome.defender_units_to_kill
         all_units = list(combat.attacker_army if combat.attacker_house == self._house_type else combat.defender_army)
+        all_units = list(u for u in all_units if u.unit_type is not MilitaryUnitType.GARRISON and u.unit_type is not MilitaryUnitType.POWER_TOKEN)
         random.shuffle(all_units)
         to_kill = all_units[:num_units_to_kill]
         return [self._to_json(to_kill)]
