@@ -11,5 +11,7 @@ class WildlingsDiscardHouseCardReaction(BaseActionReaction):
     def update_game_state(self):
         pa: ActionWildlingsDiscardHouseCard = self._reply['player_action']
         house = HouseType[pa['houseType'].upper()]
+        if house not in self._game_state.discarded_house_cards:
+            self._game_state.discarded_house_cards[house] = []
         self._game_state.discarded_house_cards[house].append(pa['cardCode'])
         self.logger.info(pa)
