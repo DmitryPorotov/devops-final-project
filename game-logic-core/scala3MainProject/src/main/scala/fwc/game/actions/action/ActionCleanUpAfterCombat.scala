@@ -19,11 +19,11 @@ case class ActionCleanUpAfterCombat(
   override def doAction(): GameState = {
 
     val combat = gameState.combat
-    val updatedArmies = `move winner's army to embattled tile` (combat)
+    val updatedArmies = `move winner's army to embattled tile after` (combat)
 
-    val updatedDiscardedCards = `discard cards used in combat` (combat)
+    val updatedDiscardedCards = `discard cards used in ` (combat)
 
-    val updatedDiscardedCards2 = `restore wolf's cards if card 2 was used` (combat, updatedDiscardedCards)
+    val updatedDiscardedCards2 = `restore wolf's cards if card 2 was used in` (combat, updatedDiscardedCards)
 
     val updatedPlacedOrders = `move march order to embattled tile if rose won with card 0` (combat)
 
@@ -130,26 +130,30 @@ case class ActionCleanUpAfterCombat(
     else gameState.placedOrders
   }
 
-  private def `restore wolf's cards if card 2 was used`(combat: Combat, updatedDiscardedCards: DiscardedHouseCards) = {
+  private def `restore wolf's cards if card 2 was used in`(combat: Combat, updatedDiscardedCards: DiscardedHouseCards) = {
     if combat.loserCard.exists(_.isWolf2)
     then updatedDiscardedCards - HouseType.Wolf
     else updatedDiscardedCards
   }
 
-  private def `discard cards used in combat`(combat: Combat) = {
-    gameState.discardedHouseCards.concat(Map(
-      combat.attackerHouse -> (
-        if combat.attackerCard == null || gameState.discardedHouseCards(combat.attackerHouse).contains(combat.attackerCard.code) then gameState.discardedHouseCards(combat.attackerHouse)
-        else gameState.discardedHouseCards(combat.attackerHouse) :+ combat.attackerCard.code
-        ),
-      combat.defenderHouse -> (
-        if combat.defenderCard == null || gameState.discardedHouseCards(combat.defenderHouse).contains(combat.defenderCard.code) then gameState.discardedHouseCards(combat.defenderHouse)
-        else gameState.discardedHouseCards(combat.defenderHouse) :+ combat.defenderCard.code
-        )
-    ))
+  private def `discard cards used in `(combat: Combat) = {
+    if combat.defenderHouse == HouseType.Neutral
+    then
+      gameState.discardedHouseCards
+    else
+      gameState.discardedHouseCards.concat(Map(
+        combat.attackerHouse -> (
+          if combat.attackerCard == null || gameState.discardedHouseCards(combat.attackerHouse).contains(combat.attackerCard.code) then gameState.discardedHouseCards(combat.attackerHouse)
+          else gameState.discardedHouseCards(combat.attackerHouse) :+ combat.attackerCard.code
+          ),
+        combat.defenderHouse -> (
+          if combat.defenderCard == null || gameState.discardedHouseCards(combat.defenderHouse).contains(combat.defenderCard.code) then gameState.discardedHouseCards(combat.defenderHouse)
+          else gameState.discardedHouseCards(combat.defenderHouse) :+ combat.defenderCard.code
+          )
+      ))
   }
 
-  private def `move winner's army to embattled tile`(combat: Combat) = {
+  private def `move winner's army to embattled tile after`(combat: Combat) = {
     if combat.loserCard.exists(_.isPufferfish2) && combat.loser.contains(combat.defenderHouse)
     then gameState.armies + (combat.attackerTileNum ->
       (gameState.armies.getOrElse(combat.attackerTileNum, Seq()) ++ combat.attackerArmy)

@@ -30,6 +30,7 @@ case class Combat(
                    defenderCardResolved: Boolean,
                    defenderTidesOfBattle: TidesOfBattleCard,
                    defenderSupport: Seq[TileNumber],
+                   assignedSupportTiles: Seq[TileNumber],
                    combatOutcome: CombatOutcome = null
                  ) extends JsonSerializable {
   def toNonEmptyFieldsJson: Value =
@@ -41,6 +42,7 @@ case class Combat(
       "defenderTileNum" -> defenderTileNum,
       "defenderHouse" -> defenderHouse.toString,
       "defenderArmy" -> ujson.Value(defenderArmy.map(_.toJson)),
+      "assignedSupportTiles" -> ujson.Arr.from(assignedSupportTiles),
     )
     if attackerCard != null then 
       init.obj.addOne(
@@ -176,6 +178,7 @@ object Combat extends JsonParsable {
       json("defenderCardResolved").bool,
       gameRules.boardCards.tidesOfBattle.find(_.code == json("defenderTidesOfBattle").num.toInt).head,
       json("defenderSupport").arr.map(_.num.toInt).toSeq,
+      if json("assignedSupportTiles") != ujson.Null then json("assignedSupportTiles").arr.map(_.num.toInt).toSeq else Seq(),
       if json("combatOutcome") != ujson.Null then CombatOutcome.fromJson(json("combatOutcome")) else null,
     )
 }

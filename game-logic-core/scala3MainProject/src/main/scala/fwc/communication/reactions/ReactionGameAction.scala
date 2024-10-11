@@ -278,9 +278,12 @@ object ReactionGameAction {
         case s => s.toJson
       })
     )
-    reply.obj.addOne(
-      "gameState" -> updatedGameState.toJson
-    )
+//    if !fwc.isProd
+//    then
+//      reply.obj.addOne(
+//        "gameState" -> updatedGameState.toJson
+//      )
+    reply
   }
   private def buildMessageToAll(a: ujson.Value): ujson.Obj =
     ujson.Obj(

@@ -1,12 +1,12 @@
 package fwc.game.actions.action
 
-import fwc.game.actionPhase.DiscardedHouseCards
+import fwc.game.actionPhase.{CombatOutcome, DiscardedHouseCards}
 import fwc.game.{GameState, gameRules}
 import fwc.game.board.{MilitaryUnit, MilitaryUnitType, TileNumber}
 import fwc.game.houses.*
 import fwc.game.houses.HouseType
 import fwc.game.phases.{SubPhase, SubPhaseSingleHouse}
-import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCard, SubPhaseResolveCardRose2, SubPhaseResolveHouseCard, SubPhaseResolveSupportOrder}
+import fwc.game.phases.actionSubPhases.{SubPhaseChooseHouseCard, SubPhaseCleanUpAfterCombat, SubPhaseResolveCardRose2, SubPhaseResolveHouseCard, SubPhaseResolveSupportOrder}
 import fwc.game.planningPhase.{Order, OrderType}
 import fwc.gameLoading.HouseCard
 
@@ -77,27 +77,39 @@ object CombatCommon {
       + gameState.combat.attackerSupport.foldLeft(0)(
       (acc, cur) =>
         acc + gameState.armies(cur).foldLeft(0)(sumUnitStrength)
-    )
+    ) + gameState.combat.attackerOrder.modifier
 
-    val newPhase = NextOrderFinder.nextSubPhase(gameState, OrderType.March, gameState.combat.attackerHouse)
-    if attackingArmyStr >= gameState.combat.defenderArmy.head.garrisonDefensePoints
-    //todo should check if someone has a support order nearby if attacker does not have enough strength 
+    val newPhase = SubPhaseCleanUpAfterCombat(Seq(gameState.combat.attackerHouse, HouseType.Neutral))
+    val isAttackersWin = attackingArmyStr >= gameState.combat.defenderArmy.head.garrisonDefensePoints
+    val updatedCombat = gameState.combat.copy(
+      combatOutcome = CombatOutcome(
+        attackingArmyStr,
+        gameState.combat.defenderArmy.head.garrisonDefensePoints,
+        if isAttackersWin then Some(gameState.combat.attackerHouse) else Some(HouseType.Neutral),
+        0,
+        0
+      )
+    )
+    if isAttackersWin
     then
       val armiesWithoutNeutralGarrison = gameState.armies - tileNumberUnderAttack
       gameState.copy(
         subPhase = newPhase,
         armies =
-          armiesWithoutNeutralGarrison + (tileNumberUnderAttack -> attackerArmy),
-        combat = null
+          armiesWithoutNeutralGarrison,
+        combat = updatedCombat
       )
     else
       val remainingArmiesAtSourceTileAfterDefeat =
         gameState.armies.getOrElse(gameState.combat.attackerTileNum, Seq())
           :++ attackerArmy.map(_.copy(isDefeated = true))
+      val updatedCombat2 = updatedCombat.copy(
+        attackerArmy = Seq()
+      )
       gameState.copy(
         subPhase = newPhase,
         armies = gameState.armies + (gameState.combat.attackerTileNum -> remainingArmiesAtSourceTileAfterDefeat),
-        combat = null
+        combat = updatedCombat2
       )
   }
 }

@@ -46,33 +46,35 @@ case class ActionResolveSupportOrder(
       then throw new ActionException("Cannot support against yourself.")
 
     val supportOrdersForTile = gameState.placedOrders.getSupportOrdersForTile(gameState.combat.defenderTileNum)
-    val usedSupportTiles = tileNumbers ++ gameState.combat.attackerSupport ++ gameState.combat.defenderSupport
+    val updatedCombat = gameState.combat.copy(
+      assignedSupportTiles = gameState.combat.assignedSupportTiles ++ tileNumbers
+    )
     val remainingSupportOrdersTiles = supportOrdersForTile.filter(x =>
-      !usedSupportTiles.contains(x._1)
+      !updatedCombat.assignedSupportTiles.contains(x._1)
     )
     try {
       val newPhase = CombatCommon.getNewSubPhaseForMarchSupport(
         remainingSupportOrdersTiles,
         gameState.tracks(TrackType.Throne),
-        gameState.combat.attackerHouse,
-        gameState.combat.defenderHouse
+        updatedCombat.attackerHouse,
+        updatedCombat.defenderHouse
       )
 
       if toHouseType != null
       then {
-        if toHouseType != gameState.combat.defenderHouse && toHouseType != gameState.combat.attackerHouse
-        then throw new ActionException(s"Support order should be targeted to ${gameState.combat.defenderHouse} or " +
-          s"${gameState.combat.attackerHouse}")
-        val updatedCombat = if toHouseType == gameState.combat.defenderHouse
-        then gameState.combat.copy(
+        if toHouseType != updatedCombat.defenderHouse && toHouseType != updatedCombat.attackerHouse
+        then throw new ActionException(s"Support order should be targeted to ${updatedCombat.defenderHouse} or " +
+          s"${updatedCombat.attackerHouse}")
+        val updatedCombat1 = if toHouseType == updatedCombat.defenderHouse
+        then updatedCombat.copy(
             defenderSupport = gameState.combat.defenderSupport :++ tileNumbers
           )
-        else gameState.combat.copy(
+        else updatedCombat.copy(
           attackerSupport = gameState.combat.defenderSupport :++ tileNumbers
         )
         gameState.copy(
           subPhase = newPhase,
-          combat = updatedCombat
+          combat = updatedCombat1
         )
       }
       else gameState.copy(
