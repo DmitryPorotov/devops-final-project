@@ -43,6 +43,8 @@ class SetWildlingsCardReaction(BaseActionReaction):
                 else:
                     max_str_cards = []
                     max_str = 0
+                    if l_w_house not in self._game_state.discarded_house_cards:
+                        self._game_state.discarded_house_cards[l_w_house] = []
                     for cc in range(7):
                         if cc not in self._game_state.discarded_house_cards[l_w_house]:
                             strength = HouseCard.from_house_and_code(l_w_house, cc).strength
