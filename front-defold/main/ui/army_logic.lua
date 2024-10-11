@@ -82,7 +82,7 @@ end
 function _M:house_armies_to_gui_format(house, armies)
 	local result = {}
 	for tile_num, army in pairs(armies) do
-		if army and army[1].house == house then
+		if army and #army > 0 and army[1].house == house then
 			result[tile_num] = self:to_gui_format(army)
 		end
 	end
