@@ -25,7 +25,8 @@ class RavenChooseChangeOrderOrLookAtWildlingCardReaction(BasePhaseReaction):
         json['player_action'] = {
             'actionType': 'ravenChooseChangeOrderOrLookAtWildlingCard',
             'houseType': self._house_type,
-            'ravenChoice': self.__raven_choices[idx]
+            'ravenChoice': 'nothing',
+            # 'ravenChoice': self.__raven_choices[idx],
         }
         self.logger.info(json)
         return json
