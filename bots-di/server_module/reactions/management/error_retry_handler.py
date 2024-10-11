@@ -3,12 +3,12 @@ from dependency_injector.wiring import Provide, inject
 from DTO.actions.action import ActionRetreatUnitsAfterBattle, ActionResolveSpecialConsolidatePower, \
     ActionResolveCardMoose3
 from DTO.actions.events import ActionMuster, ActionWildlingsMusterAtCastle, ActionTrackBids
-from DTO.actions.planning import ActionAddOrder
+from DTO.actions.planning import ActionAddOrder, ActionRavenChangeOrder
 from DTO.messages.messages import ErrorMessage
 from DTO.actions.all_actions import Action, ActionResolveMarchOrder
 from DTO.phases.phases import SubPhaseResolveMarchOrder, SubPhaseResolveHouseCard, SubPhaseRetreatUnitsAfterBattle, \
     SubPhaseMuster, SubPhaseWildlingsMusterAtCastle, SubPhaseAddOrder, SubPhaseResolveSpecialConsolidatePower, \
-    SubPhaseTracksBids
+    SubPhaseTracksBids, SubPhaseRavenChangeOrder
 from containers_module import App
 from events_service import EventSourcesService
 from server_module.game_state.house_type import HouseType
@@ -139,6 +139,14 @@ class ErrorRetryHandler:
                     "cardCode": 3
                 }
                 react_to_phase(game_id, sp8)
+            elif pa['actionType'] == 'ravenChangeOrder':
+                pa9: ActionRavenChangeOrder = pa
+                sp9: SubPhaseRavenChangeOrder = {
+                    "mainPhase": "phaseAction",
+                    "subPhase": "ravenChangeOrder",
+                    "houseType": pa9['houseType'],
+                }
+                react_to_phase(game_id, sp9)
             else:
                 pass
 
