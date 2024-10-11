@@ -150,6 +150,8 @@ switch_obj = {
 
     'disbandUnitsAfterCombat': NothingToUpdateGenericReaction, # unused now
     'calculateGameWinner': NothingToUpdateGenericReaction, # remove the game from the game data
+    'refreshTidesOfBattleDeck': NothingToUpdateGenericReaction,
+    'removeOrder': NothingToUpdateGenericReaction,
 }
 
 
@@ -182,30 +184,39 @@ class ActionReact:
                 else:
                     raise Exception("{} action is not implemented".format(action['actionType']))
 
-                if reply['player_action']['actionType'] not in [
-                    "addOrder",
-                    "openOrders",
-                    "calculateCombatOutcome",
-                    "autoKillUnitsAfterBattle",
-                    "autoRetreatAfterBattle",
-                    "killUnitsAfterBattle",
-                    "retreatUnitsAfterBattle",
-                    "ravenChooseTrackBidsOrCollectTaxes",
-                    "wildlingsBids",
-                    "trackBids",
-                    "wildlingsCard",
-                    "setWildlingsCard",
-                    "getTidesOfBattleCards",
-                    ]:
-                    new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
-                    local_game_handle = ActionReact.game_data.get_game(game_id)
-                    if reply['player_action']['actionType'] == 'cleanUpAfterCombat':
-                        local_game_handle.state.compare(new_game_state, ['availableOrders'])
-                    if reply['player_action']['actionType'] == 'disbandUnitDueToSupplies':
-                        local_game_handle.state.compare(new_game_state, ['availableOrders', 'placedOrders'])
-                    elif reply['player_action']['actionType'] == 'setWildlingsCard':
-                        local_game_handle.state.compare(new_game_state, ['supplies'])
-                    else:
-                        local_game_handle.state.compare(new_game_state)
+                # if reply['player_action']['actionType'] not in [
+                #     "addOrder",
+                #     "openOrders",
+                #     "calculateCombatOutcome",
+                #     "autoKillUnitsAfterBattle",
+                #     "autoRetreatAfterBattle",
+                #     "killUnitsAfterBattle",
+                #     "retreatUnitsAfterBattle",
+                #     "ravenChooseTrackBidsOrCollectTaxes",
+                #     "wildlingsBids",
+                #     "trackBids",
+                #     "wildlingsCard",
+                #     "setWildlingsCard",
+                #     "getTidesOfBattleCards",
+                #     ]:
+                #     new_game_state = GameState.from_json(reply['gameState'], ActionReact.game_data.game_rules)
+                #     local_game_handle = ActionReact.game_data.get_game(game_id)
+                #     if reply['player_action']['actionType'] == 'cleanUpAfterCombat':
+                #         local_game_handle.state.compare(new_game_state, ['availableOrders'])
+                #     elif reply['player_action']['actionType'] == 'resolveMarchOrder' and 'combat' in reply:
+                #         local_game_handle.state.compare(new_game_state, ['armies'])
+                #     elif reply['player_action']['actionType'] == 'resolveSupportOrder' and 'combat' in reply:
+                #         local_game_handle.state.compare(new_game_state, ['armies'])
+                #     elif reply['player_action']['actionType'] == 'disbandUnitDueToSupplies':
+                #         local_game_handle.state.compare(new_game_state, ['availableOrders', 'placedOrders', 'discardedHouseCards'])
+                #     elif reply['player_action']['actionType'] == 'setWildlingsCard':
+                #         local_game_handle.state.compare(new_game_state, ['supplies'])
+                #     elif reply['player_action']['actionType'] == 'resolveCardWolf0':
+                #         local_game_handle.state.compare(new_game_state, ['discardedHouseCards'])
+                #     elif reply['player_action']['actionType'] == 'resolveCardLion1':
+                #         local_game_handle.state.compare(new_game_state, ['discardedHouseCards'])
+                #     else:
+                #         local_game_handle.state.compare(new_game_state)
 
-                react_to_phase(game_id, reply['current_phase'])
+                if 'current_phase' in reply:
+                    react_to_phase(game_id, reply['current_phase'])
