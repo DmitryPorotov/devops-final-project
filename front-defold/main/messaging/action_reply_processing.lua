@@ -6,6 +6,7 @@ local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 
 local resolveMarchOrder = require "main/ui/phases/action/resolveMarchOrder"
 local leavePowerTokenAtTile = require "main/ui/phases/action/leavePowerTokenAtTile"
+local resolveSupportOrder = require "main/ui/phases/action/resolveSupportOrder"
 local chooseHouseCard = require "main/ui/phases/action/chooseHouseCard"
 
 local event_dispatcher = require "main/ui/event_dispatcher"
@@ -137,7 +138,8 @@ current_phase_switch = {
 		last_init_phase = leavePowerTokenAtTile
 	end,
 	resolveSupportOrder = function(reply)
-
+		resolveSupportOrder:init(reply.current_phase.houseType, reply.current_phase.tileNumbers, reply.combat.attackerHouse, reply.combat.defenderHouse)
+		last_init_phase = resolveSupportOrder
 	end,
 	chooseHouseCard = function(reply)
 		---@type Combat

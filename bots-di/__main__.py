@@ -13,6 +13,7 @@ def main(redis_service: RedisConnector = Provide[App.redis_service]):
 
 
 if __name__ == "__main__":
+    print('Starting bots...')
     application = App()
     application.init_resources()
     application.wire(modules=[

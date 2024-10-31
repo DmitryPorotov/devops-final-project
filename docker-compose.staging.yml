@@ -9,7 +9,7 @@ services:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     networks:
-      - net1
+      - net2
   mysql:
     profiles:
       - dev
@@ -24,7 +24,7 @@ services:
       MYSQL_USER: "bpuser"
       MYSQL_PASSWORD: "123456"
     networks:
-      - net1
+      - net2
   web-server:
     profiles:
       - dev
@@ -48,7 +48,7 @@ services:
       - TESTING=true
       - SEVER_NAME=server1
     networks:
-      - net1
+      - net2
   web-server2:
     profiles:
       - multi
@@ -83,22 +83,7 @@ services:
     working_dir: "/front-login"
     command: "npm run start --debug=0.0.0.0:9228"
     networks:
-      - net1
-  bots:
-    profiles:
-      - dev
-      - infra
-      - multi
-    build:
-      dockerfile: ./bots-di/Dockerfile-dev
-    environment:
-      - REDIS_HOST=redis
-    volumes:
-      - "./bots-di:/usr/src/bots"
-    working_dir: "/usr/src/bots"
-    command: "python ./__main__.py"
-    networks:
-      - net1
+      - net2
   worker:
     profiles:
       - dev
@@ -112,7 +97,7 @@ services:
       - ENVIRONMENT=dev
     command: "sbt run -- -Xrs"
     networks:
-      - net1
+      - net2
     depends_on:
       - redis
   reverse_proxy:
@@ -128,7 +113,19 @@ services:
     ports:
       - "8888:80"
     networks:
-      - net1
+      - net2
+  outer_nginx_mock:
+    image: "nginx:1.25.4"
+    volumes:
+      - ./nginx.conf.d/staging.conf:/etc/nginx/nginx.conf
+    ports:
+      - "9090:80"
+      - "4430:443"
+    networks:
+      - net2
+
 
 networks:
-  net1:
+  net2:
+volumes:
+    database_volume:

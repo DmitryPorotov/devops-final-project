@@ -1,0 +1,274 @@
+fonts {
+  name: "acme"
+  font: "/main/acme.font"
+}
+textures {
+  name: "common"
+  texture: "/main/common.atlas"
+}
+nodes {
+  size {
+    x: 340.0
+    y: 300.0
+  }
+  type: TYPE_BOX
+  id: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 123.0
+  }
+  scale {
+    x: 2.0
+    y: 2.0
+  }
+  size {
+    x: 50.0
+    y: 20.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Support"
+  font: "acme"
+  id: "header"
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -100.0
+    y: 14.0
+  }
+  size {
+    x: 100.0
+    y: 175.0
+  }
+  type: TYPE_BOX
+  id: "attacker_btn"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "attacker_bg"
+  parent: "attacker_btn"
+  inherit_alpha: true
+  template: "/main/ui/dialogs/push-button.gui"
+}
+nodes {
+  position {
+    x: -5.0
+  }
+  size {
+    x: 220.0
+    y: 350.0
+  }
+  type: TYPE_BOX
+  id: "attacker_bg/button"
+  parent: "attacker_bg"
+  overridden_fields: 1
+  overridden_fields: 4
+  template_node_child: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: 1.0
+  }
+  type: TYPE_TEXT
+  id: "attacker_bg/button_text"
+  parent: "attacker_bg/button"
+  overridden_fields: 1
+  overridden_fields: 8
+  template_node_child: true
+}
+nodes {
+  position {
+    x: -5.0
+    y: 70.0
+  }
+  size {
+    x: 60.0
+    y: 20.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Attacker"
+  font: "acme"
+  id: "attacker_header"
+  parent: "attacker_btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -5.0
+    y: -15.0
+  }
+  size {
+    x: 100.0
+    y: 120.0
+  }
+  type: TYPE_BOX
+  texture: "common/wolf"
+  id: "attacker_shield"
+  parent: "attacker_btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 100.0
+    y: 14.0
+  }
+  size {
+    x: 100.0
+    y: 175.0
+  }
+  type: TYPE_BOX
+  id: "defender_btn"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "defender_bg"
+  parent: "defender_btn"
+  inherit_alpha: true
+  template: "/main/ui/dialogs/push-button.gui"
+}
+nodes {
+  size {
+    x: 220.0
+    y: 350.0
+  }
+  type: TYPE_BOX
+  id: "defender_bg/button"
+  parent: "defender_bg"
+  overridden_fields: 4
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "defender_bg/button_text"
+  parent: "defender_bg/button"
+  overridden_fields: 8
+  template_node_child: true
+}
+nodes {
+  position {
+    y: 70.0
+  }
+  size {
+    x: 60.0
+    y: 20.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Defender"
+  font: "acme"
+  id: "defender_header"
+  parent: "defender_btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -15.0
+  }
+  size {
+    x: 100.0
+    y: 120.0
+  }
+  type: TYPE_BOX
+  texture: "common/rose"
+  id: "defender_shield"
+  parent: "defender_btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -48.0
+  }
+  scale {
+    x: 0.8
+  }
+  type: TYPE_TEMPLATE
+  id: "no_one_button"
+  parent: "container"
+  inherit_alpha: true
+  template: "/main/ui/dialogs/push-button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "no_one_button/button"
+  parent: "no_one_button"
+  template_node_child: true
+}
+nodes {
+  scale {
+    x: 2.5
+    y: 2.0
+  }
+  type: TYPE_TEXT
+  text: "No\n"
+  "one"
+  id: "no_one_button/button_text"
+  parent: "no_one_button/button"
+  overridden_fields: 3
+  overridden_fields: 8
+  template_node_child: true
+}
+nodes {
+  position {
+    y: -118.0
+  }
+  size {
+    x: 100.0
+    y: 40.0
+  }
+  color {
+    x: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  id: "send_btn"
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 100.0
+    y: 40.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Send\n"
+  ""
+  font: "acme"
+  id: "send_text"
+  parent: "send_btn"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

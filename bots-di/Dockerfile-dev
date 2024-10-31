@@ -1,0 +1,9 @@
+FROM python:3.11-bookworm
+
+WORKDIR /usr/src/bots
+
+COPY ./bots-di/requirements.txt ./
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD [ "python", "./__main__.py" ]

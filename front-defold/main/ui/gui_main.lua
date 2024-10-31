@@ -15,6 +15,7 @@ local confirm = require "main/ui/dialogs/confirm"
 local partial_march_orders = require "main/ui/partial_march_orders"
 local player_screen = require "main/ui/player_screen"
 local combat_screen = require "main/ui/combat_screen"
+local support_order = require "main/ui/dialogs/support_order"
 
 local ws = require "main/messaging/websocket"
 local mes_proc = require "main/messaging/message_processing"
@@ -73,6 +74,7 @@ function _M:init()
 	partial_march_orders:init()
 	player_screen:init()
 	combat_screen:init()
+	support_order:init()
 
 	self.panels = {
 		player_screen,
@@ -88,6 +90,7 @@ function _M:init()
 		confirm,
 		partial_march_orders,
 		leave_power_token,
+		support_order,
 	}
 end
 
@@ -136,7 +139,6 @@ function _M:update(dt)
 		end
 	end
 	if self.resolve_order_message then
-		print('in map_resolve_order')
 		local status, err =
 		pcall(event_dispatcher.trigger, events.map_resolve_order, self.resolve_order_message)
 		self.resolve_order_message = nil

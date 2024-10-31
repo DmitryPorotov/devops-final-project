@@ -7,7 +7,6 @@ from containers_module import App
 from events_service import EventSourcesService
 from redis_service import RedisConnector
 from server_module.games_data_service import GamesDataService
-from server_module.reactions.game_phase_reactions.phase_reactor import react_to_phase
 
 
 class DebuggingEventHandler:

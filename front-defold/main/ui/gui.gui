@@ -4187,6 +4187,130 @@ nodes {
   template_node_child: true
 }
 nodes {
+  position {
+    x: 600.0
+    y: 350.0
+  }
+  type: TYPE_TEMPLATE
+  id: "support_order"
+  inherit_alpha: true
+  template: "/main/ui/dialogs/support_order.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/container"
+  parent: "support_order"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/header"
+  parent: "support_order/container"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/attacker_btn"
+  parent: "support_order/container"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "support_order/attacker_bg"
+  parent: "support_order/attacker_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/attacker_bg/button"
+  parent: "support_order/attacker_bg"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/attacker_bg/button_text"
+  parent: "support_order/attacker_bg/button"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/attacker_header"
+  parent: "support_order/attacker_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/attacker_shield"
+  parent: "support_order/attacker_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/defender_btn"
+  parent: "support_order/container"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "support_order/defender_bg"
+  parent: "support_order/defender_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/defender_bg/button"
+  parent: "support_order/defender_bg"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/defender_bg/button_text"
+  parent: "support_order/defender_bg/button"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/defender_header"
+  parent: "support_order/defender_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/defender_shield"
+  parent: "support_order/defender_btn"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "support_order/no_one_button"
+  parent: "support_order/container"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/no_one_button/button"
+  parent: "support_order/no_one_button"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/no_one_button/button_text"
+  parent: "support_order/no_one_button/button"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "support_order/send_btn"
+  parent: "support_order/container"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "support_order/send_text"
+  parent: "support_order/send_btn"
+  template_node_child: true
+}
+nodes {
   type: TYPE_TEMPLATE
   id: "save_load"
   inherit_alpha: true

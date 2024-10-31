@@ -16,4 +16,5 @@ return {
 	ws_open_orders = 'ws_open_orders',
 	raven_card_or_order_click = 'raven_card_or_order_click',
 	ws_raven_card_or_order = 'ws_raven_card_or_order',
+	support_order_send_click = 'support_order_send_click',
 }
