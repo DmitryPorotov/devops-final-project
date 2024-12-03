@@ -1,221 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Testing bots</title>
+    <meta charset="UTF-8">
+    <title>Testing bots</title>
 </head>
 <body>
 <script>
-  /**
-   * @type WebSocket websock
-   */
-  let websock = null;
-  let token = null;
-  function send_create_game() {
-    websock.send(JSON.stringify({
-      type: 'action',
-      action: 'create_game',
-      lobbyId: 3,
-      isRandomHouses: false,
-      userId: 1,
-
-    }))
-  }
-  function doLogin() {
-    return fetch('http://127.0.0.1:3001/api/v1/auth/login', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: 'a@b.com',
-        password: "12345678"
-      })
-    })
-  }
-
-  function makeWebSock() {
-    websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${token}`, "events");
-    websock.onmessage = (event) => {
-      console.log("message:" + event.data);
-      const msg = JSON.parse(event.data);
-      if (msg.action === 'create_game' || msg.action === 'load') {
-        websock.send(JSON.stringify({
-          type: 'action',
-          action: 'fill_with_bots',
-          lobbyId: 3,
-          userId: 1,
-          player_action: {
-            houseTypes :[ "lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
-          }
-        }))
-      }
-      else if (msg.type === 'chat' && msg.body.type === 'create') {
-        send_create_game()
-      }
-      else if (msg.action === 'get_game_state') {
-        document.getElementById('game_state').value = JSON.stringify(msg.gameState, null,  2)
-      }
-    };
-  }
-
-  function startNew() {
-    if (websock) {
-      send_create_game();
-      return
-    }
-    doLogin().then(async (data) => {
-      const user = await data.json();
-      token = user.token;
-      makeWebSock();
-      websock.onopen = (event) => {
-        console.log("on open: ", event);
-        websock.send(JSON.stringify({
-          type: 'chat',
-          lobbyId: 3,
-          userId: 1,
-          body: {
-            type: 'create'
-          }
-
-        }))
-      };
-    });
-  }
-  function onGetState() {
-    function getState(id) {
-      fetch('http://127.0.0.1:3001/api/v1/admin/games/' + id, {
-        method: "GET",
-        headers: {
-          "Authorization": "Bearer " + token,
-        },
-      }).then(async (msg)=> {
-        const json = await msg.json();
-        document.getElementById('game_state').value =
-              JSON.stringify(json.gameState, null,  2)
-      })
-
-    }
-    if (!token) doLogin().then(async (data) => {
-      const user = await data.json();
-      token = user.token;
-      getState(3)
-    });
-    else getState(3)
-  }
-  function save() {
-    let name = document.getElementById('save-name').value.trim();
-    name = name ? name : "name";
-    fetch('http://127.0.0.1:3001/api/v1/admin/games/3', {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token,
-        "Content-type": "application/json",
-      },
-      body: `{"name":"${name}"}`
-    })
-  }
-  function onListSaves() {
-    if (!token) doLogin().then(async (data) => {
-      const user = await data.json();
-      token = user.token;
-      makeWebSock();
-      getSaves()
-    });
-    else getSaves();
-
-    function getSaves() {
-      fetch('http://127.0.0.1:3001/api/v1/admin/games/-1/saves', {
-        method: "GET",
-        headers: {
-          "Authorization": "Bearer " + token,
-          "Content-type": "application/json",
-        },
-      }).then(async data => {
-        const json = await data.json();
-        const select = document.getElementById('saved_games');
-        select.innerHTML = '';
-
-        for (const save of json.saves.sort()) {
-          /**
-           * @type {HTMLElement | HTMLOptionElement}
-           */
-          const opt = document.createElement('option');
-          opt.value = save;
-          opt.innerText = save;
-          select.appendChild(opt);
-        }
-      })
-
-    }
-  }
-  function loadGame() {
     /**
-     * @type {HTMLSelectElement}
+     * @type WebSocket websock
      */
-    const select = document.getElementById('saved_games');
-    const selectedGame = select.value;
-    if (selectedGame) {
-      fetch('http://127.0.0.1:3001/api/v1/admin/games/3/load', {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + token,
-          "Content-type": "application/json",
-        },
-        body: `{"name":"${selectedGame}"}`
-      }).then(() => {
+    let websock = null;
+    let token = null;
+
+    function send_create_game() {
         websock.send(JSON.stringify({
-          type: 'action',
-          action: 'fill_with_bots',
-          lobbyId: 3,
-          userId: 1,
-          player_action: {
-            houseTypes :[ "lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
-          }
-        }))
-      })
+            type: 'action',
+            action: 'create_game',
+            lobbyId: 3,
+            isRandomHouses: false,
+            userId: 1,
+
+        }));
     }
-  }
+
+    function doLogin() {
+        return fetch('http://127.0.0.1:3001/api/v1/auth/login', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: 'a@b.com',
+                password: "12345678"
+            })
+        });
+    }
+
+    function makeWebSock() {
+        websock = new WebSocket(`ws://127.0.0.1:3001/ws?_token=${token}`, "events");
+        websock.onmessage = (event) => {
+            console.log("message:" + event.data);
+            const msg = JSON.parse(event.data);
+            if (msg.action === 'create_game' || msg.action === 'load') {
+                websock.send(JSON.stringify({
+                    type: 'action',
+                    action: 'fill_with_bots',
+                    lobbyId: 3,
+                    userId: 1,
+                    player_action: {
+                        houseTypes: ["lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
+                    }
+                }));
+            } else if (msg.type === 'chat' && msg.body.type === 'create') {
+                send_create_game();
+            } else if (msg.action === 'get_game_state') {
+                document.getElementById('game_state').value = JSON.stringify(msg.gameState, null, 2);
+            }
+        };
+    }
+
+    function startNew() {
+        if (websock) {
+            send_create_game();
+            return;
+        }
+        doLogin().then(async (data) => {
+            const user = await data.json();
+            token = user.token;
+            makeWebSock();
+            websock.onopen = (event) => {
+                console.log("on open: ", event);
+                websock.send(JSON.stringify({
+                    type: 'chat',
+                    lobbyId: 3,
+                    userId: 1,
+                    body: {
+                        type: 'create'
+                    }
+
+                }));
+            };
+        });
+    }
+
+    function onGetState() {
+        function getState(id) {
+            fetch('http://127.0.0.1:3001/api/v1/admin/games/' + id, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                },
+            }).then(async (msg) => {
+                const json = await msg.json();
+                document.getElementById('game_state').value =
+                    JSON.stringify(json.gameState, null, 2);
+            });
+
+        }
+
+        if (!token) doLogin().then(async (data) => {
+            const user = await data.json();
+            token = user.token;
+            getState(3);
+        });
+        else getState(3);
+    }
+
+    function save() {
+        let name = document.getElementById('save-name').value.trim();
+        name = name ? name : "name";
+        fetch('http://127.0.0.1:3001/api/v1/admin/games/3', {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-type": "application/json",
+            },
+            body: `{"name":"${name}"}`
+        });
+    }
+
+    function onListSaves() {
+        if (!token) doLogin().then(async (data) => {
+            const user = await data.json();
+            token = user.token;
+            makeWebSock();
+            getSaves();
+        });
+        else getSaves();
+
+        function getSaves() {
+            fetch('http://127.0.0.1:3001/api/v1/admin/games/-1/saves', {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-type": "application/json",
+                },
+            }).then(async data => {
+                const json = await data.json();
+                const select = document.getElementById('saved_games');
+                select.innerHTML = '';
+
+                for (const save of json.saves.sort()) {
+                    /**
+                     * @type {HTMLElement | HTMLOptionElement}
+                     */
+                    const opt = document.createElement('option');
+                    opt.value = save;
+                    opt.innerText = save;
+                    select.appendChild(opt);
+                }
+            });
+
+        }
+    }
+
+    function loadGame() {
+        /**
+         * @type {HTMLSelectElement}
+         */
+        const select = document.getElementById('saved_games');
+        const selectedGame = select.value;
+        if (selectedGame) {
+            fetch('http://127.0.0.1:3001/api/v1/admin/games/3/load', {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-type": "application/json",
+                },
+                body: `{"name":"${selectedGame}"}`
+            }).then(() => {
+                websock.send(JSON.stringify({
+                    type: 'action',
+                    action: 'fill_with_bots',
+                    lobbyId: 3,
+                    userId: 1,
+                    player_action: {
+                        houseTypes: ["lion", "kraken", "moose", "rose", "pufferfish", "wolf"]
+                    }
+                }));
+            });
+        }
+    }
 </script>
 <style>
-  .container {
-    align-items: flex-start;
-    margin-right: 1rem;
-  }
-  .container:last-child {
-    margin-right: 0;
-  }
-  .start {
-    max-width: 150px;
-  }
+    .container {
+        align-items: flex-start;
+        margin-right: 1rem;
+    }
+
+    .container:last-child {
+        margin-right: 0;
+    }
+
+    .start {
+        max-width: 150px;
+    }
 </style>
-  <header style="display: flex">
+<header style="display: flex">
     <div class="container start">
-      <h1>Start bots only game</h1>
-      <button onclick="startNew()">Start</button>
+        <h1>Start bots only game</h1>
+        <button onclick="startNew()">Start</button>
     </div>
     <div class="container">
-      <h2>Get game state</h2>
-      <button onclick="onGetState()">Get</button>
-      <section>
-        <h2>Game state:</h2>
-        <textarea id="game_state" style="width: 400px;height: 100px"></textarea>
-      </section>
+        <h2>Get game state</h2>
+        <button onclick="onGetState()">Get</button>
+        <section>
+            <h2>Game state:</h2>
+            <textarea id="game_state" style="width: 400px;height: 100px"></textarea>
+        </section>
     </div>
     <div class="container">
-      <h2>Save game</h2>
-      <input id="save-name" type="text">
-      <button onclick="save()">Save</button>
+        <h2>Save game</h2>
+        <input id="save-name" type="text">
+        <button onclick="save()">Save</button>
     </div>
     <div class="container">
-      <h2>Load game</h2>
-      <button onclick="onListSaves()">List Saves</button>
-      <div>
-      <select id="saved_games"></select>
-      </div>
-      <button onclick="loadGame()">Load</button>
+        <h2>Load game</h2>
+        <button onclick="onListSaves()">List Saves</button>
+        <div>
+            <select id="saved_games"></select>
+        </div>
+        <button onclick="loadGame()">Load</button>
     </div>
-  </header>
+</header>
 
 </body>
 </html>

@@ -1,171 +1,200 @@
-import RedisPubSub from "./redis.pub-sub"
-import { Injectable, Logger } from "@nestjs/common"
-import RedisCacheStorage from "./redis.cache-storage"
-import NoGameInRedisCacheError from "./NoGameInRedisCacheError";
-import {WorkerMessageInterface} from "../websockets/messages/worker-message.interface";
-import GameTransferService from "./game-transfer.service";
-import MessageResendService from "./message-resend.service";
-import {randomUUID} from "crypto";
+import RedisPubSub from './redis.pub-sub';
+import { Injectable, Logger } from '@nestjs/common';
+import RedisCacheStorage from './redis.cache-storage';
+import NoGameInRedisCacheError from './NoGameInRedisCacheError';
+import { WorkerMessageInterface } from '../websockets/messages/worker-message.interface';
+import GameTransferService from './game-transfer.service';
+import MessageResendService from './message-resend.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 class WorkerRelayService {
-    private readonly logger = new Logger(WorkerRelayService.name);
-    private isInit = false;
+  private readonly logger = new Logger(WorkerRelayService.name);
+  private isInit = false;
 
-    private redisPubSub: RedisPubSub;
+  private redisPubSub: RedisPubSub;
 
-    private redisCacheStorage: RedisCacheStorage;
+  private redisCacheStorage: RedisCacheStorage;
 
-    private workerCallback: (msg:WorkerMessageInterface) => void;
+  private workerCallback: (msg: WorkerMessageInterface) => void;
 
-    private pendingNewGames: Map<number, Array<{worker: string, gamesCount: number}>> = new Map();
+  private pendingNewGames: Map<
+    number,
+    Array<{ worker: string; gamesCount: number }>
+  > = new Map();
 
-    private gameSubscriptions: Map<number, true> = new Map<number, true>();
+  private gameSubscriptions: Map<number, true> = new Map<number, true>();
 
-    constructor(
-        private readonly gameTransferService: GameTransferService,
-        private readonly messageResendService: MessageResendService,
-    ) {
+  constructor(
+    private readonly gameTransferService: GameTransferService,
+    private readonly messageResendService: MessageResendService,
+  ) {}
+
+  async init(
+    workerCallback: (message: WorkerMessageInterface) => void,
+  ): Promise<void> {
+    if (!this.isInit) {
+      this.workerCallback = workerCallback;
+
+      this.redisPubSub = new RedisPubSub();
+      await this.redisPubSub.init(
+        this.onNewGameMessageCallback,
+        this.onShutdownMessage,
+      );
+
+      this.redisCacheStorage = new RedisCacheStorage();
+      await this.redisCacheStorage.init();
+
+      this.isInit = true;
     }
+  }
 
-    async init(workerCallback: (message: WorkerMessageInterface) => void): Promise<void> {
-        if (!this.isInit) {
-            this.workerCallback = workerCallback;
-
-            this.redisPubSub = new RedisPubSub();
-            await this.redisPubSub.init(this.onNewGameMessageCallback, this.onShutdownMessage);
-
-            this.redisCacheStorage = new RedisCacheStorage();
-            await this.redisCacheStorage.init();
-
-            this.isInit = true;
-        }
+  private onShutdownMessage = (workerName: string) => {
+    if (this.gameTransferService.isTransferInProgress) {
+      setTimeout(() => this.onShutdownMessage(workerName), 100);
+    } else {
+      this.transferGames(workerName).then();
     }
+  };
 
-    private onShutdownMessage = (workerName: string) => {
-        if (this.gameTransferService.isTransferInProgress) {
-            setTimeout(() => this.onShutdownMessage(workerName), 100)
-        }
-        else {
-            this.transferGames(workerName).then();
-        }
-    };
+  private fakeGameIdForTransfer?: number;
 
-    private fakeGameIdForTransfer?: number;
+  private async transferGames(workerName: string) {
+    const listKey = `${workerName}_games`;
+    const workerGamesStr = await this.redisCacheStorage.lPop(listKey);
+    if (!workerGamesStr) return;
+    await this.redisCacheStorage.del(listKey);
+    const workerGames = JSON.parse(workerGamesStr);
+    this.fakeGameIdForTransfer = -Math.round(Math.random() * 1e14);
+    this.redisPubSub.publishToWorker(
+      'new_game',
+      JSON.stringify({
+        userId: -1,
+        gameId: this.fakeGameIdForTransfer + '',
+        action: 'new_game',
+        messageId: randomUUID(),
+      }),
+    );
+    const toSendToWorkers = await this.gameTransferService.transferGames(
+      workerGames,
+    );
+    toSendToWorkers.forEach((val, workerName) => {
+      this.redisPubSub.publishToWorker(
+        workerName,
+        JSON.stringify({
+          userId: -1,
+          action: 'restore_games',
+          messageId: randomUUID(),
+          games: val.map((g) => g.uuid),
+        }),
+      );
+      val.forEach((g) => {
+        this.redisCacheStorage.set(`game:${g.id}`, workerName);
+      });
+    });
+  }
 
-    private async transferGames(workerName: string) {
-        const listKey = `${workerName}_games`;
-        const workerGamesStr = await this.redisCacheStorage.lPop(listKey);
-        if (!workerGamesStr) return ;
-        await this.redisCacheStorage.del(listKey);
-        const workerGames = JSON.parse(workerGamesStr);
-        this.fakeGameIdForTransfer = -Math.round(Math.random() * 1e+14);
-        this.redisPubSub.publishToWorker('new_game', JSON.stringify({
-            userId: -1,
-            gameId: this.fakeGameIdForTransfer + "",
-            action: 'new_game',
-            messageId: randomUUID()
-        }));
-        const toSendToWorkers = await this.gameTransferService.transferGames(workerGames);
-        toSendToWorkers.forEach((val, workerName) => {
-            this.redisPubSub.publishToWorker(workerName, JSON.stringify({
-                userId: -1,
-                action: "restore_games",
-                messageId: randomUUID(),
-                games: val.map(g => g.uuid)
-            }));
-            val.forEach(g => {
-                this.redisCacheStorage.set(`game:${g.id}`, workerName)
-            })
-        });
+  private onNewGameMessageCallback = (
+    gameId: string,
+    workerName: string,
+    gamesCount: number,
+  ) => {
+    this.logger.debug('in worker new game message');
+    const intId = parseInt(gameId);
+    if (intId === this.fakeGameIdForTransfer) {
+      this.gameTransferService.addWorkerReply({
+        worker: workerName,
+        gamesCount: gamesCount,
+      });
     }
-
-    private onNewGameMessageCallback = (gameId: string, workerName: string, gamesCount: number) => {
-        this.logger.debug('in worker new game message');
-        const intId = parseInt(gameId);
-        if (intId === this.fakeGameIdForTransfer) {
-            this.gameTransferService.addWorkerReply({
-                worker: workerName,
-                gamesCount: gamesCount
-            })
-        }
-        if (this.pendingNewGames.has(intId)) {
-            this.pendingNewGames.get(intId).push({
-                worker: workerName,
-                gamesCount: gamesCount
-            })
-        }
-    };
-
-    sendToWorkersTest(message): void {
-        this.redisPubSub.sendToWorkerTest(message);
+    if (this.pendingNewGames.has(intId)) {
+      this.pendingNewGames.get(intId).push({
+        worker: workerName,
+        gamesCount: gamesCount,
+      });
     }
+  };
 
-    private gameCb = (message: string, channel: string) => {
-        const data: WorkerMessageInterface = JSON.parse(message);
-        this.messageResendService.confirmDelivery(data.messageId);
-        this.workerCallback(data);
-    };
+  sendToWorkersTest(message): void {
+    this.redisPubSub.sendToWorkerTest(message);
+  }
 
-    async subscribeToGame(gameId: number) {
-        if (this.gameSubscriptions.has(gameId)) return ;
-        await this.redisPubSub.subscribe(`game${gameId}.*`, this.gameCb);
-        this.gameSubscriptions.set(gameId,true);
-    }
+  private gameCb = (message: string, channel: string) => {
+    const data: WorkerMessageInterface = JSON.parse(message);
+    this.messageResendService.confirmDelivery(data.messageId);
+    this.workerCallback(data);
+  };
 
-    async unsubscribeFromGame(gameId: number) {
-        if (!this.gameSubscriptions.has(gameId)) return ;
-        await this.redisPubSub.unsubscribe(`game${gameId}.*`);
-        this.gameSubscriptions.delete(gameId);
-    }
+  async subscribeToGame(gameId: number) {
+    if (this.gameSubscriptions.has(gameId)) return;
+    await this.redisPubSub.subscribe(`game${gameId}.*`, this.gameCb);
+    this.gameSubscriptions.set(gameId, true);
+  }
 
-    async sendToGame(gameId: number, message: string) {
-        const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
-        if (!workerName) throw new NoGameInRedisCacheError();
-        this.redisPubSub.publishToGame(workerName, `game${gameId}`, message);
-    }
+  async unsubscribeFromGame(gameId: number) {
+    if (!this.gameSubscriptions.has(gameId)) return;
+    await this.redisPubSub.unsubscribe(`game${gameId}.*`);
+    this.gameSubscriptions.delete(gameId);
+  }
 
-    async sendToBot(gameId: number, message: string) {
-        const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
-        if (!workerName) throw new NoGameInRedisCacheError();
-        //todo: ask bot servers for their load and choose a less busy one
-        this.redisPubSub.publishToGame('bot1', workerName, message);
-    }
+  async sendToGame(gameId: number, message: string) {
+    const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
+    if (!workerName) throw new NoGameInRedisCacheError();
+    this.redisPubSub.publishToGame(workerName, `game${gameId}`, message);
+  }
 
-    async createNewGame(userId: number, gameId: number, isRandomHouses: boolean, messageId: string) {
-        if (this.pendingNewGames.has(gameId)) return ;
-        this.redisPubSub.publishToWorker( 'new_game', JSON.stringify({
+  async sendToBot(gameId: number, message: string) {
+    const workerName = await this.redisCacheStorage.get(`game:${gameId}`);
+    if (!workerName) throw new NoGameInRedisCacheError();
+    //todo: ask bot servers for their load and choose a less busy one
+    this.redisPubSub.publishToGame('bot1', workerName, message);
+  }
+
+  async createNewGame(
+    userId: number,
+    gameId: number,
+    isRandomHouses: boolean,
+    messageId: string,
+  ) {
+    if (this.pendingNewGames.has(gameId)) return;
+    this.redisPubSub.publishToWorker(
+      'new_game',
+      JSON.stringify({
+        userId,
+        gameId: String(gameId),
+        action: 'new_game',
+        messageId,
+      }),
+    );
+    this.pendingNewGames.set(gameId, []);
+    setTimeout(() => {
+      const workers = this.pendingNewGames.get(gameId);
+      if (workers.length) {
+        this.subscribeToGame(gameId);
+        const worker = workers.sort((a, b) => b.gamesCount - a.gamesCount)[0];
+        this.redisPubSub.publishToGame(
+          worker.worker,
+          `game${gameId}`,
+          JSON.stringify({
+            action: 'create_game',
             userId,
             gameId: String(gameId),
-            action: 'new_game',
-            messageId
-        }));
-        this.pendingNewGames.set(gameId, []);
-        setTimeout(() => {
-            const workers = this.pendingNewGames.get(gameId);
-            if (workers.length) {
-                this.subscribeToGame(gameId);
-                const worker = workers.sort((a, b) => b.gamesCount - a.gamesCount)[0];
-                this.redisPubSub.publishToGame(worker.worker, `game${gameId}`, JSON.stringify({
-                    action: 'create_game',
-                    userId,
-                    gameId: String(gameId),
-                    messageId,
-                    isRandomHouses
-                }));
-                this.redisCacheStorage.set(`game:${gameId}`, worker.worker);
-            }
-            else {
-                this.workerCallback({
-                    gameId: "" + gameId,
-                    type: "action",
-                    action: "error",
-                    message: "Workers are busy or are dead."
-                })
-            }
-            this.pendingNewGames.delete(gameId);
-        }, 1000)
-    }
+            messageId,
+            isRandomHouses,
+          }),
+        );
+        this.redisCacheStorage.set(`game:${gameId}`, worker.worker);
+      } else {
+        this.workerCallback({
+          gameId: '' + gameId,
+          type: 'action',
+          action: 'error',
+          message: 'Workers are busy or are dead.',
+        });
+      }
+      this.pendingNewGames.delete(gameId);
+    }, 1000);
+  }
 }
 
 export default WorkerRelayService;

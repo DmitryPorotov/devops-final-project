@@ -26,7 +26,7 @@
         exampleSocket.onopen = (event) => {
             console.log("on open: ", event);
             // exampleSocket.send('{"action": "hello", "type": "test", "userId": 0}')
-            exampleSocket.send('{"type": "chat", "lobbyId": 2, "body":{"type":"create"}}')
+            exampleSocket.send('{"type": "chat", "lobbyId": 2, "body":{"type":"create"}}');
         };
     });
 

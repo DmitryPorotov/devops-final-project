@@ -1,34 +1,36 @@
 import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable,
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
-import {BaseEntity} from "../../common/base.entity";
-import {User} from "../../user/entities/user.entity";
+import { BaseEntity } from '../../common/base.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Lobby extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({
-        nullable:true
-    })
-    password?: string;
+  @Column({
+    nullable: true,
+  })
+  password?: string;
 
-    @ManyToOne(
-        () => User,
-        (user) => user.ownedLobbies,
-        {
-            createForeignKeyConstraints: false,
-            nullable: false
-        })
-    owner: User;
+  @ManyToOne(() => User, (user) => user.ownedLobbies, {
+    createForeignKeyConstraints: false,
+    nullable: false,
+  })
+  owner: User;
 
-    @ManyToMany(() => User, (user) => user.lobbies, {createForeignKeyConstraints: false})
-    @JoinTable()
-    participants: User[];
+  @ManyToMany(() => User, (user) => user.lobbies, {
+    createForeignKeyConstraints: false,
+  })
+  @JoinTable()
+  participants: User[];
 }

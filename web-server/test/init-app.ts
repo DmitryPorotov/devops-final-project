@@ -2,10 +2,10 @@ import {Test} from "@nestjs/testing";
 import {AppModule} from "../src/app.module";
 import {FastifyAdapter, NestFastifyApplication} from "@nestjs/platform-fastify";
 import * as request from "supertest";
-import { BadRequestException, INestApplication, ValidationPipe } from "@nestjs/common"
+import {BadRequestException, INestApplication, ValidationPipe} from "@nestjs/common";
 import {AuthCredentialsDto} from "../src/auth/dto/auth.credentials.dto";
-import { WsAdapter } from "@nestjs/platform-ws"
-import { ValidationError } from "@nestjs/common/interfaces/external/validation-error.interface"
+import {WsAdapter} from "@nestjs/platform-ws";
+import {ValidationError} from "@nestjs/common/interfaces/external/validation-error.interface";
 
 export default async (): Promise<INestApplication> => {
     const moduleRef = await Test.createTestingModule({
@@ -22,14 +22,14 @@ export default async (): Promise<INestApplication> => {
         transform: true,
         exceptionFactory: (errors: ValidationError[]) => new BadRequestException(
             {
-                message: errors.reduce((acc,cur) => {
+                message: errors.reduce((acc, cur) => {
                     acc[cur.property] = Object.values(cur.constraints);
                     return acc;
                 }, {}),
                 statusCode: 400
             }
-
-        )}));
+        )
+    }));
 
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
@@ -61,6 +61,6 @@ const doLogin = async (app, credentials: AuthCredentialsDto) => {
     const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(credentials);
-    return response.body.token
+    return response.body.token;
 };
 

@@ -25,17 +25,17 @@ export class LobbiesSeeder implements Seeder {
         user.id = 1;
 
         const lobbies = [];
-        for (const i of [1,2,3,4,5]) {
+        for (const i of [1, 2, 3, 4, 5]) {
             const lobby = new Lobby();
             lobby.name = 'test' + i;
             if (i === 1) lobby.password = '1234';
             lobby.owner = user;
             lobby.participants = [];
             lobby.participants.push(user);
-            lobbies.push(lobby)
+            lobbies.push(lobby);
         }
 
-        for (const i of [2,3,4,5,6]) {
+        for (const i of [2, 3, 4, 5, 6]) {
             const user = new User();
             user.id = i;
             lobbies[1].participants.push(user);

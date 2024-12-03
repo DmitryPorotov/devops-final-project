@@ -1,15 +1,15 @@
-import {ChatMessageInterface} from "./chat-message.interface";
+import { ChatMessageInterface } from './chat-message.interface';
 
 export interface MessageInterface {
-    userId?: number;
-    action?: string;
-    joinAs?: string;
-    isRandomHouses?: boolean;
-    messageId?: string;
-    name?: string;
-    time?: string;
-    type: 'chat' | 'action' | 'test' | 'error' | 'system';
-    lobbyId?: number;
-    body?: ChatMessageInterface;
-    player_action?: object | unknown
+  userId?: number;
+  action?: string;
+  joinAs?: string;
+  isRandomHouses?: boolean;
+  messageId?: string;
+  name?: string;
+  time?: string;
+  type: 'chat' | 'action' | 'test' | 'error' | 'system';
+  lobbyId?: number;
+  body?: ChatMessageInterface;
+  player_action?: object | unknown;
 }

@@ -1,5 +1,3 @@
-class NoGameInRedisCacheError extends Error {
+class NoGameInRedisCacheError extends Error {}
 
-}
-
-export default NoGameInRedisCacheError
+export default NoGameInRedisCacheError;

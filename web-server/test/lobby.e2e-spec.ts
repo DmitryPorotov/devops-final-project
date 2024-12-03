@@ -8,7 +8,7 @@ describe('LobbiesController', () => {
 
     beforeAll(async () => {
         app = await initApp();
-        userToken = await getUserToken(app)
+        userToken = await getUserToken(app);
     });
 
     afterAll(async () => {
@@ -18,7 +18,7 @@ describe('LobbiesController', () => {
     test('POST /lobby', () => {
         return request(app.getHttpServer())
             .post('/lobby')
-            .auth(userToken, { type: "bearer" })
+            .auth(userToken, {type: "bearer"})
             .send({
                 name: 'myLobby',
                 password: '1234'
@@ -34,7 +34,7 @@ describe('LobbiesController', () => {
     test('GET /lobby', () => {
         return request(app.getHttpServer())
             .get('/lobby')
-            .auth(userToken, { type: "bearer" })
+            .auth(userToken, {type: "bearer"})
             .expect(200)
             .expect(r => {
                 const b = r.body;
@@ -45,7 +45,7 @@ describe('LobbiesController', () => {
     test('PATCH /lobby/1', () => {
         return request(app.getHttpServer())
             .patch('/lobby/1')
-            .auth(userToken, { type: "bearer" })
+            .auth(userToken, {type: "bearer"})
             .send({
                 name: 'newName',
                 password: '4321'
@@ -61,7 +61,7 @@ describe('LobbiesController', () => {
     test('PATCH /lobby/1/join', async () => {
         return request(app.getHttpServer())
             .patch('/lobby/1/join')
-            .auth(await getUser2Token(app), { type: "bearer" })
+            .auth(await getUser2Token(app), {type: "bearer"})
             .send({
                 password: '4321'
             })
@@ -75,7 +75,7 @@ describe('LobbiesController', () => {
     test('PATCH /lobby/1/leave', async () => {
         return request(app.getHttpServer())
             .patch('/lobby/1/leave')
-            .auth(await getUser2Token(app), { type: "bearer" })
+            .auth(await getUser2Token(app), {type: "bearer"})
             .send({
                 password: '4321'
             })

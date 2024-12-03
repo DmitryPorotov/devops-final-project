@@ -1,10 +1,10 @@
 export interface ChatActionsEnum {
-    create,
-    join,
-    leave,
-    kick,
-    message,
-    error,
-    edit,
-    ping
+  create;
+  join;
+  leave;
+  kick;
+  message;
+  error;
+  edit;
+  ping;
 }

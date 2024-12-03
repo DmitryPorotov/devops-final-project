@@ -1,3 +1,1 @@
-export default class NoWorkersException extends Error{
-
-}
+export default class NoWorkersException extends Error {}

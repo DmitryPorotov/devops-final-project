@@ -3,7 +3,7 @@ import {Seeder} from "nestjs-seeder";
 import {User} from "../src/user/entities/user.entity";
 import constants from "../src/constants";
 import {Repository} from "typeorm";
-import * as bcrypt from "bcrypt"
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersSeeder implements Seeder {
