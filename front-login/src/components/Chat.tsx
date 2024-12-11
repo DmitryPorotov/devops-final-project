@@ -21,7 +21,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
         if (!lobbyCtx.lobbyData) return ;
         const receiveMessage = async (message) => {
             if (message.type === 'chat') {
-                message.ts = formatDate(new Date());
+                message.ts = formatDate(new Date(message.time));
                 setChatMessages([...chatMessages, message]);
                 setTimeout(() => {
                     scrollToRef.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
