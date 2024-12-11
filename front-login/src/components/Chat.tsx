@@ -15,7 +15,17 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
     const auth = useContext(AuthContext);
     const lobbyCtx = useContext(LobbyContext);
 
-    const formatDate = (time) => `[${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}:${String(time.getSeconds()).padStart(2, '0')}]`;
+    const formatDate = (time: Date) => {
+        const now = new Date();
+        let dateStr = '';
+        if (now.getDate() !== time.getDate() || now.getMonth() !== time.getMonth() || now.getFullYear() !== time.getFullYear()) {
+            dateStr = ` - ${time.getDate()} ${time.toLocaleString("default", {month:"short"})}`;
+        }
+        if (now.getFullYear() !== time.getFullYear()) {
+            dateStr += ` ${time.getFullYear()}`;
+        }
+        return `[${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(2, '0')}:${String(time.getSeconds()).padStart(2, '0')}${dateStr}]`;
+    };
 
     useEffect(() => {
         if (!lobbyCtx.lobbyData) return ;
@@ -122,7 +132,7 @@ const Chat = ({lobbyId, afterInitGetMissedMessages, style}) => {
                 }
             </Card>
             <Card sx={{margin: '.4rem .2rem .3rem .2rem', paddingTop: '.4rem'}}>
-                    <form style={{display: 'flex'}} onSubmit={handleSubmit} autoComplete={'off'}>
+                    <form style={{display: 'flex',padding:".2rem"}} onSubmit={handleSubmit} autoComplete={'off'}>
                         <TextField
                             sx={{flexGrow:4}}
                             label="message"
