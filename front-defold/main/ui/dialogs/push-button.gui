@@ -1,3 +1,4 @@
+script: ""
 fonts {
   name: "acme"
   font: "/main/acme.font"
