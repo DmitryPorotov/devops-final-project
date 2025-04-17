@@ -4200,7 +4200,9 @@ nodes {
   type: TYPE_BOX
   id: "support_order/container"
   parent: "support_order"
+  overridden_fields: 45
   template_node_child: true
+  enabled: false
 }
 nodes {
   type: TYPE_TEXT
