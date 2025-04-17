@@ -11,7 +11,7 @@ class Board(list[BoardTile]):
             self.append(bt)
             if bt.mustering_points > 0:
                 self.__castle_tiles[str(tn)] = bt
-                if tn == 39 or tn == 28:  # note: I don't to run checks on all neighbours, I know these are the only 2 castles
+                if tn == 39 or tn == 28:  # note: I don't want to run checks on all neighbours, I know these are the only 2 castles
                     self.__castle_tiles_no_water[str(tn)] = bt
 
     def get_castle_tiles(self) -> dict[str, BoardTile]:
