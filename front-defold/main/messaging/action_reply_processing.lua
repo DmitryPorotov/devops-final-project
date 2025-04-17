@@ -72,6 +72,7 @@ action_type_switch = {
 			msg.post('/map', 'set_order_source_tile', {})
 		end
 		msg.post('/map', 'remove_order', {tile_num = reply.player_action.sourceTileNumber})
+		game_data.placedOrders[reply.player_action.houseType][tostring(reply.player_action.sourceTileNumber)] = nil
 		resolveMarchOrder:clean_up()
 		do_current_phase_switching(reply)
 	end,
