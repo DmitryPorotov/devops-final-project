@@ -309,11 +309,11 @@ local function shift_leftover_army(self, source_tile_num)
 end
 
 local function move_units_serially(self, from_tile, targets, through_tiles, for_attack, call_idx)
-	if not next(targets) and call_idx == 1 then
+	if call_idx == 1 then
 		self:reassign_labels()
 		shift_leftover_army(self, from_tile)
-		return
-	elseif not next(targets) then
+	end
+	if not next(targets) then
 		return
 	end
 
