@@ -3694,6 +3694,20 @@ nodes {
 }
 nodes {
   position {
+    x: -22.0
+  }
+  size {
+    x: 40.0
+    y: 40.0
+  }
+  type: TYPE_PIE
+  texture: "gui/shield-back"
+  id: "log_button"
+  parent: "misc_buttons"
+  perimeterVertices: 16
+}
+nodes {
+  position {
     x: 600.0
     y: 25.0
   }
@@ -4572,6 +4586,104 @@ nodes {
   type: TYPE_TEXT
   id: "confirm/question"
   parent: "confirm/panel"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEMPLATE
+  id: "log"
+  inherit_alpha: true
+  template: "/main/ui/log/log.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/back_drop"
+  parent: "log"
+  overridden_fields: 45
+  template_node_child: true
+  enabled: false
+}
+nodes {
+  type: TYPE_PIE
+  id: "log/close"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/text"
+  parent: "log/close"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/box"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/entry"
+  parent: "log/box"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/box1"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/entry1"
+  parent: "log/box1"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/box2"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/entry2"
+  parent: "log/box2"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/box3"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/entry3"
+  parent: "log/box3"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "log/box4"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  id: "log/entry4"
+  parent: "log/box4"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_PIE
+  id: "log/up_button"
+  parent: "log/back_drop"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_PIE
+  id: "log/down_button"
+  parent: "log/back_drop"
   template_node_child: true
 }
 nodes {

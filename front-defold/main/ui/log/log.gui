@@ -1,0 +1,359 @@
+script: ""
+fonts {
+  name: "acme"
+  font: "/main/acme.font"
+}
+textures {
+  name: "gui"
+  texture: "/main/ui/gui.atlas"
+}
+nodes {
+  position {
+    x: 300.0
+    y: 337.5
+  }
+  size {
+    x: 600.0
+    y: 675.0
+  }
+  type: TYPE_BOX
+  texture: "gui/slice-9-trsm"
+  id: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 30.0
+    y: 30.0
+    z: 30.0
+    w: 30.0
+  }
+}
+nodes {
+  position {
+    x: 235.0
+    y: 270.0
+  }
+  size {
+    x: 70.0
+    y: 70.0
+  }
+  type: TYPE_PIE
+  texture: "gui/shield-back"
+  id: "close"
+  parent: "back_drop"
+  inherit_alpha: true
+  perimeterVertices: 20
+}
+nodes {
+  position {
+    x: 2.0
+    y: 6.0
+  }
+  scale {
+    x: 4.0
+    y: 4.0
+  }
+  size {
+    x: 20.0
+    y: 20.0
+  }
+  color {
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "x"
+  font: "acme"
+  id: "text"
+  outline {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  parent: "close"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: 166.0
+  }
+  size {
+    x: 560.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "gui/hint-bg"
+  id: "box"
+  parent: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 20.0
+    y: 20.0
+    z: 20.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: -250.0
+    y: 44.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 330.0
+    y: 66.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  font: "acme"
+  id: "entry"
+  xanchor: XANCHOR_LEFT
+  pivot: PIVOT_NW
+  line_break: true
+  parent: "box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: 57.0
+  }
+  size {
+    x: 560.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "gui/hint-bg"
+  id: "box1"
+  parent: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 20.0
+    y: 20.0
+    z: 20.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: -250.0
+    y: 44.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 330.0
+    y: 66.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  font: "acme"
+  id: "entry1"
+  xanchor: XANCHOR_LEFT
+  pivot: PIVOT_NW
+  line_break: true
+  parent: "box1"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: -50.0
+  }
+  size {
+    x: 560.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "gui/hint-bg"
+  id: "box2"
+  parent: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 20.0
+    y: 20.0
+    z: 20.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: -250.0
+    y: 44.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 330.0
+    y: 66.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  font: "acme"
+  id: "entry2"
+  xanchor: XANCHOR_LEFT
+  pivot: PIVOT_NW
+  line_break: true
+  parent: "box2"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: -159.0
+  }
+  size {
+    x: 560.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "gui/hint-bg"
+  id: "box3"
+  parent: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 20.0
+    y: 20.0
+    z: 20.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: -250.0
+    y: 44.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 330.0
+    y: 66.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  font: "acme"
+  id: "entry3"
+  xanchor: XANCHOR_LEFT
+  pivot: PIVOT_NW
+  line_break: true
+  parent: "box3"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -10.0
+    y: -271.0
+  }
+  size {
+    x: 560.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  texture: "gui/hint-bg"
+  id: "box4"
+  parent: "back_drop"
+  inherit_alpha: true
+  slice9 {
+    x: 20.0
+    y: 20.0
+    z: 20.0
+    w: 20.0
+  }
+}
+nodes {
+  position {
+    x: -250.0
+    y: 44.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  size {
+    x: 330.0
+    y: 66.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  font: "acme"
+  id: "entry4"
+  xanchor: XANCHOR_LEFT
+  pivot: PIVOT_NW
+  line_break: true
+  parent: "box4"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 265.0
+    y: 195.0
+  }
+  rotation {
+    z: 90.0
+  }
+  size {
+    x: 50.0
+    y: 50.0
+  }
+  type: TYPE_PIE
+  texture: "gui/next_button"
+  id: "up_button"
+  parent: "back_drop"
+  inherit_alpha: true
+  perimeterVertices: 20
+}
+nodes {
+  position {
+    x: 265.0
+    y: -305.0
+  }
+  rotation {
+    z: 270.0
+  }
+  size {
+    x: 50.0
+    y: 50.0
+  }
+  type: TYPE_PIE
+  texture: "gui/next_button"
+  id: "down_button"
+  parent: "back_drop"
+  inherit_alpha: true
+  perimeterVertices: 20
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

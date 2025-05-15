@@ -76,6 +76,11 @@ function _M:process_message(message)
 						message.gameState.subPhase.houseTypes[2],
 						message.gameState.combat.attackerTileNum,
 						message.gameState.combat.defenderTileNum
+					)
+			elseif message.gameState.subPhase.subPhase == 'resolveRaidOrder' then
+				phase = require "main/ui/phases/action/resolveRaidOrder"
+				phase:init(
+					message.gameState.subPhase.houseType
 				)
 			else
 				error("Unknown or unimplemented phase " .. message.gameState.subPhase.subPhase)

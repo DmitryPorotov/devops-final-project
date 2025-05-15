@@ -9,6 +9,7 @@ local raven_card_or_order = require "main/ui/dialogs/raven_choose_card_or_order"
 local leave_power_token = require "main/ui/dialogs/leave_power_token"
 local march_select_army = require "main/ui/dialogs/march_select_army"
 local save_load_menu = require "main/ui/settings/save_load"
+local log = require "main/ui/log/log"
 local misc_buttons = require "main/ui/misc_buttons"
 local list_of_saves = require "main/ui/settings/list_of_saves"
 local confirm = require "main/ui/dialogs/confirm"
@@ -75,8 +76,10 @@ function _M:init()
 	player_screen:init()
 	combat_screen:init()
 	support_order:init()
+	log:init()
 
 	self.panels = {
+		log,
 		player_screen,
 		misc_buttons,
 		hints,

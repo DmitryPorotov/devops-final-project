@@ -5,6 +5,7 @@ local ravenChoose = require "main/ui/phases/planning/ravenChooseChangeOrderOrLoo
 local ravenChangeOrder = require "main/ui/phases/planning/ravenChangeOrder"
 
 local resolveMarchOrder = require "main/ui/phases/action/resolveMarchOrder"
+local resolveRaidOrder = require "main/ui/phases/action/resolveRaidOrder"
 local leavePowerTokenAtTile = require "main/ui/phases/action/leavePowerTokenAtTile"
 local resolveSupportOrder = require "main/ui/phases/action/resolveSupportOrder"
 local chooseHouseCard = require "main/ui/phases/action/chooseHouseCard"
@@ -114,7 +115,7 @@ action_type_switch = {
 		chooseHouseCard:update_outcome()
 	end,
 	autoKillUnitsAfterBattle = function(reply)
-
+		print('in autoKillUnitsAfterBattle')
 	end
 }
 
@@ -132,7 +133,8 @@ current_phase_switch = {
 		last_init_phase = resolveMarchOrder
 	end,
 	resolveRaidOrder = function(reply)
-
+		print('in resolve raid order')
+		resolveRaidOrder:init(reply.current_phase.houseType)
 	end,
 	leavePowerTokenAtTile = function(reply)
 		leavePowerTokenAtTile:init(reply.current_phase.houseType, reply.current_phase.tileNumber)

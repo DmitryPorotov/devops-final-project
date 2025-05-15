@@ -40,6 +40,7 @@ function _M:init()
 	mes_proc.send = self.send
 	local function process_message(message)
 		mes_proc:process_message(message)
+		event_dispatcher.trigger(events.ws_message, message)
 	end
 	
 	ws_to_use:init(process_message)

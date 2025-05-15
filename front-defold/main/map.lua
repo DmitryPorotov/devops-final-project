@@ -72,6 +72,8 @@ function _M:select_label(label_hash)
 	if self.phase == "addOrder" then
 		self:tile_select_for_add_order(tile_num, label_hash)
 	elseif self.phase == "openOrders" then
+	elseif self.phase == "resolveRaidOrder" then
+		self:tile_select_for_order_resolve(tile_num, label_hash, 'raid')
 	elseif self.phase == "resolveMarchOrder" then
 		if self.to_select_from_tile then
 			self:tile_select_target(tile_num, label_hash)
@@ -163,12 +165,13 @@ function _M:tile_select_for_order_resolve(tile_num, label_hash, order_type)
 	if self.orders[label_hash] then
 		local order_on_label, house = get_order_type(self, label_hash)
 		if house == game_data.me and order_on_label:find(order_type) then
-			labels:select(label_hash)
+			local is_selected = labels:select(label_hash)
 			msg.post("/gui", "resolve_order", {
 				label = label_hash,
 				tile_num = tile_num,
 				name = get_tile_name(tile_num, label_hash),
-				order = order_on_label
+				order = order_on_label,
+				is_selected = is_selected
 			})
 		end
 	end
