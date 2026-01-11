@@ -72,8 +72,8 @@ function _M:process_message(message)
 			elseif message.gameState.subPhase.subPhase == 'chooseHouseCard' then
 				phase = require "main/ui/phases/action/chooseHouseCard"
 				phase:init(
-						message.gameState.subPhase.houseTypes[1],
-						message.gameState.subPhase.houseTypes[2],
+						message.gameState.combat.attackerHouse,
+						message.gameState.combat.defenderHouse,
 						message.gameState.combat.attackerTileNum,
 						message.gameState.combat.defenderTileNum
 					)
