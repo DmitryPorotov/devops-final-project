@@ -1,4 +1,4 @@
 FROM eclipse-temurin:17.0.11_9-jre-alpine
 WORKDIR /fwc
-COPY ./game-logic-core/target/scala-3.3.3/worker.jar /fwc/
-COPY ./game-logic-core/textures/ /fwc/textures/
+COPY ../../game-logic-core/target/scala-3.3.3/worker.jar /fwc/
+COPY ../../game-logic-core/textures/ /fwc/textures/
