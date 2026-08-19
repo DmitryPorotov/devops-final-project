@@ -7,8 +7,10 @@ def REGISTRY   = "registry.registry.svc.cluster.local:5000"
 def REGISTRY_EXTERN = "localhost:30500"
 def WEB_SERVER_IMAGE_NAME = "web-server-prod"
 def WORKER_IMAGE_NAME = "worker-prod"
+def NGINX_IMAGE_NAME = "nginx-prod"
 def WEB_SERVER_DEPLOYMENT_NAME= "web-server"
 def WORKER_DEPLOYMENT_NAME= "worker"
+def NGINX_DEPLOYMENT_NAME= "nginx"
 def APP_NS     = "fwc"
 
 pipeline {
@@ -42,7 +44,12 @@ spec:
       tty: true
       securityContext:
         runAsUser: 1000
-
+    - name: bob
+      image: localhost:30500/bob-the-builder:latest
+      command: ["cat"]
+      tty: true
+      securityContext:
+        runAsUser: 1000
 """
         }
     }
@@ -83,12 +90,20 @@ spec:
                 //         npx nest build
                 //     """
                 // }
-                echo 'Installing dependencies and building the worker.'
-                container('sbt') {
+                // echo 'Installing dependencies and building the worker.'
+                // container('sbt') {
+                //     sh """
+                //         cd game-logic-core &&\
+                //         sbt update &&\
+                //         sbt assembly
+                //     """
+                // }
+                echo 'Installing dependencies and building the Defold frontend.'
+                container('bob') {
                     sh """
-                        cd game-logic-core &&\
-                        sbt update &&\
-                        sbt assembly
+                        cd front-defold &&\
+                        java -jar /bob/bob.jar --settings=web.properties -bo /fd_fwc/build/prod/htmlLaunchDir \
+                        build bundle -p js-web -a
                     """
                 }
             }
@@ -108,17 +123,17 @@ spec:
                     //     --insecure-pull \
                     //     --skip-tls-verify
                     // """
-                    echo "Building worker image"
-                    sh """
-                        /kaniko/executor \
-                        --context=`pwd`/game-logic-core/docker \
-                        --dockerfile=`pwd`/game-logic-core/docker/Dockerfile_prod \
-                        --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
-                        --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:latest \
-                        --insecure \
-                        --insecure-pull \
-                        --skip-tls-verify
-                    """
+                    // echo "Building worker image"
+                    // sh """
+                    //     /kaniko/executor \
+                    //     --context=`pwd`/game-logic-core/docker \
+                    //     --dockerfile=`pwd`/game-logic-core/docker/Dockerfile_prod \
+                    //     --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
+                    //     --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:latest \
+                    //     --insecure \
+                    //     --insecure-pull \
+                    //     --skip-tls-verify
+                    // """
                 }
             }
         }
@@ -135,14 +150,14 @@ spec:
 
                     //     kubectl rollout status deployment/${WEB_SERVER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
                     // """
-                    echo "Deploying worker image"
-                    sh """
-                        kubectl set image deployment/${WORKER_DEPLOYMENT_NAME} \
-                        ${WORKER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
-                        -n ${APP_NS}
+                    // echo "Deploying worker image"
+                    // sh """
+                    //     kubectl set image deployment/${WORKER_DEPLOYMENT_NAME} \
+                    //     ${WORKER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
+                    //     -n ${APP_NS}
 
-                        kubectl rollout status deployment/${WORKER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
-                    """
+                    //     kubectl rollout status deployment/${WORKER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
+                    // """
                 }
             }
         }
