@@ -70,7 +70,7 @@ spec:
                 container('node') {
                     sh """
                         cd web-server &&\
-                        npm i\
+                        npm i &&\
                         npx nest build
                     """
                 }
