@@ -102,7 +102,7 @@ spec:
                 container('bob') {
                     sh """
                         cd front-defold &&\
-                        java -jar /bob/bob.jar --settings=web.properties -bo /fd_fwc/build/prod/htmlLaunchDir \
+                        java -jar /bob/bob.jar --settings=web.properties -bo build/prod/htmlLaunchDir \
                         build bundle -p js-web -a
                     """
                 }
