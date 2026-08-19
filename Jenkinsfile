@@ -123,7 +123,7 @@ spec:
             echo "Pipeline failed — deployment was not updated."
         }
         success {
-            echo "Deployed ${IMAGE_NAME}:${IMAGE_TAG} to namespace ${APP_NS}"
+            echo "Deployed ${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} to namespace ${APP_NS}"
         }
     }
 }
