@@ -69,6 +69,7 @@ spec:
                 echo 'Add language-specific build/test commands here if not handled inside the Dockerfile.'
                 container('node') {
                     sh """
+                        cd web-server &&\
                         npm i
                     """
                 }
