@@ -1,0 +1,269 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fwc
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: fwc
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: "rootPassword"
+  MYSQL_DATABASE: "fwc"
+  MYSQL_USER: "bpuser"
+  MYSQL_PASSWORD: "123456"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-volume
+  namespace: fwc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+# ===================== REDIS =====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: fwc
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2.2
+          command: ["redis-server", "--save", "20", "1", "--loglevel", "warning"]
+          ports:
+            - containerPort: 6379
+      # "restart: always" -> Deployments always restart failed pods by default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: fwc
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+---
+# ===================== MYSQL =====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: fwc
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate   # avoid two pods writing to the same RWO volume
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: "mysql:8.0.34"
+          envFrom:
+            - secretRef:
+                name: mysql-secret
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: database-volume
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: database-volume
+          persistentVolumeClaim:
+            claimName: database-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: fwc
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+# ===================== WEB SERVER =====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  namespace: fwc
+  labels:
+    app: web-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-server
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      # depends_on has no direct k8s equivalent - initContainers approximate
+      # "wait for it up" behavior; app should also handle DB/redis retries itself.
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done"]
+        - name: wait-for-redis
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z redis 6379; do echo waiting for redis; sleep 2; done"]
+      containers:
+        - name: web-server
+          # Build this image (from ./web-server/Dockerfile) and push it to a
+          # registry first - Kubernetes cannot build images itself.
+          image: "localhost:30500/web_server_prod:latest"
+          workingDir: "/web-server"
+          command: ["node", "dist/src/main.js"]
+          env:
+            - name: DB_HOST
+              value: "mysql"
+            - name: REDIS_URL
+              value: "redis://redis:6379"
+            - name: SERVER_PORT
+              value: "80"
+            - name: SERVER_NAME
+              value: "server1"
+            - name: CLIENT_SIDE_MESSAGE_ID
+              value: "false"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server
+  namespace: fwc
+spec:
+  selector:
+    app: web-server
+  ports:
+    - port: 80
+      targetPort: 80
+---
+# ===================== WORKER =====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: fwc
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      initContainers:
+        - name: wait-for-redis
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z redis 6379; do echo waiting for redis; sleep 2; done"]
+      containers:
+        - name: worker
+          # Build this image (from ./game-logic-core/docker/Dockerfile_prod)
+          # and push it to a registry first.
+          image: "localhost:30500/worker_prod:latest"
+          workingDir: "/fwc"
+          command: ["java", "-Xrs", "-jar", "worker.jar"]
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+            - name: WORKER_NAME
+              value: "worker1"
+            - name: ENVIRONMENT
+              value: "prod"
+            - name: REDIS_PORT
+              value: "6379"
+      restartPolicy: Always
+      # "restart: on-failure" - closest native fit is a Job, but since this is
+      # a long-running process a Deployment (Always) is used, matching the
+      # other services. Switch to a Job if this is meant to run to completion.
+---
+# ===================== REVERSE PROXY (NGINX) =====================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reverse-proxy
+  namespace: fwc
+  labels:
+    app: reverse-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reverse-proxy
+  template:
+    metadata:
+      labels:
+        app: reverse-proxy
+    spec:
+      containers:
+        - name: reverse-proxy
+          # Build this image (from ./nginx.conf.d/Dockerfile) and push it to
+          # a registry first.
+          image: "localhost:30500/nginx_prod:latest"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: letsencrypt
+              mountPath: /etc/letsencrypt
+      volumes:
+        - name: letsencrypt
+          # hostPath only works if the pod is pinned to a specific node that
+          # already has certs at this path. In a real cluster, prefer
+          # cert-manager + a Secret/PVC instead of hostPath.
+          hostPath:
+            path: /etc/letsencrypt
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverse-proxy
+  namespace: fwc
+spec:
+  type: NodePort   # exposes port 443 externally, like "443:443" in compose
+  selector:
+    app: reverse-proxy
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30800   # must be in the 30000-32767 range; reachable at <NodeIP>:30443

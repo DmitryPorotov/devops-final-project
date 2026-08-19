@@ -1,0 +1,64 @@
+# Run: kubectl apply -f jenkins-rbac.yaml
+# Assumes Jenkins itself runs in namespace "jenkins" and your app runs in "default".
+# Change namespaces below to match your setup.
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-deployer
+  namespace: jenkins
+---
+# Permission to build agent pods dynamically (Kubernetes plugin needs this
+# in the jenkins namespace; usually granted already if you installed Jenkins
+# via the official Helm chart, but included here for completeness).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: jenkins-agent-role
+  namespace: jenkins
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec", "pods/log", "persistentvolumeclaims"]
+    verbs: ["create", "delete", "get", "list", "patch", "update", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-agent-binding
+  namespace: jenkins
+subjects:
+  - kind: ServiceAccount
+    name: jenkins-deployer
+    namespace: jenkins
+roleRef:
+  kind: Role
+  name: jenkins-agent-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Permission to update Deployments in the namespace where the app is deployed.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: jenkins-deploy-role
+  namespace: default
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["pods", "events"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-deploy-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: jenkins-deployer
+    namespace: jenkins
+roleRef:
+  kind: Role
+  name: jenkins-deploy-role
+  apiGroup: rbac.authorization.k8s.io
