@@ -98,19 +98,20 @@ spec:
                 //         sbt assembly
                 //     """
                 // }
-                echo 'Building the Defold frontend.'
-                container('bob') {
-                    sh """
-                        cd front-defold &&\
-                        java -jar /bob/bob.jar --settings=web.properties -bo build/prod/htmlLaunchDir \
-                        build bundle -p js-web -a
-                    """
-                }
+                // echo 'Building the Defold frontend.'
+                // container('bob') {
+                //     sh """
+                //         cd front-defold &&\
+                //         java -jar /bob/bob.jar --settings=web.properties -bo build/prod/htmlLaunchDir \
+                //         build bundle -p js-web -a
+                //     """
+                // }
                 echo 'Installing dependencies and building the login frontend.'
                 container('node') {
                     sh """
                         cd front-login &&\
                         npm i &&\
+                        CI=false &&\
                         npx react-scripts build
                     """
                 }
@@ -142,17 +143,17 @@ spec:
                     //     --insecure-pull \
                     //     --skip-tls-verify
                     // """
-                    echo "Building nginx image"
-                    sh """
-                        /kaniko/executor \
-                        --context=`pwd` \
-                        --dockerfile=`pwd`/nginx.conf.d/Dockerfile \
-                        --destination=${REGISTRY}/${NGINX_IMAGE_NAME}:${IMAGE_TAG} \
-                        --destination=${REGISTRY}/${NGINX_IMAGE_NAME}:latest \
-                        --insecure \
-                        --insecure-pull \
-                        --skip-tls-verify
-                    """
+                    // echo "Building nginx image"
+                    // sh """
+                    //     /kaniko/executor \
+                    //     --context=`pwd` \
+                    //     --dockerfile=`pwd`/nginx.conf.d/Dockerfile \
+                    //     --destination=${REGISTRY}/${NGINX_IMAGE_NAME}:${IMAGE_TAG} \
+                    //     --destination=${REGISTRY}/${NGINX_IMAGE_NAME}:latest \
+                    //     --insecure \
+                    //     --insecure-pull \
+                    //     --skip-tls-verify
+                    // """
                 }
             }
         }
@@ -177,14 +178,14 @@ spec:
 
                     //     kubectl rollout status deployment/${WORKER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
                     // """
-                    echo "Deploying nginx image"
-                    sh """
-                        kubectl set image deployment/${NGINX_DEPLOYMENT_NAME} \
-                        ${NGINX_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${NGINX_IMAGE_NAME}:${IMAGE_TAG} \
-                        -n ${APP_NS}
+                    // echo "Deploying nginx image"
+                    // sh """
+                    //     kubectl set image deployment/${NGINX_DEPLOYMENT_NAME} \
+                    //     ${NGINX_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${NGINX_IMAGE_NAME}:${IMAGE_TAG} \
+                    //     -n ${APP_NS}
 
-                        kubectl rollout status deployment/${NGINX_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
-                    """
+                    //     kubectl rollout status deployment/${NGINX_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
+                    // """
                 }
             }
         }
