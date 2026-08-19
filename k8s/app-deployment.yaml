@@ -239,7 +239,7 @@ spec:
         - name: reverse-proxy
           # Build this image (from ./nginx.conf.d/Dockerfile) and push it to
           # a registry first.
-          image: "localhost:30500/nginx_prod:latest"
+          image: "localhost:30500/nginx-prod:latest"
           ports:
             - containerPort: 80
           volumeMounts:
