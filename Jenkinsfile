@@ -105,7 +105,7 @@ spec:
                         echo "Image tag ${IMAGE_TAG}\n"
                         sh """
                             kubectl set image deployment/${WEB_SERVER_IMAGE_NAME} \
-                            ${WEB_SERVER_IMAGE_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
+                            ${WEB_SERVER_IMAGE_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:latest \
                             -n ${APP_NS}
 
                             kubectl rollout status deployment/${WEB_SERVER_IMAGE_NAME} -n ${APP_NS} --timeout=120s

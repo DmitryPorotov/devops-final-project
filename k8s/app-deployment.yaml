@@ -145,7 +145,7 @@ spec:
         - name: web-server
           # Build this image (from ./web-server/Dockerfile) and push it to a
           # registry first - Kubernetes cannot build images itself.
-          image: "localhost:30500/web_server_prod:latest"
+          image: "localhost:30500/web-server-prod:latest"
           workingDir: "/web-server"
           command: ["node", "dist/src/main.js"]
           env:
