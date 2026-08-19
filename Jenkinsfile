@@ -5,7 +5,7 @@
 
 def REGISTRY   = "registry.registry.svc.cluster.local:5000"
 def REGISTRY_EXTERN = "localhost:30500"
-def WEB_SERVER_IMAGE_NAME = "myapp"
+def WEB_SERVER_IMAGE_NAME = "web_server_prod"
 def APP_NS     = "fwc"
 
 pipeline {
