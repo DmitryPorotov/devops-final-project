@@ -6,6 +6,7 @@
 def REGISTRY   = "registry.registry.svc.cluster.local:5000"
 def REGISTRY_EXTERN = "localhost:30500"
 def WEB_SERVER_IMAGE_NAME = "web-server-prod"
+def WEB_SERVER_DEPLOYMENT_NAME= "web-server"
 def APP_NS     = "fwc"
 
 pipeline {
@@ -104,11 +105,11 @@ spec:
                     container('kubectl') {
                         echo "Image tag ${IMAGE_TAG}\n"
                         sh """
-                            kubectl set image deployment/${WEB_SERVER_IMAGE_NAME} \
-                            ${WEB_SERVER_IMAGE_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:latest \
+                            kubectl set image deployment/${WEB_SERVER_DEPLOYMENT_NAME} \
+                            ${WEB_SERVER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
                             -n ${APP_NS}
 
-                            kubectl rollout status deployment/${WEB_SERVER_IMAGE_NAME} -n ${APP_NS} --timeout=120s
+                            kubectl rollout status deployment/${WEB_SERVER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
                         """
                     }
                 }
