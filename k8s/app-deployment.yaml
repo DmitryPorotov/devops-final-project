@@ -200,7 +200,7 @@ spec:
         - name: worker
           # Build this image (from ./game-logic-core/docker/Dockerfile_prod)
           # and push it to a registry first.
-          image: "localhost:30500/worker_prod:latest"
+          image: "localhost:30500/worker-prod:latest"
           workingDir: "/fwc"
           command: ["java", "-Xrs", "-jar", "worker.jar"]
           env:
