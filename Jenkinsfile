@@ -112,7 +112,7 @@ spec:
                     sh """
                         /kaniko/executor \
                         --context=`pwd`/game-logic-core/docker \
-                        --dockerfile=`pwd`/game-logic-core/docker/Dockerfile \
+                        --dockerfile=`pwd`/game-logic-core/docker/Dockerfile_prod \
                         --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
                         --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:latest \
                         --insecure \
