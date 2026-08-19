@@ -83,21 +83,21 @@ spec:
         stage('Build (pre-Docker)') {
             steps {
                 // echo 'Installing dependencies and building the webserver.'
-                // container('node') {
-                //     sh """
-                //         cd web-server &&\
-                //         npm i &&\
-                //         npx nest build
-                //     """
-                // }
-                // echo 'Installing dependencies and building the worker.'
-                // container('sbt') {
-                //     sh """
-                //         cd game-logic-core &&\
-                //         sbt update &&\
-                //         sbt assembly
-                //     """
-                // }
+                container('node') {
+                    sh """
+                        cd web-server &&\
+                        npm i &&\
+                        npx nest build
+                    """
+                }
+                echo 'Installing dependencies and building the worker.'
+                container('sbt') {
+                    sh """
+                        cd game-logic-core &&\
+                        sbt update &&\
+                        sbt assembly
+                    """
+                }
                 echo 'Building the Defold frontend.'
                 container('bob') {
                     sh """
@@ -121,28 +121,28 @@ spec:
         stage('Build & Push Image (Kaniko)') {
             steps {
                 container('kaniko') {
-                    // echo "Building web-server image"
-                    // sh """
-                    //     /kaniko/executor \
-                    //     --context=`pwd`/web-server \
-                    //     --dockerfile=`pwd`/web-server/Dockerfile \
-                    //     --destination=${REGISTRY}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
-                    //     --destination=${REGISTRY}/${WEB_SERVER_IMAGE_NAME}:latest \
-                    //     --insecure \
-                    //     --insecure-pull \
-                    //     --skip-tls-verify
-                    // """
-                    // echo "Building worker image"
-                    // sh """
-                    //     /kaniko/executor \
-                    //     --context=`pwd`/game-logic-core/docker \
-                    //     --dockerfile=`pwd`/game-logic-core/docker/Dockerfile_prod \
-                    //     --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
-                    //     --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:latest \
-                    //     --insecure \
-                    //     --insecure-pull \
-                    //     --skip-tls-verify
-                    // """
+                    echo "Building web-server image"
+                    sh """
+                        /kaniko/executor \
+                        --context=`pwd`/web-server \
+                        --dockerfile=`pwd`/web-server/Dockerfile \
+                        --destination=${REGISTRY}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
+                        --destination=${REGISTRY}/${WEB_SERVER_IMAGE_NAME}:latest \
+                        --insecure \
+                        --insecure-pull \
+                        --skip-tls-verify
+                    """
+                    echo "Building worker image"
+                    sh """
+                        /kaniko/executor \
+                        --context=`pwd`/game-logic-core/docker \
+                        --dockerfile=`pwd`/game-logic-core/docker/Dockerfile_prod \
+                        --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
+                        --destination=${REGISTRY}/${WORKER_IMAGE_NAME}:latest \
+                        --insecure \
+                        --insecure-pull \
+                        --skip-tls-verify
+                    """
                     echo "Building nginx image"
                     sh """
                         /kaniko/executor \
@@ -162,22 +162,22 @@ spec:
             steps {
                 container('kubectl') {
                     echo "Image tag ${IMAGE_TAG}\n"
-                    // echo "Deploying web-server image"
-                    // sh """
-                    //     kubectl set image deployment/${WEB_SERVER_DEPLOYMENT_NAME} \
-                    //     ${WEB_SERVER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
-                    //     -n ${APP_NS}
+                    echo "Deploying web-server image"
+                    sh """
+                        kubectl set image deployment/${WEB_SERVER_DEPLOYMENT_NAME} \
+                        ${WEB_SERVER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} \
+                        -n ${APP_NS}
 
-                    //     kubectl rollout status deployment/${WEB_SERVER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
-                    // """
-                    // echo "Deploying worker image"
-                    // sh """
-                    //     kubectl set image deployment/${WORKER_DEPLOYMENT_NAME} \
-                    //     ${WORKER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
-                    //     -n ${APP_NS}
+                        kubectl rollout status deployment/${WEB_SERVER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
+                    """
+                    echo "Deploying worker image"
+                    sh """
+                        kubectl set image deployment/${WORKER_DEPLOYMENT_NAME} \
+                        ${WORKER_DEPLOYMENT_NAME}=${REGISTRY_EXTERN}/${WORKER_IMAGE_NAME}:${IMAGE_TAG} \
+                        -n ${APP_NS}
 
-                    //     kubectl rollout status deployment/${WORKER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
-                    // """
+                        kubectl rollout status deployment/${WORKER_DEPLOYMENT_NAME} -n ${APP_NS} --timeout=120s
+                    """
                     echo "Deploying nginx image"
                     sh """
                         kubectl set image deployment/${NGINX_DEPLOYMENT_NAME} \
