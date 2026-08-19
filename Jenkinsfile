@@ -10,7 +10,7 @@ def WORKER_IMAGE_NAME = "worker-prod"
 def NGINX_IMAGE_NAME = "nginx-prod"
 def WEB_SERVER_DEPLOYMENT_NAME= "web-server"
 def WORKER_DEPLOYMENT_NAME= "worker"
-def NGINX_DEPLOYMENT_NAME= "nginx"
+def NGINX_DEPLOYMENT_NAME= "reverse-proxy"
 def APP_NS     = "fwc"
 
 pipeline {
@@ -199,6 +199,7 @@ spec:
         success {
             echo "Deployed ${WEB_SERVER_IMAGE_NAME}:${IMAGE_TAG} to namespace ${APP_NS}"
             echo "Deployed ${WORKER_IMAGE_NAME}:${IMAGE_TAG} to namespace ${APP_NS}"
+            echo "Deployed ${NGINX_IMAGE_NAME}:${IMAGE_TAG} to namespace ${APP_NS}"
         }
     }
 }
